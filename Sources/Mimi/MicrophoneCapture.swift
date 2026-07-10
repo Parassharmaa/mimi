@@ -22,7 +22,7 @@ final class MicrophoneCapture {
     func start(
         recordingTo url: URL?,
         deviceID: AudioDeviceID?,
-        onBuffer: @escaping (AVAudioPCMBuffer) -> Void
+        onBuffer: @escaping @Sendable (AVAudioPCMBuffer) -> Void
     ) throws {
         _ = try? stop()
 
@@ -30,9 +30,14 @@ final class MicrophoneCapture {
         try recorder.begin(url: url, format: format)
 
         let input = audioEngine.inputNode
+        // AVAudioEngine invokes a tap on its realtime queue, not the main
+        // actor. Capture only the lock-protected recorder and a Sendable
+        // handler here; capturing `self` would make this callback
+        // MainActor-isolated and trap as soon as audio arrives.
+        let recorder = url == nil ? nil : recorder
 
-        input.installTap(onBus: 0, bufferSize: 1_024, format: format) { [weak self] buffer, _ in
-            self?.recorder.write(buffer)
+        input.installTap(onBus: 0, bufferSize: 1_024, format: format) { @Sendable [recorder, onBuffer] buffer, _ in
+            recorder?.write(buffer)
             onBuffer(buffer)
         }
 

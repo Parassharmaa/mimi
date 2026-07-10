@@ -46,7 +46,7 @@ public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
         switch self {
         case .microphone: "Microphone"
         case .applicationAudio: "Selected App Audio"
-        case .systemAudio: "All System Audio"
+        case .systemAudio: "Selected Display Audio"
         }
     }
 
@@ -54,7 +54,7 @@ public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
         switch self {
         case .microphone: "Your selected microphone input"
         case .applicationAudio: "Zoom, Chrome, or another selected app"
-        case .systemAudio: "Everything playing through this Mac"
+        case .systemAudio: "Audio associated with a display you choose"
         }
     }
 }
@@ -70,7 +70,7 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
         switch self {
         case .appleSpeechAnalyzer: "Apple Speech"
         case .whisperKitLargeV3Turbo: "Whisper Large-v3 (626 MB)"
-        case .nemotronStreamingExperimental: "Nemotron 3.5 Streaming"
+        case .nemotronStreamingExperimental: "Nemotron 3.5 MLX (756 MB)"
         }
     }
 
@@ -81,7 +81,7 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
         case .whisperKitLargeV3Turbo:
             "Downloadable Core ML accuracy model for English and Japanese."
         case .nemotronStreamingExperimental:
-            "Experimental native-streaming model. Available after Mimi's local Mac bake-off."
+            "Experimental on-device MLX accuracy pass for English and Japanese. Download explicitly before use."
         }
     }
 
@@ -99,7 +99,7 @@ public enum TranslationMode: String, CaseIterable, Codable, Sendable, Identifiab
     public var displayName: String {
         switch self {
         case .off: "Off"
-        case .translateFinalSegments: "Translate Final Segments"
+        case .translateFinalSegments: "Translate Final Transcript"
         }
     }
 }
@@ -158,8 +158,8 @@ public enum ModelCatalog {
             engine: .nemotronStreamingExperimental,
             supportedLanguages: [.english, .japanese],
             ownership: .experimental,
-            estimatedDownloadMB: nil,
-            recommendation: "Candidate for the lowest-latency third-party lane; gated on reproducible Mac benchmarks."
+            estimatedDownloadMB: 756,
+            recommendation: "Local Apple-silicon MLX accuracy pass. It uses Nemotron's streaming model after Stop; live chunk delivery remains experimental."
         )
     ]
 

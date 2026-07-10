@@ -9,6 +9,7 @@ struct InlineTranslationView: View {
     @State private var configuration: TranslationSession.Configuration?
     @State private var translatedText = ""
     @State private var errorText: String?
+    @State private var isTranslating = false
 
     private var targetLanguage: SpeechLanguage {
         sourceLanguage.translationTarget
@@ -21,26 +22,46 @@ struct InlineTranslationView: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
-                Button("Translate") {
+                if isTranslating {
+                    ProgressView()
+                        .controlSize(.small)
+                        .accessibilityLabel("Preparing local translation")
+                }
+                Button(isTranslating ? "Translating…" : "Translate Transcript") {
                     beginTranslation()
                 }
                 .buttonStyle(.borderless)
+                .disabled(isTranslating)
             }
 
-            if translatedText.isEmpty {
-                Text("Translate finalized transcript text locally.")
+            if !translatedText.isEmpty {
+                ScrollView {
+                    Text(translatedText)
+                        .textSelection(.enabled)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(maxHeight: 160)
+            } else if isTranslating {
+                Text("Preparing local translation…")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
-                Text(translatedText)
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("Translate finalized transcript text locally.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             if let errorText {
-                Text(errorText)
-                    .font(.caption)
-                    .foregroundStyle(.red)
+                HStack(alignment: .firstTextBaseline) {
+                    Text(errorText)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                    Spacer()
+                    Button("Try Again") {
+                        beginTranslation()
+                    }
+                    .buttonStyle(.borderless)
+                }
             }
         }
         .padding(10)
@@ -51,31 +72,35 @@ struct InlineTranslationView: View {
                 let response = try await session.translate(sourceText)
                 translatedText = response.targetText
                 errorText = nil
+                isTranslating = false
             } catch {
                 translatedText = ""
                 errorText = "Translation is unavailable until macOS has the required local language pair."
+                isTranslating = false
             }
         }
         .onChange(of: sourceText) { _, _ in
             configuration = nil
             translatedText = ""
             errorText = nil
+            isTranslating = false
         }
         .onChange(of: sourceLanguage) { _, _ in
             configuration = nil
             translatedText = ""
             errorText = nil
+            isTranslating = false
         }
     }
 
     private func beginTranslation() {
-        if configuration == nil {
-            configuration = .init(
-                source: .init(identifier: sourceLanguage.rawValue),
-                target: .init(identifier: targetLanguage.rawValue)
-            )
-        } else {
-            configuration?.invalidate()
-        }
+        configuration?.invalidate()
+        translatedText = ""
+        errorText = nil
+        isTranslating = true
+        configuration = .init(
+            source: .init(identifier: sourceLanguage.rawValue),
+            target: .init(identifier: targetLanguage.rawValue)
+        )
     }
 }

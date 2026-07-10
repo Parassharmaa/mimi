@@ -13,22 +13,25 @@ enum MimiStorage {
         return document
     }
 
-    static func saveLatestTranscript(_ document: TranscriptDocument) {
-        guard let url = try? latestTranscriptURL(),
-              let data = try? JSONEncoder().encode(document) else {
-            return
+    static func saveLatestTranscript(_ document: TranscriptDocument) throws {
+        let url = try latestTranscriptURL()
+        let data = try JSONEncoder().encode(document)
+        try data.write(to: url, options: .atomic)
+    }
+
+    static func clearLatestTranscript() throws {
+        let url = try latestTranscriptURL()
+        guard FileManager.default.fileExists(atPath: url.path) else { return }
+        try FileManager.default.removeItem(at: url)
+    }
+
+    static func makeTemporaryRecordingURL(fileExtension: String) throws -> URL {
+        let normalizedExtension = fileExtension.lowercased()
+        guard ["caf", "wav"].contains(normalizedExtension) else {
+            throw MimiStorageError.unsupportedTemporaryAudioFormat(fileExtension)
         }
-        try? data.write(to: url, options: .atomic)
-    }
-
-    static func clearLatestTranscript() {
-        guard let url = try? latestTranscriptURL() else { return }
-        try? FileManager.default.removeItem(at: url)
-    }
-
-    static func makeTemporaryRecordingURL() throws -> URL {
         let folder = try recordingsDirectory()
-        return folder.appending(path: "recording-\(UUID().uuidString).caf")
+        return folder.appending(path: "recording-\(UUID().uuidString).\(normalizedExtension)")
     }
 
     /// Raw microphone files exist only during a Whisper accuracy pass. Remove
@@ -69,5 +72,16 @@ enum MimiStorage {
         let folder = support.appending(path: appFolderName, directoryHint: .isDirectory)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         return folder
+    }
+}
+
+private enum MimiStorageError: LocalizedError {
+    case unsupportedTemporaryAudioFormat(String)
+
+    var errorDescription: String? {
+        switch self {
+        case let .unsupportedTemporaryAudioFormat(fileExtension):
+            "Mimi cannot create a temporary recording with the \(fileExtension) format."
+        }
     }
 }

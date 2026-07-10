@@ -3,6 +3,7 @@ import SwiftUI
 
 struct TranscriptWindow: View {
     @Bindable var store: AppStore
+    @State private var showingClearConfirmation = false
 
     init(store: AppStore) {
         self.store = store
@@ -11,67 +12,90 @@ struct TranscriptWindow: View {
     var body: some View {
         NavigationSplitView {
             Form {
-                Picker("Input", selection: $store.source) {
-                    ForEach([AudioSource.microphone]) { source in
-                        Text(source.displayName).tag(source)
-                    }
-                }
-                .disabled(store.controlsLocked)
-                if store.source == .microphone {
-                    Picker("Microphone", selection: $store.selectedInputDeviceID) {
-                        Text("System Default").tag(UInt32?.none)
-                        ForEach(store.inputDevices) { device in
-                            Text(device.displayName).tag(Optional(device.id))
+                Section("Session") {
+                    Picker("Input", selection: $store.source) {
+                        ForEach(AudioSource.allCases) { source in
+                            Text(source.displayName).tag(source)
                         }
                     }
                     .disabled(store.controlsLocked)
-                    Button("Refresh Input Devices") {
-                        store.refreshInputDevices()
+
+                    if store.source == .microphone {
+                        Picker("Microphone", selection: $store.selectedInputDeviceID) {
+                            Text("System Default").tag(UInt32?.none)
+                            ForEach(store.inputDevices) { device in
+                                Text(device.displayName).tag(Optional(device.id))
+                            }
+                        }
+                        .disabled(store.controlsLocked)
+
+                        Button("Refresh Input Devices") {
+                            store.refreshInputDevices()
+                        }
+                        .disabled(store.controlsLocked)
+                    } else {
+                        ScreenAudioSelectionControl(store: store)
+                    }
+                }
+
+                Section("Language and model") {
+                    Picker("Language", selection: $store.sourceLanguage) {
+                        ForEach(SpeechLanguage.allCases) { language in
+                            Text(language.nativeName).tag(language)
+                        }
+                    }
+                    .disabled(store.controlsLocked)
+
+                    Picker("Model", selection: $store.engineID) {
+                        ForEach(TranscriptionEngineID.allCases) { engine in
+                            Text(engine.displayName).tag(engine)
+                        }
+                    }
+                    .disabled(store.controlsLocked)
+
+                    if let message = store.selectedModelReadiness.message {
+                        Label(message, systemImage: "info.circle")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                Section("Translation") {
+                    Picker("Mode", selection: $store.translationMode) {
+                        ForEach(TranslationMode.allCases) { mode in
+                            Text(mode.displayName).tag(mode)
+                        }
                     }
                     .disabled(store.controlsLocked)
                 }
-                Picker("Language", selection: $store.sourceLanguage) {
-                    ForEach(SpeechLanguage.allCases) { language in
-                        Text(language.nativeName).tag(language)
-                    }
-                }
-                .disabled(store.controlsLocked)
-                Picker("Model", selection: $store.engineID) {
-                    ForEach(TranscriptionEngineID.allCases) { engine in
-                        Text(engine.displayName).tag(engine)
-                    }
-                }
-                .disabled(store.controlsLocked)
-                Picker("Translation", selection: $store.translationMode) {
-                    ForEach(TranslationMode.allCases) { mode in
-                        Text(mode.displayName).tag(mode)
-                    }
-                }
-                .disabled(store.controlsLocked)
             }
             .formStyle(.grouped)
+            .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 300)
             .navigationTitle("Session")
         } detail: {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    Label(store.recordingState.label, systemImage: store.menuBarSymbolName)
+                    Label(store.isRecording ? "Recording \(store.source.displayName.lowercased()) locally" : store.recordingState.label, systemImage: store.menuBarSymbolName)
                         .foregroundStyle(store.isRecording ? .red : .primary)
+                        .accessibilityElement(children: .combine)
                     Spacer()
-                    Button(store.isRecording ? "Stop" : "Start") {
+                    Button(store.isRecording ? "Stop Recording" : "Start Recording") {
                         store.toggleRecording()
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(store.isRecording ? .red : .accentColor)
+                    .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
                 }
 
                 ScrollView {
-                    Text(store.document.renderedText.isEmpty ? "Your local transcript will appear here." : store.document.renderedText)
-                        .font(.title3)
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
+                    TranscriptContentView(
+                        document: store.document,
+                        emptyMessage: "Your local transcript will appear here.",
+                        font: .title3
+                    )
+                    .padding(.vertical, 4)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
 
                 if store.translationMode == .translateFinalSegments,
                    !store.document.finalizedText(for: store.sourceLanguage).isEmpty {
@@ -82,7 +106,34 @@ struct TranscriptWindow: View {
                 }
             }
             .padding()
+            .frame(minWidth: 600, minHeight: 420, alignment: .topLeading)
             .navigationTitle("Transcript")
+            .toolbar {
+                ToolbarItemGroup(placement: .primaryAction) {
+                    Button {
+                        store.copyTranscript()
+                    } label: {
+                        Label("Copy Transcript", systemImage: "doc.on.doc")
+                    }
+                    .keyboardShortcut("c", modifiers: [.command, .shift])
+                    .disabled(store.document.renderedText.isEmpty)
+
+                    Button(role: .destructive) {
+                        showingClearConfirmation = true
+                    } label: {
+                        Label("Clear Transcript", systemImage: "trash")
+                    }
+                    .disabled(store.document.renderedText.isEmpty)
+                }
+            }
+        }
+        .confirmationDialog("Clear local transcript?", isPresented: $showingClearConfirmation, titleVisibility: .visible) {
+            Button("Clear Transcript", role: .destructive) {
+                store.clearTranscript()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This removes the stored transcript from this Mac. Mimi does not retain source audio after a completed session.")
         }
     }
 }

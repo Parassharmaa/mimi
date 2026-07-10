@@ -4,6 +4,7 @@ import SwiftUI
 struct MenuBarView: View {
     @Bindable var store: AppStore
     @Environment(\.openWindow) private var openWindow
+    @State private var showingClearConfirmation = false
 
     init(store: AppStore) {
         self.store = store
@@ -17,23 +18,29 @@ struct MenuBarView: View {
 
             if store.translationMode == .translateFinalSegments,
                !store.document.finalizedText(for: store.sourceLanguage).isEmpty {
-                InlineTranslationView(
-                    sourceText: store.document.finalizedText(for: store.sourceLanguage),
-                    sourceLanguage: store.sourceLanguage
-                )
+                Label("Translation is available in the Transcript window.", systemImage: "translate")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Divider()
 
             HStack(spacing: 10) {
-                Button("Open Transcript") {
+                Button {
                     openWindow(id: "transcript")
+                } label: {
+                    Label("Open Transcript", systemImage: "text.alignleft")
+                }
+                .buttonStyle(.borderless)
+
+                SettingsLink {
+                    Label("Settings", systemImage: "gearshape")
                 }
                 .buttonStyle(.borderless)
 
                 Spacer()
 
-                Button("Quit Mimi") {
+                Button("Quit") {
                     NSApplication.shared.terminate(nil)
                 }
                 .buttonStyle(.borderless)
@@ -41,7 +48,15 @@ struct MenuBarView: View {
             .font(.footnote)
         }
         .padding(16)
-        .frame(width: 420)
+        .frame(width: 430)
+        .confirmationDialog("Clear local transcript?", isPresented: $showingClearConfirmation, titleVisibility: .visible) {
+            Button("Clear Transcript", role: .destructive) {
+                store.clearTranscript()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This removes the stored transcript from this Mac. Mimi does not retain source audio after a completed session.")
+        }
     }
 
     private var header: some View {
@@ -49,12 +64,12 @@ struct MenuBarView: View {
             Image(systemName: store.menuBarSymbolName)
                 .font(.title2)
                 .foregroundStyle(statusColor)
-                .symbolEffect(.variableColor.iterative, options: .repeating, isActive: store.isRecording)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text("Mimi")
                     .font(.headline)
-                Text(store.recordingState.label)
+                Text(store.isRecording ? "Recording \(store.source.displayName.lowercased()) locally" : store.recordingState.label)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -62,39 +77,37 @@ struct MenuBarView: View {
             Spacer()
 
             if store.isRecording {
-                Text("LOCAL")
+                Text("REC")
                     .font(.caption2.weight(.bold))
                     .foregroundStyle(.red)
                     .padding(.horizontal, 7)
                     .padding(.vertical, 4)
                     .background(.red.opacity(0.12), in: Capsule())
+                    .accessibilityLabel("Recording \(store.source.displayName.lowercased()) locally")
             }
         }
+        .accessibilityElement(children: .combine)
     }
 
     private var controls: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             Picker("Input", selection: $store.source) {
-                ForEach([AudioSource.microphone]) { source in
+                ForEach(AudioSource.allCases) { source in
                     Text(source.displayName).tag(source)
                 }
             }
-            .labelsHidden()
             .pickerStyle(.menu)
-            .frame(maxWidth: .infinity, alignment: .leading)
             .disabled(store.controlsLocked)
 
             if store.source == .microphone {
-                HStack(spacing: 6) {
+                HStack(spacing: 8) {
                     Picker("Microphone", selection: $store.selectedInputDeviceID) {
                         Text("System Default").tag(UInt32?.none)
                         ForEach(store.inputDevices) { device in
                             Text(device.displayName).tag(Optional(device.id))
                         }
                     }
-                    .labelsHidden()
                     .pickerStyle(.menu)
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .disabled(store.controlsLocked)
 
                     Button {
@@ -104,29 +117,28 @@ struct MenuBarView: View {
                     }
                     .buttonStyle(.borderless)
                     .help("Refresh microphone inputs")
+                    .accessibilityLabel("Refresh microphone inputs")
                     .disabled(store.controlsLocked)
                 }
             }
 
-            HStack(spacing: 8) {
-                Picker("Language", selection: $store.sourceLanguage) {
-                    ForEach(SpeechLanguage.allCases) { language in
-                        Text(language.nativeName).tag(language)
-                    }
-                }
-                .labelsHidden()
-                .pickerStyle(.menu)
-                .disabled(store.controlsLocked)
+            ScreenAudioSelectionControl(store: store, compact: true)
 
-                Picker("Model", selection: $store.engineID) {
-                    ForEach(TranscriptionEngineID.allCases) { engine in
-                        Text(engine.displayName).tag(engine)
-                    }
+            Picker("Language", selection: $store.sourceLanguage) {
+                ForEach(SpeechLanguage.allCases) { language in
+                    Text(language.nativeName).tag(language)
                 }
-                .labelsHidden()
-                .pickerStyle(.menu)
-                .disabled(store.controlsLocked)
             }
+            .pickerStyle(.menu)
+            .disabled(store.controlsLocked)
+
+            Picker("Model", selection: $store.engineID) {
+                ForEach(TranscriptionEngineID.allCases) { engine in
+                    Text(engine.displayName).tag(engine)
+                }
+            }
+            .pickerStyle(.menu)
+            .disabled(store.controlsLocked)
 
             if let pack = store.modelPack {
                 Text(pack.recommendation)
@@ -135,20 +147,27 @@ struct MenuBarView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
 
+            if let readinessMessage = store.selectedModelReadiness.message {
+                Label(readinessMessage, systemImage: "info.circle")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
             HStack(spacing: 8) {
-                Button(store.isRecording ? "Stop" : "Start") {
+                Button(store.isRecording ? "Stop Recording" : "Start Recording") {
                     store.toggleRecording()
                 }
                 .keyboardShortcut(.return, modifiers: [])
                 .buttonStyle(.borderedProminent)
                 .tint(store.isRecording ? .red : .accentColor)
-                .disabled(store.recordingState == .preparing || store.recordingState == .processing)
+                .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
 
-                Button("Download Model") {
+                Button(downloadButtonTitle) {
                     store.installSelectedModel()
                 }
                 .buttonStyle(.bordered)
-                .disabled(store.controlsLocked)
+                .disabled(!store.canInstallSelectedModel)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -157,7 +176,7 @@ struct MenuBarView: View {
     private var transcriptPreview: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Live transcript")
+                Text("Latest transcript")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -167,25 +186,38 @@ struct MenuBarView: View {
                     Image(systemName: "doc.on.doc")
                 }
                 .buttonStyle(.plain)
+                .help("Copy transcript")
+                .accessibilityLabel("Copy transcript")
                 .disabled(store.document.renderedText.isEmpty)
+
                 Button {
-                    store.clearTranscript()
+                    showingClearConfirmation = true
                 } label: {
                     Image(systemName: "trash")
                 }
                 .buttonStyle(.plain)
+                .help("Clear transcript")
+                .accessibilityLabel("Clear transcript")
                 .disabled(store.document.renderedText.isEmpty)
             }
 
             ScrollView {
-                Text(store.document.renderedText.isEmpty ? "Choose a local model, then start speaking." : store.document.renderedText)
-                    .font(.body)
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(10)
+                TranscriptContentView(
+                    document: store.document,
+                    emptyMessage: "Choose a ready local model, then start speaking."
+                )
+                .padding(10)
             }
             .frame(height: 130)
-            .background(.quaternary.opacity(0.45), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        }
+    }
+
+    private var downloadButtonTitle: String {
+        switch store.engineID {
+        case .appleSpeechAnalyzer: "Download Apple Assets"
+        case .whisperKitLargeV3Turbo: "Download Whisper"
+        case .nemotronStreamingExperimental: "Download Nemotron"
         }
     }
 

@@ -1,4 +1,6 @@
 import AppKit
+import Darwin
+import MimiCore
 import SwiftUI
 
 @MainActor
@@ -12,20 +14,94 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         NSApplication.shared.setActivationPolicy(.accessory)
 
         let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("--e2e-microphone-smoke") {
+            let store = AppStore(loadPersistedTranscript: false)
+            e2eStore = store
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let callbackCount = try await store.runMicrophoneCaptureSmokeTest()
+                    print("Mimi microphone smoke passed: \(callbackCount) audio callbacks in one second.")
+                    status = 0
+                } catch {
+                    print("Mimi microphone smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let engineSmoke = argument(after: "--e2e-engine-smoke", in: arguments) {
+            let store = AppStore(loadPersistedTranscript: false)
+            e2eStore = store
+            let engine: TranscriptionEngineID
+            switch engineSmoke {
+            case "whisper":
+                engine = .whisperKitLargeV3Turbo
+            case "nemotron":
+                engine = .nemotronStreamingExperimental
+            default:
+                engine = .appleSpeechAnalyzer
+            }
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    try await store.runEngineSmokeTest(engine: engine, language: .english)
+                    print("Mimi \(engine.displayName) smoke passed: local model started and stopped without retaining source audio.")
+                    status = 0
+                } catch {
+                    print("Mimi \(engine.displayName) smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
         guard arguments.contains("--e2e-window") else { return }
 
         let store = AppStore(loadPersistedTranscript: false)
         store.sourceLanguage = .japanese
         store.engineID = .whisperKitLargeV3Turbo
         store.translationMode = .translateFinalSegments
-        store.document.apply(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
-        store.document.apply(.final("Mimi keeps the transcript on this Mac."), language: .english)
+        store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
+        store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
 
-        let view = MenuBarView(store: store)
-        let window = NSWindow(contentViewController: NSHostingController(rootView: view))
-        window.title = "Mimi E2E Sample"
+        let screen = argument(after: "--e2e-screen", in: arguments) ?? "menu"
+        let presentationState = argument(after: "--e2e-state", in: arguments) ?? "ready"
+        switch presentationState {
+        case "recording":
+            store.applyPresentationFixture(state: .recording)
+        case "failed":
+            store.applyPresentationFixture(state: .failed("Microphone access needs attention"))
+        default:
+            break
+        }
+        let view: AnyView
+        let size: NSSize
+        switch screen {
+        case "transcript":
+            view = AnyView(TranscriptWindow(store: store))
+            size = NSSize(width: 820, height: 600)
+        case "settings":
+            view = AnyView(SettingsView(store: store))
+            size = NSSize(width: 560, height: 540)
+        default:
+            view = AnyView(MenuBarView(store: store))
+            size = NSSize(width: 430, height: 580)
+        }
+
+        let hostingController = NSHostingController(rootView: view)
+        // The smoke harness owns a fixed AppKit test window. Letting the
+        // hosting controller also resize it from intrinsic content produces a
+        // constraint feedback loop for a popover-width SwiftUI surface.
+        hostingController.sizingOptions = []
+        let window = NSWindow(contentViewController: hostingController)
+        window.title = "Mimi E2E \(screen.capitalized)"
         window.styleMask = [.titled, .closable, .miniaturizable]
-        window.setContentSize(NSSize(width: 420, height: 540))
+        if screen != "menu" {
+            window.styleMask.insert(.resizable)
+        }
+        window.setContentSize(size)
         window.center()
         window.makeKeyAndOrderFront(nil)
         NSApplication.shared.activate(ignoringOtherApps: true)
@@ -34,10 +110,17 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
         if arguments.contains("--e2e-auto-quit") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                print("Mimi UI smoke passed: menu-bar surface rendered deterministic English/Japanese sample data.")
+                print("Mimi UI smoke passed: \(screen) \(presentationState) surface rendered deterministic English/Japanese sample data.")
                 NSApplication.shared.terminate(nil)
             }
         }
+    }
+
+    private func argument(after flag: String, in arguments: [String]) -> String? {
+        guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else {
+            return nil
+        }
+        return arguments[index + 1]
     }
 }
 
@@ -47,8 +130,11 @@ struct MimiApp: App {
     @State private var store = AppStore()
 
     var body: some Scene {
-        MenuBarExtra("Mimi", systemImage: store.menuBarSymbolName) {
+        MenuBarExtra {
             MenuBarView(store: store)
+        } label: {
+            Label(store.isRecording ? "Mimi REC" : "Mimi", systemImage: store.menuBarSymbolName)
+                .accessibilityLabel(store.isRecording ? "Mimi recording microphone locally" : "Mimi ready")
         }
         .menuBarExtraStyle(.window)
 
@@ -60,5 +146,22 @@ struct MimiApp: App {
             TranscriptWindow(store: store)
         }
         .defaultSize(width: 760, height: 560)
+        .windowToolbarStyle(.unified)
+        .windowResizability(.contentMinSize)
+        .commands {
+            CommandMenu("Recording") {
+                Button(store.isRecording ? "Stop Recording" : "Start Recording") {
+                    store.toggleRecording()
+                }
+                .keyboardShortcut("r", modifiers: [.command, .shift])
+                .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
+
+                Button("Copy Transcript") {
+                    store.copyTranscript()
+                }
+                .keyboardShortcut("c", modifiers: [.command, .shift])
+                .disabled(store.document.renderedText.isEmpty)
+            }
+        }
     }
 }

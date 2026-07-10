@@ -1,12 +1,6 @@
 import CoreAudio
 import Foundation
-
-struct AudioInputDevice: Identifiable, Hashable {
-    let id: AudioDeviceID
-    let name: String
-
-    var displayName: String { name }
-}
+import MimiSession
 
 enum AudioDeviceCatalog {
     static func inputDevices() -> [AudioInputDevice] {

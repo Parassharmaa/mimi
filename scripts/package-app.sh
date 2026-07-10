@@ -21,6 +21,8 @@ lipo -create \
   "$INTEL_BUILD/release/Mimi" \
   -output "$APP/Contents/MacOS/Mimi"
 cp "$ROOT/App/Info.plist" "$APP/Contents/Info.plist"
+"$ROOT/scripts/prepare-mlx-metallib.sh" "$APP/Contents/MacOS" release required
+[[ -s "$APP/Contents/MacOS/mlx.metallib" ]]
 
 ARCHS="$(lipo -archs "$APP/Contents/MacOS/Mimi")"
 [[ "$ARCHS" == *arm64* && "$ARCHS" == *x86_64* ]]

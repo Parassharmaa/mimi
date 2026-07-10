@@ -1,6 +1,7 @@
 @preconcurrency import AVFoundation
 import Foundation
 import MimiCore
+import MimiSession
 import Speech
 
 @available(macOS 26.0, *)
@@ -27,7 +28,8 @@ final class AppleSpeechEngine {
     ) async throws {
         let transcriber = try await Self.makeTranscriber(for: language)
         if let request = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
-            try await request.downloadAndInstall()
+            _ = request
+            throw TranscriptionSessionError.appleAssetsNeedExplicitDownload
         }
 
         guard let analyzerFormat = await SpeechAnalyzer.bestAvailableAudioFormat(

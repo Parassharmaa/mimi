@@ -24,9 +24,11 @@
     <string>15.0</string>
     <key>LSUIElement</key>
     <true/>
-    <key>NSAudioCaptureUsageDescription</key>
-    <string>Mimi captures audio played by an app you choose to create a local transcript.</string>
-    <key>NSHighResolutionCapable</key>
+	<key>NSAudioCaptureUsageDescription</key>
+	<string>Mimi captures audio played by an app you choose to create a local transcript.</string>
+	<key>NSScreenCaptureUsageDescription</key>
+	<string>Mimi lets you choose an app or display whose audio it transcribes locally. Mimi does not save screen images.</string>
+	<key>NSHighResolutionCapable</key>
     <true/>
     <key>NSMicrophoneUsageDescription</key>
     <string>Mimi captures audio from the microphone you choose to create a local transcript.</string>

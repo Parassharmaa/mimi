@@ -1,5 +1,6 @@
 import Foundation
 import MimiCore
+import MimiSession
 @preconcurrency import WhisperKit
 
 @MainActor
@@ -7,7 +8,7 @@ final class WhisperKitAccuracyEngine {
     /// Argmax's compressed multilingual Large-v3 Core ML artifact. This is not
     /// labelled Turbo because it is not the separate full Turbo artifact.
     private let modelName = "large-v3-v20240930_626MB"
-    private let modelFolder: URL
+    private let modelCacheFolder: URL
     private let installMarkerURL: URL
     private var whisperKit: WhisperKit?
 
@@ -18,27 +19,41 @@ final class WhisperKitAccuracyEngine {
             appropriateFor: nil,
             create: true
         )) ?? fileManager.temporaryDirectory
-        modelFolder = support.appending(path: "Mimi/Models/WhisperKit", directoryHint: .isDirectory)
+        modelCacheFolder = support.appending(path: "Mimi/Models/WhisperKit", directoryHint: .isDirectory)
         installMarkerURL = support.appending(path: "Mimi/Models/WhisperKit/.mimi-large-v3-installed")
     }
 
     var isDownloaded: Bool {
-        FileManager.default.fileExists(atPath: installMarkerURL.path)
+        (try? installedModelFolder()) != nil
     }
 
     func ensureInstalled() throws {
-        guard isDownloaded else { throw WhisperModelError.notInstalled }
+        _ = try installedModelFolder()
     }
 
     func install() async throws {
-        if whisperKit == nil {
-            try FileManager.default.createDirectory(at: modelFolder, withIntermediateDirectories: true)
-            let config = makeConfiguration(download: true)
-            whisperKit = try await WhisperKit(config)
-            guard FileManager.default.createFile(atPath: installMarkerURL.path, contents: Data()) else {
-                throw WhisperModelError.installMarkerFailed
-            }
+        if isDownloaded {
+            try await loadInstalledModel()
+            return
         }
+
+        // WhisperKit treats a non-nil `modelFolder` as an already-local model
+        // and skips downloading. Download to our cache base first, then load
+        // the resolved snapshot folder with downloads disabled.
+        whisperKit = nil
+        try FileManager.default.createDirectory(at: modelCacheFolder, withIntermediateDirectories: true)
+        let downloadedFolder = try await WhisperKit.download(
+            variant: modelName,
+            downloadBase: modelCacheFolder
+        )
+        let loadedWhisperKit = try await WhisperKit(makeConfiguration(modelFolder: downloadedFolder))
+        do {
+            try Data(downloadedFolder.path.utf8).write(to: installMarkerURL, options: .atomic)
+        } catch {
+            whisperKit = nil
+            throw WhisperModelError.installMarkerFailed
+        }
+        whisperKit = loadedWhisperKit
     }
 
     func transcribe(recordingAt url: URL, language: SpeechLanguage) async throws -> String {
@@ -58,27 +73,44 @@ final class WhisperKitAccuracyEngine {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    func removeDownloadedModel() throws {
+    func removeDownloadedModel() async throws {
         // Core ML may retain an operating-system specialization cache; Mimi
         // removes every app-owned model weight and tokenizer it manages.
         whisperKit = nil
-        guard FileManager.default.fileExists(atPath: modelFolder.path) else { return }
-        try FileManager.default.removeItem(at: modelFolder)
+        guard FileManager.default.fileExists(atPath: modelCacheFolder.path) else { return }
+        try FileManager.default.removeItem(at: modelCacheFolder)
     }
 
     private func loadInstalledModel() async throws {
-        try ensureInstalled()
+        let folder = try installedModelFolder()
         if whisperKit == nil {
-            whisperKit = try await WhisperKit(makeConfiguration(download: false))
+            whisperKit = try await WhisperKit(makeConfiguration(modelFolder: folder))
         }
     }
 
-    private func makeConfiguration(download: Bool) -> WhisperKitConfig {
+    private func installedModelFolder() throws -> URL {
+        guard FileManager.default.fileExists(atPath: installMarkerURL.path),
+              let data = try? Data(contentsOf: installMarkerURL),
+              let path = String(data: data, encoding: .utf8),
+              !path.isEmpty else {
+            throw WhisperModelError.notInstalled
+        }
+
+        let folder = URL(fileURLWithPath: path).standardizedFileURL
+        let cachePath = modelCacheFolder.standardizedFileURL.path + "/"
+        guard folder.path.hasPrefix(cachePath),
+              FileManager.default.fileExists(atPath: folder.path) else {
+            throw WhisperModelError.notInstalled
+        }
+        return folder
+    }
+
+    private func makeConfiguration(modelFolder: URL) -> WhisperKitConfig {
         WhisperKitConfig(
             model: modelName,
             modelFolder: modelFolder.path,
             prewarm: true,
-            download: download
+            download: false
         )
     }
 }

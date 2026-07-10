@@ -12,18 +12,19 @@ Mimi is a native, local-first macOS transcription utility for English and Japane
 | Deployment target | macOS 15+ | Enables Apple Translation and Core Audio taps; macOS 26 unlocks the newer Apple live ASR engine. |
 | Default ASR on macOS 26 | Apple `SpeechAnalyzer` / `SpeechTranscriber` | On-device, designed for live/meeting transcription, system-managed locale assets. |
 | Accuracy ASR pack | WhisperKit / Whisper Large-v3 Core ML (626 MB) | Mature Swift integration, multilingual Japanese + English, explicit model download. |
-| New streaming candidate | NVIDIA Nemotron 3.5 Streaming 0.6B | Promising EN/JA streaming option, but not promoted until a native-Mac accuracy/latency bake-off passes. |
+| Experimental MLX ASR pack | `mlx-community/nemotron-3.5-asr-streaming-0.6b-8bit` (756 MB) | Direct Swift/MLX integration for English/Japanese post-stop accuracy passes. The underlying model supports streaming, but Mimi does not yet send it incremental live chunks. |
 | Translation | Apple Translation framework | EN↔JA is a local, on-demand language-pair download. Translate finalized segments only. |
-| Meeting/speaker capture | Core Audio process taps | Captures a selected Zoom/Chrome process without requesting screen pixels; mic and app audio stay as separate lanes. |
+| Meeting/speaker capture | ScreenCaptureKit content picker | The implemented audio-only lanes capture a person-selected app or display without registering a video output; microphone, app, and display audio stay separate. Core Audio process taps remain a later alternative. |
 
 ## V1 user flow
 
 1. Open Mimi from the menu bar.
 2. Choose **English** or **日本語** and a local model.
-3. Click **Download Model** explicitly; no large model is fetched on launch.
-4. Click **Start**. The menu-bar glyph and red `LOCAL` indicator make the active recording state clear.
-5. Read/copy the live transcript, then optionally translate finalized text into the other language.
-6. Temporary source audio is deleted after the transcription engine completes; transcript text remains local.
+3. If using **Selected App Audio** or **Selected Display Audio**, click the matching **Choose … Audio** control and make an explicit choice in the macOS content picker.
+4. Click **Download Model** explicitly; no large model is fetched on launch.
+5. Click **Start**. The menu-bar glyph and red `LOCAL` indicator make the active recording state clear.
+6. Read/copy the live transcript, then optionally translate finalized text into the other language.
+7. Temporary source audio is deleted after the transcription engine completes; transcript text remains local.
 
 ## Capture lanes
 
@@ -31,13 +32,16 @@ Mimi never blindly mixes your microphone and meeting audio. They are independent
 
 ```text
 Selected microphone ──┐
-                     ├─> PCM normalization ─> chosen ASR ─> final segments ─> local translation
-Selected app audio ───┘
+Selected app audio ───┼─> PCM normalization ─> chosen ASR ─> final segments ─> local translation
+Selected display audio┘
 ```
 
-- **Microphone** is the first complete lane and asks only for Microphone permission.
-- **Selected App Audio** and **All System Audio** are designed around Core Audio taps, but remain outside this initial release until the local physical-Mac permission smoke test is complete. On a browser, this will be process/app level (for example, Chrome audio), not a specific Meet tab.
-- ScreenCaptureKit is deliberately not the primary meeting-audio route. It remains a later option for a user-selected screen/window plus audio feature.
+- **Microphone** uses the selected microphone input and asks only for Microphone permission.
+- **Selected App Audio** presents the system ScreenCaptureKit picker in app-only mode. After an explicit selection, Mimi registers an audio output for that app's stream. On a browser this is app-level (for example, Chrome), not a specific Meet tab.
+- **Selected Display Audio** presents the system picker in display-only mode. After an explicit display selection, Mimi captures the audio associated with that display. It is deliberately not labeled unrestricted “all system audio.”
+- The implementation does not register a ScreenCaptureKit video output or build its own app/window picker. The system picker, its cancellation path, and the relevant macOS privacy flow remain visible to the person using Mimi.
+- Each lane is selected and started independently. Mimi does not mix microphone and speaker-output audio by default.
+- Core Audio process taps are still a planned alternative, not the capture mechanism claimed for this version.
 
 ## Model-pack contract
 
@@ -47,26 +51,32 @@ All engines conform to the same functional contract: report volatile partial tex
 | --- | --- | --- | --- | --- |
 | Apple Speech | Native live lane on macOS 26+ | Runtime-probed English/Japanese assets | System managed | Default where available |
 | Whisper Large-v3 (626 MB) | Local accuracy lane | English + Japanese | About 626 MB, selected by the user, stored in Mimi's app-managed model folder | Implemented and removable |
-| Nemotron 3.5 Streaming | Lowest-latency third-party candidate | English + Japanese | Not exposed until benchmarked | Experimental/gated |
+| Nemotron 3.5 MLX (756 MB) | Experimental post-stop accuracy pass, not live incremental ASR | English + Japanese | About 756 MB, selected by the user, revision-pinned in Mimi's app-managed cache | Implemented and removable; never the default without a Mac bake-off |
 | TranslateGemma | Higher-quality local translation candidate | English + Japanese | Requires Gemma terms/notice | Deferred |
 
-The rule is deliberate: no model is advertised as a quality default merely because it is new. A model graduates only after repeatable Mac measurements on English and Japanese meeting audio.
+No optional model is auto-downloaded or bundled with Mimi. The rule is deliberate: no model is advertised as a quality default merely because it is new. A model graduates only after repeatable Mac measurements on English and Japanese meeting audio.
 
 ## Acceptance gates
 
 ### Automated in CI
 
 - Dependency-free Swift self-tests for volatile/final transcript coalescing, Japanese rendering, and model routing (works with Command Line Tools, not just full Xcode).
-- Deterministic E2E executable covering English and Japanese source sessions.
+- Deterministic E2E executable covering English and Japanese source sessions, model install/remove gates, temporary-audio cleanup, and screen-audio selection/cancellation lifecycle.
+- Native MLX/Nemotron product compilation without fetching model weights.
 - A deterministic native menu-surface smoke launch that renders real SwiftUI sample data and exits automatically.
 - Swift package build, universal app packaging, signing verification, and `Info.plist` validation.
 
 ### Physical-Mac smoke suite
 
-- Microphone grant/deny/revoke and device route changes.
-- Core Audio tap permission, selected Zoom/Chrome audio, sleep/wake, and app restart.
-- Offline after Apple/WhisperKit model installation.
-- Apple versus WhisperKit EN WER / JA CER, time-to-first-partial, finalization delay, real-time factor, memory, and thermal behavior.
+- `scripts/run-microphone-smoke.sh`: microphone grant and one-second realtime
+  callback check without retaining source audio. Also verify deny/revoke and
+  device route changes manually.
+- `scripts/run-apple-speech-smoke.sh` and `scripts/run-whisper-smoke.sh`:
+  opt-in one-second local model checks after a person explicitly installs the
+  corresponding asset. They never download models from a test run.
+- ScreenCaptureKit app/display selection, picker cancellation, selected Zoom/Chrome audio, sleep/wake, app restart, and the relevant macOS privacy prompts.
+- Offline transcription after Apple, WhisperKit, or Nemotron installation. The real MLX Nemotron fixture smoke is opt-in and must use an already-downloaded local model; it never downloads weights as part of a test.
+- Apple versus WhisperKit versus Nemotron EN WER / JA CER, time-to-first-partial, finalization delay, real-time factor, memory, and thermal behavior. Nemotron must also be measured with its intended incremental-session API before Mimi describes it as a live lane.
 
 ## Explicit non-goals for the first PR
 
@@ -74,14 +84,18 @@ The rule is deliberate: no model is advertised as a quality default merely becau
 - Background launch/login-item auto-enable.
 - Cloud ASR or cloud translation.
 - Persistent source-audio archive by default.
-- Making the experimental Nemotron wrapper a default before it is tested on real Macs.
+- Making the experimental native MLX Nemotron post-stop pass a default, or presenting it as live incremental transcription, before it is tested on real Macs.
 
 ## Authoritative research links
 
 - [Apple: Bring advanced speech-to-text to your app with SpeechAnalyzer](https://developer.apple.com/videos/play/wwdc2025/277/)
 - [Apple: Capturing system audio with Core Audio taps](https://developer.apple.com/documentation/coreaudio/capturing-system-audio-with-core-audio-taps)
+- [Apple: Capturing screen content with ScreenCaptureKit](https://developer.apple.com/documentation/screencapturekit/capturing-screen-content-in-macos)
 - [Apple: TranslationSession](https://developer.apple.com/documentation/translation/translationsession)
 - [Apple: Designing for macOS](https://developer.apple.com/design/human-interface-guidelines/designing-for-macos/)
 - [WhisperKit / Argmax OSS Swift](https://github.com/argmaxinc/argmax-oss-swift)
+- [MLX Swift](https://github.com/ml-explore/mlx-swift)
+- [MLX Audio Swift](https://github.com/Blaizzy/mlx-audio-swift)
 - [NVIDIA Nemotron 3.5 ASR Streaming 0.6B](https://huggingface.co/nvidia/nemotron-3.5-asr-streaming-0.6b)
+- [MLX community Nemotron 8-bit conversion](https://huggingface.co/mlx-community/nemotron-3.5-asr-streaming-0.6b-8bit)
 - [Qwen3-ASR](https://github.com/QwenLM/Qwen3-ASR)
