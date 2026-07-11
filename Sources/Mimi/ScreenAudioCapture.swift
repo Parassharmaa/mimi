@@ -133,29 +133,45 @@ final class ScreenAudioCapture: NSObject, ScreenAudioCapturing {
     }
 }
 
-extension ScreenAudioCapture: @MainActor SCContentSharingPickerObserver {
-    func contentSharingPicker(
+extension ScreenAudioCapture: SCContentSharingPickerObserver {
+    /// ScreenCaptureKit delivers picker callbacks from its XPC connection,
+    /// rather than the main actor. Do not make these witness methods
+    /// `@MainActor`: Swift 6 correctly traps when the system invokes an
+    /// actor-isolated Objective-C callback on that queue. Hop explicitly
+    /// before touching the picker/session state instead.
+    nonisolated func contentSharingPicker(
         _ picker: SCContentSharingPicker,
         didCancelFor stream: SCStream?
     ) {
-        resolvePicker(.failure(ScreenAudioCaptureError.pickerCancelled))
+        Task { @MainActor [weak self] in
+            self?.resolvePicker(.failure(ScreenAudioCaptureError.pickerCancelled))
+        }
     }
 
-    func contentSharingPicker(
+    nonisolated func contentSharingPicker(
         _ picker: SCContentSharingPicker,
         didUpdateWith filter: SCContentFilter,
         for stream: SCStream?
     ) {
-        guard let source = pendingPickerSource else { return }
-        selectedFilter = filter
-        selectedScreenContent = ScreenAudioSelection(source: source, description: selectionDescription(for: source))
-        resolvePicker(.success(()))
+        Task { @MainActor [weak self] in
+            guard let self, let source = self.pendingPickerSource else { return }
+            self.selectedFilter = filter
+            self.selectedScreenContent = ScreenAudioSelection(
+                source: source,
+                description: self.selectionDescription(for: source)
+            )
+            self.resolvePicker(.success(()))
+        }
     }
 
-    func contentSharingPickerStartDidFailWithError(_ error: Error) {
-        resolvePicker(.failure(error))
+    nonisolated func contentSharingPickerStartDidFailWithError(_ error: Error) {
+        Task { @MainActor [weak self] in
+            self?.resolvePicker(.failure(error))
+        }
     }
+}
 
+extension ScreenAudioCapture {
     private func selectionDescription(for source: AudioSource) -> String {
         switch source {
         case .applicationAudio:
