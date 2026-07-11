@@ -117,11 +117,10 @@ struct FloatingCaptionView: View {
     @Bindable var preferences: UserPreferences
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @State private var configuration: TranslationSession.Configuration?
-    @State private var translatedText = ""
-    @State private var translatedSourceText = ""
-    @State private var requestedText = ""
-    @State private var pendingText = ""
-    @State private var isTranslating = false
+    @State private var pipeline = LiveTranslationPipeline()
+    @State private var configuredLanguage: SpeechLanguage?
+    @State private var latestTranslationInput: CaptionTranslationInput?
+    @State private var retryAfter: Date?
 
     private var sourceLanguage: SpeechLanguage {
         if store.isRecording {
@@ -132,8 +131,12 @@ struct FloatingCaptionView: View {
     private var sourceText: String {
         store.document.latestCaptionText
     }
-    private var synchronizedTranslation: String {
-        translatedSourceText == sourceText ? translatedText : ""
+    private var translationInput: CaptionTranslationInput {
+        CaptionTranslationInput(
+            text: sourceText,
+            language: sourceLanguage,
+            isEnabled: preferences.floatingCaptionContent != .original
+        )
     }
 
     var body: some View {
@@ -142,16 +145,16 @@ struct FloatingCaptionView: View {
                 if preferences.floatingCaptionContent != .translation {
                     caption(sourceText, secondary: preferences.floatingCaptionContent == .both)
                 }
-            if preferences.floatingCaptionContent != .original {
-                if !synchronizedTranslation.isEmpty {
-                    caption(synchronizedTranslation, secondary: false)
-                } else if !sourceText.isEmpty {
-                    Text("…")
-                        .font(.title2.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                if preferences.floatingCaptionContent != .original {
+                    if !pipeline.displayedTranslation.isEmpty {
+                        caption(pipeline.displayedTranslation, secondary: false)
+                    } else if !sourceText.isEmpty {
+                        Text("…")
+                            .font(.title2.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
                 }
-                }
-                if sourceText.isEmpty && translatedText.isEmpty {
+                if sourceText.isEmpty && pipeline.displayedTranslation.isEmpty {
                     Text(preferences.text("Captions will appear here", "字幕がここに表示されます"))
                         .foregroundStyle(.secondary)
                 }
@@ -191,60 +194,75 @@ struct FloatingCaptionView: View {
         }
         .padding(8)
         .translationTask(configuration) { @MainActor session in
-            let text = requestedText
-            guard !text.isEmpty else { return }
+            guard let request = pipeline.activeRequest else { return }
             do {
                 try await session.prepareTranslation()
-                let response = try await session.translate(text)
-                guard requestedText == text, pendingText == text else {
-                    isTranslating = false
-                    return
-                }
-                translatedText = response.targetText
-                translatedSourceText = text
+                let response = try await session.translate(request.text)
+                guard pipeline.activeRequest?.id == request.id else { return }
+                let next = pipeline.complete(requestID: request.id, translation: response.targetText)
+                retryAfter = nil
+                startAfterCurrentTask(next)
             } catch {
-                guard requestedText == text else { return }
-                translatedText = preferences.text("Translation is not ready yet.", "翻訳の準備がまだできていません。")
-            }
-            isTranslating = false
-        }
-        .onChange(of: sourceText, initial: true) { _, text in
-            pendingText = text
-            if text.isEmpty {
-                translatedText = ""
-                translatedSourceText = ""
+                guard pipeline.activeRequest?.id == request.id else { return }
+                let next = pipeline.fail(requestID: request.id)
+                retryAfter = Date().addingTimeInterval(1.5)
+                startAfterCurrentTask(next)
             }
         }
-        .task(id: sourceLanguage) {
+        .onChange(of: translationInput, initial: true) { _, input in
+            latestTranslationInput = input
+            guard input.text.isEmpty else { return }
+            pipeline.clear()
             configuration = nil
-            translatedText = ""
-            translatedSourceText = ""
-            requestedText = ""
+            configuredLanguage = nil
+            retryAfter = nil
+        }
+        .task {
             while !Task.isCancelled {
-                try? await Task.sleep(for: .milliseconds(250))
+                try? await Task.sleep(for: .milliseconds(180))
                 guard !Task.isCancelled,
-                      preferences.floatingCaptionContent != .original,
-                      !pendingText.isEmpty,
-                      pendingText != requestedText,
-                      !isTranslating else { continue }
-                requestedText = pendingText
-                isTranslating = true
-                if var configuration {
-                    configuration.invalidate()
-                    self.configuration = configuration
-                } else if #available(macOS 26.4, *) {
-                    configuration = .init(
-                        source: .init(identifier: sourceLanguage.rawValue),
-                        target: .init(identifier: sourceLanguage.translationTarget.rawValue),
-                        preferredStrategy: .lowLatency
-                    )
-                } else {
-                    configuration = .init(
-                        source: .init(identifier: sourceLanguage.rawValue),
-                        target: .init(identifier: sourceLanguage.translationTarget.rawValue)
-                    )
+                      let input = latestTranslationInput,
+                      input.isEnabled,
+                      !input.text.isEmpty,
+                      retryAfter.map({ Date() >= $0 }) ?? true else { continue }
+                // Sample at a steady cadence rather than debouncing: continuous
+                // speech must keep producing translations even if partials
+                // change more frequently than the sampling interval.
+                if let request = pipeline.enqueue(text: input.text, language: input.language) {
+                    startTranslation(request)
                 }
             }
+        }
+    }
+
+    private func startAfterCurrentTask(_ request: LiveTranslationPipeline.Request?) {
+        guard let request else { return }
+        Task { @MainActor in
+            await Task.yield()
+            guard pipeline.activeRequest?.id == request.id else { return }
+            startTranslation(request)
+        }
+    }
+
+    private func startTranslation(_ request: LiveTranslationPipeline.Request) {
+        if configuredLanguage == request.language, var configuration {
+            configuration.invalidate()
+            self.configuration = configuration
+            return
+        }
+
+        configuredLanguage = request.language
+        if #available(macOS 26.4, *) {
+            configuration = .init(
+                source: .init(identifier: request.language.rawValue),
+                target: .init(identifier: request.language.translationTarget.rawValue),
+                preferredStrategy: .lowLatency
+            )
+        } else {
+            configuration = .init(
+                source: .init(identifier: request.language.rawValue),
+                target: .init(identifier: request.language.translationTarget.rawValue)
+            )
         }
     }
 
@@ -255,8 +273,16 @@ struct FloatingCaptionView: View {
             .lineLimit(preferences.floatingCaptionContent == .both ? 2 : 4)
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .contentTransition(.opacity)
+            // Captions are a hot streaming path. Cross-fading every partial
+            // reads as blinking, so text updates are deliberately immediate.
+            .transaction { $0.animation = nil }
     }
+}
+
+private struct CaptionTranslationInput: Equatable {
+    let text: String
+    let language: SpeechLanguage
+    let isEnabled: Bool
 }
 
 private struct CaptionDragSurface: NSViewRepresentable {

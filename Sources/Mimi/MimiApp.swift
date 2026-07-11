@@ -386,7 +386,9 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         let screen = argument(after: "--e2e-screen", in: arguments) ?? "menu"
         let presentationState = argument(after: "--e2e-state", in: arguments) ?? "ready"
         let store = AppStore(loadPersistedTranscript: false)
-        store.languageMode = presentationState == "incremental-translation" ? .automatic : .japanese
+        store.languageMode = ["incremental-translation", "translation-stream", "caption-stream"].contains(presentationState)
+            ? .automatic
+            : .japanese
         store.engineID = .appleSpeechAnalyzer
         store.translationMode = .translateFinalSegments
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
@@ -394,7 +396,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
 
         switch presentationState {
-        case "recording":
+        case "recording", "translation-stream", "caption-stream":
             store.applyPresentationFixture(state: .recording)
         case "backpressure":
             store.applyPresentationFixture(
@@ -423,7 +425,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 store: store,
                 preferences: fixturePreferences,
                 isConfirmingClear: presentationState == "clear-confirmation",
-                fixtureTranslation: presentationState == "incremental-translation"
+                fixtureTranslation: ["incremental-translation", "translation-stream"].contains(presentationState)
                     ? nil
                     : "Hello. Mimi transcribes locally on this Mac.",
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"
@@ -479,6 +481,29 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         NSApplication.shared.activate(ignoringOtherApps: true)
         e2eStore = store
         e2eWindow = window
+
+        if presentationState == "caption-stream" {
+            Task { @MainActor in
+                for tick in 1...600 {
+                    try? await Task.sleep(for: .milliseconds(120))
+                    store.applyFixture(
+                        .partial("Live caption phrase \(tick) keeps growing without blinking"),
+                        language: .english
+                    )
+                }
+            }
+        } else if presentationState == "translation-stream" {
+            Task { @MainActor in
+                for tick in 1...180 {
+                    try? await Task.sleep(for: .milliseconds(300))
+                    let language: SpeechLanguage = tick.isMultiple(of: 2) ? .english : .japanese
+                    let text = language == .english
+                        ? "Sustained English sentence \(tick)."
+                        : "長時間テストの日本語文 \(tick)。"
+                    store.applyFixture(.final(text), language: language)
+                }
+            }
+        }
 
         if arguments.contains("--e2e-auto-quit") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

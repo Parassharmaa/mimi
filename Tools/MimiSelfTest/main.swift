@@ -9,8 +9,67 @@ struct MimiSelfTest {
         testInputLanguageChangeDoesNotRewriteTranscriptLanguage()
         testFloatingCaptionAlwaysUsesNewestUtterance()
         testIncrementalMixedLanguageTranslationQueue()
+        testLongHorizonCaptionTranslationCoalescing()
+        testLongHorizonFinalizedTranslationQueue()
         testRecommendedPacksCoverBothV1Languages()
-        print("Mimi self-test passed: transcript coalescing, Japanese finalization, and model routing.")
+        print("Mimi self-test passed: transcript coalescing, long-horizon translation, Japanese finalization, and model routing.")
+    }
+
+    private static func testLongHorizonCaptionTranslationCoalescing() {
+        var pipeline = LiveTranslationPipeline()
+        var completedRequests = 0
+        var hasShownTranslation = false
+
+        for index in 0..<10_000 {
+            let language: SpeechLanguage = index.isMultiple(of: 11) ? .japanese : .english
+            _ = pipeline.enqueue(text: "live phrase \(index)", language: language)
+
+            if index.isMultiple(of: 7), let active = pipeline.activeRequest {
+                _ = pipeline.complete(requestID: active.id, translation: "translated \(active.text)")
+                completedRequests += 1
+                hasShownTranslation = true
+            }
+
+            if hasShownTranslation {
+                expect(!pipeline.displayedTranslation.isEmpty, "A newer live partial never blanks the last good translation")
+            }
+        }
+
+        while let active = pipeline.activeRequest {
+            _ = pipeline.complete(requestID: active.id, translation: "translated \(active.text)")
+            completedRequests += 1
+        }
+
+        expect(pipeline.pendingRequest == nil, "The live translation queue drains after sustained speech")
+        expect(pipeline.displayedSourceText == "live phrase 9999", "Caption translation eventually catches the newest long-session partial")
+        expect(completedRequests < 2_000, "Ten thousand partials are coalesced into bounded translation work")
+        expect(
+            pipeline.enqueue(text: "live phrase 9999", language: .japanese) == nil,
+            "An unchanged translated caption is not submitted again every sampling tick"
+        )
+    }
+
+    private static func testLongHorizonFinalizedTranslationQueue() {
+        let segments = (0..<2_500).map { index in
+            TranscriptSegment(
+                text: index.isMultiple(of: 2) ? "English sentence \(index)" : "日本語の文 \(index)",
+                language: index.isMultiple(of: 2) ? .english : .japanese
+            )
+        }
+        var queue = SegmentTranslationQueue()
+        var completedIDs: Set<UUID> = []
+        var translatedLanguages: [SpeechLanguage] = []
+
+        while let segment = queue.beginNext(in: segments, completedIDs: completedIDs) {
+            expect(queue.activeSegmentID == segment.id, "Exactly one finalized sentence is active at a time")
+            expect(queue.finish(segment.id), "The active finalized sentence completes deterministically")
+            completedIDs.insert(segment.id)
+            translatedLanguages.append(segment.language)
+        }
+
+        expect(completedIDs.count == segments.count, "Every sentence translates during a long mixed-language session")
+        expect(translatedLanguages == segments.map(\.language), "Long-session translations preserve transcript order and per-sentence language")
+        expect(queue.activeSegmentID == nil, "The finalized translation queue never remains stuck loading after it drains")
     }
 
     private static func testIncrementalMixedLanguageTranslationQueue() {
