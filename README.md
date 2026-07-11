@@ -35,7 +35,7 @@ Mimi is intentionally provider-pluggable:
 | Nemotron 3.5 MLX (756 MB) | Experimental post-stop accuracy pass | Native Swift/MLX path for the 8-bit English/Japanese conversion. The underlying model is streaming-capable, but Mimi does not feed it live chunks in this version. |
 | Qwen3-ASR | Future quality lane | Strong current open ASR family, but native Swift/Mac tooling is still less mature. |
 
-The app will not quietly download model weights. The person using Mimi picks **Download Model** first. WhisperKit and Nemotron weights live in Mimi’s Application Support folder and can be removed from Settings; Apple assets remain system-managed. Neither optional model is bundled in the repository or release archive.
+The app will not quietly download model weights. Model setup lives in **Settings → Models**: Mimi checks the exact selected Apple language through `AssetInventory`, then shows **Checking**, **Needs download**, **Downloading**, **Ready**, or **Unavailable** instead of conflating macOS support with installed assets. Apple assets remain system-managed and language-specific; Whisper and Nemotron weights are app-managed, explicitly downloaded, and removable. Whisper shows truthful model-file progress, supports cancellation, and resumes partial downloads on retry. Neither optional model is bundled in the repository or release archive.
 
 ## Audio sources
 
@@ -60,7 +60,7 @@ scripts/build-app.sh debug
 open .build/Mimi.app
 ```
 
-The first microphone action triggers the standard macOS permission flow. Choosing app or display audio opens the system content picker and may require the relevant macOS privacy permission. The first Apple/WhisperKit translation or ASR model use may ask to download the language/model pack; Nemotron downloads only after an explicit Mimi action.
+The first microphone action triggers the standard macOS permission flow. Choosing app or display audio opens the system content picker and may require the relevant macOS privacy permission. Apple Speech never starts a hidden download: choose the selected English or Japanese system asset in **Settings → Models** and explicitly start setup. Whisper and Nemotron likewise download only after an explicit Mimi action.
 
 ## Verify
 
@@ -91,6 +91,7 @@ They never download a model implicitly and are intentionally excluded from CI.
 
 ```sh
 scripts/run-apple-speech-smoke.sh
+scripts/run-apple-speech-smoke.sh ja-JP
 scripts/run-whisper-smoke.sh
 ```
 
@@ -118,6 +119,7 @@ The CI archive is ad-hoc signed for local testing. It is not yet Developer-ID si
 ## References
 
 - [Apple SpeechAnalyzer](https://developer.apple.com/videos/play/wwdc2025/277/)
+- [Apple Speech asset inventory](https://developer.apple.com/documentation/speech/assetinventory)
 - [Apple Translation](https://developer.apple.com/documentation/translation/translationsession)
 - [Apple Core Audio taps](https://developer.apple.com/documentation/coreaudio/capturing-system-audio-with-core-audio-taps)
 - [Apple ScreenCaptureKit content capture](https://developer.apple.com/documentation/screencapturekit/capturing-screen-content-in-macos)

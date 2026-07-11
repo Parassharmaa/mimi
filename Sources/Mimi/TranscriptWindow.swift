@@ -44,14 +44,14 @@ struct TranscriptWindow: View {
                             Text(language.nativeName).tag(language)
                         }
                     }
-                    .disabled(store.controlsLocked)
+                    .disabled(store.controlsLocked || store.isModelSetupActive)
 
                     Picker("Model", selection: $store.engineID) {
                         ForEach(TranscriptionEngineID.allCases) { engine in
                             Text(engine.displayName).tag(engine)
                         }
                     }
-                    .disabled(store.controlsLocked)
+                    .disabled(store.controlsLocked || store.isModelSetupActive)
 
                     if let message = store.selectedModelReadiness.message {
                         Label(message, systemImage: "info.circle")

@@ -67,18 +67,50 @@ public protocol AppleLiveTranscribing: AnyObject {
     func stop() async
 }
 
+/// The real availability of the selected Apple Speech language asset. This is
+/// deliberately distinct from whether the Mac supports the SpeechAnalyzer API:
+/// a capable Mac can still need a per-language system download.
+public enum AppleSpeechAssetStatus: Equatable, Sendable {
+    case unsupported
+    case supported
+    case downloading
+    case installed
+}
+
 @MainActor
 public protocol AppleSpeechProviding: AnyObject {
-    var isAvailable: Bool { get }
+    /// Whether this Mac can use the SpeechAnalyzer API at all.
+    var isPlatformAvailable: Bool { get }
+    /// The actual asset state for the selected language on this Mac.
+    func assetStatus(for language: SpeechLanguage) async -> AppleSpeechAssetStatus
     func installAssets(for language: SpeechLanguage) async throws
     func makeEngine() throws -> any AppleLiveTranscribing
+}
+
+public struct ModelDownloadProgress: Equatable, Sendable {
+    /// The downloader's aggregate work units. Do not assume these are bytes:
+    /// WhisperKit currently reports equally weighted model-file units.
+    public let completedUnitCount: Int64
+    public let totalUnitCount: Int64
+
+    public init(completedUnitCount: Int64, totalUnitCount: Int64) {
+        self.completedUnitCount = completedUnitCount
+        self.totalUnitCount = totalUnitCount
+    }
+
+    public var fractionCompleted: Double? {
+        guard totalUnitCount > 0 else { return nil }
+        return min(1, max(0, Double(completedUnitCount) / Double(totalUnitCount)))
+    }
 }
 
 @MainActor
 public protocol WhisperAccuracyTranscribing: AnyObject {
     var isDownloaded: Bool { get }
     func ensureInstalled() throws
-    func install() async throws
+    func install(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws
     func transcribe(recordingAt url: URL, language: SpeechLanguage) async throws -> String
     func removeDownloadedModel() async throws
 }
@@ -139,8 +171,10 @@ public struct TranscriptionSessionDependencies {
 }
 
 public enum ModelReadiness: Equatable, Sendable {
+    case checking(String)
     case ready
     case needsDownload(String)
+    case downloading(String)
     case unavailable(String)
     case experimental(String)
 
@@ -148,7 +182,7 @@ public enum ModelReadiness: Equatable, Sendable {
         switch self {
         case .ready:
             nil
-        case let .needsDownload(message), let .unavailable(message), let .experimental(message):
+        case let .checking(message), let .needsDownload(message), let .downloading(message), let .unavailable(message), let .experimental(message):
             message
         }
     }
@@ -157,6 +191,63 @@ public enum ModelReadiness: Equatable, Sendable {
         if case .ready = self { return true }
         return false
     }
+
+    public var canInstall: Bool {
+        if case .needsDownload = self { return true }
+        return false
+    }
+}
+
+/// A model download is a separate background operation, not a recording state.
+/// This keeps a ready engine usable while another optional model is downloading.
+public enum ModelSetupState: Equatable, Sendable {
+    case idle
+    case checking(engine: TranscriptionEngineID, language: SpeechLanguage?)
+    case downloading(
+        engine: TranscriptionEngineID,
+        language: SpeechLanguage?,
+        progress: ModelDownloadProgress?
+    )
+    case prewarming(engine: TranscriptionEngineID, language: SpeechLanguage?)
+    case removing(engine: TranscriptionEngineID, language: SpeechLanguage?)
+    case waitingForSystem(engine: TranscriptionEngineID, language: SpeechLanguage?)
+    case cancelled(engine: TranscriptionEngineID, language: SpeechLanguage?)
+    case failed(engine: TranscriptionEngineID, language: SpeechLanguage?, message: String)
+
+    public var engine: TranscriptionEngineID? {
+        switch self {
+        case .idle:
+            nil
+        case let .checking(engine, _), let .downloading(engine, _, _), let .prewarming(engine, _),
+             let .removing(engine, _), let .waitingForSystem(engine, _), let .cancelled(engine, _),
+             let .failed(engine, _, _):
+            engine
+        }
+    }
+
+    public var language: SpeechLanguage? {
+        switch self {
+        case .idle:
+            nil
+        case let .checking(_, language), let .downloading(_, language, _), let .prewarming(_, language),
+             let .removing(_, language), let .waitingForSystem(_, language), let .cancelled(_, language),
+             let .failed(_, language, _):
+            language
+        }
+    }
+
+    public var isActive: Bool {
+        switch self {
+        case .checking, .downloading, .prewarming, .removing:
+            true
+        case .idle, .waitingForSystem, .cancelled, .failed:
+            false
+        }
+    }
+
+    public func matches(engine: TranscriptionEngineID, language: SpeechLanguage?) -> Bool {
+        self.engine == engine && self.language == language
+    }
 }
 
 @MainActor
@@ -164,14 +255,26 @@ public enum ModelReadiness: Equatable, Sendable {
 public final class TranscriptionSession {
     public var recordingState: RecordingState = .idle
     public var source: AudioSource = .microphone
-    public var sourceLanguage: SpeechLanguage = .english
-    public var engineID: TranscriptionEngineID
+    public var sourceLanguage: SpeechLanguage = .english {
+        didSet {
+            guard sourceLanguage != oldValue else { return }
+            scheduleSelectedModelReadinessRefresh()
+        }
+    }
+    public var engineID: TranscriptionEngineID {
+        didSet {
+            guard engineID != oldValue else { return }
+            scheduleSelectedModelReadinessRefresh()
+        }
+    }
     public var translationMode: TranslationMode = .off
     public var document: TranscriptDocument
     public var lastError: String?
     public var lastRecordingURL: URL?
     public var inputDevices: [AudioInputDevice]
     public var selectedInputDeviceID: UInt32?
+    public private(set) var appleSpeechAssetStatuses: [SpeechLanguage: AppleSpeechAssetStatus] = [:]
+    public private(set) var modelSetupState: ModelSetupState = .idle
 
     private let microphoneCapture: any MicrophoneCapturing
     private let screenAudioCapture: any ScreenAudioCapturing
@@ -184,6 +287,11 @@ public final class TranscriptionSession {
     @ObservationIgnored private var activeAudioFrames: RealtimeAudioFramePipe?
     @ObservationIgnored private var captureIsActive = false
     @ObservationIgnored private var modelStorageRevision = 0
+    @ObservationIgnored private var modelReadinessRefreshTask: Task<Void, Never>?
+    @ObservationIgnored private var appleSpeechDownloadRefreshTask: Task<Void, Never>?
+    @ObservationIgnored private var appleStatusGenerations: [SpeechLanguage: Int] = [:]
+    @ObservationIgnored private var modelSetupTask: Task<Void, Never>?
+    @ObservationIgnored private var modelSetupID: UUID?
 
     public init(
         dependencies: TranscriptionSessionDependencies,
@@ -197,7 +305,7 @@ public final class TranscriptionSession {
         nemotron = dependencies.nemotron
         storage = dependencies.storage
         inputDevices = dependencies.inputDevices
-        engineID = initialEngine ?? (dependencies.appleSpeech.isAvailable ? .appleSpeechAnalyzer : .whisperKitLargeV3Turbo)
+        engineID = initialEngine ?? (dependencies.appleSpeech.isPlatformAvailable ? .appleSpeechAnalyzer : .whisperKitLargeV3Turbo)
         document = loadPersistedTranscript ? dependencies.storage.loadLatestTranscript() : TranscriptDocument()
         dependencies.storage.removeStaleTemporaryRecordings()
     }
@@ -229,6 +337,7 @@ public final class TranscriptionSession {
 
     public var canRemoveSelectedModel: Bool {
         _ = modelStorageRevision
+        guard !modelSetupState.isActive else { return false }
         return switch engineID {
         case .whisperKitLargeV3Turbo: whisper.isDownloaded
         case .nemotronStreamingExperimental: nemotron.isDownloaded
@@ -237,11 +346,19 @@ public final class TranscriptionSession {
     }
 
     public var selectedModelReadiness: ModelReadiness {
+        if let activeReadiness = readinessDuringSelectedSetup {
+            return activeReadiness
+        }
+
         switch engineID {
         case .appleSpeechAnalyzer:
-            return appleSpeech.isAvailable
-                ? .ready
-                : .unavailable("Apple Speech live transcription requires macOS 26 or later.")
+            guard appleSpeech.isPlatformAvailable else {
+                return .unavailable("Apple Speech live transcription requires macOS 26 or later.")
+            }
+            guard let assetStatus = appleSpeechAssetStatuses[sourceLanguage] else {
+                return .checking("Checking the \(sourceLanguage.displayName) Apple Speech asset…")
+            }
+            return appleReadiness(for: assetStatus, language: sourceLanguage)
         case .whisperKitLargeV3Turbo:
             return whisper.isDownloaded
                 ? .ready
@@ -271,11 +388,35 @@ public final class TranscriptionSession {
     }
 
     public var canInstallSelectedModel: Bool {
-        guard !controlsLocked else { return false }
-        return switch engineID {
-        case .appleSpeechAnalyzer: appleSpeech.isAvailable
-        case .whisperKitLargeV3Turbo: true
-        case .nemotronStreamingExperimental: nemotron.runtimeAvailabilityMessage == nil
+        guard !controlsLocked, !modelSetupState.isActive else { return false }
+        return selectedModelReadiness.canInstall
+    }
+
+    public var selectedModelSetupState: ModelSetupState {
+        // The normal UI locks the selectors while setup is active. Preserve
+        // the active state anyway if a programmatic/model-selection race gets
+        // through, so the in-flight download never becomes invisible.
+        if modelSetupState.isActive {
+            return modelSetupState
+        }
+        return modelSetupState.matches(engine: engineID, language: selectedModelSetupLanguage)
+            ? modelSetupState
+            : .idle
+    }
+
+    public var canCancelSelectedModelInstall: Bool {
+        guard modelSetupState.matches(
+            engine: .whisperKitLargeV3Turbo,
+            language: nil
+        ) else {
+            return false
+        }
+
+        return switch modelSetupState {
+        case .downloading, .prewarming:
+            true
+        case .idle, .checking, .removing, .waitingForSystem, .cancelled, .failed:
+            false
         }
     }
 
@@ -315,55 +456,342 @@ public final class TranscriptionSession {
         }
     }
 
+    /// Re-checks the system-managed Apple asset for the selected language.
+    /// App-managed model markers are synchronous, so they only need an
+    /// observation refresh.
+    public func refreshSelectedModelReadiness() async {
+        switch engineID {
+        case .appleSpeechAnalyzer:
+            _ = await refreshAppleSpeechAssetStatus(for: sourceLanguage)
+        case .whisperKitLargeV3Turbo, .nemotronStreamingExperimental:
+            modelStorageRevision += 1
+        }
+    }
+
     public func installSelectedModel() {
-        Task { await installSelectedModelNow() }
+        guard let request = beginModelSetup() else { return }
+        modelSetupTask = Task { [weak self] in
+            await self?.performModelInstall(request)
+        }
     }
 
     public func installSelectedModelNow() async {
-        guard !controlsLocked else { return }
-        recordingState = .preparing
-        lastError = nil
+        guard let request = beginModelSetup() else { return }
+        await performModelInstall(request)
+    }
 
-        do {
-            switch engineID {
-            case .appleSpeechAnalyzer:
-                guard appleSpeech.isAvailable else { throw TranscriptionSessionError.appleSpeechRequiresMacOS26 }
-                try await appleSpeech.installAssets(for: sourceLanguage)
-            case .whisperKitLargeV3Turbo:
-                try await whisper.install()
-            case .nemotronStreamingExperimental:
-                try await nemotron.install()
-            }
-            modelStorageRevision += 1
-            recordingState = .idle
-        } catch {
-            record(error)
-        }
+    public func cancelSelectedModelInstall() {
+        guard canCancelSelectedModelInstall else { return }
+        modelSetupTask?.cancel()
     }
 
     public func removeSelectedModel() {
-        Task { await removeSelectedModelNow() }
+        guard let request = beginModelSetup(removing: true) else { return }
+        modelSetupTask = Task { [weak self] in
+            await self?.performModelRemoval(request)
+        }
     }
 
     public func removeSelectedModelNow() async {
-        guard !controlsLocked else { return }
-        recordingState = .preparing
+        guard let request = beginModelSetup(removing: true) else { return }
+        await performModelRemoval(request)
+    }
+
+    private func beginModelSetup(removing: Bool = false) -> ModelSetupRequest? {
+        guard !controlsLocked, !modelSetupState.isActive else { return nil }
+
+        let request = ModelSetupRequest(
+            id: UUID(),
+            engine: engineID,
+            language: engineID == .appleSpeechAnalyzer ? sourceLanguage : nil
+        )
+        // Setup is its own recoverable workflow. Do not leave a stale
+        // recording-start error pinned in the menu after the person chooses
+        // the action that resolves it.
         lastError = nil
+        if case .failed = recordingState {
+            recordingState = .idle
+        }
+        modelSetupID = request.id
+        modelSetupState = removing
+            ? .removing(engine: request.engine, language: request.language)
+            : .checking(engine: request.engine, language: request.language)
+        return request
+    }
+
+    private func performModelInstall(_ request: ModelSetupRequest) async {
+        defer { finishModelSetupTask(id: request.id) }
+
         do {
-            switch engineID {
+            try Task.checkCancellation()
+
+            switch request.engine {
+            case .appleSpeechAnalyzer:
+                guard appleSpeech.isPlatformAvailable else {
+                    throw TranscriptionSessionError.appleSpeechRequiresMacOS26
+                }
+                guard let language = request.language else { return }
+
+                let initialStatus = await refreshAppleSpeechAssetStatus(for: language)
+                try Task.checkCancellation()
+                switch initialStatus {
+                case .installed, .unsupported:
+                    updateModelSetup(.idle, for: request)
+                case .downloading:
+                    updateModelSetup(.waitingForSystem(engine: request.engine, language: language), for: request)
+                    scheduleAppleSpeechDownloadRefresh(for: language)
+                case .supported:
+                    updateModelSetup(.downloading(engine: request.engine, language: language, progress: nil), for: request)
+                    try await appleSpeech.installAssets(for: language)
+                    let finalStatus = await refreshAppleSpeechAssetStatus(for: language)
+                    switch finalStatus {
+                    case .installed, .unsupported:
+                        updateModelSetup(.idle, for: request)
+                    case .downloading:
+                        updateModelSetup(.waitingForSystem(engine: request.engine, language: language), for: request)
+                        scheduleAppleSpeechDownloadRefresh(for: language)
+                    case .supported:
+                        updateModelSetup(
+                            .failed(
+                                engine: request.engine,
+                                language: language,
+                                message: "macOS did not begin the \(language.displayName) Apple Speech download. Check your connection, then retry."
+                            ),
+                            for: request
+                        )
+                    }
+                }
+            case .whisperKitLargeV3Turbo:
+                updateModelSetup(.downloading(engine: request.engine, language: nil, progress: nil), for: request)
+                try await whisper.install { [weak self, request] progress in
+                    self?.updateWhisperDownloadProgress(progress, for: request)
+                }
+                modelStorageRevision += 1
+                updateModelSetup(.idle, for: request)
+            case .nemotronStreamingExperimental:
+                updateModelSetup(.downloading(engine: request.engine, language: nil, progress: nil), for: request)
+                try await nemotron.install()
+                modelStorageRevision += 1
+                updateModelSetup(.idle, for: request)
+            }
+        } catch {
+            if isCancellation(error) {
+                updateModelSetup(.cancelled(engine: request.engine, language: request.language), for: request)
+            } else {
+                if let language = request.language {
+                    _ = await refreshAppleSpeechAssetStatus(for: language)
+                }
+                updateModelSetup(
+                    .failed(engine: request.engine, language: request.language, message: error.localizedDescription),
+                    for: request
+                )
+            }
+        }
+    }
+
+    private func performModelRemoval(_ request: ModelSetupRequest) async {
+        defer { finishModelSetupTask(id: request.id) }
+
+        do {
+            switch request.engine {
             case .whisperKitLargeV3Turbo:
                 try await whisper.removeDownloadedModel()
                 modelStorageRevision += 1
-            case .appleSpeechAnalyzer:
-                lastError = "Apple's language assets are shared system models, so Mimi does not remove them."
             case .nemotronStreamingExperimental:
                 try await nemotron.removeDownloadedModel()
                 modelStorageRevision += 1
+            case .appleSpeechAnalyzer:
+                updateModelSetup(
+                    .failed(
+                        engine: request.engine,
+                        language: request.language,
+                        message: "Apple manages this shared language asset. Mimi cannot remove it."
+                    ),
+                    for: request
+                )
+                return
             }
-            recordingState = .idle
+            updateModelSetup(.idle, for: request)
         } catch {
-            record(error)
+            updateModelSetup(
+                .failed(engine: request.engine, language: request.language, message: error.localizedDescription),
+                for: request
+            )
         }
+    }
+
+    private var selectedModelSetupLanguage: SpeechLanguage? {
+        engineID == .appleSpeechAnalyzer ? sourceLanguage : nil
+    }
+
+    private var readinessDuringSelectedSetup: ModelReadiness? {
+        // Do not make a newly selected ready model look unavailable merely
+        // because a different model is downloading in the background.
+        guard modelSetupState.matches(engine: engineID, language: selectedModelSetupLanguage) else {
+            return nil
+        }
+        return switch selectedModelSetupState {
+        case .idle:
+            nil
+        case let .checking(engine, language):
+            .checking(modelSetupTitle(for: engine, language: language, verb: "Checking"))
+        case let .downloading(engine, language, progress):
+            .downloading(modelDownloadMessage(for: engine, language: language, progress: progress))
+        case let .prewarming(engine, language):
+            .downloading(modelSetupTitle(for: engine, language: language, verb: "Preparing"))
+        case let .removing(engine, language):
+            .checking(modelSetupTitle(for: engine, language: language, verb: "Removing"))
+        case let .waitingForSystem(_, language):
+            .downloading(
+                "macOS is downloading or waiting to download the \(language?.displayName ?? "selected") Apple Speech asset. You can use another ready model meanwhile."
+            )
+        case let .cancelled(engine, language):
+            engine == .whisperKitLargeV3Turbo
+                ? .needsDownload(
+                    "\(modelSetupTitle(for: engine, language: language, verb: "Download")) paused. Retry resumes any saved Whisper data."
+                )
+                : nil
+        case .failed:
+            // Keep actual model availability authoritative. The setup card
+            // retains the actionable error, while this value still prevents a
+            // false download CTA for unsupported Apple hardware/languages.
+            nil
+        }
+    }
+
+    private func appleReadiness(
+        for status: AppleSpeechAssetStatus,
+        language: SpeechLanguage
+    ) -> ModelReadiness {
+        return switch status {
+        case .installed:
+            .ready
+        case .supported:
+            .needsDownload(
+                "Download the macOS-managed \(language.displayName) Apple Speech asset before recording."
+            )
+        case .downloading:
+            .downloading(
+                "macOS is downloading or waiting to download the \(language.displayName) Apple Speech asset."
+            )
+        case .unsupported:
+            .unavailable(
+                "Apple Speech does not provide a local \(language.displayName) asset on this Mac. Choose Whisper Large-v3 instead."
+            )
+        }
+    }
+
+    private func modelSetupTitle(
+        for engine: TranscriptionEngineID,
+        language: SpeechLanguage?,
+        verb: String
+    ) -> String {
+        return switch engine {
+        case .appleSpeechAnalyzer:
+            "\(verb) \(language?.displayName ?? "Apple Speech") Apple Speech"
+        case .whisperKitLargeV3Turbo:
+            "\(verb) Whisper Large-v3"
+        case .nemotronStreamingExperimental:
+            "\(verb) Nemotron MLX"
+        }
+    }
+
+    private func modelDownloadMessage(
+        for engine: TranscriptionEngineID,
+        language: SpeechLanguage?,
+        progress: ModelDownloadProgress?
+    ) -> String {
+        guard engine == .whisperKitLargeV3Turbo, let progress else {
+            return modelSetupTitle(for: engine, language: language, verb: "Downloading")
+        }
+
+        if let fraction = progress.fractionCompleted {
+            return "Downloading Whisper Large-v3 — \(Int((fraction * 100).rounded()))%"
+        }
+        return "Downloading Whisper Large-v3…"
+    }
+
+    private func scheduleSelectedModelReadinessRefresh() {
+        modelReadinessRefreshTask?.cancel()
+        guard engineID == .appleSpeechAnalyzer else {
+            modelStorageRevision += 1
+            return
+        }
+
+        let language = sourceLanguage
+        modelReadinessRefreshTask = Task { [weak self] in
+            guard let self, !Task.isCancelled else { return }
+            _ = await self.refreshAppleSpeechAssetStatus(for: language)
+        }
+    }
+
+    private func refreshAppleSpeechAssetStatus(for language: SpeechLanguage) async -> AppleSpeechAssetStatus {
+        guard appleSpeech.isPlatformAvailable else {
+            appleSpeechAssetStatuses[language] = .unsupported
+            return .unsupported
+        }
+
+        let nextGeneration = (appleStatusGenerations[language] ?? 0) + 1
+        appleStatusGenerations[language] = nextGeneration
+        let status = await appleSpeech.assetStatus(for: language)
+        guard appleStatusGenerations[language] == nextGeneration else {
+            // The caller may be at the recording boundary. Even when a newer
+            // refresh owns the cache, this call must use its own freshly
+            // queried truth rather than an older cached `.installed` value.
+            return status
+        }
+
+        appleSpeechAssetStatuses[language] = status
+        if modelSetupState.matches(engine: .appleSpeechAnalyzer, language: language),
+           case .waitingForSystem = modelSetupState,
+           status != .downloading {
+            modelSetupState = .idle
+        }
+        return status
+    }
+
+    private func scheduleAppleSpeechDownloadRefresh(for language: SpeechLanguage) {
+        appleSpeechDownloadRefreshTask?.cancel()
+        appleSpeechDownloadRefreshTask = Task { [weak self] in
+            for _ in 0..<12 {
+                try? await Task.sleep(for: .seconds(5))
+                guard let self, !Task.isCancelled else { return }
+                let status = await self.refreshAppleSpeechAssetStatus(for: language)
+                guard status == .downloading else { return }
+            }
+        }
+    }
+
+    private func updateWhisperDownloadProgress(
+        _ progress: ModelDownloadProgress,
+        for request: ModelSetupRequest
+    ) {
+        updateModelSetup(
+            .downloading(engine: request.engine, language: request.language, progress: progress),
+            for: request
+        )
+    }
+
+    private func updateModelSetup(_ state: ModelSetupState, for request: ModelSetupRequest) {
+        guard modelSetupID == request.id else { return }
+        modelSetupState = state
+    }
+
+    private func finishModelSetupTask(id: UUID) {
+        guard modelSetupID == id else { return }
+        modelSetupID = nil
+        modelSetupTask = nil
+    }
+
+    private func isCancellation(_ error: Error) -> Bool {
+        Task.isCancelled || error is CancellationError || (error as? URLError)?.code == .cancelled
+    }
+
+    private func configurationMatchesCurrentSelection(_ configuration: SessionConfiguration) -> Bool {
+        configuration.source == source &&
+            configuration.language == sourceLanguage &&
+            configuration.engine == engineID &&
+            configuration.inputDeviceID == selectedInputDeviceID
     }
 
     public func startRecording() async {
@@ -374,6 +802,34 @@ public final class TranscriptionSession {
             engine: engineID,
             inputDeviceID: selectedInputDeviceID
         )
+
+        // Re-check Apple’s per-language asset at the recording boundary. The
+        // button is normally disabled until it is ready, but this protects the
+        // path from a system asset eviction or a stale UI refresh before any
+        // microphone permission/capture side effect can occur.
+        if configuration.engine == .appleSpeechAnalyzer {
+            switch await refreshAppleSpeechAssetStatus(for: configuration.language) {
+            case .installed:
+                break
+            case .supported:
+                record(TranscriptionSessionError.appleAssetsNeedExplicitDownload)
+                return
+            case .downloading:
+                record(TranscriptionSessionError.appleAssetsDownloading)
+                return
+            case .unsupported:
+                record(TranscriptionSessionError.appleSpeechLanguageUnavailable(configuration.language))
+                return
+            }
+        }
+
+        // AssetInventory is asynchronous. Do not let an older start attempt
+        // begin capture after a person has switched input, language, model, or
+        // microphone while macOS was checking the selected Apple asset.
+        guard !controlsLocked, configurationMatchesCurrentSelection(configuration) else {
+            return
+        }
+
         recordingState = .preparing
         lastError = nil
         activeSession = configuration
@@ -384,7 +840,7 @@ public final class TranscriptionSession {
             // surprise download.
             switch configuration.engine {
             case .appleSpeechAnalyzer:
-                guard appleSpeech.isAvailable else { throw TranscriptionSessionError.appleSpeechRequiresMacOS26 }
+                guard appleSpeech.isPlatformAvailable else { throw TranscriptionSessionError.appleSpeechRequiresMacOS26 }
             case .whisperKitLargeV3Turbo:
                 try whisper.ensureInstalled()
             case .nemotronStreamingExperimental:
@@ -660,6 +1116,12 @@ public final class TranscriptionSession {
     }
 }
 
+private struct ModelSetupRequest: Equatable, Sendable {
+    let id: UUID
+    let engine: TranscriptionEngineID
+    let language: SpeechLanguage?
+}
+
 private struct SessionConfiguration: Equatable, Sendable {
     let id: UUID
     let source: AudioSource
@@ -773,6 +1235,8 @@ public enum TranscriptionSessionError: LocalizedError {
     case microphonePermissionDenied
     case appleSpeechRequiresMacOS26
     case appleAssetsNeedExplicitDownload
+    case appleAssetsDownloading
+    case appleSpeechLanguageUnavailable(SpeechLanguage)
     case missingRecording
     case screenAudioSelectionRequired(AudioSource)
     case screenAudioStreamStopped(String?)
@@ -788,6 +1252,10 @@ public enum TranscriptionSessionError: LocalizedError {
             "Apple Speech live transcription requires macOS 26 or later. Choose Whisper Large-v3 on this Mac."
         case .appleAssetsNeedExplicitDownload:
             "Download Apple Speech's local language assets in Settings before starting."
+        case .appleAssetsDownloading:
+            "macOS is still downloading Apple Speech's local language asset. Use Whisper Large-v3 while it finishes, then check the model status."
+        case let .appleSpeechLanguageUnavailable(language):
+            "Apple Speech does not provide a local \(language.displayName) asset on this Mac. Choose Whisper Large-v3 instead."
         case .missingRecording:
             "Mimi could not find the local audio used for this accuracy pass."
         case let .screenAudioSelectionRequired(source):

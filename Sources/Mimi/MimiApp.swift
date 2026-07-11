@@ -43,11 +43,18 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             default:
                 engine = .appleSpeechAnalyzer
             }
+            let language: SpeechLanguage
+            switch argument(after: "--e2e-language", in: arguments) {
+            case "ja", "ja-JP":
+                language = .japanese
+            default:
+                language = .english
+            }
             Task { @MainActor in
                 let status: Int32
                 do {
-                    try await store.runEngineSmokeTest(engine: engine, language: .english)
-                    print("Mimi \(engine.displayName) smoke passed: local model started and stopped without retaining source audio.")
+                    try await store.runEngineSmokeTest(engine: engine, language: language)
+                    print("Mimi \(engine.displayName) \(language.displayName) smoke passed: local model started and stopped without retaining source audio.")
                     status = 0
                 } catch {
                     print("Mimi \(engine.displayName) smoke failed: \(error.localizedDescription)")
@@ -104,6 +111,10 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         window.setContentSize(size)
         window.center()
         window.makeKeyAndOrderFront(nil)
+        // The physical visual-QA runner may be launched while another app is
+        // active. Put this deterministic test window in front so the native
+        // surface can actually be inspected, rather than merely constructed.
+        window.orderFrontRegardless()
         NSApplication.shared.activate(ignoringOtherApps: true)
         e2eStore = store
         e2eWindow = window
@@ -134,7 +145,7 @@ struct MimiApp: App {
             MenuBarView(store: store)
         } label: {
             Label(store.isRecording ? "Mimi REC" : "Mimi", systemImage: store.menuBarSymbolName)
-                .accessibilityLabel(store.isRecording ? "Mimi recording microphone locally" : "Mimi ready")
+                .accessibilityLabel(menuBarAccessibilityLabel)
         }
         .menuBarExtraStyle(.window)
 
@@ -163,5 +174,12 @@ struct MimiApp: App {
                 .disabled(store.document.renderedText.isEmpty)
             }
         }
+    }
+
+    private var menuBarAccessibilityLabel: String {
+        if store.isRecording {
+            return "Mimi recording \(store.source.displayName.lowercased()) locally"
+        }
+        return "Mimi \(store.recordingState.label.lowercased())"
     }
 }

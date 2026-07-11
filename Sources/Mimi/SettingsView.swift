@@ -17,15 +17,23 @@ struct SettingsView: View {
                             Text(engine.displayName).tag(engine)
                         }
                     }
-                    .disabled(store.controlsLocked)
+                    .disabled(store.controlsLocked || store.isModelSetupActive)
 
-                    LabeledContent("Status") {
-                        Label(modelStatusText, systemImage: modelStatusSymbol)
-                            .foregroundStyle(store.selectedModelReadiness.canStart ? .primary : .secondary)
+                    Picker("Language", selection: $store.sourceLanguage) {
+                        ForEach(SpeechLanguage.allCases) { language in
+                            Text(language.nativeName).tag(language)
+                        }
                     }
+                    .disabled(store.controlsLocked || store.isModelSetupActive)
 
-                    LabeledContent("Language pack") {
-                        Text(store.sourceLanguage.nativeName)
+                    VStack(alignment: .leading, spacing: 7) {
+                        Text("Status")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                        ModelSetupStatusView(
+                            readiness: store.selectedModelReadiness,
+                            setupState: store.selectedModelSetupState
+                        )
                     }
 
                     if let pack = store.modelPack {
@@ -42,16 +50,39 @@ struct SettingsView: View {
                         }
                     }
 
-                    Button(downloadButtonTitle) {
-                        store.installSelectedModel()
+                    HStack(spacing: 8) {
+                        if store.canInstallSelectedModel {
+                            Button(modelActionTitle) {
+                                store.installSelectedModel()
+                            }
+                        }
+
+                        if store.canCancelSelectedModelInstall {
+                            Button("Cancel Download") {
+                                store.cancelSelectedModelInstall()
+                            }
+                        }
+
+                        if shouldShowAppleStatusCheck {
+                            Button("Check Apple Speech Status") {
+                                store.refreshSelectedModelReadiness()
+                            }
+                        }
                     }
-                    .disabled(!store.canInstallSelectedModel)
 
                     if store.canRemoveSelectedModel {
                         Button(removeButtonTitle, role: .destructive) {
                             store.removeSelectedModel()
                         }
                         .disabled(store.controlsLocked)
+                    }
+
+                    if case .unavailable = store.selectedModelReadiness,
+                       store.engineID == .appleSpeechAnalyzer {
+                        Button("Use Whisper Large-v3 Instead") {
+                            store.engineID = .whisperKitLargeV3Turbo
+                        }
+                        .disabled(store.controlsLocked || store.isModelSetupActive)
                     }
                 }
 
@@ -67,11 +98,11 @@ struct SettingsView: View {
 
             Form {
                 Section("Microphone") {
-                    LabeledContent("Microphone") {
-                        Label("Ready", systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
+                    LabeledContent("Microphone access") {
+                        Label("Requested when recording starts", systemImage: "mic")
+                            .foregroundStyle(.secondary)
                     }
-                    Text("Choose a microphone from the Session panel. Mimi makes the active local recording state visible in its menu-bar control and transcript window.")
+                    Text("Choose a microphone from the Session panel. Mimi asks macOS for access only when you begin a microphone recording, then shows the active local recording state in its menu-bar control and transcript window.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -118,21 +149,35 @@ struct SettingsView: View {
             .tabItem { Label("Capture", systemImage: "waveform") }
         }
         .frame(width: 560, height: 520)
+        .background(SettingsWindowRegistrar())
     }
 
-    private var modelStatusText: String {
-        store.selectedModelReadiness.message ?? "Ready to record locally"
-    }
-
-    private var modelStatusSymbol: String {
-        store.selectedModelReadiness.canStart ? "checkmark.circle" : "arrow.down.circle"
-    }
-
-    private var downloadButtonTitle: String {
+    private var modelActionTitle: String {
+        let retry = switch store.selectedModelSetupState {
+        case .cancelled, .failed:
+            true
+        case .idle, .checking, .downloading, .prewarming, .removing, .waitingForSystem:
+            false
+        }
+        let base: String
         switch store.engineID {
-        case .appleSpeechAnalyzer: "Download Apple Language Asset"
-        case .whisperKitLargeV3Turbo: "Download Whisper Large-v3"
-        case .nemotronStreamingExperimental: "Download Nemotron MLX"
+        case .appleSpeechAnalyzer:
+            base = "Download \(store.sourceLanguage.displayName) Apple Speech"
+        case .whisperKitLargeV3Turbo:
+            base = "Download Whisper Large-v3"
+        case .nemotronStreamingExperimental:
+            base = "Download Nemotron MLX"
+        }
+        return retry ? "Retry \(base)" : base
+    }
+
+    private var shouldShowAppleStatusCheck: Bool {
+        guard store.engineID == .appleSpeechAnalyzer else { return false }
+        return switch store.selectedModelReadiness {
+        case .checking, .downloading, .ready:
+            true
+        case .needsDownload, .unavailable, .experimental:
+            false
         }
     }
 

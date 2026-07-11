@@ -12,9 +12,14 @@ extension WhisperKitAccuracyEngine: WhisperAccuracyTranscribing {}
 
 @MainActor
 final class SystemAppleSpeechProvider: AppleSpeechProviding {
-    var isAvailable: Bool {
+    var isPlatformAvailable: Bool {
         if #available(macOS 26.0, *) { return true }
         return false
+    }
+
+    func assetStatus(for language: SpeechLanguage) async -> AppleSpeechAssetStatus {
+        guard #available(macOS 26.0, *) else { return .unsupported }
+        return await AppleSpeechEngine.assetStatus(for: language)
     }
 
     func installAssets(for language: SpeechLanguage) async throws {

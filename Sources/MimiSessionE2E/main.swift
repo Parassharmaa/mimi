@@ -15,8 +15,11 @@ struct MimiSessionE2E {
         await modelAndPermissionFailuresNeverStartCapture()
         await captureAndTranscriptionFailuresCleanUp()
         await modelLifecycleAndPersistenceEdges()
+        await modelSetupStateMachinesAreTruthfulAndRecoverable()
+        await appleStartBoundaryRejectsFreshMissingAssetDespiteStaleReadyCache()
+        await appleStartBoundaryAbandonsSupersededSelectionAfterAssetLookup()
         transcriptAndTranslationRoutingEdgeCases()
-        print("Mimi session E2E passed: model gates, capture lifecycle, EN/JA routing, cleanup, persistence, and realtime queue edges.")
+        print("Mimi session E2E passed: model setup states, capture lifecycle, EN/JA routing, cleanup, persistence, and realtime queue edges.")
     }
 
     @MainActor
@@ -464,7 +467,12 @@ struct MimiSessionE2E {
             await session.installSelectedModelNow()
 
             expect(apple.installCalls == 0, "Unavailable Apple Speech does not attempt asset installation")
-            expect(isFailed(session.recordingState), "Unavailable Apple Speech reports a clear failure")
+            expect(
+                session.selectedModelReadiness == .unavailable("Apple Speech live transcription requires macOS 26 or later."),
+                "Unavailable Apple Speech remains unavailable instead of showing a misleading download action"
+            )
+            expect(isSetupFailed(session.selectedModelSetupState), "Unavailable Apple Speech retains a setup-specific explanation")
+            expect(session.recordingState == .idle, "A setup failure does not masquerade as a failed recording")
         }
 
         do {
@@ -478,6 +486,261 @@ struct MimiSessionE2E {
             session.clearTranscript()
             expect(storage.clearCalls == 1 && session.document.renderedText.isEmpty, "Clear removes persisted and in-memory transcript together")
         }
+    }
+
+    @MainActor
+    private static func modelSetupStateMachinesAreTruthfulAndRecoverable() async {
+        do {
+            let capture = FakeCapture()
+            let apple = FakeAppleProvider()
+            apple.assetStatuses[.english] = .installed
+            apple.assetStatuses[.japanese] = .supported
+            let whisper = FakeWhisper(isDownloaded: true)
+            let storage = FakeStorage()
+            let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
+            session.engineID = .appleSpeechAnalyzer
+            session.sourceLanguage = .japanese
+
+            await session.refreshSelectedModelReadiness()
+            expect(
+                session.selectedModelReadiness == .needsDownload("Download the macOS-managed Japanese Apple Speech asset before recording."),
+                "Apple setup distinguishes a supported Japanese asset from an installed one"
+            )
+            expect(session.canInstallSelectedModel && !session.canStartRecording, "A missing Apple language asset enables setup and disables recording")
+
+            await session.startRecording()
+            expect(capture.permissionRequests == 0 && capture.startCount == 0, "Missing Apple assets are rejected before microphone permission or capture")
+
+            apple.statusAfterInstall = .installed
+            await session.installSelectedModelNow()
+            expect(apple.installCalls == 1, "Apple asset install is explicit and language-scoped")
+            expect(session.selectedModelReadiness == .ready && session.canStartRecording, "Apple is ready only after a post-install status check says installed")
+            expect(session.recordingState == .idle, "Successful model setup returns the recorder to idle")
+
+            session.sourceLanguage = .english
+            await session.refreshSelectedModelReadiness()
+            expect(session.selectedModelReadiness == .ready, "An installed English asset remains independently ready")
+            session.sourceLanguage = .japanese
+            expect(session.selectedModelReadiness == .ready, "The installed Japanese status is cached independently from English")
+        }
+
+        do {
+            let capture = FakeCapture()
+            let apple = FakeAppleProvider()
+            apple.assetStatuses[.japanese] = .supported
+            apple.statusAfterInstall = .downloading
+            let whisper = FakeWhisper(isDownloaded: true)
+            let storage = FakeStorage()
+            let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
+            session.engineID = .appleSpeechAnalyzer
+            session.sourceLanguage = .japanese
+
+            await session.installSelectedModelNow()
+            expect(isWaitingForSystem(session.selectedModelSetupState), "A post-install Apple download that continues in macOS is shown as waiting, not success")
+            expect(!session.canStartRecording && !session.canInstallSelectedModel, "A macOS-managed Apple download cannot record or start duplicate installers")
+            await session.startRecording()
+            expect(capture.permissionRequests == 0 && capture.startCount == 0, "A waiting Apple asset still blocks capture before permission")
+        }
+
+        do {
+            let capture = FakeCapture()
+            let apple = FakeAppleProvider()
+            // The first two reads are the setup preflight and post-install
+            // recheck. The third is the background poll scheduled while
+            // macOS continues the system-owned download.
+            apple.assetStatusSequence[.english] = [.supported, .downloading, .installed]
+            apple.statusAfterInstall = .downloading
+            let whisper = FakeWhisper(isDownloaded: true)
+            let storage = FakeStorage()
+            let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
+
+            await session.installSelectedModelNow()
+            expect(isWaitingForSystem(session.selectedModelSetupState), "Apple reports a truthful waiting state before the background system poll completes")
+            expect(!session.canStartRecording, "Apple remains non-recordable while the system download is in flight")
+
+            // `scheduleAppleSpeechDownloadRefresh` polls after five seconds.
+            // Leave a small deterministic margin for the main-actor update.
+            try? await Task.sleep(for: .seconds(6))
+            await yieldToMainActor()
+
+            expect(session.selectedModelSetupState == .idle, "A polled installed Apple asset clears the waiting setup state")
+            expect(session.selectedModelReadiness == .ready && session.canStartRecording, "A polled installed Apple asset becomes recordable without a manual status refresh")
+        }
+
+        do {
+            let capture = FakeCapture()
+            let apple = FakeAppleProvider()
+            let whisper = FakeWhisper(isDownloaded: false)
+            whisper.progressEvents = [.init(completedUnitCount: 1, totalUnitCount: 4)]
+            let storage = FakeStorage()
+            let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
+            session.engineID = .whisperKitLargeV3Turbo
+
+            var sawProgress = false
+            whisper.afterProgress = {
+                guard case let .downloading(engine, _, progress) = session.selectedModelSetupState else { return }
+                sawProgress = engine == .whisperKitLargeV3Turbo &&
+                    progress?.completedUnitCount == 1 &&
+                    progress?.totalUnitCount == 4 &&
+                    progress?.fractionCompleted == 0.25 &&
+                    !session.controlsLocked
+            }
+            await session.installSelectedModelNow()
+            expect(sawProgress, "Whisper setup exposes truthful file-unit progress without locking recording controls")
+            expect(session.selectedModelReadiness == .ready, "Whisper becomes ready after its explicit install and prewarm")
+
+            whisper.isDownloaded = false
+            whisper.installError = CancellationError()
+            await session.installSelectedModelNow()
+            expect(isSetupCancelled(session.selectedModelSetupState), "A cancelled Whisper download is not shown as a generic failure")
+            expect(session.recordingState == .idle && session.canInstallSelectedModel, "A cancelled Whisper download remains retryable without failing the recorder")
+        }
+
+        do {
+            let capture = FakeCapture()
+            let apple = FakeAppleProvider()
+            let whisper = FakeWhisper(isDownloaded: false)
+            whisper.progressEvents = [.init(completedUnitCount: 1, totalUnitCount: 2)]
+            let storage = FakeStorage()
+            let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
+            session.engineID = .whisperKitLargeV3Turbo
+
+            var cancelRemainedAvailableAfterSelectionChange = false
+            whisper.afterProgress = {
+                // Either the session locks the picker at its boundary, or it
+                // permits this change but keeps the in-flight download
+                // globally cancellable. In neither design may a download be
+                // orphaned merely because the visible selection changes.
+                session.engineID = .appleSpeechAnalyzer
+                cancelRemainedAvailableAfterSelectionChange = session.canCancelSelectedModelInstall
+                session.cancelSelectedModelInstall()
+            }
+
+            session.installSelectedModel()
+            await yieldToMainActor()
+
+            expect(cancelRemainedAvailableAfterSelectionChange, "An in-flight Whisper setup remains recoverable after a model-selection attempt")
+            expect(isSetupCancelled(session.modelSetupState), "Cancelling an in-flight task updates the global setup state even if the selection changed")
+            expect(!whisper.isDownloaded, "Cancelling an in-flight Whisper task never marks the model ready")
+
+            // Returning to the original model must expose a retryable state,
+            // regardless of whether the selection change was accepted or
+            // blocked while the task was active.
+            session.engineID = .whisperKitLargeV3Turbo
+            expect(isSetupCancelled(session.selectedModelSetupState) && session.canInstallSelectedModel, "The interrupted Whisper setup is retryable after returning to its model")
+
+            whisper.afterProgress = nil
+            await session.installSelectedModelNow()
+            expect(session.selectedModelSetupState == .idle && session.selectedModelReadiness == .ready, "A retried Whisper setup recovers cleanly after cancellation")
+        }
+
+        do {
+            let capture = FakeCapture()
+            let apple = FakeAppleProvider()
+            let whisper = FakeWhisper(isDownloaded: false)
+            whisper.installError = ProbeError.modelDownload
+            let storage = FakeStorage()
+            let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
+            session.engineID = .whisperKitLargeV3Turbo
+
+            await session.installSelectedModelNow()
+            expect(isSetupFailed(session.selectedModelSetupState), "A non-cancellation Whisper download error is retained as a model-setup failure")
+            expect(session.selectedModelReadiness.canStart == false && session.canInstallSelectedModel, "A failed Whisper download disables recording but exposes Retry")
+            expect(session.recordingState == .idle && capture.permissionRequests == 0 && capture.startCount == 0, "A failed model download never becomes a failed recording or starts capture")
+
+            whisper.installError = nil
+            await session.installSelectedModelNow()
+            expect(whisper.installCalls == 2, "Retry invokes the Whisper installer again after a non-cancellation failure")
+            expect(session.selectedModelSetupState == .idle && session.selectedModelReadiness == .ready, "A successful Retry clears the Whisper failure and makes it ready")
+        }
+    }
+
+    @MainActor
+    private static func appleStartBoundaryRejectsFreshMissingAssetDespiteStaleReadyCache() async {
+        let capture = FakeCapture()
+        let apple = FakeAppleProvider()
+        let whisper = FakeWhisper(isDownloaded: true)
+        let storage = FakeStorage()
+        let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
+
+        // First establish the normal, previously-ready cache value.
+        apple.scriptedAssetStatusResponses = [.immediate(.installed)]
+        await session.refreshSelectedModelReadiness()
+        expect(session.selectedModelReadiness == .ready, "The race fixture begins from an installed Apple Speech cache")
+
+        // Start observes a fresh, missing asset but suspends before it can
+        // return. A competing refresh subsequently preserves the old ready
+        // cache. The start boundary must honor its own fresh result rather
+        // than trusting that newer cache generation.
+        apple.scriptedAssetStatusResponses = [
+            .suspended(.supported),
+            .immediate(.installed)
+        ]
+        let startTask = Task { @MainActor in
+            await session.startRecording()
+        }
+        await waitUntil(
+            { apple.suspendedAssetStatusRequestCount == 1 },
+            "The start-boundary Apple asset lookup should reach its controlled suspension"
+        )
+
+        await session.refreshSelectedModelReadiness()
+        expect(session.selectedModelReadiness == .ready, "The competing refresh deliberately retains the stale ready cache")
+
+        apple.resumeSuspendedAssetStatus()
+        await startTask.value
+
+        expect(capture.permissionRequests == 0 && capture.startCount == 0, "A fresh missing Apple asset never prompts for or starts microphone capture even when the cache remains ready")
+        expect(apple.makeEngineCalls == 0, "A fresh missing Apple asset never constructs a live SpeechAnalyzer")
+        expect(isFailed(session.recordingState), "The start boundary surfaces the fresh missing-asset result instead of recording")
+    }
+
+    @MainActor
+    private static func appleStartBoundaryAbandonsSupersededSelectionAfterAssetLookup() async {
+        let capture = FakeCapture()
+        let apple = FakeAppleProvider()
+        let whisper = FakeWhisper(isDownloaded: true)
+        let storage = FakeStorage()
+        let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
+
+        // Mimic a normal ready menu state, then make only the next
+        // start-boundary AssetInventory lookup suspend.
+        apple.scriptedAssetStatusResponses = [.immediate(.installed)]
+        await session.refreshSelectedModelReadiness()
+        expect(session.canStartRecording, "The superseded-selection fixture starts from a recordable Apple Speech configuration")
+
+        apple.scriptedAssetStatusResponses = [.suspended(.installed)]
+        let startTask = Task { @MainActor in
+            await session.startRecording()
+        }
+        await waitUntil(
+            { apple.suspendedAssetStatusRequestCount == 1 },
+            "The start-boundary installed-asset lookup should suspend before capture"
+        )
+
+        // A person may change every session-affecting control while macOS is
+        // resolving the asset check. The stale start must be abandoned rather
+        // than capturing with its old microphone/Apple configuration.
+        session.source = .systemAudio
+        session.engineID = .whisperKitLargeV3Turbo
+        session.sourceLanguage = .japanese
+        session.selectedInputDeviceID = 42
+
+        apple.resumeSuspendedAssetStatus()
+        await startTask.value
+
+        expect(session.recordingState == .idle && !session.isRecording, "A superseded start attempt leaves the session idle")
+        expect(capture.permissionRequests == 0 && capture.startCount == 0, "A superseded start never requests microphone access or starts a microphone tap")
+        expect(apple.makeEngineCalls == 0 && apple.engine.startCount == 0, "A superseded start never constructs or starts the old Apple Speech engine")
+        expect(whisper.ensureCalls == 0, "A superseded start does not silently begin the newly selected Whisper session")
+        expect(storage.createdTemporaryURLs.isEmpty, "A superseded start creates no accuracy-pass recording file")
+        expect(
+            session.source == .systemAudio &&
+                session.engineID == .whisperKitLargeV3Turbo &&
+                session.sourceLanguage == .japanese &&
+                session.selectedInputDeviceID == 42,
+            "A superseded start preserves the person's new source, model, language, and microphone selection"
+        )
     }
 
     private static func transcriptAndTranslationRoutingEdgeCases() {
@@ -521,8 +784,35 @@ struct MimiSessionE2E {
         await Task.yield()
     }
 
+    @MainActor
+    private static func waitUntil(
+        _ condition: @escaping @MainActor () -> Bool,
+        _ failureMessage: String
+    ) async {
+        for _ in 0..<100 {
+            if condition() { return }
+            await Task.yield()
+        }
+        fatalError("Mimi session E2E failure: \(failureMessage)")
+    }
+
     private static func isFailed(_ state: RecordingState) -> Bool {
         if case .failed = state { return true }
+        return false
+    }
+
+    private static func isSetupFailed(_ state: ModelSetupState) -> Bool {
+        if case .failed = state { return true }
+        return false
+    }
+
+    private static func isSetupCancelled(_ state: ModelSetupState) -> Bool {
+        if case .cancelled = state { return true }
+        return false
+    }
+
+    private static func isWaitingForSystem(_ state: ModelSetupState) -> Bool {
+        if case .waitingForSystem = state { return true }
         return false
     }
 
@@ -679,19 +969,66 @@ private final class FakeAppleEngine: AppleLiveTranscribing {
 @MainActor
 private final class FakeAppleProvider: AppleSpeechProviding {
     let engine = FakeAppleEngine()
-    var isAvailable: Bool
+    var isPlatformAvailable: Bool
+    var assetStatuses: [SpeechLanguage: AppleSpeechAssetStatus]
+    var assetStatusSequence: [SpeechLanguage: [AppleSpeechAssetStatus]] = [:]
+    var scriptedAssetStatusResponses: [FakeAppleAssetStatusResponse] = []
+    var statusAfterInstall: AppleSpeechAssetStatus = .installed
     var installError: Error?
     var makeEngineError: Error?
+    private(set) var assetStatusRequests: [SpeechLanguage] = []
+    private(set) var suspendedAssetStatusRequestCount = 0
+    private var suspendedAssetStatusContinuation: CheckedContinuation<AppleSpeechAssetStatus, Never>?
+    private var suspendedAssetStatus: AppleSpeechAssetStatus?
     private(set) var installCalls = 0
     private(set) var makeEngineCalls = 0
 
     init(isAvailable: Bool = true) {
-        self.isAvailable = isAvailable
+        isPlatformAvailable = isAvailable
+        let initialStatus: AppleSpeechAssetStatus = isAvailable ? .installed : .unsupported
+        assetStatuses = [.english: initialStatus, .japanese: initialStatus]
+    }
+
+    func assetStatus(for language: SpeechLanguage) async -> AppleSpeechAssetStatus {
+        assetStatusRequests.append(language)
+        if !scriptedAssetStatusResponses.isEmpty {
+            let response = scriptedAssetStatusResponses.removeFirst()
+            switch response {
+            case let .immediate(status):
+                assetStatuses[language] = status
+                return status
+            case let .suspended(status):
+                assetStatuses[language] = status
+                suspendedAssetStatusRequestCount += 1
+                suspendedAssetStatus = status
+                return await withCheckedContinuation { continuation in
+                    suspendedAssetStatusContinuation = continuation
+                }
+            }
+        }
+        if var sequence = assetStatusSequence[language], let next = sequence.first {
+            sequence.removeFirst()
+            assetStatusSequence[language] = sequence
+            assetStatuses[language] = next
+            return next
+        }
+        return assetStatuses[language] ?? .unsupported
+    }
+
+    func resumeSuspendedAssetStatus() {
+        guard let continuation = suspendedAssetStatusContinuation else {
+            fatalError("Mimi session E2E failure: no suspended Apple asset status request to resume")
+        }
+        suspendedAssetStatusContinuation = nil
+        let status = suspendedAssetStatus ?? .unsupported
+        suspendedAssetStatus = nil
+        continuation.resume(returning: status)
     }
 
     func installAssets(for language: SpeechLanguage) async throws {
         installCalls += 1
         if let installError { throw installError }
+        assetStatuses[language] = statusAfterInstall
     }
 
     func makeEngine() throws -> any AppleLiveTranscribing {
@@ -701,11 +1038,18 @@ private final class FakeAppleProvider: AppleSpeechProviding {
     }
 }
 
+private enum FakeAppleAssetStatusResponse {
+    case immediate(AppleSpeechAssetStatus)
+    case suspended(AppleSpeechAssetStatus)
+}
+
 @MainActor
 private final class FakeWhisper: WhisperAccuracyTranscribing {
     var isDownloaded: Bool
     var ensureError: Error?
     var installError: Error?
+    var progressEvents: [ModelDownloadProgress] = []
+    var afterProgress: (() -> Void)?
     var transcribeError: Error?
     var transcription = ""
     private(set) var ensureCalls = 0
@@ -723,8 +1067,19 @@ private final class FakeWhisper: WhisperAccuracyTranscribing {
         guard isDownloaded else { throw ProbeError.modelNotInstalled }
     }
 
-    func install() async throws {
+    func install(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws {
         installCalls += 1
+        for progress in progressEvents {
+            onProgress(progress)
+            afterProgress?()
+            // Model downloads are expected to cooperate with task
+            // cancellation. This lets the deterministic suite exercise the
+            // public cancel action rather than only injecting a cancellation
+            // error from the fake.
+            try Task.checkCancellation()
+        }
         if let installError { throw installError }
         isDownloaded = true
     }
@@ -832,6 +1187,7 @@ private final class FakeStorage: TranscriptPersisting {
 private enum ProbeError: LocalizedError {
     case captureStart
     case transcription
+    case modelDownload
     case modelNotInstalled
     case screenPickerCancelled
     case runtimeUnavailable(String)
@@ -840,6 +1196,7 @@ private enum ProbeError: LocalizedError {
         switch self {
         case .captureStart: "Fixture capture start failed"
         case .transcription: "Fixture Whisper transcription failed"
+        case .modelDownload: "Fixture Whisper download failed"
         case .modelNotInstalled: "Fixture Whisper model is missing"
         case .screenPickerCancelled: "No app or display was selected."
         case let .runtimeUnavailable(message): message

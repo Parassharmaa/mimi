@@ -1,9 +1,11 @@
+import AppKit
 import MimiCore
 import SwiftUI
 
 struct MenuBarView: View {
     @Bindable var store: AppStore
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.openSettings) private var openSettings
     @State private var showingClearConfirmation = false
 
     init(store: AppStore) {
@@ -33,7 +35,9 @@ struct MenuBarView: View {
                 }
                 .buttonStyle(.borderless)
 
-                SettingsLink {
+                Button {
+                    openMimiSettings()
+                } label: {
                     Label("Settings", systemImage: "gearshape")
                 }
                 .buttonStyle(.borderless)
@@ -130,7 +134,7 @@ struct MenuBarView: View {
                 }
             }
             .pickerStyle(.menu)
-            .disabled(store.controlsLocked)
+            .disabled(store.controlsLocked || store.isModelSetupActive)
 
             Picker("Model", selection: $store.engineID) {
                 ForEach(TranscriptionEngineID.allCases) { engine in
@@ -138,21 +142,9 @@ struct MenuBarView: View {
                 }
             }
             .pickerStyle(.menu)
-            .disabled(store.controlsLocked)
+            .disabled(store.controlsLocked || store.isModelSetupActive)
 
-            if let pack = store.modelPack {
-                Text(pack.recommendation)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            if let readinessMessage = store.selectedModelReadiness.message {
-                Label(readinessMessage, systemImage: "info.circle")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
+            modelStatus
 
             HStack(spacing: 8) {
                 Button(store.isRecording ? "Stop Recording" : "Start Recording") {
@@ -163,13 +155,32 @@ struct MenuBarView: View {
                 .tint(store.isRecording ? .red : .accentColor)
                 .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
 
-                Button(downloadButtonTitle) {
-                    store.installSelectedModel()
+                if needsModelSetupAction {
+                    Button("Set Up Model…") {
+                        openMimiSettings()
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityHint("Opens the model setup window")
                 }
-                .buttonStyle(.bordered)
-                .disabled(!store.canInstallSelectedModel)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private var modelStatus: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if let pack = store.modelPack {
+                Text(pack.recommendation)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            ModelSetupStatusView(
+                readiness: store.selectedModelReadiness,
+                setupState: store.selectedModelSetupState,
+                compact: true
+            )
         }
     }
 
@@ -213,15 +224,20 @@ struct MenuBarView: View {
         }
     }
 
-    private var downloadButtonTitle: String {
-        switch store.engineID {
-        case .appleSpeechAnalyzer: "Download Apple Assets"
-        case .whisperKitLargeV3Turbo: "Download Whisper"
-        case .nemotronStreamingExperimental: "Download Nemotron"
-        }
+    private var needsModelSetupAction: Bool {
+        !store.selectedModelReadiness.canStart || store.selectedModelSetupState != .idle
     }
 
     private var statusColor: Color {
         store.isRecording ? .red : .accentColor
+    }
+
+    private func openMimiSettings() {
+        // This is the real Mimi Settings window, not a passive app
+        // activation. Registering the native window lets a menu-bar utility
+        // reliably bring it in front even when another app currently owns
+        // focus.
+        SettingsWindowFocusCoordinator.shared.requestFocus()
+        openSettings()
     }
 }

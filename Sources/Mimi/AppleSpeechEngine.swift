@@ -16,8 +16,38 @@ final class AppleSpeechEngine {
 
     static func installAssets(for language: SpeechLanguage) async throws {
         let transcriber = try await makeTranscriber(for: language)
+        switch await AssetInventory.status(forModules: [transcriber]) {
+        case .installed:
+            return
+        case .unsupported:
+            throw TranscriptionSessionError.appleSpeechLanguageUnavailable(language)
+        case .supported, .downloading:
+            break
+        @unknown default:
+            throw TranscriptionSessionError.appleSpeechLanguageUnavailable(language)
+        }
+
         if let request = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
             try await request.downloadAndInstall()
+        }
+    }
+
+    static func assetStatus(for language: SpeechLanguage) async -> AppleSpeechAssetStatus {
+        guard let transcriber = try? await makeTranscriber(for: language) else {
+            return .unsupported
+        }
+
+        switch await AssetInventory.status(forModules: [transcriber]) {
+        case .unsupported:
+            return .unsupported
+        case .supported:
+            return .supported
+        case .downloading:
+            return .downloading
+        case .installed:
+            return .installed
+        @unknown default:
+            return .unsupported
         }
     }
 
@@ -27,9 +57,17 @@ final class AppleSpeechEngine {
         onEvent: @escaping @MainActor (TranscriptEvent) -> Void
     ) async throws {
         let transcriber = try await Self.makeTranscriber(for: language)
-        if let request = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
-            _ = request
+        switch await AssetInventory.status(forModules: [transcriber]) {
+        case .installed:
+            break
+        case .supported:
             throw TranscriptionSessionError.appleAssetsNeedExplicitDownload
+        case .downloading:
+            throw TranscriptionSessionError.appleAssetsDownloading
+        case .unsupported:
+            throw TranscriptionSessionError.appleSpeechLanguageUnavailable(language)
+        @unknown default:
+            throw TranscriptionSessionError.appleSpeechLanguageUnavailable(language)
         }
 
         guard let analyzerFormat = await SpeechAnalyzer.bestAvailableAudioFormat(

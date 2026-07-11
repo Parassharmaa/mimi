@@ -13,7 +13,7 @@ final class AppStore {
 
     init(loadPersistedTranscript: Bool = true) {
         inputDevicesProvider = AudioDeviceCatalog.inputDevices
-        session = TranscriptionSession(
+        let createdSession = TranscriptionSession(
             dependencies: .init(
                 microphoneCapture: MicrophoneCapture(),
                 screenAudioCapture: ScreenAudioCapture(),
@@ -25,6 +25,10 @@ final class AppStore {
             ),
             loadPersistedTranscript: loadPersistedTranscript
         )
+        session = createdSession
+        Task { [weak createdSession] in
+            await createdSession?.refreshSelectedModelReadiness()
+        }
     }
 
     var recordingState: RecordingState { session.recordingState }
@@ -58,8 +62,12 @@ final class AppStore {
     var modelPack: LocalModelPack? { session.modelPack }
     var canRemoveSelectedModel: Bool { session.canRemoveSelectedModel }
     var selectedModelReadiness: ModelReadiness { session.selectedModelReadiness }
+    var modelSetupState: ModelSetupState { session.modelSetupState }
+    var selectedModelSetupState: ModelSetupState { session.selectedModelSetupState }
+    var isModelSetupActive: Bool { session.modelSetupState.isActive }
     var canStartRecording: Bool { session.canStartRecording }
     var canInstallSelectedModel: Bool { session.canInstallSelectedModel }
+    var canCancelSelectedModelInstall: Bool { session.canCancelSelectedModelInstall }
 
     func toggleRecording() {
         session.toggleRecording()
@@ -67,6 +75,14 @@ final class AppStore {
 
     func installSelectedModel() {
         session.installSelectedModel()
+    }
+
+    func cancelSelectedModelInstall() {
+        session.cancelSelectedModelInstall()
+    }
+
+    func refreshSelectedModelReadiness() {
+        Task { await session.refreshSelectedModelReadiness() }
     }
 
     func removeSelectedModel() {

@@ -31,9 +31,13 @@ final class WhisperKitAccuracyEngine {
         _ = try installedModelFolder()
     }
 
-    func install() async throws {
+    func install(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws {
+        try Task.checkCancellation()
         if isDownloaded {
             try await loadInstalledModel()
+            try Task.checkCancellation()
             return
         }
 
@@ -42,16 +46,32 @@ final class WhisperKitAccuracyEngine {
         // the resolved snapshot folder with downloads disabled.
         whisperKit = nil
         try FileManager.default.createDirectory(at: modelCacheFolder, withIntermediateDirectories: true)
-        let downloadedFolder = try await WhisperKit.download(
-            variant: modelName,
-            downloadBase: modelCacheFolder
+        let progressRelay = WhisperDownloadProgressRelay(onProgress)
+        let downloadedFolder = try await Self.downloadModel(
+            named: modelName,
+            to: modelCacheFolder,
+            progressRelay: progressRelay
         )
+        // A cancelled download can still return a reusable partial/full
+        // snapshot from the underlying hub. Keep those files for retry, but
+        // never mark the model ready unless prewarm also completes.
+        try Task.checkCancellation()
         let loadedWhisperKit = try await WhisperKit(makeConfiguration(modelFolder: downloadedFolder))
+        try Task.checkCancellation()
         do {
             try Data(downloadedFolder.path.utf8).write(to: installMarkerURL, options: .atomic)
         } catch {
             whisperKit = nil
             throw WhisperModelError.installMarkerFailed
+        }
+        do {
+            try Task.checkCancellation()
+        } catch {
+            // The snapshot remains cached for a later retry; only the marker
+            // is removed so this cancelled task is never treated as ready.
+            try? FileManager.default.removeItem(at: installMarkerURL)
+            whisperKit = nil
+            throw error
         }
         whisperKit = loadedWhisperKit
     }
@@ -113,6 +133,20 @@ final class WhisperKitAccuracyEngine {
             download: false
         )
     }
+
+    nonisolated private static func downloadModel(
+        named modelName: String,
+        to modelCacheFolder: URL,
+        progressRelay: WhisperDownloadProgressRelay
+    ) async throws -> URL {
+        try await WhisperKit.download(
+            variant: modelName,
+            downloadBase: modelCacheFolder,
+            progressCallback: { progress in
+                progressRelay.report(progress)
+            }
+        )
+    }
 }
 
 private enum WhisperModelError: LocalizedError {
@@ -125,6 +159,27 @@ private enum WhisperModelError: LocalizedError {
             "Download Whisper Large-v3 (626 MB) explicitly before starting an accuracy-pass recording."
         case .installMarkerFailed:
             "Whisper downloaded, but Mimi could not mark the local model as ready. Check available disk space and try again."
+        }
+    }
+}
+
+/// WhisperKit reports Foundation `Progress` from a downloader callback that
+/// is not actor-isolated. Copy its scalar values before hopping to Mimi's
+/// main-actor session state; never pass `Progress` itself across executors.
+private final class WhisperDownloadProgressRelay: @unchecked Sendable {
+    private let callback: @MainActor @Sendable (ModelDownloadProgress) -> Void
+
+    init(_ callback: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void) {
+        self.callback = callback
+    }
+
+    func report(_ progress: Progress) {
+        let snapshot = ModelDownloadProgress(
+            completedUnitCount: progress.completedUnitCount,
+            totalUnitCount: progress.totalUnitCount
+        )
+        Task { @MainActor [callback] in
+            callback(snapshot)
         }
     }
 }
