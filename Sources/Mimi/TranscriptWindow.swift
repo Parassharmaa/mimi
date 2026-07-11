@@ -3,10 +3,11 @@ import SwiftUI
 
 struct TranscriptWindow: View {
     @Bindable var store: AppStore
-    @State private var showingClearConfirmation = false
+    @State private var isConfirmingClear = false
 
-    init(store: AppStore) {
+    init(store: AppStore, isConfirmingClear: Bool = false) {
         self.store = store
+        _isConfirmingClear = State(initialValue: isConfirmingClear)
     }
 
     var body: some View {
@@ -87,6 +88,13 @@ struct TranscriptWindow: View {
                     .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
                 }
 
+                if let message = store.lastError {
+                    Label(message, systemImage: "exclamationmark.triangle.fill")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .accessibilityLabel("Recording warning: \(message)")
+                }
+
                 ScrollView {
                     TranscriptContentView(
                         document: store.document,
@@ -110,30 +118,42 @@ struct TranscriptWindow: View {
             .navigationTitle("Transcript")
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
-                    Button {
-                        store.copyTranscript()
-                    } label: {
-                        Label("Copy Transcript", systemImage: "doc.on.doc")
-                    }
-                    .keyboardShortcut("c", modifiers: [.command, .shift])
-                    .disabled(store.document.renderedText.isEmpty)
+                    if isConfirmingClear {
+                        Text("Clear saved transcript?")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
 
-                    Button(role: .destructive) {
-                        showingClearConfirmation = true
-                    } label: {
-                        Label("Clear Transcript", systemImage: "trash")
+                        Button("Cancel") {
+                            isConfirmingClear = false
+                        }
+                        .keyboardShortcut(.cancelAction)
+                        .buttonStyle(.bordered)
+
+                        Button("Clear", role: .destructive) {
+                            store.clearTranscript()
+                            isConfirmingClear = false
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.red)
+                    } else {
+                        Button {
+                            store.copyTranscript()
+                        } label: {
+                            Label("Copy Transcript", systemImage: "doc.on.doc")
+                        }
+                        .keyboardShortcut("c", modifiers: [.command, .shift])
+                        .disabled(store.document.renderedText.isEmpty)
+
+                        Button(role: .destructive) {
+                            isConfirmingClear = true
+                        } label: {
+                            Label("Clear Transcript", systemImage: "trash")
+                        }
+                        .accessibilityHint("Shows an inline confirmation before removing the local transcript")
+                        .disabled(store.document.renderedText.isEmpty)
                     }
-                    .disabled(store.document.renderedText.isEmpty)
                 }
             }
-        }
-        .confirmationDialog("Clear local transcript?", isPresented: $showingClearConfirmation, titleVisibility: .visible) {
-            Button("Clear Transcript", role: .destructive) {
-                store.clearTranscript()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This removes the stored transcript from this Mac. Mimi does not retain source audio after a completed session.")
         }
     }
 }

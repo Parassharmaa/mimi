@@ -11,3 +11,4 @@ swift build --product MimiMLXRuntimeE2E
 "$ROOT/.build/debug/MimiSelfTest"
 swift run MimiE2E
 swift run MimiSessionE2E
+scripts/run-ui-smoke.sh

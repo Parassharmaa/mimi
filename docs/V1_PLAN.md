@@ -12,7 +12,7 @@ Mimi is a native, local-first macOS transcription utility for English and Japane
 | Deployment target | macOS 15+ | Enables Apple Translation and Core Audio taps; macOS 26 unlocks the newer Apple live ASR engine. |
 | Default ASR on macOS 26 | Apple `SpeechAnalyzer` / `SpeechTranscriber` | On-device, designed for live/meeting transcription, system-managed locale assets. |
 | Accuracy ASR pack | WhisperKit / Whisper Large-v3 Core ML (626 MB) | Mature Swift integration, multilingual Japanese + English, explicit model download. |
-| Experimental MLX ASR pack | `mlx-community/nemotron-3.5-asr-streaming-0.6b-8bit` (756 MB) | Direct Swift/MLX integration for English/Japanese post-stop accuracy passes. The underlying model supports streaming, but Mimi does not yet send it incremental live chunks. |
+| Experimental MLX ASR pack | `mlx-community/nemotron-3.5-asr-streaming-0.6b-8bit` (756 MB) | Direct Swift/MLX integration for English/Japanese bounded live caption windows across every capture lane. |
 | Translation | Apple Translation framework | EN↔JA is a local, on-demand language-pair download. Translate finalized segments only. |
 | Meeting/speaker capture | ScreenCaptureKit content picker | The implemented audio-only lanes capture a person-selected app or display without registering a video output; microphone, app, and display audio stay separate. Core Audio process taps remain a later alternative. |
 
@@ -24,7 +24,7 @@ Mimi is a native, local-first macOS transcription utility for English and Japane
 4. Click **Download Model** explicitly; no large model is fetched on launch.
 5. Click **Start**. The menu-bar glyph and red `LOCAL` indicator make the active recording state clear.
 6. Read/copy the live transcript, then optionally translate finalized text into the other language.
-7. Temporary source audio is deleted after the transcription engine completes; transcript text remains local.
+7. Whisper's temporary source audio is deleted after its accuracy pass; Apple Speech and live Nemotron process bounded PCM in memory without writing a source-audio file. Transcript text remains local.
 
 ## Capture lanes
 
@@ -51,7 +51,7 @@ All engines conform to the same functional contract: report volatile partial tex
 | --- | --- | --- | --- | --- |
 | Apple Speech | Native live lane on macOS 26+ | Runtime-probed English/Japanese assets | System managed | Default where available |
 | Whisper Large-v3 (626 MB) | Local accuracy lane | English + Japanese | About 626 MB, selected by the user, stored in Mimi's app-managed model folder | Implemented and removable |
-| Nemotron 3.5 MLX (756 MB) | Experimental post-stop accuracy pass, not live incremental ASR | English + Japanese | About 756 MB, selected by the user, revision-pinned in Mimi's app-managed cache | Implemented and removable; never the default without a Mac bake-off |
+| Nemotron 3.5 MLX (756 MB) | Experimental bounded live captions | English + Japanese | About 756 MB, selected by the user, revision-pinned in Mimi's app-managed cache | Streams 560 ms chunks, commits on a pause or hard 30-second cap, and is never the default without a Mac bake-off |
 | TranslateGemma | Higher-quality local translation candidate | English + Japanese | Requires Gemma terms/notice | Deferred |
 
 No optional model is auto-downloaded or bundled with Mimi. The rule is deliberate: no model is advertised as a quality default merely because it is new. A model graduates only after repeatable Mac measurements on English and Japanese meeting audio.
@@ -75,8 +75,8 @@ No optional model is auto-downloaded or bundled with Mimi. The rule is deliberat
   opt-in one-second local model checks after a person explicitly installs the
   corresponding asset. They never download models from a test run.
 - ScreenCaptureKit app/display selection, picker cancellation, selected Zoom/Chrome audio, sleep/wake, app restart, and the relevant macOS privacy prompts.
-- Offline transcription after Apple, WhisperKit, or Nemotron installation. The real MLX Nemotron fixture smoke is opt-in and must use an already-downloaded local model; it never downloads weights as part of a test.
-- Apple versus WhisperKit versus Nemotron EN WER / JA CER, time-to-first-partial, finalization delay, real-time factor, memory, and thermal behavior. Nemotron must also be measured with its intended incremental-session API before Mimi describes it as a live lane.
+- Offline transcription after Apple, WhisperKit, or Nemotron installation. The real MLX Nemotron fixture and direct-executable live PCM smoke checks are opt-in and must use an already-downloaded local model; they never download weights as part of a test.
+- Apple versus WhisperKit versus Nemotron EN WER / JA CER, time-to-first-partial, finalization delay, real-time factor, memory, and thermal behavior. The bounded Nemotron path must be benchmarked on real Macs before it becomes a default or is described as seamless long-meeting ASR.
 
 ## Explicit non-goals for the first PR
 
@@ -84,7 +84,7 @@ No optional model is auto-downloaded or bundled with Mimi. The rule is deliberat
 - Background launch/login-item auto-enable.
 - Cloud ASR or cloud translation.
 - Persistent source-audio archive by default.
-- Making the experimental native MLX Nemotron post-stop pass a default, or presenting it as live incremental transcription, before it is tested on real Macs.
+- Making the experimental native MLX Nemotron live path a default, or presenting its bounded windows as seamless long-meeting ASR, before it is tested on real Macs.
 
 ## Authoritative research links
 

@@ -6,10 +6,11 @@ struct MenuBarView: View {
     @Bindable var store: AppStore
     @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
-    @State private var showingClearConfirmation = false
+    @State private var isConfirmingClear = false
 
-    init(store: AppStore) {
+    init(store: AppStore, isConfirmingClear: Bool = false) {
         self.store = store
+        _isConfirmingClear = State(initialValue: isConfirmingClear)
     }
 
     var body: some View {
@@ -53,14 +54,6 @@ struct MenuBarView: View {
         }
         .padding(16)
         .frame(width: 430)
-        .confirmationDialog("Clear local transcript?", isPresented: $showingClearConfirmation, titleVisibility: .visible) {
-            Button("Clear Transcript", role: .destructive) {
-                store.clearTranscript()
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This removes the stored transcript from this Mac. Mimi does not retain source audio after a completed session.")
-        }
     }
 
     private var header: some View {
@@ -146,6 +139,19 @@ struct MenuBarView: View {
 
             modelStatus
 
+            if let message = store.lastError {
+                HStack(alignment: .top, spacing: 6) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .accessibilityHidden(true)
+                    Text(message)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Recording warning: \(message)")
+            }
+
             HStack(spacing: 8) {
                 Button(store.isRecording ? "Stop Recording" : "Start Recording") {
                     store.toggleRecording()
@@ -186,6 +192,44 @@ struct MenuBarView: View {
 
     private var transcriptPreview: some View {
         VStack(alignment: .leading, spacing: 6) {
+            transcriptHeader
+
+            ScrollView {
+                TranscriptContentView(
+                    document: store.document,
+                    emptyMessage: "Choose a ready local model, then start speaking."
+                )
+                .padding(10)
+            }
+            .frame(height: 130)
+            .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        }
+    }
+
+    @ViewBuilder
+    private var transcriptHeader: some View {
+        if isConfirmingClear {
+            HStack(spacing: 8) {
+                Text("Clear saved transcript?")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Cancel") {
+                    isConfirmingClear = false
+                }
+                .keyboardShortcut(.cancelAction)
+                .buttonStyle(.bordered)
+
+                Button("Clear", role: .destructive) {
+                    store.clearTranscript()
+                    isConfirmingClear = false
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
+            }
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Clear local transcript confirmation")
+        } else {
             HStack {
                 Text("Latest transcript")
                     .font(.caption.weight(.semibold))
@@ -202,25 +246,16 @@ struct MenuBarView: View {
                 .disabled(store.document.renderedText.isEmpty)
 
                 Button {
-                    showingClearConfirmation = true
+                    isConfirmingClear = true
                 } label: {
                     Image(systemName: "trash")
                 }
                 .buttonStyle(.plain)
-                .help("Clear transcript")
-                .accessibilityLabel("Clear transcript")
+                .help("Clear saved transcript")
+                .accessibilityLabel("Clear saved transcript")
+                .accessibilityHint("Shows an inline confirmation before removing the local transcript")
                 .disabled(store.document.renderedText.isEmpty)
             }
-
-            ScrollView {
-                TranscriptContentView(
-                    document: store.document,
-                    emptyMessage: "Choose a ready local model, then start speaking."
-                )
-                .padding(10)
-            }
-            .frame(height: 130)
-            .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
         }
     }
 

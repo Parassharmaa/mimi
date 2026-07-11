@@ -31,7 +31,9 @@ trap 'rm -rf "$temporary_directory"' EXIT
 say -o "$temporary_directory/english.aiff" "Mimi performs English and Japanese transcription locally."
 afconvert -f WAVE -d LEI16 "$temporary_directory/english.aiff" "$temporary_directory/english.wav"
 "$binary" "$MODEL_DIRECTORY" "$temporary_directory/english.wav" en-US "English and Japanese transcription"
+"$binary" --stream "$MODEL_DIRECTORY" "$temporary_directory/english.wav" en-US "English and Japanese transcription"
 
 say -v Kyoko -o "$temporary_directory/japanese.aiff" "ミミはこのマックで日本語の文字起こしをします。"
 afconvert -f WAVE -d LEI16 "$temporary_directory/japanese.aiff" "$temporary_directory/japanese.wav"
 "$binary" "$MODEL_DIRECTORY" "$temporary_directory/japanese.wav" ja-JP "日本語"
+"$binary" --stream "$MODEL_DIRECTORY" "$temporary_directory/japanese.wav" ja-JP "日本語"

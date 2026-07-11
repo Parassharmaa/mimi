@@ -7,9 +7,10 @@ set -euo pipefail
 # MIMI_MLX_METALLIB developer override) is required to include MLX shaders.
 
 ROOT="${0:A:h:h}"
+LANGUAGE="${1:-en}"
 "$ROOT/scripts/build-app.sh" debug
 set +e
-output=$("$ROOT/.build/Mimi.app/Contents/MacOS/Mimi" --e2e-engine-smoke nemotron 2>&1)
+output=$("$ROOT/.build/Mimi.app/Contents/MacOS/Mimi" --e2e-engine-smoke nemotron --e2e-language "$LANGUAGE" 2>&1)
 exit_code=$?
 set -e
 print -r -- "$output"

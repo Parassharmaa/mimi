@@ -1,4 +1,5 @@
 import AppKit
+@preconcurrency import AVFoundation
 import Darwin
 import MimiCore
 import SwiftUI
@@ -25,6 +26,63 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                     status = 0
                 } catch {
                     print("Mimi microphone smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if arguments.contains("--e2e-nemotron-live-smoke") {
+            let language: SpeechLanguage
+            switch argument(after: "--e2e-language", in: arguments) {
+            case "ja", "ja-JP":
+                language = .japanese
+            default:
+                language = .english
+            }
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let engine = NemotronMLXLiveEngine()
+                    guard let format = AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 1) else {
+                        throw NemotronLiveSmokeError.invalidFixtureFormat
+                    }
+
+                    var receivedFinal = false
+                    try await engine.startLive(
+                        language: language,
+                        inputFormat: format,
+                        onEvent: { event in
+                            if case .final = event {
+                                receivedFinal = true
+                            }
+                        },
+                        onBackpressure: { message in
+                            print("Mimi Nemotron live app smoke warning: \(message)")
+                        }
+                    )
+
+                    // 640 ms of owned 48 kHz PCM exercises Mimi's converter,
+                    // bounded queue, streaming session, and sub-window Stop
+                    // flush without opening a microphone or retaining audio.
+                    for _ in 0..<30 {
+                        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 1_024) else {
+                            throw NemotronLiveSmokeError.invalidFixtureBuffer
+                        }
+                        buffer.frameLength = 1_024
+                        if let samples = buffer.floatChannelData?[0] {
+                            for index in 0..<Int(buffer.frameLength) {
+                                samples[index] = 0
+                            }
+                        }
+                        engine.consumeLive(buffer)
+                    }
+                    await engine.stopLive()
+                    guard receivedFinal else { throw NemotronLiveSmokeError.missingFinalEvent }
+                    print("Mimi Nemotron \(language.displayName) live app smoke passed: converted 48 kHz PCM, flushed a bounded local stream, and retained no source-audio file.")
+                    status = 0
+                } catch {
+                    print("Mimi Nemotron \(language.displayName) live app smoke failed: \(error.localizedDescription)")
                     status = 1
                 }
                 Darwin.exit(status)
@@ -78,6 +136,11 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         switch presentationState {
         case "recording":
             store.applyPresentationFixture(state: .recording)
+        case "backpressure":
+            store.applyPresentationFixture(
+                state: .recording,
+                lastError: "Nemotron MLX is slower than this audio source. Mimi skipped some queued audio to stay live."
+            )
         case "failed":
             store.applyPresentationFixture(state: .failed("Microphone access needs attention"))
         default:
@@ -87,13 +150,13 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         let size: NSSize
         switch screen {
         case "transcript":
-            view = AnyView(TranscriptWindow(store: store))
+            view = AnyView(TranscriptWindow(store: store, isConfirmingClear: presentationState == "clear-confirmation"))
             size = NSSize(width: 820, height: 600)
         case "settings":
             view = AnyView(SettingsView(store: store))
             size = NSSize(width: 560, height: 540)
         default:
-            view = AnyView(MenuBarView(store: store))
+            view = AnyView(MenuBarView(store: store, isConfirmingClear: presentationState == "clear-confirmation"))
             size = NSSize(width: 430, height: 580)
         }
 
@@ -132,6 +195,23 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             return nil
         }
         return arguments[index + 1]
+    }
+}
+
+private enum NemotronLiveSmokeError: LocalizedError {
+    case invalidFixtureFormat
+    case invalidFixtureBuffer
+    case missingFinalEvent
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidFixtureFormat:
+            "Mimi could not create the deterministic 48 kHz live-audio fixture."
+        case .invalidFixtureBuffer:
+            "Mimi could not allocate the deterministic live-audio fixture buffer."
+        case .missingFinalEvent:
+            "Nemotron did not flush a final event when the live fixture stopped."
+        }
     }
 }
 

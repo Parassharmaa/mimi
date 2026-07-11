@@ -8,16 +8,17 @@ struct MimiSessionE2E {
     static func main() async {
         await appleStreamingEnglishSessionDrainsBoundedFrames()
         await whisperJapaneseAccuracySessionFreezesConfigurationAndCleansAudio()
-        await nemotronJapaneseAccuracySessionUsesWAVAndCleansAudio()
+        await nemotronJapaneseLiveSessionStreamsAndFinalizesWithoutAudioFiles()
         await screenAudioSelectionAndLifecycle()
         await screenAudioPickerCancellationAndUnexpectedStop()
-        await screenAudioAccuracyPassAndUnexpectedStopCleanTemporaryAudio()
+        await screenAudioLiveNemotronAndUnexpectedStopCleanLiveState()
         await modelAndPermissionFailuresNeverStartCapture()
         await captureAndTranscriptionFailuresCleanUp()
         await modelLifecycleAndPersistenceEdges()
         await modelSetupStateMachinesAreTruthfulAndRecoverable()
         await appleStartBoundaryRejectsFreshMissingAssetDespiteStaleReadyCache()
         await appleStartBoundaryAbandonsSupersededSelectionAfterAssetLookup()
+        liveFlowControlStaysBoundedAndFinalizesAtSafeBoundaries()
         transcriptAndTranslationRoutingEdgeCases()
         print("Mimi session E2E passed: model setup states, capture lifecycle, EN/JA routing, cleanup, persistence, and realtime queue edges.")
     }
@@ -91,12 +92,15 @@ struct MimiSessionE2E {
     }
 
     @MainActor
-    private static func nemotronJapaneseAccuracySessionUsesWAVAndCleansAudio() async {
+    private static func nemotronJapaneseLiveSessionStreamsAndFinalizesWithoutAudioFiles() async {
         let capture = FakeCapture()
+        capture.framesToEmitOnStart = 2
         let apple = FakeAppleProvider()
         let whisper = FakeWhisper(isDownloaded: true)
         let nemotron = FakeNemotron(isDownloaded: true)
-        nemotron.transcription = "これはMLXで処理した日本語の文字起こしです。"
+        nemotron.livePartialText = "これはMLXで処理中の日本語です。"
+        nemotron.liveFinalText = "これはMLXで処理した日本語の文字起こしです。"
+        nemotron.liveBackpressureMessage = "Fixture live inference is behind."
         let storage = FakeStorage()
         let session = makeSession(
             capture: capture,
@@ -109,27 +113,31 @@ struct MimiSessionE2E {
         session.sourceLanguage = .japanese
 
         await session.startRecording()
-        expect(session.recordingState == .recording, "Installed Nemotron starts an accuracy-pass recording")
-        expect(storage.createdTemporaryURLs.count == 1, "Nemotron gets exactly one temporary source-audio URL")
-        let temporaryURL = storage.createdTemporaryURLs[0]
-        expect(temporaryURL.pathExtension == "wav", "Nemotron receives a portable WAV instead of Whisper's CAF")
-        expect(capture.recordingURLs == [temporaryURL], "Nemotron's WAV is handed to the active microphone capture")
+        await yieldToMainActor()
+        expect(session.recordingState == .recording, "Installed Nemotron starts a local live session")
+        expect(storage.createdTemporaryURLs.isEmpty && capture.recordingURLs == [nil], "Live Nemotron never writes raw microphone audio")
+        expect(nemotron.liveStartLanguages == [.japanese], "Nemotron receives the frozen Japanese live-language route")
+        expect(session.document.liveText == nemotron.livePartialText, "Nemotron emits a replaceable Japanese live hypothesis while audio arrives")
+        expect(session.lastError == "Fixture live inference is behind." && session.recordingState == .recording, "Live backpressure remains nonfatal and visible while capture continues")
 
-        // As with Whisper, the active session owns its configuration even if
-        // the visible controls change while recording.
+        // The active live model owns its configuration even if the visible
+        // controls change while recording.
         session.engineID = .appleSpeechAnalyzer
         session.sourceLanguage = .english
         await session.stopRecording()
 
-        expect(
-            nemotron.transcribeCalls.count == 1 &&
-                nemotron.transcribeCalls[0].0 == temporaryURL &&
-                nemotron.transcribeCalls[0].1 == .japanese,
-            "Nemotron stop uses the frozen Japanese session configuration"
-        )
-        expect(session.document.segments.map(\.language) == [.japanese], "Nemotron final text retains Japanese routing")
-        expect(storage.removedTemporaryURLs == [temporaryURL], "Nemotron WAV is deleted after native MLX transcription")
+        expect(nemotron.liveStopCalls == 1, "Stopping a live Nemotron session flushes exactly once")
+        expect(nemotron.liveCancelCalls == 0, "A normally finalized live session is not cancelled during cleanup")
+        expect(session.document.segments.map(\.language) == [.japanese], "Nemotron final text retains the frozen Japanese route")
+        expect(session.document.segments.map(\.text) == [nemotron.liveFinalText], "Nemotron finalizes the bounded live hypothesis once")
+        expect(session.document.liveText.isEmpty, "Nemotron finalization clears the volatile live text")
+        expect(storage.removedTemporaryURLs.isEmpty, "Live Nemotron has no temporary source audio to remove")
         expect(whisper.transcribeCalls.isEmpty, "A Nemotron session never invokes Whisper")
+
+        let staleCallback = capture.lastCallback
+        staleCallback?(FakeCapture.makeBuffer())
+        await yieldToMainActor()
+        expect(nemotron.liveConsumedBufferCount == 2, "A callback retained after Stop cannot feed a stale live Nemotron session")
     }
 
     @MainActor
@@ -215,14 +223,16 @@ struct MimiSessionE2E {
     }
 
     @MainActor
-    private static func screenAudioAccuracyPassAndUnexpectedStopCleanTemporaryAudio() async {
+    private static func screenAudioLiveNemotronAndUnexpectedStopCleanLiveState() async {
         do {
             let microphone = FakeCapture(permissionGranted: false)
             let screen = FakeScreenAudioCapture()
+            screen.framesToEmitOnStart = 1
             let apple = FakeAppleProvider()
             let whisper = FakeWhisper(isDownloaded: true)
             let nemotron = FakeNemotron(isDownloaded: true)
-            nemotron.transcription = "selected display audio"
+            nemotron.livePartialText = "selected display live audio"
+            nemotron.liveFinalText = "selected display final audio"
             let storage = FakeStorage()
             let session = makeSession(
                 capture: microphone,
@@ -238,27 +248,32 @@ struct MimiSessionE2E {
 
             await session.selectScreenAudioContent()
             await session.startRecording()
-            expect(session.recordingState == .recording, "Selected display audio can feed a native MLX accuracy pass")
-            let temporaryURL = storage.createdTemporaryURLs[0]
-            expect(temporaryURL.pathExtension == "wav", "ScreenCaptureKit accuracy capture uses the Nemotron WAV contract")
-            expect(screen.recordingURLs == [temporaryURL], "ScreenCaptureKit receives the accuracy-pass output URL")
+            await yieldToMainActor()
+            expect(session.recordingState == .recording, "Selected display audio can feed native MLX live transcription")
+            expect(screen.recordingURLs == [nil], "Live ScreenCaptureKit transcription does not retain selected display audio")
             expect(microphone.permissionRequests == 0 && microphone.startCount == 0, "Selected display audio never falls back to microphone capture")
+            expect(session.document.liveText == nemotron.livePartialText, "Selected display PCM reaches the live Nemotron engine")
 
             await session.stopRecording()
-            expect(screen.stopCount == 1, "Stopping a ScreenCaptureKit accuracy pass stops the selected stream")
-            expect(
-                nemotron.transcribeCalls.count == 1 && nemotron.transcribeCalls[0].0 == temporaryURL,
-                "Stopped selected display audio is handed to Nemotron exactly once"
-            )
-            expect(storage.removedTemporaryURLs == [temporaryURL], "Completed screen-audio WAV is deleted after transcription")
+            expect(screen.stopCount == 1, "Stopping a ScreenCaptureKit live session stops the selected stream")
+            expect(nemotron.liveStopCalls == 1, "Stopped selected display audio flushes the live Nemotron session exactly once")
+            expect(storage.removedTemporaryURLs.isEmpty, "Live screen-audio transcription has no source-audio file to delete")
+
+            let staleCallback = screen.lastCallback
+            staleCallback?(FakeCapture.makeBuffer(channels: 2))
+            await yieldToMainActor()
+            expect(nemotron.liveConsumedBufferCount == 1, "A ScreenCaptureKit callback retained after Stop cannot mutate a future live session")
         }
 
         do {
             let microphone = FakeCapture(permissionGranted: false)
             let screen = FakeScreenAudioCapture()
+            screen.framesToEmitOnStart = 1
             let apple = FakeAppleProvider()
             let whisper = FakeWhisper(isDownloaded: true)
             let nemotron = FakeNemotron(isDownloaded: true)
+            nemotron.livePartialText = "selected app live audio"
+            nemotron.liveFinalText = "selected app final audio"
             let storage = FakeStorage()
             let session = makeSession(
                 capture: microphone,
@@ -273,13 +288,15 @@ struct MimiSessionE2E {
 
             await session.selectScreenAudioContent()
             await session.startRecording()
-            let temporaryURL = storage.createdTemporaryURLs[0]
+            await yieldToMainActor()
             screen.emitUnexpectedStop("The selected app stopped sharing audio.")
             await yieldToMainActor()
 
-            expect(isFailed(session.recordingState) && !session.isRecording, "An accuracy-pass stream stop is surfaced without entering transcription")
-            expect(nemotron.transcribeCalls.isEmpty, "A system-stopped stream never transcribes incomplete temporary audio")
-            expect(storage.removedTemporaryURLs == [temporaryURL], "A system-stopped screen-audio WAV is deleted immediately")
+            expect(isFailed(session.recordingState) && !session.isRecording, "A live stream stop remains a recoverable capture error")
+            expect(nemotron.liveStopCalls == 1 && nemotron.liveCancelCalls == 0, "A system-stopped stream flushes rather than discarding live MLX captions")
+            expect(session.document.segments.map(\.text) == [nemotron.liveFinalText], "A system-stopped stream retains its finalized local live transcript")
+            expect(storage.savedDocuments.contains(where: { $0.segments.map(\.text) == [nemotron.liveFinalText] }), "The recovered transcript persists before the capture error is shown")
+            expect(storage.removedTemporaryURLs.isEmpty, "A system-stopped live session leaves no temporary audio behind")
             expect(screen.stopCount == 0, "The system stream-stop path never double-stops ScreenCaptureKit")
             expect(microphone.permissionRequests == 0, "An app-audio stream stop never requests microphone permission")
         }
@@ -391,6 +408,23 @@ struct MimiSessionE2E {
         }
 
         do {
+            let capture = FakeCapture()
+            let apple = FakeAppleProvider()
+            let whisper = FakeWhisper(isDownloaded: true)
+            let nemotron = FakeNemotron(isDownloaded: true)
+            nemotron.liveStartError = ProbeError.transcription
+            let storage = FakeStorage()
+            let session = makeSession(capture: capture, apple: apple, whisper: whisper, nemotron: nemotron, storage: storage)
+            session.engineID = .nemotronStreamingExperimental
+
+            await session.startRecording()
+
+            expect(capture.permissionRequests == 1 && capture.startCount == 0, "A failed live-model start never installs a microphone tap")
+            expect(storage.createdTemporaryURLs.isEmpty, "A failed live-model start never creates source audio")
+            expect(isFailed(session.recordingState), "A failed live-model start becomes a recoverable recording error")
+        }
+
+        do {
             let microphone = FakeCapture(permissionGranted: false)
             let screen = FakeScreenAudioCapture()
             screen.startError = ProbeError.captureStart
@@ -485,6 +519,21 @@ struct MimiSessionE2E {
 
             session.clearTranscript()
             expect(storage.clearCalls == 1 && session.document.renderedText.isEmpty, "Clear removes persisted and in-memory transcript together")
+        }
+
+        do {
+            var initial = TranscriptDocument()
+            initial.apply(.final("keep this transcript"), language: .english)
+            let storage = FakeStorage(initialDocument: initial)
+            storage.clearError = ProbeError.transcription
+            let session = makeSession(capture: FakeCapture(), apple: FakeAppleProvider(), whisper: FakeWhisper(isDownloaded: true), storage: storage)
+
+            session.clearTranscript()
+            expect(session.document.renderedText == "keep this transcript" && isFailed(session.recordingState), "A failed clear keeps the local transcript visible and recoverable")
+
+            storage.clearError = nil
+            session.clearTranscript()
+            expect(storage.clearCalls == 1 && session.document.renderedText.isEmpty, "Retrying a failed clear removes the transcript exactly once")
         }
     }
 
@@ -753,6 +802,28 @@ struct MimiSessionE2E {
         expect(document.finalizedText(for: .english) == "final English\nfinal English", "Translation input preserves legitimate repeated final English speech")
         expect(document.finalizedText(for: .japanese) == "最終の日本語", "Translation input filters immutable text by its source language")
         expect(document.liveText.isEmpty, "Final events never leave a volatile translation input behind")
+    }
+
+    private static func liveFlowControlStaysBoundedAndFinalizesAtSafeBoundaries() {
+        var queue = BoundedAudioSampleQueue(maximumSampleCount: 160, preferredChunkSize: 40)
+        expect(queue.append(Array(repeating: 0.1, count: 120)) == 0, "A live queue accepts normal audio without dropping it")
+        expect(queue.append(Array(repeating: 0.2, count: 80)) == 40, "A slow live consumer drops only oldest whole decode chunks")
+        expect(queue.count == 160, "Live backpressure keeps queued PCM memory bounded")
+        expect(queue.dequeue(upTo: 40).allSatisfy { $0 == 0.1 }, "Backpressure preserves newest queued audio after discarding the oldest chunk")
+        expect(queue.dequeue(upTo: 200).count == 120 && queue.isEmpty, "A bounded live queue flushes deterministically at Stop")
+
+        var policy = BoundedLiveWindowPolicy(
+            minimumWindowSampleCount: 30,
+            maximumWindowSampleCount: 300,
+            silenceBoundarySampleCount: 8,
+            silenceRMS: 0.01
+        )
+        expect(policy.append(Array(repeating: 0.1, count: 29)) == .none, "A short spoken live window stays provisional")
+        expect(policy.append(Array(repeating: 0, count: 8)) == .silence, "A sufficient pause finalizes a bounded live window")
+        policy.reset()
+        expect(policy.append(Array(repeating: 0.1, count: 300)) == .maximumDuration, "Continuous speech finalizes at the hard live-window cap")
+        policy.reset()
+        expect(policy.append(Array(repeating: 0.1, count: 1)) == .none, "A reset starts a fresh live window after finalization")
     }
 
     @MainActor
@@ -1097,17 +1168,27 @@ private final class FakeWhisper: WhisperAccuracyTranscribing {
 }
 
 @MainActor
-private final class FakeNemotron: NemotronMLXAccuracyTranscribing {
+private final class FakeNemotron: NemotronMLXLiveTranscribing {
     var runtimeAvailabilityMessage: String?
     var isDownloaded: Bool
     var ensureError: Error?
     var installError: Error?
     var transcribeError: Error?
     var transcription = ""
+    var liveStartError: Error?
+    var livePartialText = ""
+    var liveFinalText = ""
+    var liveBackpressureMessage: String?
     private(set) var ensureCalls = 0
     private(set) var installCalls = 0
     private(set) var removeCalls = 0
     private(set) var transcribeCalls: [(URL, SpeechLanguage)] = []
+    private(set) var liveStartLanguages: [SpeechLanguage] = []
+    private(set) var liveConsumedBufferCount = 0
+    private(set) var liveStopCalls = 0
+    private(set) var liveCancelCalls = 0
+    private var onLiveEvent: (@MainActor (TranscriptEvent) -> Void)?
+    private var onLiveBackpressure: (@MainActor (String) -> Void)?
 
     init(isDownloaded: Bool) {
         self.isDownloaded = isDownloaded
@@ -1124,6 +1205,41 @@ private final class FakeNemotron: NemotronMLXAccuracyTranscribing {
         installCalls += 1
         if let installError { throw installError }
         isDownloaded = true
+    }
+
+    func startLive(
+        language: SpeechLanguage,
+        inputFormat: AVAudioFormat,
+        onEvent: @escaping @MainActor (TranscriptEvent) -> Void,
+        onBackpressure: @escaping @MainActor (String) -> Void
+    ) async throws {
+        liveStartLanguages.append(language)
+        if let liveStartError { throw liveStartError }
+        onLiveEvent = onEvent
+        onLiveBackpressure = onBackpressure
+    }
+
+    func consumeLive(_ buffer: AVAudioPCMBuffer) {
+        liveConsumedBufferCount += 1
+        if let liveBackpressureMessage {
+            onLiveBackpressure?(liveBackpressureMessage)
+            self.liveBackpressureMessage = nil
+        }
+        guard !livePartialText.isEmpty else { return }
+        onLiveEvent?(.partial(livePartialText))
+    }
+
+    func stopLive() async {
+        liveStopCalls += 1
+        onLiveEvent?(.final(liveFinalText))
+        onLiveEvent = nil
+        onLiveBackpressure = nil
+    }
+
+    func cancelLive() async {
+        liveCancelCalls += 1
+        onLiveEvent = nil
+        onLiveBackpressure = nil
     }
 
     func transcribe(recordingAt url: URL, language: SpeechLanguage) async throws -> String {

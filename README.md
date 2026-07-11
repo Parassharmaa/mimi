@@ -2,7 +2,7 @@
 
 **A local English/Japanese transcription utility for macOS.**
 
-Mimi sits in the menu bar, transcribes locally, and makes its model choices visible. On macOS 26 it uses Apple’s on-device live transcription engine; when accuracy matters, it can download Whisper Large-v3 or the optional MLX Nemotron pack and perform a local accuracy pass after recording.
+Mimi sits in the menu bar, transcribes locally, and makes its model choices visible. On macOS 26 it uses Apple’s on-device live transcription engine; it can also download Whisper Large-v3 for a local post-stop accuracy pass or the optional MLX Nemotron pack for experimental bounded live captions.
 
 > `Mimi` (耳) means “ear” in Japanese.
 
@@ -17,11 +17,13 @@ Mimi sits in the menu bar, transcribes locally, and makes its model choices visi
 - Apple `SpeechAnalyzer` live ASR on macOS 26+, with system-managed local assets.
 - Downloadable WhisperKit Large-v3 accuracy mode (about 626 MB) with forced `en` or `ja` decoding rather than auto-detect.
 - Downloadable `mlx-community/nemotron-3.5-asr-streaming-0.6b-8bit` mode
-  (about 756 MB), loaded directly by native Swift/MLX code for an experimental
-  post-stop English/Japanese accuracy pass. It is not presented as live
-  incremental transcription yet.
+  (about 756 MB), loaded directly by native Swift/MLX code for experimental
+  English/Japanese live captions from the selected microphone, app, or display
+  audio lane. It finalizes a bounded local window at a pause or 30 seconds;
+  that keeps memory predictable, but a forced speech-boundary reset can reduce
+  accuracy versus Apple Speech or Whisper's post-stop pass.
 - On-device English ↔ Japanese text translation using Apple’s Translation framework.
-- Transcript copy/clear actions and automatic deletion of temporary source audio after transcription.
+- Transcript copy/clear actions and automatic deletion of temporary source audio after Whisper's post-stop transcription; Apple Speech and live Nemotron process bounded PCM in memory without writing a source-audio file.
 - Deterministic English/Japanese E2E coverage and a GitHub Actions macOS packaging job.
 
 ## Model policy
@@ -32,7 +34,7 @@ Mimi is intentionally provider-pluggable:
 | --- | --- | --- |
 | Apple Speech | Fast live captions on macOS 26 | Apple designed the new on-device engine for live, long-form, and meeting transcription. |
 | Whisper Large-v3 (626 MB) / WhisperKit | Accuracy pass / macOS 15 fallback | Mature Apple-silicon/Core ML path for multilingual English and Japanese. |
-| Nemotron 3.5 MLX (756 MB) | Experimental post-stop accuracy pass | Native Swift/MLX path for the 8-bit English/Japanese conversion. The underlying model is streaming-capable, but Mimi does not feed it live chunks in this version. |
+| Nemotron 3.5 MLX (756 MB) | Experimental bounded live captions | Native Swift/MLX path for English/Japanese selected-audio capture. It streams 560 ms chunks, finalizes at a pause or 30 seconds, and is not presented as seamless long-meeting ASR. |
 | Qwen3-ASR | Future quality lane | Strong current open ASR family, but native Swift/Mac tooling is still less mature. |
 
 The app will not quietly download model weights. Model setup lives in **Settings → Models**: Mimi checks the exact selected Apple language through `AssetInventory`, then shows **Checking**, **Needs download**, **Downloading**, **Ready**, or **Unavailable** instead of conflating macOS support with installed assets. Apple assets remain system-managed and language-specific; Whisper and Nemotron weights are app-managed, explicitly downloaded, and removable. Whisper shows truthful model-file progress, supports cancellation, and resumes partial downloads on retry. Neither optional model is bundled in the repository or release archive.
@@ -93,11 +95,16 @@ They never download a model implicitly and are intentionally excluded from CI.
 scripts/run-apple-speech-smoke.sh
 scripts/run-apple-speech-smoke.sh ja-JP
 scripts/run-whisper-smoke.sh
+scripts/run-whisper-smoke.sh ja-JP
+scripts/run-nemotron-smoke.sh
+scripts/run-nemotron-smoke.sh ja-JP
 ```
 
 The native Nemotron product has an opt-in fixture smoke check for an
-already-downloaded local model; it is intentionally not a CI download step,
-because model weights are never fetched implicitly.
+already-downloaded local model. It verifies both the offline comparison path
+and the 560 ms bounded streaming path for English and Japanese; it is
+intentionally not a CI download step because model weights are never fetched
+implicitly.
 
 ```sh
 MIMI_NEMOTRON_MODEL_DIR=/path/to/pinned-model \
@@ -105,10 +112,20 @@ MIMI_MLX_METALLIB=/path/to/mlx.metallib \
 scripts/run-nemotron-fixture-smoke.sh
 ```
 
+To exercise Mimi's actual 48 kHz PCM conversion, bounded queue, and live
+stream lifecycle without opening a microphone, run the companion opt-in
+smoke with the same already-downloaded model and shader:
+
+```sh
+MIMI_NEMOTRON_MODEL_DIR=/path/to/pinned-model \
+MIMI_MLX_METALLIB=/path/to/mlx.metallib \
+scripts/run-nemotron-live-app-smoke.sh
+```
+
 ## Privacy
 
 - No cloud ASR or cloud translation is part of Mimi.
-- Temporary microphone, selected-app, and selected-display audio is deleted after a transcription run completes.
+- Whisper's temporary microphone, selected-app, and selected-display audio is deleted after its post-stop transcription completes. Apple Speech and live Nemotron process PCM only in memory; Nemotron bounds both its active window and waiting queue.
 - Mimi persists the latest finalized session locally under Application Support until you clear it.
 - Apple documents that Translation content is processed on-device; it may collect non-content API/performance metadata such as language pair and app bundle ID.
 

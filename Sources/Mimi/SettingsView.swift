@@ -87,7 +87,7 @@ struct SettingsView: View {
                 }
 
                 Section("Privacy") {
-                    Text("Mimi stores finalized transcript text locally. Temporary source audio exists only during a local accuracy pass and is deleted after the session finishes.")
+                    Text("Mimi stores finalized transcript text locally. Temporary source audio exists only during Whisper's post-stop accuracy pass and is deleted after the session finishes; Apple Speech and live Nemotron process bounded PCM in memory without writing a source-audio file.")
                     Text("Apple Translation processes text on-device; macOS may collect non-content performance metadata for the API.")
                         .foregroundStyle(.secondary)
                 }

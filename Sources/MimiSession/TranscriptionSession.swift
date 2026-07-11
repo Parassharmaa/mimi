@@ -115,11 +115,12 @@ public protocol WhisperAccuracyTranscribing: AnyObject {
     func removeDownloadedModel() async throws
 }
 
-/// Optional Apple-silicon MLX execution of the Nemotron 3.5 model. The
-/// current local runner is an accuracy pass: it receives the short, temporary
-/// WAV captured by Mimi after Stop and removes no source audio itself.
+/// Optional Apple-silicon MLX execution of the Nemotron 3.5 model. Unlike the
+/// post-stop Whisper accuracy path, this protocol receives Mimi's selected
+/// microphone/app/display PCM stream directly and reports replaceable live
+/// hypotheses plus final bounded-window segments.
 @MainActor
-public protocol NemotronMLXAccuracyTranscribing: AnyObject {
+public protocol NemotronMLXLiveTranscribing: AnyObject {
     /// A nil value means the app contains a usable MLX Metal runtime on this
     /// machine. Keeping this separate from `isDownloaded` makes it impossible
     /// to promise a usable model merely because its weights are present.
@@ -127,6 +128,15 @@ public protocol NemotronMLXAccuracyTranscribing: AnyObject {
     var isDownloaded: Bool { get }
     func ensureInstalled() throws
     func install() async throws
+    func startLive(
+        language: SpeechLanguage,
+        inputFormat: AVAudioFormat,
+        onEvent: @escaping @MainActor (TranscriptEvent) -> Void,
+        onBackpressure: @escaping @MainActor (String) -> Void
+    ) async throws
+    func consumeLive(_ buffer: AVAudioPCMBuffer)
+    func stopLive() async
+    func cancelLive() async
     func transcribe(recordingAt url: URL, language: SpeechLanguage) async throws -> String
     func removeDownloadedModel() async throws
 }
@@ -147,7 +157,7 @@ public struct TranscriptionSessionDependencies {
     public let screenAudioCapture: any ScreenAudioCapturing
     public let appleSpeech: any AppleSpeechProviding
     public let whisper: any WhisperAccuracyTranscribing
-    public let nemotron: any NemotronMLXAccuracyTranscribing
+    public let nemotron: any NemotronMLXLiveTranscribing
     public let storage: any TranscriptPersisting
     public let inputDevices: [AudioInputDevice]
 
@@ -156,7 +166,7 @@ public struct TranscriptionSessionDependencies {
         screenAudioCapture: any ScreenAudioCapturing,
         appleSpeech: any AppleSpeechProviding,
         whisper: any WhisperAccuracyTranscribing,
-        nemotron: any NemotronMLXAccuracyTranscribing,
+        nemotron: any NemotronMLXLiveTranscribing,
         storage: any TranscriptPersisting,
         inputDevices: [AudioInputDevice]
     ) {
@@ -280,9 +290,10 @@ public final class TranscriptionSession {
     private let screenAudioCapture: any ScreenAudioCapturing
     private let appleSpeech: any AppleSpeechProviding
     private let whisper: any WhisperAccuracyTranscribing
-    private let nemotron: any NemotronMLXAccuracyTranscribing
+    private let nemotron: any NemotronMLXLiveTranscribing
     private let storage: any TranscriptPersisting
     @ObservationIgnored private var appleEngine: (any AppleLiveTranscribing)?
+    @ObservationIgnored private var nemotronLiveSessionActive = false
     @ObservationIgnored private var activeSession: SessionConfiguration?
     @ObservationIgnored private var activeAudioFrames: RealtimeAudioFramePipe?
     @ObservationIgnored private var captureIsActive = false
@@ -369,7 +380,7 @@ public final class TranscriptionSession {
             }
             return nemotron.isDownloaded
                 ? .ready
-                : .needsDownload("Download Nemotron MLX (756 MB) before starting an accuracy-pass recording.")
+                : .needsDownload("Download Nemotron MLX (756 MB) before starting experimental bounded live transcription.")
         }
     }
 
@@ -854,9 +865,9 @@ public final class TranscriptionSession {
             case .whisperKitLargeV3Turbo:
                 recordingURL = try storage.makeTemporaryRecordingURL(fileExtension: "caf")
             case .nemotronStreamingExperimental:
-                // The MLX runner intentionally consumes a portable mono WAV
-                // file so it never needs a system codec or conversion helper.
-                recordingURL = try storage.makeTemporaryRecordingURL(fileExtension: "wav")
+                // The bounded live MLX session receives selected PCM frames
+                // directly, so it neither writes nor retains raw source audio.
+                recordingURL = nil
             }
             lastRecordingURL = recordingURL
 
@@ -888,7 +899,20 @@ public final class TranscriptionSession {
             case .whisperKitLargeV3Turbo:
                 audioFrames = nil
             case .nemotronStreamingExperimental:
-                audioFrames = nil
+                try await nemotron.startLive(
+                    language: configuration.language,
+                    inputFormat: inputFormat,
+                    onEvent: { [weak self] event in
+                        self?.receive(event, for: configuration)
+                    },
+                    onBackpressure: { [weak self] message in
+                        self?.receiveLiveWarning(message, for: configuration)
+                    }
+                )
+                nemotronLiveSessionActive = true
+                let frames = RealtimeAudioFramePipe(capacity: 32)
+                activeAudioFrames = frames
+                audioFrames = frames
             }
 
             let onBuffer: @Sendable (AVAudioPCMBuffer) -> Void
@@ -955,9 +979,11 @@ public final class TranscriptionSession {
                 document.apply(.final(text), language: configuration.language)
                 try persistDocument()
             case .nemotronStreamingExperimental:
-                guard let completedURL else { throw TranscriptionSessionError.missingRecording }
-                let text = try await nemotron.transcribe(recordingAt: completedURL, language: configuration.language)
-                document.apply(.final(text), language: configuration.language)
+                if let activeAudioFrames {
+                    drainAudioFrames(activeAudioFrames, for: configuration)
+                }
+                await nemotron.stopLive()
+                nemotronLiveSessionActive = false
                 try persistDocument()
             }
             await tearDownCapture(keepAudio: false)
@@ -1047,6 +1073,10 @@ public final class TranscriptionSession {
             await engine.stop()
         }
         appleEngine = nil
+        if nemotronLiveSessionActive {
+            await nemotron.cancelLive()
+            nemotronLiveSessionActive = false
+        }
 
         if !keepAudio, let lastRecordingURL {
             try? storage.removeTemporaryRecording(at: lastRecordingURL)
@@ -1060,14 +1090,34 @@ public final class TranscriptionSession {
 
         // The ScreenCaptureKit delegate has already stopped the stream. Mark
         // the capture inactive before teardown so it cannot call stopCapture
-        // a second time while handling a system-driven stop.
+        // a second time while handling a system-driven stop. Finalize the
+        // live engine before reporting the capture error: a selected app may
+        // quit mid-sentence, but its local captions should remain available
+        // to copy instead of vanishing with the stream.
         captureIsActive = false
+        if let activeAudioFrames {
+            drainAudioFrames(activeAudioFrames, for: configuration)
+        }
+
+        switch configuration.engine {
+        case .appleSpeechAnalyzer:
+            if let engine = appleEngine {
+                await engine.stop()
+            }
+            appleEngine = nil
+            document.finalizeLiveText(language: configuration.language)
+            try? persistDocument()
+        case .nemotronStreamingExperimental:
+            if nemotronLiveSessionActive {
+                await nemotron.stopLive()
+                nemotronLiveSessionActive = false
+            }
+            try? persistDocument()
+        case .whisperKitLargeV3Turbo:
+            break
+        }
         activeAudioFrames?.discard()
         activeAudioFrames = nil
-        if let engine = appleEngine {
-            await engine.stop()
-        }
-        appleEngine = nil
 
         if let lastRecordingURL {
             try? storage.removeTemporaryRecording(at: lastRecordingURL)
@@ -1079,8 +1129,7 @@ public final class TranscriptionSession {
 
     private func drainAudioFrames(_ audioFrames: RealtimeAudioFramePipe, for configuration: SessionConfiguration) {
         guard activeSession == configuration,
-              activeAudioFrames === audioFrames,
-              let engine = appleEngine else {
+              activeAudioFrames === audioFrames else {
             audioFrames.discard()
             return
         }
@@ -1090,7 +1139,19 @@ public final class TranscriptionSession {
                 audioFrames.discard()
                 return
             }
-            engine.consume(frame.buffer)
+            switch configuration.engine {
+            case .appleSpeechAnalyzer:
+                guard let appleEngine else {
+                    audioFrames.discard()
+                    return
+                }
+                appleEngine.consume(frame.buffer)
+            case .nemotronStreamingExperimental:
+                nemotron.consumeLive(frame.buffer)
+            case .whisperKitLargeV3Turbo:
+                audioFrames.discard()
+                return
+            }
         }
     }
 
@@ -1104,6 +1165,14 @@ public final class TranscriptionSession {
                 lastError = error.localizedDescription
             }
         }
+    }
+
+    private func receiveLiveWarning(_ message: String, for configuration: SessionConfiguration) {
+        guard activeSession == configuration else { return }
+        // This is nonfatal: when local MLX inference falls behind realtime
+        // input, the engine bounds memory by discarding oldest queued audio.
+        // Keep capture running and make that tradeoff visible immediately.
+        lastError = message
     }
 
     private func persistDocument() throws {

@@ -19,7 +19,7 @@ final class AppStore {
                 screenAudioCapture: ScreenAudioCapture(),
                 appleSpeech: SystemAppleSpeechProvider(),
                 whisper: WhisperKitAccuracyEngine(),
-                nemotron: NemotronMLXAccuracyEngine(),
+                nemotron: NemotronMLXLiveEngine(),
                 storage: FileTranscriptStore(),
                 inputDevices: AudioDeviceCatalog.inputDevices()
             ),
@@ -112,8 +112,9 @@ final class AppStore {
     }
 
     /// Development-only fixture used by the deterministic UI smoke launch.
-    func applyPresentationFixture(state: RecordingState) {
+    func applyPresentationFixture(state: RecordingState, lastError: String? = nil) {
         session.recordingState = state
+        session.lastError = lastError
     }
 
     func runMicrophoneCaptureSmokeTest() async throws -> Int {

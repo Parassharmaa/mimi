@@ -1,3 +1,4 @@
+import MimiCore
 import MimiSession
 import SwiftUI
 
@@ -12,8 +13,8 @@ struct ModelSetupStatusView: View {
     var body: some View {
         Group {
             switch setupState {
-            case let .downloading(_, _, progress):
-                progressStatus(progress)
+            case let .downloading(engine, _, progress):
+                progressStatus(engine: engine, progress: progress)
             case .checking, .prewarming, .removing:
                 activityStatus
             case .waitingForSystem:
@@ -34,7 +35,7 @@ struct ModelSetupStatusView: View {
     }
 
     @ViewBuilder
-    private func progressStatus(_ progress: ModelDownloadProgress?) -> some View {
+    private func progressStatus(engine: TranscriptionEngineID, progress: ModelDownloadProgress?) -> some View {
         VStack(alignment: .leading, spacing: 5) {
             if let fraction = progress?.fractionCompleted {
                 let percent = Int((fraction * 100).rounded())
@@ -44,7 +45,7 @@ struct ModelSetupStatusView: View {
                 ProgressView()
                     .accessibilityValue("Model download progress unavailable")
             }
-            Text(downloadMessage(progress))
+            Text(downloadMessage(engine: engine, progress: progress))
                 .foregroundStyle(.secondary)
         }
     }
@@ -87,15 +88,15 @@ struct ModelSetupStatusView: View {
         }
     }
 
-    private func downloadMessage(_ progress: ModelDownloadProgress?) -> String {
+    private func downloadMessage(engine: TranscriptionEngineID, progress: ModelDownloadProgress?) -> String {
         guard let progress else {
-            return readiness.message ?? "Downloading local model…"
+            return readiness.message ?? "Downloading \(engine.displayName)…"
         }
 
         if let fraction = progress.fractionCompleted {
             let percent = Int((fraction * 100).rounded())
-            return "Downloading Whisper Large-v3 — \(percent)% of model files"
+            return "Downloading \(engine.displayName) — \(percent)% of model files"
         }
-        return readiness.message ?? "Downloading local model…"
+        return readiness.message ?? "Downloading \(engine.displayName)…"
     }
 }

@@ -4,11 +4,12 @@ set -euo pipefail
 # Local-only: requires a person to explicitly download Whisper Large-v3 first
 # and a granted microphone permission. It never triggers a model download.
 ROOT="${0:A:h:h}"
+LANGUAGE="${1:-en}"
 cd "$ROOT"
 
 scripts/build-app.sh debug >/dev/null
 set +e
-output=$("$ROOT/.build/Mimi.app/Contents/MacOS/Mimi" --e2e-engine-smoke whisper 2>&1)
+output=$("$ROOT/.build/Mimi.app/Contents/MacOS/Mimi" --e2e-engine-smoke whisper --e2e-language "$LANGUAGE" 2>&1)
 exit_code=$?
 set -e
 print -r -- "$output"

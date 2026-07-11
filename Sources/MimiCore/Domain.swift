@@ -81,7 +81,7 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
         case .whisperKitLargeV3Turbo:
             "Downloadable Core ML accuracy model for English and Japanese."
         case .nemotronStreamingExperimental:
-            "Experimental on-device MLX accuracy pass for English and Japanese. Download explicitly before use."
+            "Experimental on-device MLX live transcription for English and Japanese. Uses bounded local windows for predictable memory."
         }
     }
 
@@ -159,7 +159,7 @@ public enum ModelCatalog {
             supportedLanguages: [.english, .japanese],
             ownership: .experimental,
             estimatedDownloadMB: 756,
-            recommendation: "Local Apple-silicon MLX accuracy pass. It uses Nemotron's streaming model after Stop; live chunk delivery remains experimental."
+            recommendation: "Experimental Apple-silicon MLX live captions. Mimi finalizes bounded local windows at a pause or 30 seconds to keep memory predictable."
         )
     ]
 
