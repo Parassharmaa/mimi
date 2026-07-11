@@ -27,6 +27,16 @@ struct MenuBarView: View {
         VStack(alignment: .leading, spacing: MimiMetrics.sectionSpacing) {
             MimiStatusHeader(state: store.recordingState, source: store.source)
 
+            Button {
+                store.newSession()
+            } label: {
+                Label(t("New Session", "新しいセッション"), systemImage: "plus")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.large)
+            .disabled(store.controlsLocked)
+
             recordingButton
 
             if let message = store.lastError {

@@ -303,6 +303,12 @@ public struct TranscriptDocument: Codable, Equatable, Sendable {
         segments.map(\.text).joined(separator: "\n")
     }
 
+    /// The transcript owns the language of existing speech. A later input
+    /// preference change must never relabel or filter already-saved segments.
+    public func contentLanguage(fallback: SpeechLanguage) -> SpeechLanguage {
+        segments.last?.language ?? fallback
+    }
+
     public func finalizedText(for language: SpeechLanguage) -> String {
         segments
             .filter { $0.language == language }

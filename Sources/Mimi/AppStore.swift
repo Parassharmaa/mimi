@@ -149,6 +149,16 @@ final class AppStore {
         selectedHistoryID = nil
     }
 
+    func newSession() {
+        guard !controlsLocked else { return }
+        if !session.document.renderedText.isEmpty {
+            archiveCurrentSessionIfNeeded()
+        }
+        session.clearTranscript()
+        selectedHistoryID = nil
+        recordingStartedAt = nil
+    }
+
     private func archiveCurrentSessionIfNeeded() {
         let document = session.document
         guard !document.renderedText.isEmpty else {
@@ -156,9 +166,7 @@ final class AppStore {
             return
         }
         let start = recordingStartedAt ?? document.segments.first?.createdAt ?? Date()
-        if let existingIndex = historyRecords.firstIndex(where: {
-            $0.document == document && abs($0.startedAt.timeIntervalSince(start)) < 1
-        }) {
+        if let existingIndex = historyRecords.firstIndex(where: { $0.document == document }) {
             historyRecords.remove(at: existingIndex)
         }
         historyRecords.insert(

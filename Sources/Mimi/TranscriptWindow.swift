@@ -25,7 +25,7 @@ struct TranscriptWindow: View {
 
     var body: some View {
         NavigationSplitView {
-            TranscriptHistorySidebar(store: store)
+            TranscriptHistorySidebar(store: store, preferences: preferences)
                 .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 310)
                 .navigationTitle(t("Sessions", "セッション"))
         } detail: {
@@ -83,24 +83,30 @@ struct TranscriptWindow: View {
 
     @ViewBuilder
     private var transcriptContent: some View {
-        let followsAppleSpeech = store.isRecording && store.engineID == .appleSpeechAnalyzer
         let displayedDocument = store.viewedDocument
-        let translationSourceText = followsAppleSpeech && store.selectedHistoryID == nil
-            ? store.document.realtimeTranslationContext(for: store.sourceLanguage)
-            : displayedDocument.finalizedText(for: store.sourceLanguage)
+        let followsAppleSpeech = store.isRecording &&
+            store.selectedHistoryID == nil &&
+            store.engineID == .appleSpeechAnalyzer
+        let contentLanguage = followsAppleSpeech
+            ? (store.detectedLanguage ?? displayedDocument.contentLanguage(fallback: store.sourceLanguage))
+            : displayedDocument.contentLanguage(fallback: store.sourceLanguage)
+        let translationSourceText = displayedDocument.realtimeTranslationContext(
+            for: contentLanguage,
+            maximumCharacterCount: 480
+        )
 
         if store.translationMode == .translateFinalSegments {
             HSplitView {
                 TranscriptLanguagePane(
                     document: displayedDocument,
-                    language: store.sourceLanguage,
+                    language: nil,
                     initiallyFollowingLatest: initiallyFollowingLatest
                 )
                 .frame(minWidth: 250)
 
                 InlineTranslationView(
                     sourceText: translationSourceText,
-                    sourceLanguage: store.sourceLanguage,
+                    sourceLanguage: contentLanguage,
                     isLive: followsAppleSpeech,
                     fillsAvailableSpace: true,
                     fixtureTranslation: fixtureTranslation,
@@ -145,6 +151,14 @@ struct TranscriptWindow: View {
     @ToolbarContentBuilder
     private var transcriptToolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .primaryAction) {
+            Button {
+                store.newSession()
+            } label: {
+                Label(t("New Session", "新しいセッション"), systemImage: "plus")
+            }
+            .keyboardShortcut("n", modifiers: .command)
+            .disabled(store.controlsLocked)
+
             Button {
                 store.copyTranscript()
             } label: {
@@ -196,10 +210,21 @@ struct TranscriptWindow: View {
 
 private struct TranscriptHistorySidebar: View {
     @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
 
     var body: some View {
         List(selection: $store.selectedHistoryID) {
             Section("Now") {
+                Button {
+                    store.newSession()
+                } label: {
+                    Label(preferences.text("New Session", "新しいセッション"), systemImage: "plus.circle.fill")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.tint)
+                }
+                .buttonStyle(.plain)
+                .disabled(store.controlsLocked)
+
                 Button {
                     store.selectCurrentSession()
                 } label: {

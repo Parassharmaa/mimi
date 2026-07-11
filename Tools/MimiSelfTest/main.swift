@@ -6,8 +6,23 @@ struct MimiSelfTest {
     static func main() {
         testRepeatedFinalTextIsPreserved()
         testStopFinalizesJapaneseVolatileResult()
+        testInputLanguageChangeDoesNotRewriteTranscriptLanguage()
         testRecommendedPacksCoverBothV1Languages()
         print("Mimi self-test passed: transcript coalescing, Japanese finalization, and model routing.")
+    }
+
+    private static func testInputLanguageChangeDoesNotRewriteTranscriptLanguage() {
+        var document = TranscriptDocument()
+        document.apply(.final("Existing English session"), language: .english)
+
+        expect(
+            document.contentLanguage(fallback: .japanese) == .english,
+            "Changing the next-input language never relabels an existing transcript"
+        )
+        expect(
+            document.renderedText == "Existing English session",
+            "Changing the next-input language never filters or rewrites existing text"
+        )
     }
 
     private static func testRepeatedFinalTextIsPreserved() {

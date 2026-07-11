@@ -122,7 +122,12 @@ struct FloatingCaptionView: View {
     @State private var pendingText = ""
     @State private var isTranslating = false
 
-    private var sourceLanguage: SpeechLanguage { store.detectedLanguage ?? store.sourceLanguage }
+    private var sourceLanguage: SpeechLanguage {
+        if store.isRecording {
+            return store.detectedLanguage ?? store.document.contentLanguage(fallback: store.sourceLanguage)
+        }
+        return store.document.contentLanguage(fallback: store.sourceLanguage)
+    }
     private var sourceText: String {
         store.document.realtimeTranslationContext(for: sourceLanguage, maximumCharacterCount: 320)
     }
@@ -167,6 +172,12 @@ struct FloatingCaptionView: View {
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .strokeBorder(.white.opacity(reduceTransparency ? 0.18 : 0.10))
                 }
+        }
+        .overlay {
+            if !preferences.floatingCaptionClickThrough {
+                CaptionDragSurface()
+                    .accessibilityHidden(true)
+            }
         }
         .padding(8)
         .translationTask(configuration) { @MainActor session in
@@ -228,4 +239,24 @@ struct FloatingCaptionView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentTransition(.opacity)
     }
+}
+
+private struct CaptionDragSurface: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        CaptionDragNSView()
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
+}
+
+private final class CaptionDragNSView: NSView {
+    override func mouseDown(with event: NSEvent) {
+        window?.performDrag(with: event)
+    }
+
+    override func resetCursorRects() {
+        addCursorRect(bounds, cursor: .openHand)
+    }
+
+    override var acceptsFirstResponder: Bool { false }
 }

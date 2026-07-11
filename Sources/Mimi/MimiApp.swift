@@ -415,6 +415,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         case "captions":
             fixturePreferences.floatingCaptionsEnabled = true
             fixturePreferences.floatingCaptionContent = .both
+            fixturePreferences.floatingCaptionClickThrough = false
             view = AnyView(FloatingCaptionView(store: store, preferences: fixturePreferences))
             size = NSSize(width: 820, height: 150)
         case "transcript":
@@ -593,6 +594,12 @@ struct MimiApp: App {
         .windowResizability(.contentMinSize)
         .commands {
             CommandMenu("Recording") {
+                Button(preferences.text("New Session", "新しいセッション")) {
+                    store.newSession()
+                }
+                .keyboardShortcut("n", modifiers: .command)
+                .disabled(store.controlsLocked)
+
                 Button(store.isRecording ? "Stop Recording" : "Start Recording") {
                     store.toggleRecording()
                 }
