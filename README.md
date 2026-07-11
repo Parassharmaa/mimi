@@ -23,7 +23,7 @@ Mimi sits in the menu bar, transcribes locally, and makes its model choices visi
   that keeps memory predictable, but a forced speech-boundary reset can reduce
   accuracy versus Apple Speech or Whisper's post-stop pass.
 - Downloadable `mlx-community/Qwen3-ASR-0.6B-4bit` mode (about 713 MB), loaded directly in Swift with MLX Audio. It combines frequent provisional decoding, agreement-based confirmation, cached encoder windows, and a retrospective finalization pass.
-- Live on-device English ↔ Japanese text translation using Apple’s Translation framework. While recording, Mimi translates the latest transcript snapshot on a bounded cadence and uses the low-latency strategy on macOS 26.4+.
+- Live on-device English ↔ Japanese text translation using Apple’s Translation framework. With Apple Speech selected, Mimi presents source and target panes together and translates a bounded 480-character rolling context on a steady cadence; other ASR engines translate finalized text. It uses the low-latency strategy on macOS 26.4+.
 - Transcript copy/clear actions and automatic deletion of temporary source audio after Whisper's post-stop transcription; Apple Speech and live MLX engines process bounded PCM in memory without writing a source-audio file.
 - Deterministic English/Japanese E2E coverage and a GitHub Actions macOS packaging job.
 

@@ -295,7 +295,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
         let store = AppStore(loadPersistedTranscript: false)
         store.sourceLanguage = .japanese
-        store.engineID = .whisperKitLargeV3Turbo
+        store.engineID = .appleSpeechAnalyzer
         store.translationMode = .translateFinalSegments
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
@@ -319,7 +319,11 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         let size: NSSize
         switch screen {
         case "transcript":
-            view = AnyView(TranscriptWindow(store: store, isConfirmingClear: presentationState == "clear-confirmation"))
+            view = AnyView(TranscriptWindow(
+                store: store,
+                isConfirmingClear: presentationState == "clear-confirmation",
+                fixtureTranslation: "Hello. Mimi transcribes locally on this Mac."
+            ))
             size = NSSize(width: 820, height: 600)
         case "settings":
             view = AnyView(SettingsView(store: store))

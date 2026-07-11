@@ -242,6 +242,29 @@ public struct TranscriptDocument: Codable, Equatable, Sendable {
             .joined(separator: "\n")
     }
 
+    /// A bounded tail for realtime translation. Re-translating the complete
+    /// meeting on every partial makes latency grow with session length; a few
+    /// recent completed phrases plus the current Apple Speech hypothesis give
+    /// the translator local word-order context while keeping work constant.
+    public func realtimeTranslationContext(
+        for language: SpeechLanguage,
+        maximumCharacterCount: Int = 480
+    ) -> String {
+        guard maximumCharacterCount > 0 else { return "" }
+
+        let current = Self.normalized(liveText)
+        var parts = current.isEmpty ? [] : [String(current.suffix(maximumCharacterCount))]
+        var remaining = maximumCharacterCount - (parts.first?.count ?? 0)
+
+        for segment in segments.reversed() where segment.language == language {
+            let separatorCost = parts.isEmpty ? 0 : 1
+            guard segment.text.count + separatorCost <= remaining else { break }
+            parts.insert(segment.text, at: 0)
+            remaining -= segment.text.count + separatorCost
+        }
+        return parts.joined(separator: "\n")
+    }
+
     public mutating func apply(_ event: TranscriptEvent, language: SpeechLanguage, now: Date = Date()) {
         switch event {
         case let .partial(text):

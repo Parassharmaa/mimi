@@ -6,6 +6,8 @@ struct InlineTranslationView: View {
     let sourceText: String
     let sourceLanguage: SpeechLanguage
     let isLive: Bool
+    let fillsAvailableSpace: Bool
+    let fixtureTranslation: String?
 
     @State private var configuration: TranslationSession.Configuration?
     @State private var translatedText = ""
@@ -14,10 +16,19 @@ struct InlineTranslationView: View {
     @State private var requestedText = ""
     @State private var pendingText = ""
 
-    init(sourceText: String, sourceLanguage: SpeechLanguage, isLive: Bool = false) {
+    init(
+        sourceText: String,
+        sourceLanguage: SpeechLanguage,
+        isLive: Bool = false,
+        fillsAvailableSpace: Bool = false,
+        fixtureTranslation: String? = nil
+    ) {
         self.sourceText = sourceText
         self.sourceLanguage = sourceLanguage
         self.isLive = isLive
+        self.fillsAvailableSpace = fillsAvailableSpace
+        self.fixtureTranslation = fixtureTranslation
+        _translatedText = State(initialValue: fixtureTranslation ?? "")
     }
 
     private var targetLanguage: SpeechLanguage {
@@ -27,7 +38,7 @@ struct InlineTranslationView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Label("\(sourceLanguage.nativeName) → \(targetLanguage.nativeName)", systemImage: "translate")
+                Label(targetLanguage.nativeName, systemImage: "translate")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -36,20 +47,23 @@ struct InlineTranslationView: View {
                         .controlSize(.small)
                         .accessibilityLabel("Updating local translation")
                 }
-                Button("Refresh") {
-                    beginTranslation(of: sourceText)
+                if !isLive {
+                    Button("Refresh") {
+                        beginTranslation(of: sourceText)
+                    }
+                    .buttonStyle(.borderless)
+                    .disabled(sourceText.isEmpty || fixtureTranslation != nil)
                 }
-                .buttonStyle(.borderless)
-                .disabled(sourceText.isEmpty)
             }
 
             if !translatedText.isEmpty {
                 ScrollView {
                     Text(translatedText)
+                        .font(fillsAvailableSpace ? .title3 : .body)
                         .textSelection(.enabled)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxHeight: 160)
+                .frame(maxHeight: fillsAvailableSpace ? .infinity : 160)
             } else if isTranslating {
                 Text("Preparing local translation…")
                     .font(.caption)
@@ -75,6 +89,7 @@ struct InlineTranslationView: View {
         }
         .padding(10)
         .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .frame(maxHeight: fillsAvailableSpace ? .infinity : nil, alignment: .topLeading)
         .translationTask(configuration) { @MainActor session in
             let text = requestedText
             guard !text.isEmpty else { return }
@@ -93,6 +108,7 @@ struct InlineTranslationView: View {
         }
         .onChange(of: sourceText, initial: true) { _, newText in
             pendingText = newText
+            guard fixtureTranslation == nil else { return }
             guard !newText.isEmpty else {
                 translatedText = ""
                 requestedText = ""
@@ -101,7 +117,7 @@ struct InlineTranslationView: View {
             }
         }
         .task(id: isLive) {
-            guard isLive else { return }
+            guard isLive, fixtureTranslation == nil else { return }
             while !Task.isCancelled {
                 // Translate the newest snapshot at a steady cadence even when
                 // ASR partials keep changing continuously. Never queue more
@@ -115,7 +131,7 @@ struct InlineTranslationView: View {
             }
         }
         .task(id: sourceText) {
-            guard !isLive, !sourceText.isEmpty else { return }
+            guard fixtureTranslation == nil, !isLive, !sourceText.isEmpty else { return }
             do {
                 try await Task.sleep(for: .milliseconds(150))
                 try Task.checkCancellation()
@@ -135,7 +151,7 @@ struct InlineTranslationView: View {
     }
 
     private func beginTranslation(of text: String) {
-        guard !text.isEmpty else { return }
+        guard fixtureTranslation == nil, !text.isEmpty else { return }
         requestedText = text
         errorText = nil
         isTranslating = true

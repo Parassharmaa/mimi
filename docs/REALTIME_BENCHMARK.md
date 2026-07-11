@@ -65,8 +65,9 @@ change to the decoder's evidence.
   background correction pass over bounded finalized windows.
 - Keep **Nemotron** as an alternative experimental streaming model; do not call
   it unavailable when its pinned local pack and MLX runtime are installed.
-- Run local translation independently on the latest transcript snapshot every
-  700 ms while recording, using Apple's low-latency strategy on macOS 26.4+.
+- With Apple Speech selected, run local translation independently on a bounded
+  480-character source tail every 700 ms, using Apple's low-latency strategy on
+  macOS 26.4+. Other ASR engines translate finalized text for now.
 
 ## Model-engineering iteration gates
 

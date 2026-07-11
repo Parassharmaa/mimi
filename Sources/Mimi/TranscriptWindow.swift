@@ -4,9 +4,15 @@ import SwiftUI
 struct TranscriptWindow: View {
     @Bindable var store: AppStore
     @State private var isConfirmingClear = false
+    private let fixtureTranslation: String?
 
-    init(store: AppStore, isConfirmingClear: Bool = false) {
+    init(
+        store: AppStore,
+        isConfirmingClear: Bool = false,
+        fixtureTranslation: String? = nil
+    ) {
         self.store = store
+        self.fixtureTranslation = fixtureTranslation
         _isConfirmingClear = State(initialValue: isConfirmingClear)
     }
 
@@ -95,27 +101,38 @@ struct TranscriptWindow: View {
                         .accessibilityLabel("Recording warning: \(message)")
                 }
 
-                ScrollView {
-                    TranscriptContentView(
-                        document: store.document,
-                        emptyMessage: "Your local transcript will appear here.",
-                        font: .title3
-                    )
-                    .padding(.vertical, 4)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                let followsAppleSpeech = store.isRecording && store.engineID == .appleSpeechAnalyzer
+                let translationSourceText = followsAppleSpeech
+                    ? store.document.realtimeTranslationContext(for: store.sourceLanguage)
+                    : store.document.finalizedText(for: store.sourceLanguage)
 
-                let translationSourceText = store.document.renderedText(
-                    for: store.sourceLanguage,
-                    includingLiveText: true
-                )
-                if store.translationMode == .translateFinalSegments,
-                   !translationSourceText.isEmpty {
-                    InlineTranslationView(
-                        sourceText: translationSourceText,
-                        sourceLanguage: store.sourceLanguage,
-                        isLive: store.isRecording
-                    )
+                if store.translationMode == .translateFinalSegments {
+                    GeometryReader { proxy in
+                        HStack(alignment: .top, spacing: 12) {
+                            TranscriptLanguagePane(
+                                document: store.document,
+                                language: store.sourceLanguage
+                            )
+                            InlineTranslationView(
+                                sourceText: translationSourceText,
+                                sourceLanguage: store.sourceLanguage,
+                                isLive: followsAppleSpeech,
+                                fillsAvailableSpace: true,
+                                fixtureTranslation: fixtureTranslation
+                            )
+                        }
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                    }
+                } else {
+                    ScrollView {
+                        TranscriptContentView(
+                            document: store.document,
+                            emptyMessage: "Your local transcript will appear here.",
+                            font: .title3
+                        )
+                        .padding(.vertical, 4)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
             }
             .padding()
@@ -160,5 +177,34 @@ struct TranscriptWindow: View {
                 }
             }
         }
+    }
+}
+
+private struct TranscriptLanguagePane: View {
+    let document: TranscriptDocument
+    let language: SpeechLanguage
+
+    var body: some View {
+        let sourceDocument = TranscriptDocument(
+            segments: document.segments.filter { $0.language == language },
+            liveText: document.liveText
+        )
+        VStack(alignment: .leading, spacing: 6) {
+            Label(language.nativeName, systemImage: "waveform")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            ScrollView {
+                TranscriptContentView(
+                    document: sourceDocument,
+                    emptyMessage: "Speech will appear here.",
+                    font: .title3
+                )
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .padding(10)
+        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }

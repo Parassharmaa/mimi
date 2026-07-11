@@ -13,7 +13,7 @@ Mimi is a native, local-first macOS transcription utility for English and Japane
 | Default ASR on macOS 26 | Apple `SpeechAnalyzer` / `SpeechTranscriber` | On-device, designed for live/meeting transcription, system-managed locale assets. |
 | Accuracy ASR pack | WhisperKit / Whisper Large-v3 Core ML (626 MB) | Mature Swift integration, multilingual Japanese + English, explicit model download. |
 | Experimental MLX ASR packs | Qwen3-ASR 0.6B 4-bit (713 MB) and Nemotron 3.5 streaming 8-bit (756 MB) | Direct Swift/MLX integration across every capture lane; Qwen adds provisional, agreement-confirmed, and retrospective completed-window passes. |
-| Translation | Apple Translation framework | EN↔JA is a local, on-demand language-pair download. Translate the newest snapshot on a bounded live cadence. |
+| Translation | Apple Translation framework | EN↔JA is a local, on-demand language-pair download. Apple Speech drives a bounded rolling source/target view; other engines translate finalized text. |
 | Meeting/speaker capture | ScreenCaptureKit content picker | The implemented audio-only lanes capture a person-selected app or display without registering a video output; microphone, app, and display audio stay separate. Core Audio process taps remain a later alternative. |
 
 ## V1 user flow

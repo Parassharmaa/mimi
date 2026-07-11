@@ -862,12 +862,20 @@ struct MimiSessionE2E {
             "Live translation receives the current provisional speech before any segment is final"
         )
         expect(
+            document.realtimeTranslationContext(for: .english, maximumCharacterCount: 32) == "volatile English",
+            "Realtime translation starts from the current Apple Speech hypothesis"
+        )
+        expect(
             document.renderedText(for: .english, includingLiveText: false).isEmpty,
             "Non-live translation excludes volatile speech"
         )
         document.apply(.final("final English"), language: .english)
         document.apply(.final("最終の日本語"), language: .japanese)
         document.apply(.partial("next live phrase"), language: .english)
+        expect(
+            document.realtimeTranslationContext(for: .english, maximumCharacterCount: 40) == "final English\nnext live phrase",
+            "Realtime translation keeps only bounded same-language context plus the current hypothesis"
+        )
         document.apply(.final("final English"), language: .english)
 
         expect(document.finalizedText(for: .english) == "final English\nfinal English", "Translation input preserves legitimate repeated final English speech")
