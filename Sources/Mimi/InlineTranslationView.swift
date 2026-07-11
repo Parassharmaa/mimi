@@ -8,6 +8,7 @@ struct InlineTranslationView: View {
     let isLive: Bool
     let fillsAvailableSpace: Bool
     let fixtureTranslation: String?
+    let initiallyFollowingLatest: Bool
 
     @State private var configuration: TranslationSession.Configuration?
     @State private var translatedText = ""
@@ -21,13 +22,15 @@ struct InlineTranslationView: View {
         sourceLanguage: SpeechLanguage,
         isLive: Bool = false,
         fillsAvailableSpace: Bool = false,
-        fixtureTranslation: String? = nil
+        fixtureTranslation: String? = nil,
+        initiallyFollowingLatest: Bool = true
     ) {
         self.sourceText = sourceText
         self.sourceLanguage = sourceLanguage
         self.isLive = isLive
         self.fillsAvailableSpace = fillsAvailableSpace
         self.fixtureTranslation = fixtureTranslation
+        self.initiallyFollowingLatest = initiallyFollowingLatest
         _translatedText = State(initialValue: fixtureTranslation ?? "")
     }
 
@@ -57,7 +60,10 @@ struct InlineTranslationView: View {
             }
 
             if !translatedText.isEmpty {
-                ScrollView {
+                FollowLatestScrollView(
+                    contentVersion: translatedText,
+                    initiallyFollowing: initiallyFollowingLatest
+                ) {
                     Text(translatedText)
                         .font(fillsAvailableSpace ? .title3 : .body)
                         .textSelection(.enabled)

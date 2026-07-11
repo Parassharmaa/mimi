@@ -10,6 +10,8 @@ Mimi sits in the menu bar, transcribes locally, and makes its model choices visi
 
 - Native SwiftUI menu-bar control and a normal transcript window.
 - Local microphone capture with a prominent active-recording state.
+- Direct audio-only capture of everything playing through a selected physical
+  or virtual output device, using a private, unmuted Core Audio process tap.
 - Audio-only capture of a person-selected app or display through the macOS
   ScreenCaptureKit content picker. These are separate lanes from microphone
   input; Mimi does not register a video output or silently mix the sources.
@@ -25,6 +27,9 @@ Mimi sits in the menu bar, transcribes locally, and makes its model choices visi
 - Downloadable `mlx-community/Qwen3-ASR-0.6B-4bit` mode (about 713 MB), loaded directly in Swift with MLX Audio. It combines frequent provisional decoding, agreement-based confirmation, cached encoder windows, and a retrospective finalization pass.
 - Live on-device English ↔ Japanese text translation using Apple’s Translation framework. With Apple Speech selected, Mimi presents source and target panes together and translates a bounded 480-character rolling context on a steady cadence; other ASR engines translate finalized text. It uses the low-latency strategy on macOS 26.4+.
 - Transcript copy/clear actions and automatic deletion of temporary source audio after Whisper's post-stop transcription; Apple Speech and live MLX engines process bounded PCM in memory without writing a source-audio file.
+- Transcript and translation panes follow incoming text automatically. If a
+  person scrolls up, Mimi preserves that reading position and shows a **New
+  text ↓** control that returns to the bottom and resumes following.
 - Deterministic English/Japanese E2E coverage and a GitHub Actions macOS packaging job.
 
 ## Model policy
@@ -44,9 +49,9 @@ The repeatable local evaluation and current M3 Pro measurements are documented i
 
 ## Audio sources
 
-**Microphone**, **Selected App Audio**, and **Selected Display Audio** are distinct inputs. For the two speaker-output lanes, Mimi opens macOS’s ScreenCaptureKit content picker: choose an app such as Zoom or Chrome for app audio, or choose the display carrying the speaker output for display-associated audio. The picker and macOS privacy flow remain in control; Mimi captures only the selected audio stream and does not capture screen pixels. A browser choice is app-level (for example, Chrome), not a specific Meet tab.
+**Microphone**, **Selected Audio Output**, **Selected App Audio**, and **Selected Display Audio** are distinct inputs. Selected Audio Output uses a private Core Audio tap for everything routed to one selected physical or virtual output, making it the direct choice for speaker or meeting audio. The app and display lanes instead open macOS’s ScreenCaptureKit content picker: choose an app such as Zoom or Chrome for app audio, or choose the display carrying the speaker output for display-associated audio. Mimi captures only audio and does not capture screen pixels. A browser choice is app-level (for example, Chrome), not a specific Meet tab.
 
-Core Audio process taps remain a future alternative. Mimi does not label the current display lane as unrestricted “all system audio,” and it never blindly mixes meeting audio with the microphone.
+Each lane is explicit and independent. Mimi never blindly mixes meeting audio with the microphone, and it does not label the display lane as unrestricted “all system audio.”
 
 For implementation details and the acceptance criteria, read [the v1 plan](docs/V1_PLAN.md).
 
@@ -65,7 +70,7 @@ scripts/build-app.sh debug
 open .build/Mimi.app
 ```
 
-The first microphone action triggers the standard macOS permission flow. Choosing app or display audio opens the system content picker and may require the relevant macOS privacy permission. Apple Speech never starts a hidden download: choose the selected English or Japanese system asset in **Settings → Models** and explicitly start setup. Whisper, Qwen, and Nemotron likewise download only after an explicit Mimi action.
+The first microphone action triggers the standard macOS permission flow. Selected Audio Output may request System Audio Recording access; choosing app or display audio opens the system content picker and may require the relevant macOS privacy permission. Apple Speech never starts a hidden download: choose the selected English or Japanese system asset in **Settings → Models** and explicitly start setup. Whisper, Qwen, and Nemotron likewise download only after an explicit Mimi action.
 
 ## Verify
 
@@ -88,6 +93,15 @@ permission prompts cannot be auto-accepted safely.
 
 ```sh
 scripts/run-microphone-smoke.sh
+```
+
+The signed app also has an opt-in physical smoke for direct output capture. It
+plays a local synthesized phrase, verifies PCM callbacks from the default
+output tap, and retains no source audio:
+
+```sh
+scripts/build-app.sh debug
+.build/Mimi.app/Contents/MacOS/Mimi --e2e-output-audio-smoke
 ```
 
 After explicitly downloading a model in Mimi, these opt-in physical-Mac

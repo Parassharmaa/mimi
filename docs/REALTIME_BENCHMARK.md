@@ -57,6 +57,24 @@ coalesces display updates to a 160 ms cadence while retaining agreement-based
 confirmation inside the model session. This is a UI stability policy, not a
 change to the decoder's evidence.
 
+### Lightweight acoustic language ID groundwork
+
+For a future mixed English/Japanese **Auto** mode, Mimi benchmarks a separate
+Whisper tiny detector rather than asking the text-only Natural Language
+framework to guess after transcription. On the same M3 Pro, its app-managed
+model occupies about 73 MB, loads in roughly 0.56–0.60 s, and identifies both
+synthetic English and Japanese correctly from a one-second prefix. Warm
+language decisions take about 0.07–0.08 s. These measurements support a short
+rolling detector with hysteresis; they do not yet make Auto mode a shipped
+language choice.
+
+Install and benchmark the detector explicitly—never as a hidden download:
+
+```sh
+.build/Mimi.app/Contents/MacOS/Mimi --benchmark-install-language-id
+.build/Mimi.app/Contents/MacOS/Mimi --benchmark-tiny-language-id /path/to/audio.wav
+```
+
 ## Current decision
 
 - Keep **Apple progressive** as the default on macOS 26.

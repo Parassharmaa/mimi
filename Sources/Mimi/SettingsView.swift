@@ -124,7 +124,7 @@ struct SettingsView: View {
                     }
                     .disabled(store.controlsLocked)
 
-                    Text("These buttons show macOS's content picker and request Screen Recording access only when you choose one. Mimi registers only an audio output for the selected app or display; it does not save screen images.")
+                    Text("Selected Audio Output uses a private Core Audio tap and the system audio-recording permission. App and display choices use macOS's content picker. Mimi captures audio only and does not save screen images.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Text("For Google Meet, select Chrome; for Zoom, select Zoom. Display audio follows the display you choose, which is useful when your meeting audio is playing through that display.")

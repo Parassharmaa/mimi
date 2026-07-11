@@ -5,14 +5,17 @@ struct TranscriptWindow: View {
     @Bindable var store: AppStore
     @State private var isConfirmingClear = false
     private let fixtureTranslation: String?
+    private let initiallyFollowingLatest: Bool
 
     init(
         store: AppStore,
         isConfirmingClear: Bool = false,
-        fixtureTranslation: String? = nil
+        fixtureTranslation: String? = nil,
+        initiallyFollowingLatest: Bool = true
     ) {
         self.store = store
         self.fixtureTranslation = fixtureTranslation
+        self.initiallyFollowingLatest = initiallyFollowingLatest
         _isConfirmingClear = State(initialValue: isConfirmingClear)
     }
 
@@ -38,6 +41,19 @@ struct TranscriptWindow: View {
 
                         Button("Refresh Input Devices") {
                             store.refreshInputDevices()
+                        }
+                        .disabled(store.controlsLocked)
+                    } else if store.source == .outputAudio {
+                        Picker("Output", selection: $store.selectedOutputDeviceID) {
+                            Text("System Default").tag(UInt32?.none)
+                            ForEach(store.outputDevices) { device in
+                                Text(device.displayName).tag(Optional(device.id))
+                            }
+                        }
+                        .disabled(store.controlsLocked)
+
+                        Button("Refresh Output Devices") {
+                            store.refreshOutputDevices()
                         }
                         .disabled(store.controlsLocked)
                     } else {
@@ -111,20 +127,25 @@ struct TranscriptWindow: View {
                         HStack(alignment: .top, spacing: 12) {
                             TranscriptLanguagePane(
                                 document: store.document,
-                                language: store.sourceLanguage
+                                language: store.sourceLanguage,
+                                initiallyFollowingLatest: initiallyFollowingLatest
                             )
                             InlineTranslationView(
                                 sourceText: translationSourceText,
                                 sourceLanguage: store.sourceLanguage,
                                 isLive: followsAppleSpeech,
                                 fillsAvailableSpace: true,
-                                fixtureTranslation: fixtureTranslation
+                                fixtureTranslation: fixtureTranslation,
+                                initiallyFollowingLatest: initiallyFollowingLatest
                             )
                         }
                         .frame(width: proxy.size.width, height: proxy.size.height)
                     }
                 } else {
-                    ScrollView {
+                    FollowLatestScrollView(
+                        contentVersion: store.document.renderedText,
+                        initiallyFollowing: initiallyFollowingLatest
+                    ) {
                         TranscriptContentView(
                             document: store.document,
                             emptyMessage: "Your local transcript will appear here.",
@@ -183,6 +204,7 @@ struct TranscriptWindow: View {
 private struct TranscriptLanguagePane: View {
     let document: TranscriptDocument
     let language: SpeechLanguage
+    let initiallyFollowingLatest: Bool
 
     var body: some View {
         let sourceDocument = TranscriptDocument(
@@ -194,7 +216,10 @@ private struct TranscriptLanguagePane: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
 
-            ScrollView {
+            FollowLatestScrollView(
+                contentVersion: sourceDocument.renderedText,
+                initiallyFollowing: initiallyFollowingLatest
+            ) {
                 TranscriptContentView(
                     document: sourceDocument,
                     emptyMessage: "Speech will appear here.",

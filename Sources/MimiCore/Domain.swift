@@ -37,6 +37,7 @@ public enum SpeechLanguage: String, CaseIterable, Codable, Sendable, Identifiabl
 
 public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
     case microphone
+    case outputAudio
     case applicationAudio
     case systemAudio
 
@@ -45,6 +46,7 @@ public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
     public var displayName: String {
         switch self {
         case .microphone: "Microphone"
+        case .outputAudio: "Selected Audio Output"
         case .applicationAudio: "Selected App Audio"
         case .systemAudio: "Selected Display Audio"
         }
@@ -53,6 +55,7 @@ public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
     public var details: String {
         switch self {
         case .microphone: "Your selected microphone input"
+        case .outputAudio: "Everything playing through the selected output device"
         case .applicationAudio: "Zoom, Chrome, or another selected app"
         case .systemAudio: "Audio associated with a display you choose"
         }

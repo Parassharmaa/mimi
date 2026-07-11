@@ -7,9 +7,15 @@ struct MenuBarView: View {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
     @State private var isConfirmingClear = false
+    private let initiallyFollowingLatest: Bool
 
-    init(store: AppStore, isConfirmingClear: Bool = false) {
+    init(
+        store: AppStore,
+        isConfirmingClear: Bool = false,
+        initiallyFollowingLatest: Bool = true
+    ) {
         self.store = store
+        self.initiallyFollowingLatest = initiallyFollowingLatest
         _isConfirmingClear = State(initialValue: isConfirmingClear)
     }
 
@@ -117,6 +123,27 @@ struct MenuBarView: View {
                     .accessibilityLabel("Refresh microphone inputs")
                     .disabled(store.controlsLocked)
                 }
+            } else if store.source == .outputAudio {
+                HStack(spacing: 8) {
+                    Picker("Output", selection: $store.selectedOutputDeviceID) {
+                        Text("System Default").tag(UInt32?.none)
+                        ForEach(store.outputDevices) { device in
+                            Text(device.displayName).tag(Optional(device.id))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .disabled(store.controlsLocked)
+
+                    Button {
+                        store.refreshOutputDevices()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Refresh audio outputs")
+                    .accessibilityLabel("Refresh audio outputs")
+                    .disabled(store.controlsLocked)
+                }
             }
 
             ScreenAudioSelectionControl(store: store, compact: true)
@@ -194,7 +221,10 @@ struct MenuBarView: View {
         VStack(alignment: .leading, spacing: 6) {
             transcriptHeader
 
-            ScrollView {
+            FollowLatestScrollView(
+                contentVersion: store.document.renderedText,
+                initiallyFollowing: initiallyFollowingLatest
+            ) {
                 TranscriptContentView(
                     document: store.document,
                     emptyMessage: "Choose a ready local model, then start speaking."

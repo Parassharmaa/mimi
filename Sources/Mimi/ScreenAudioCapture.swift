@@ -27,7 +27,7 @@ final class ScreenAudioCapture: NSObject, ScreenAudioCapturing {
     }
 
     func selectContent(for source: AudioSource) async throws {
-        guard source != .microphone else {
+        guard source == .applicationAudio || source == .systemAudio else {
             throw ScreenAudioCaptureError.unsupportedSource(source)
         }
         guard pickerContinuation == nil else {
@@ -178,7 +178,7 @@ extension ScreenAudioCapture {
             "App chosen with the macOS content picker"
         case .systemAudio:
             "Display chosen with the macOS content picker"
-        case .microphone:
+        case .microphone, .outputAudio:
             ""
         }
     }

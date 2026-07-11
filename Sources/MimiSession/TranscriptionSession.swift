@@ -15,9 +15,36 @@ public struct AudioInputDevice: Identifiable, Hashable, Sendable {
     public var displayName: String { name }
 }
 
+public struct AudioOutputDevice: Identifiable, Hashable, Sendable {
+    public let id: UInt32
+    public let name: String
+
+    public init(id: UInt32, name: String) {
+        self.id = id
+        self.name = name
+    }
+
+    public var displayName: String { name }
+}
+
 @MainActor
 public protocol MicrophoneCapturing: AnyObject {
     func requestPermission() async -> Bool
+    func configureInput(deviceID: UInt32?) throws -> AVAudioFormat
+    func start(
+        recordingTo url: URL?,
+        deviceID: UInt32?,
+        onBuffer: @escaping @Sendable (AVAudioPCMBuffer) -> Void
+    ) throws
+    @discardableResult func stop() throws -> URL?
+}
+
+/// Captures the system mix sent to one physical or virtual output device by
+/// creating a private Core Audio process tap and exposing it as an aggregate
+/// input. Unlike ScreenCaptureKit, this lane does not require choosing a
+/// display or application.
+@MainActor
+public protocol OutputAudioCapturing: AnyObject {
     func configureInput(deviceID: UInt32?) throws -> AVAudioFormat
     func start(
         recordingTo url: URL?,
@@ -172,6 +199,7 @@ public protocol TranscriptPersisting: AnyObject {
 @MainActor
 public struct TranscriptionSessionDependencies {
     public let microphoneCapture: any MicrophoneCapturing
+    public let outputAudioCapture: any OutputAudioCapturing
     public let screenAudioCapture: any ScreenAudioCapturing
     public let appleSpeech: any AppleSpeechProviding
     public let whisper: any WhisperAccuracyTranscribing
@@ -179,18 +207,22 @@ public struct TranscriptionSessionDependencies {
     public let qwen: any QwenMLXLiveTranscribing
     public let storage: any TranscriptPersisting
     public let inputDevices: [AudioInputDevice]
+    public let outputDevices: [AudioOutputDevice]
 
     public init(
         microphoneCapture: any MicrophoneCapturing,
+        outputAudioCapture: any OutputAudioCapturing,
         screenAudioCapture: any ScreenAudioCapturing,
         appleSpeech: any AppleSpeechProviding,
         whisper: any WhisperAccuracyTranscribing,
         nemotron: any NemotronMLXLiveTranscribing,
         qwen: any QwenMLXLiveTranscribing,
         storage: any TranscriptPersisting,
-        inputDevices: [AudioInputDevice]
+        inputDevices: [AudioInputDevice],
+        outputDevices: [AudioOutputDevice]
     ) {
         self.microphoneCapture = microphoneCapture
+        self.outputAudioCapture = outputAudioCapture
         self.screenAudioCapture = screenAudioCapture
         self.appleSpeech = appleSpeech
         self.whisper = whisper
@@ -198,6 +230,7 @@ public struct TranscriptionSessionDependencies {
         self.qwen = qwen
         self.storage = storage
         self.inputDevices = inputDevices
+        self.outputDevices = outputDevices
     }
 }
 
@@ -303,11 +336,14 @@ public final class TranscriptionSession {
     public var lastError: String?
     public var lastRecordingURL: URL?
     public var inputDevices: [AudioInputDevice]
+    public var outputDevices: [AudioOutputDevice]
     public var selectedInputDeviceID: UInt32?
+    public var selectedOutputDeviceID: UInt32?
     public private(set) var appleSpeechAssetStatuses: [SpeechLanguage: AppleSpeechAssetStatus] = [:]
     public private(set) var modelSetupState: ModelSetupState = .idle
 
     private let microphoneCapture: any MicrophoneCapturing
+    private let outputAudioCapture: any OutputAudioCapturing
     private let screenAudioCapture: any ScreenAudioCapturing
     private let appleSpeech: any AppleSpeechProviding
     private let whisper: any WhisperAccuracyTranscribing
@@ -333,6 +369,7 @@ public final class TranscriptionSession {
         initialEngine: TranscriptionEngineID? = nil
     ) {
         microphoneCapture = dependencies.microphoneCapture
+        outputAudioCapture = dependencies.outputAudioCapture
         screenAudioCapture = dependencies.screenAudioCapture
         appleSpeech = dependencies.appleSpeech
         whisper = dependencies.whisper
@@ -340,6 +377,7 @@ public final class TranscriptionSession {
         qwen = dependencies.qwen
         storage = dependencies.storage
         inputDevices = dependencies.inputDevices
+        outputDevices = dependencies.outputDevices
         engineID = initialEngine ?? (dependencies.appleSpeech.isPlatformAvailable ? .appleSpeechAnalyzer : .whisperKitLargeV3Turbo)
         document = loadPersistedTranscript ? dependencies.storage.loadLatestTranscript() : TranscriptDocument()
         dependencies.storage.removeStaleTemporaryRecordings()
@@ -421,6 +459,8 @@ public final class TranscriptionSession {
         return switch source {
         case .microphone:
             true
+        case .outputAudio:
+            !outputDevices.isEmpty
         case .applicationAudio, .systemAudio:
             screenAudioCapture.selectedContent?.source == source
         }
@@ -467,6 +507,13 @@ public final class TranscriptionSession {
         inputDevices = devices
         if let selectedInputDeviceID, !devices.contains(where: { $0.id == selectedInputDeviceID }) {
             self.selectedInputDeviceID = nil
+        }
+    }
+
+    public func replaceOutputDevices(_ devices: [AudioOutputDevice]) {
+        outputDevices = devices
+        if let selectedOutputDeviceID, !devices.contains(where: { $0.id == selectedOutputDeviceID }) {
+            self.selectedOutputDeviceID = nil
         }
     }
 
@@ -857,7 +904,8 @@ public final class TranscriptionSession {
         configuration.source == source &&
             configuration.language == sourceLanguage &&
             configuration.engine == engineID &&
-            configuration.inputDeviceID == selectedInputDeviceID
+            configuration.inputDeviceID == selectedInputDeviceID &&
+            configuration.outputDeviceID == selectedOutputDeviceID
     }
 
     public func startRecording() async {
@@ -866,7 +914,8 @@ public final class TranscriptionSession {
             source: source,
             language: sourceLanguage,
             engine: engineID,
-            inputDeviceID: selectedInputDeviceID
+            inputDeviceID: selectedInputDeviceID,
+            outputDeviceID: selectedOutputDeviceID
         )
 
         // Re-check Apple’s per-language asset at the recording boundary. The
@@ -939,6 +988,8 @@ public final class TranscriptionSession {
                     throw TranscriptionSessionError.microphonePermissionDenied
                 }
                 inputFormat = try microphoneCapture.configureInput(deviceID: configuration.inputDeviceID)
+            case .outputAudio:
+                inputFormat = try outputAudioCapture.configureInput(deviceID: configuration.outputDeviceID)
             case .applicationAudio, .systemAudio:
                 guard screenAudioCapture.selectedContent?.source == configuration.source else {
                     throw TranscriptionSessionError.screenAudioSelectionRequired(configuration.source)
@@ -1008,6 +1059,12 @@ public final class TranscriptionSession {
                 try microphoneCapture.start(
                     recordingTo: recordingURL,
                     deviceID: configuration.inputDeviceID,
+                    onBuffer: onBuffer
+                )
+            case .outputAudio:
+                try outputAudioCapture.start(
+                    recordingTo: recordingURL,
+                    deviceID: configuration.outputDeviceID,
                     onBuffer: onBuffer
                 )
             case .applicationAudio, .systemAudio:
@@ -1143,6 +1200,8 @@ public final class TranscriptionSession {
         switch activeSession?.source ?? source {
         case .microphone:
             return try microphoneCapture.stop()
+        case .outputAudio:
+            return try outputAudioCapture.stop()
         case .applicationAudio, .systemAudio:
             return try await screenAudioCapture.stop()
         }
@@ -1292,13 +1351,21 @@ private struct SessionConfiguration: Equatable, Sendable {
     let language: SpeechLanguage
     let engine: TranscriptionEngineID
     let inputDeviceID: UInt32?
+    let outputDeviceID: UInt32?
 
-    init(source: AudioSource, language: SpeechLanguage, engine: TranscriptionEngineID, inputDeviceID: UInt32?) {
+    init(
+        source: AudioSource,
+        language: SpeechLanguage,
+        engine: TranscriptionEngineID,
+        inputDeviceID: UInt32?,
+        outputDeviceID: UInt32?
+    ) {
         id = UUID()
         self.source = source
         self.language = language
         self.engine = engine
         self.inputDeviceID = inputDeviceID
+        self.outputDeviceID = outputDeviceID
     }
 }
 

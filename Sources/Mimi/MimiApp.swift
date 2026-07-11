@@ -15,6 +15,54 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         NSApplication.shared.setActivationPolicy(.accessory)
 
         let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("--benchmark-install-language-id") {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let detector = WhisperLanguageDetector()
+                    try await detector.install { progress in
+                        if let fraction = progress.fractionCompleted {
+                            print("Mimi language detector setup: \(Int((fraction * 100).rounded()))%")
+                        }
+                    }
+                    print("Mimi Whisper tiny language detector is installed and ready.")
+                    status = 0
+                } catch {
+                    print("Mimi language detector install failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if arguments.contains("--e2e-output-audio-smoke") {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let capture = OutputAudioCapture()
+                    let format = try capture.configureInput(deviceID: nil)
+                    let counter = OutputAudioSmokeCounter()
+                    try capture.start(recordingTo: nil, deviceID: nil) { _ in
+                        counter.increment()
+                    }
+                    let speech = AVSpeechSynthesizer()
+                    speech.speak(AVSpeechUtterance(string: "Mimi output audio capture smoke test."))
+                    try await Task.sleep(for: .seconds(4))
+                    speech.stopSpeaking(at: .immediate)
+                    _ = try capture.stop()
+                    guard counter.value > 0 else {
+                        throw RealtimeBenchmarkCommandError.outputAudioMissing
+                    }
+                    print("Mimi selected output audio smoke passed: \(counter.value) PCM callbacks at \(Int(format.sampleRate)) Hz.")
+                    status = 0
+                } catch {
+                    print("Mimi selected output audio smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
         if arguments.contains("--benchmark-install-qwen") {
             Task { @MainActor in
                 let status: Int32
@@ -115,6 +163,40 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                     status = 0
                 } catch {
                     print("Mimi Apple Speech asset install failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let audioPath = argument(after: "--benchmark-language-id", in: arguments) {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let report = try await WhisperKitAccuracyEngine().runLanguageDetectionBenchmark(
+                        recordingAt: URL(fileURLWithPath: audioPath)
+                    )
+                    try report.printJSON()
+                    status = 0
+                } catch {
+                    print("Mimi acoustic language-ID benchmark failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let audioPath = argument(after: "--benchmark-tiny-language-id", in: arguments) {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let report = try await WhisperLanguageDetector().runBenchmark(
+                        recordingAt: URL(fileURLWithPath: audioPath)
+                    )
+                    try report.printJSON()
+                    status = 0
+                } catch {
+                    print("Mimi tiny acoustic language-ID benchmark failed: \(error.localizedDescription)")
                     status = 1
                 }
                 Darwin.exit(status)
@@ -322,14 +404,19 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             view = AnyView(TranscriptWindow(
                 store: store,
                 isConfirmingClear: presentationState == "clear-confirmation",
-                fixtureTranslation: "Hello. Mimi transcribes locally on this Mac."
+                fixtureTranslation: "Hello. Mimi transcribes locally on this Mac.",
+                initiallyFollowingLatest: presentationState != "follow-latest-paused"
             ))
             size = NSSize(width: 820, height: 600)
         case "settings":
             view = AnyView(SettingsView(store: store))
             size = NSSize(width: 560, height: 540)
         default:
-            view = AnyView(MenuBarView(store: store, isConfirmingClear: presentationState == "clear-confirmation"))
+            view = AnyView(MenuBarView(
+                store: store,
+                isConfirmingClear: presentationState == "clear-confirmation",
+                initiallyFollowingLatest: presentationState != "follow-latest-paused"
+            ))
             size = NSSize(width: 430, height: 580)
         }
 
@@ -382,6 +469,7 @@ private enum RealtimeBenchmarkCommandError: LocalizedError {
     case qwenDidNotBecomeReady
     case qwenFixtureBufferFailed
     case qwenLiveOutputMissing
+    case outputAudioMissing
     case unknownEngine(String)
 
     var errorDescription: String? {
@@ -396,9 +484,28 @@ private enum RealtimeBenchmarkCommandError: LocalizedError {
             "Mimi could not allocate a Qwen3-ASR fixture buffer."
         case .qwenLiveOutputMissing:
             "Qwen3-ASR did not produce both live and final output for the fixture."
+        case .outputAudioMissing:
+            "The Core Audio output tap started, but no output PCM arrived. Allow System Audio Recording and make sure the selected output is playing."
         case let .unknownEngine(engine):
             "Unknown realtime benchmark engine: \(engine)."
         }
+    }
+}
+
+private final class OutputAudioSmokeCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    var value: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return count
+    }
+
+    func increment() {
+        lock.lock()
+        count += 1
+        lock.unlock()
     }
 }
 

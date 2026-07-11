@@ -10,19 +10,23 @@ import Observation
 final class AppStore {
     @ObservationIgnored private let session: TranscriptionSession
     @ObservationIgnored private let inputDevicesProvider: () -> [AudioInputDevice]
+    @ObservationIgnored private let outputDevicesProvider: () -> [AudioOutputDevice]
 
     init(loadPersistedTranscript: Bool = true) {
         inputDevicesProvider = AudioDeviceCatalog.inputDevices
+        outputDevicesProvider = AudioDeviceCatalog.outputDevices
         let createdSession = TranscriptionSession(
             dependencies: .init(
                 microphoneCapture: MicrophoneCapture(),
+                outputAudioCapture: OutputAudioCapture(),
                 screenAudioCapture: ScreenAudioCapture(),
                 appleSpeech: SystemAppleSpeechProvider(),
                 whisper: WhisperKitAccuracyEngine(),
                 nemotron: NemotronMLXLiveEngine(),
                 qwen: QwenMLXLiveEngine(),
                 storage: FileTranscriptStore(),
-                inputDevices: AudioDeviceCatalog.inputDevices()
+                inputDevices: AudioDeviceCatalog.inputDevices(),
+                outputDevices: AudioDeviceCatalog.outputDevices()
             ),
             loadPersistedTranscript: loadPersistedTranscript
         )
@@ -53,9 +57,14 @@ final class AppStore {
     var lastError: String? { session.lastError }
     var screenAudioSelection: ScreenAudioSelection? { session.screenAudioSelection }
     var inputDevices: [AudioInputDevice] { session.inputDevices }
+    var outputDevices: [AudioOutputDevice] { session.outputDevices }
     var selectedInputDeviceID: UInt32? {
         get { session.selectedInputDeviceID }
         set { session.selectedInputDeviceID = newValue }
+    }
+    var selectedOutputDeviceID: UInt32? {
+        get { session.selectedOutputDeviceID }
+        set { session.selectedOutputDeviceID = newValue }
     }
     var menuBarSymbolName: String { session.menuBarSymbolName }
     var isRecording: Bool { session.isRecording }
@@ -96,6 +105,10 @@ final class AppStore {
 
     func refreshInputDevices() {
         session.replaceInputDevices(inputDevicesProvider())
+    }
+
+    func refreshOutputDevices() {
+        session.replaceOutputDevices(outputDevicesProvider())
     }
 
     func selectScreenAudioContent() {
