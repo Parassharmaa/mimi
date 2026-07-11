@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-package:
+    name: Test and package
+    runs-on: macos-26
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Show Swift toolchain
+        run: swift --version
+
+      - name: Verify MLX build tooling
+        run: |
+          xcodebuild -version
+          xcrun --find metallib
+
+      - name: Run deterministic tests
+        run: scripts/test.sh
+
+      - name: Build universal app archive
+        run: scripts/package-app.sh
+
+      - name: Verify packaged app
+        run: |
+          rm -rf .build/package-check
+          mkdir -p .build/package-check
+          ditto -x -k .build/dist/Mimi-macOS.zip .build/package-check
+          codesign --verify --deep --strict .build/package-check/Mimi.app
+          plutil -lint .build/package-check/Mimi.app/Contents/Info.plist
+          test -s .build/package-check/Mimi.app/Contents/MacOS/mlx.metallib
+          ARCHS="$(lipo -archs .build/package-check/Mimi.app/Contents/MacOS/Mimi)"
+          [[ "$ARCHS" == *arm64* && "$ARCHS" == *x86_64* ]]
+
+      - name: Smoke the packaged MLX runtime
+        if: runner.arch == 'ARM64'
+        run: |
+          RUNTIME_SMOKE="$(find .build -type f -path '*/debug/MimiMLXRuntimeE2E' -perm -111 -print -quit)"
+          test -n "$RUNTIME_SMOKE"
+          cp "$RUNTIME_SMOKE" .build/package-check/Mimi.app/Contents/MacOS/MimiMLXRuntimeE2E
+          .build/package-check/Mimi.app/Contents/MacOS/MimiMLXRuntimeE2E
+
+      - name: Upload app archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: Mimi-macOS
+          path: |
+            .build/dist/Mimi-macOS.zip
+            .build/dist/Mimi-macOS.zip.sha256
+          if-no-files-found: error
+          retention-days: 14
