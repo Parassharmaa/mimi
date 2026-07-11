@@ -590,18 +590,9 @@ public final class TranscriptionSession {
                     switch finalStatus {
                     case .installed, .unsupported:
                         updateModelSetup(.idle, for: request)
-                    case .downloading:
+                    case .supported, .downloading:
                         updateModelSetup(.waitingForSystem(engine: request.engine, language: language), for: request)
                         scheduleAppleSpeechDownloadRefresh(for: language)
-                    case .supported:
-                        updateModelSetup(
-                            .failed(
-                                engine: request.engine,
-                                language: language,
-                                message: "macOS did not begin the \(language.displayName) Apple Speech download. Check your connection, then retry."
-                            ),
-                            for: request
-                        )
                     }
                 }
             case .whisperKitLargeV3Turbo:
@@ -797,10 +788,17 @@ public final class TranscriptionSession {
         }
 
         appleSpeechAssetStatuses[language] = status
-        if modelSetupState.matches(engine: .appleSpeechAnalyzer, language: language),
-           case .waitingForSystem = modelSetupState,
-           status != .downloading {
-            modelSetupState = .idle
+        if modelSetupState.matches(engine: .appleSpeechAnalyzer, language: language) {
+            switch modelSetupState {
+            case .waitingForSystem where status == .installed || status == .unsupported:
+                modelSetupState = .idle
+            case .failed where status == .installed:
+                // A manual status check must recover an already-installed
+                // asset from an older setup error without requiring relaunch.
+                modelSetupState = .idle
+            default:
+                break
+            }
         }
         return status
     }
@@ -808,12 +806,25 @@ public final class TranscriptionSession {
     private func scheduleAppleSpeechDownloadRefresh(for language: SpeechLanguage) {
         appleSpeechDownloadRefreshTask?.cancel()
         appleSpeechDownloadRefreshTask = Task { [weak self] in
+            var lastStatus: AppleSpeechAssetStatus = .supported
             for _ in 0..<12 {
                 try? await Task.sleep(for: .seconds(5))
                 guard let self, !Task.isCancelled else { return }
                 let status = await self.refreshAppleSpeechAssetStatus(for: language)
-                guard status == .downloading else { return }
+                lastStatus = status
+                guard status == .supported || status == .downloading else { return }
             }
+
+            guard let self,
+                  !Task.isCancelled,
+                  lastStatus == .supported,
+                  modelSetupState.matches(engine: .appleSpeechAnalyzer, language: language),
+                  case .waitingForSystem = modelSetupState else { return }
+            modelSetupState = .failed(
+                engine: .appleSpeechAnalyzer,
+                language: language,
+                message: "macOS has not confirmed the \(language.displayName) Apple Speech asset yet. Check status, then retry if it is still missing."
+            )
         }
     }
 

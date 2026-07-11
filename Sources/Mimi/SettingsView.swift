@@ -176,9 +176,9 @@ struct SettingsView: View {
     private var shouldShowAppleStatusCheck: Bool {
         guard store.engineID == .appleSpeechAnalyzer else { return false }
         return switch store.selectedModelReadiness {
-        case .checking, .downloading, .ready:
+        case .checking, .needsDownload, .downloading, .ready:
             true
-        case .needsDownload, .unavailable, .experimental:
+        case .unavailable, .experimental:
             false
         }
     }

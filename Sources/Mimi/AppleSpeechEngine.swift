@@ -2,11 +2,17 @@
 import Foundation
 import MimiCore
 import MimiSession
+import OSLog
 import Speech
 
 @available(macOS 26.0, *)
 @MainActor
 final class AppleSpeechEngine {
+    private static let assetLogger = Logger(
+        subsystem: "dev.paras.mimi",
+        category: "AppleSpeechAssets"
+    )
+
     enum ResultMode: String, Sendable {
         case accurate
         case progressive
@@ -35,7 +41,9 @@ final class AppleSpeechEngine {
 
     static func installAssets(for language: SpeechLanguage) async throws {
         let transcriber = try await makeTranscriber(for: language, resultMode: .progressive)
-        switch await AssetInventory.status(forModules: [transcriber]) {
+        let initialStatus = await AssetInventory.status(forModules: [transcriber])
+        assetLogger.info("Apple Speech asset install requested for \(language.rawValue, privacy: .public); initial status: \(statusName(initialStatus), privacy: .public)")
+        switch initialStatus {
         case .installed:
             return
         case .unsupported:
@@ -48,6 +56,13 @@ final class AppleSpeechEngine {
 
         if let request = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
             try await request.downloadAndInstall()
+            let finalStatus = await AssetInventory.status(forModules: [transcriber])
+            assetLogger.info("Apple Speech asset request completed for \(language.rawValue, privacy: .public); immediate status: \(statusName(finalStatus), privacy: .public)")
+        } else {
+            // Apple documents nil as "already installed." AssetInventory can
+            // still report a transient older status to a separate immediate
+            // query, so the session performs a short reconciliation poll.
+            assetLogger.info("Apple Speech returned no installation request for \(language.rawValue, privacy: .public); the asset is already installed")
         }
     }
 
@@ -191,6 +206,16 @@ final class AppleSpeechEngine {
             throw SpeechEngineError.unsupportedLanguage(language)
         }
         return SpeechTranscriber(locale: supportedLocale, preset: resultMode.preset)
+    }
+
+    private static func statusName(_ status: AssetInventory.Status) -> String {
+        switch status {
+        case .unsupported: "unsupported"
+        case .supported: "supported"
+        case .downloading: "downloading"
+        case .installed: "installed"
+        @unknown default: "unknown"
+        }
     }
 }
 

@@ -681,6 +681,35 @@ struct MimiSessionE2E {
         do {
             let capture = FakeCapture()
             let apple = FakeAppleProvider()
+            // AssetInventory may briefly return `.supported` after an
+            // installation request has completed (including the documented
+            // nil/already-installed request path). Reconcile instead of
+            // blaming the network immediately.
+            apple.assetStatusSequence[.japanese] = [.supported, .supported, .installed]
+            apple.statusAfterInstall = .supported
+            let session = makeSession(
+                capture: capture,
+                apple: apple,
+                whisper: FakeWhisper(isDownloaded: true),
+                storage: FakeStorage()
+            )
+            session.engineID = .appleSpeechAnalyzer
+            session.sourceLanguage = .japanese
+
+            await session.installSelectedModelNow()
+            expect(isWaitingForSystem(session.selectedModelSetupState), "A transient post-install supported state is reconciled instead of reported as a connection failure")
+            expect(!session.canStartRecording, "Apple remains gated during transient asset reconciliation")
+
+            try? await Task.sleep(for: .seconds(6))
+            await yieldToMainActor()
+
+            expect(session.selectedModelSetupState == .idle, "An installed reconciliation poll clears the transient Apple setup state")
+            expect(session.selectedModelReadiness == .ready && session.canStartRecording, "A reconciled already-installed Apple asset becomes immediately usable")
+        }
+
+        do {
+            let capture = FakeCapture()
+            let apple = FakeAppleProvider()
             let whisper = FakeWhisper(isDownloaded: false)
             whisper.progressEvents = [.init(completedUnitCount: 1, totalUnitCount: 4)]
             let storage = FakeStorage()
