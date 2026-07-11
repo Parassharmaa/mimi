@@ -5,10 +5,23 @@ import SwiftUI
 struct OnboardingView: View {
     @Bindable var store: AppStore
     @Bindable var preferences: UserPreferences
+    @Bindable var voiceTyping: VoiceTypingController
     @Environment(\.dismissWindow) private var dismissWindow
-    @State private var step = 0
+    @State private var step: Int
     @State private var microphoneStatus = AVCaptureDevice.authorizationStatus(for: .audio)
     @State private var startAtLogin = false
+
+    init(
+        store: AppStore,
+        preferences: UserPreferences,
+        voiceTyping: VoiceTypingController,
+        initialStep: Int = 0
+    ) {
+        self.store = store
+        self.preferences = preferences
+        self.voiceTyping = voiceTyping
+        _step = State(initialValue: min(3, max(0, initialStep)))
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -110,12 +123,47 @@ struct OnboardingView: View {
     }
 
     private var readyStep: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 18) {
             welcomeSymbol("checkmark.circle")
             title(t("Mimi is ready", "Mimiの準備ができました"),
                   t("It lives in the menu bar and can show captions over other apps.", "メニューバーから使え、他のアプリの上に字幕も表示できます。"))
             Toggle(t("Open Mimi when I log in", "ログイン時にMimiを開く"), isOn: $startAtLogin)
                 .frame(width: 320, alignment: .leading)
+            VStack(alignment: .leading, spacing: 8) {
+                Toggle(t("Type anywhere by speaking", "声でどこにでも入力"), isOn: $preferences.voiceTypingEnabled)
+                if preferences.voiceTypingEnabled {
+                    HStack {
+                        Text(t("Shortcut", "ショートカット"))
+                        Spacer()
+                        Picker("Shortcut", selection: $preferences.voiceTypingShortcut) {
+                            ForEach(VoiceTypingShortcut.allCases) { shortcut in
+                                Text(shortcut.displayName).tag(shortcut)
+                            }
+                        }
+                        .labelsHidden()
+                        if !voiceTyping.hasAccessibilityAccess {
+                            Button(t("Allow…", "許可…")) { voiceTyping.requestAccessibilityAccess() }
+                        }
+                    }
+                    Text(t(
+                        "Mimi needs Accessibility access only to insert text into the field you selected.",
+                        "選択した入力欄に文字を入力するためにのみアクセシビリティ許可を使用します。"
+                    ))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    if !voiceTyping.shortcutRegistered {
+                        Label(
+                            t("That shortcut is already in use. Choose the other one.", "そのショートカットは使用中です。もう一つを選んでください。"),
+                            systemImage: "exclamationmark.triangle"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                    }
+                }
+            }
+            .frame(width: 380, alignment: .leading)
+            .padding(12)
+            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 12))
             if let error = preferences.loginItemError {
                 Label(error, systemImage: "exclamationmark.triangle")
                     .font(.caption)

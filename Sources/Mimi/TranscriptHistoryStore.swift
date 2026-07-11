@@ -21,8 +21,8 @@ final class TranscriptHistoryStore {
     private let fileURL: URL
 
     init(fileManager: FileManager = .default) {
-        let base = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let directory = base.appendingPathComponent("Mimi", isDirectory: true)
+        let directory = (try? MimiStorage.applicationDirectory(fileManager: fileManager))
+            ?? fileManager.temporaryDirectory.appendingPathComponent("Mimi", isDirectory: true)
         try? fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
         fileURL = directory.appendingPathComponent("sessions.json")
     }

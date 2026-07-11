@@ -22,6 +22,7 @@ and translation on your Mac.
 - Recognize English and Japanese automatically as speech arrives.
 - Translate between English and Japanese locally.
 - Float original text, translations, or both above other apps.
+- Type into the selected field by speaking, with a global shortcut.
 - Keep previous sessions so you can return to them later.
 - Open automatically when you log in, if you choose.
 
@@ -43,7 +44,9 @@ open .build/Mimi.app
 ```
 
 macOS asks for microphone or system-audio access only when the selected source
-needs it. Languages are prepared in **Settings → Languages**.
+needs it. Languages are prepared in **Settings → Languages**. To dictate into
+another app, enable **Voice Type** during setup or in Settings, place the cursor
+in a text field, press the chosen shortcut, speak, and press it again to insert.
 
 ## Test it
 

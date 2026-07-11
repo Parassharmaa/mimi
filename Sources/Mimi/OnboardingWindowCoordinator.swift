@@ -5,22 +5,22 @@ import SwiftUI
 final class OnboardingWindowCoordinator {
     private var window: NSWindow?
 
-    init(store: AppStore, preferences: UserPreferences) {
+    init(store: AppStore, preferences: UserPreferences, voiceTyping: VoiceTypingController) {
         guard !preferences.completedOnboarding,
               !ProcessInfo.processInfo.arguments.contains("--e2e-window") else { return }
-        DispatchQueue.main.async { [weak self, weak store, weak preferences] in
-            guard let self, let store, let preferences else { return }
-            self.show(store: store, preferences: preferences)
+        DispatchQueue.main.async { [weak self, weak store, weak preferences, weak voiceTyping] in
+            guard let self, let store, let preferences, let voiceTyping else { return }
+            self.show(store: store, preferences: preferences, voiceTyping: voiceTyping)
         }
     }
 
-    func show(store: AppStore, preferences: UserPreferences) {
+    func show(store: AppStore, preferences: UserPreferences, voiceTyping: VoiceTypingController) {
         if let window {
             window.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
             return
         }
-        let controller = NSHostingController(rootView: OnboardingView(store: store, preferences: preferences))
+        let controller = NSHostingController(rootView: OnboardingView(store: store, preferences: preferences, voiceTyping: voiceTyping))
         let window = NSWindow(contentViewController: controller)
         window.title = preferences.text("Welcome to Mimi", "Mimiへようこそ")
         window.styleMask = [.titled, .closable, .fullSizeContentView]

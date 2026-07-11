@@ -62,15 +62,24 @@ enum MimiStorage {
         return folder
     }
 
-    private static func applicationDirectory() throws -> URL {
-        let support = try FileManager.default.url(
+    static func applicationDirectory(fileManager: FileManager = .default) throws -> URL {
+        // v0.1.2 and earlier were sandboxed. Voice Type requires the
+        // Accessibility APIs, which Apple documents as incompatible with App
+        // Sandbox. Keep using the existing container data directory when it
+        // exists so transcripts and downloaded language models survive the
+        // transition without a large duplicate copy.
+        let legacy = fileManager.homeDirectoryForCurrentUser
+            .appending(path: "Library/Containers/dev.paras.mimi/Data/Library/Application Support/Mimi", directoryHint: .isDirectory)
+        if fileManager.fileExists(atPath: legacy.path) { return legacy }
+
+        let support = try fileManager.url(
             for: .applicationSupportDirectory,
             in: .userDomainMask,
             appropriateFor: nil,
             create: true
         )
         let folder = support.appending(path: appFolderName, directoryHint: .isDirectory)
-        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: folder, withIntermediateDirectories: true)
         return folder
     }
 }

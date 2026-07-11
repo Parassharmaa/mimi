@@ -19,13 +19,9 @@ final class WhisperLanguageDetector {
     private var whisperKit: WhisperKit?
 
     init(fileManager: FileManager = .default) {
-        let support = (try? fileManager.url(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )) ?? fileManager.temporaryDirectory
-        cacheFolder = support.appending(path: "Mimi/Models/LanguageID", directoryHint: .isDirectory)
+        let support = (try? MimiStorage.applicationDirectory(fileManager: fileManager))
+            ?? fileManager.temporaryDirectory.appending(path: "Mimi", directoryHint: .isDirectory)
+        cacheFolder = support.appending(path: "Models/LanguageID", directoryHint: .isDirectory)
         markerURL = cacheFolder.appending(path: ".mimi-whisper-tiny-language-id")
     }
 

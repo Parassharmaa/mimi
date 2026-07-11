@@ -17,14 +17,10 @@ final class WhisperKitAccuracyEngine {
         fileManager: FileManager = .default,
         environment: [String: String] = ProcessInfo.processInfo.environment
     ) {
-        let support = (try? fileManager.url(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )) ?? fileManager.temporaryDirectory
-        modelCacheFolder = support.appending(path: "Mimi/Models/WhisperKit", directoryHint: .isDirectory)
-        installMarkerURL = support.appending(path: "Mimi/Models/WhisperKit/.mimi-large-v3-installed")
+        let support = (try? MimiStorage.applicationDirectory(fileManager: fileManager))
+            ?? fileManager.temporaryDirectory.appending(path: "Mimi", directoryHint: .isDirectory)
+        modelCacheFolder = support.appending(path: "Models/WhisperKit", directoryHint: .isDirectory)
+        installMarkerURL = support.appending(path: "Models/WhisperKit/.mimi-large-v3-installed")
         benchmarkModelFolderOverride = environment["MIMI_WHISPER_MODEL_DIR"].map {
             URL(fileURLWithPath: $0, isDirectory: true).standardizedFileURL
         }

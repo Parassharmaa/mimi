@@ -43,14 +43,10 @@ final class QwenMLXLiveEngine: QwenMLXLiveTranscribing {
 
     init(fileManager: FileManager = .default, rootURL: URL? = nil, modelDirectory: URL? = nil) {
         self.fileManager = fileManager
-        let support = (try? fileManager.url(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )) ?? fileManager.temporaryDirectory
+        let support = (try? MimiStorage.applicationDirectory(fileManager: fileManager))
+            ?? fileManager.temporaryDirectory.appending(path: "Mimi", directoryHint: .isDirectory)
         self.rootURL = rootURL ?? support.appending(
-            path: "Mimi/Models/Qwen3ASRMLX",
+            path: "Models/Qwen3ASRMLX",
             directoryHint: .isDirectory
         )
 
