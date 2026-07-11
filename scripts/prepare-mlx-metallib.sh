@@ -42,7 +42,7 @@ elif xcrun --find xcodebuild >/dev/null 2>&1 && xcrun --find metallib >/dev/null
   derived_data="$ROOT/.build/mlx-metal-$CONFIGURATION"
   xcodebuild \
     -project "$mlx_checkout/xcode/MLX.xcodeproj" \
-    -target Cmlx \
+    -scheme MLX \
     -configuration "$XCODE_CONFIGURATION" \
     -sdk macosx \
     -derivedDataPath "$derived_data" \
