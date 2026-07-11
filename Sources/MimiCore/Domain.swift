@@ -283,6 +283,132 @@ public struct TranscriptSegment: Identifiable, Codable, Equatable, Sendable {
     }
 }
 
+/// A bounded newest-wins queue for volatile live-caption translation. It keeps
+/// one request in flight and at most one replacement, so rapid ASR partials do
+/// not cancel useful work or make the last good translation disappear.
+public struct LiveTranslationPipeline: Equatable, Sendable {
+    public struct Request: Identifiable, Equatable, Sendable {
+        public let id: UInt64
+        public let text: String
+        public let language: SpeechLanguage
+
+        public init(id: UInt64, text: String, language: SpeechLanguage) {
+            self.id = id
+            self.text = text
+            self.language = language
+        }
+    }
+
+    public private(set) var activeRequest: Request?
+    public private(set) var pendingRequest: Request?
+    public private(set) var displayedTranslation = ""
+    public private(set) var displayedSourceText = ""
+    public private(set) var displayedSourceLanguage: SpeechLanguage?
+    private var nextRevision: UInt64 = 1
+
+    public init() {}
+
+    /// Returns a request only when the translator is idle. While translation
+    /// is active, repeated partials replace the single pending snapshot.
+    @discardableResult
+    public mutating func enqueue(text: String, language: SpeechLanguage) -> Request? {
+        let normalized = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalized.isEmpty else {
+            clear()
+            return nil
+        }
+        if activeRequest?.text == normalized, activeRequest?.language == language {
+            return nil
+        }
+        if pendingRequest?.text == normalized, pendingRequest?.language == language {
+            return nil
+        }
+        if displayedSourceText == normalized, displayedSourceLanguage == language {
+            return nil
+        }
+
+        let request = Request(id: nextRevision, text: normalized, language: language)
+        nextRevision &+= 1
+        guard activeRequest != nil else {
+            activeRequest = request
+            return request
+        }
+        pendingRequest = request
+        return nil
+    }
+
+    /// Commits a successful response without clearing the previous value
+    /// first, then promotes the newest pending snapshot in constant space.
+    @discardableResult
+    public mutating func complete(requestID: UInt64, translation: String) -> Request? {
+        guard let activeRequest, activeRequest.id == requestID else { return nil }
+        let normalized = translation.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !normalized.isEmpty {
+            displayedTranslation = normalized
+            displayedSourceText = activeRequest.text
+            displayedSourceLanguage = activeRequest.language
+        }
+        self.activeRequest = nil
+        return promotePending()
+    }
+
+    /// A failed or cancelled request never erases the last successful caption.
+    @discardableResult
+    public mutating func fail(requestID: UInt64) -> Request? {
+        guard activeRequest?.id == requestID else { return nil }
+        activeRequest = nil
+        return promotePending()
+    }
+
+    public mutating func clear() {
+        activeRequest = nil
+        pendingRequest = nil
+        displayedTranslation = ""
+        displayedSourceText = ""
+        displayedSourceLanguage = nil
+    }
+
+    private mutating func promotePending() -> Request? {
+        let next = pendingRequest
+        pendingRequest = nil
+        activeRequest = next
+        return next
+    }
+}
+
+/// Stable one-at-a-time work state for finalized transcript segments. The
+/// queue never marks a sentence complete until its response is stored.
+public struct SegmentTranslationQueue: Equatable, Sendable {
+    public private(set) var activeSegmentID: UUID?
+
+    public init() {}
+
+    public mutating func beginNext(
+        in segments: [TranscriptSegment],
+        completedIDs: Set<UUID>
+    ) -> TranscriptSegment? {
+        let validIDs = Set(segments.map(\.id))
+        if let activeSegmentID, !validIDs.contains(activeSegmentID) {
+            self.activeSegmentID = nil
+        }
+        guard activeSegmentID == nil,
+              let segment = segments.first(where: { !completedIDs.contains($0.id) }) else { return nil }
+        activeSegmentID = segment.id
+        return segment
+    }
+
+    @discardableResult
+    public mutating func finish(_ segmentID: UUID) -> Bool {
+        guard activeSegmentID == segmentID else { return false }
+        activeSegmentID = nil
+        return true
+    }
+
+    public mutating func reset() {
+        activeSegmentID = nil
+    }
+}
+
 public struct TranscriptDocument: Codable, Equatable, Sendable {
     public private(set) var segments: [TranscriptSegment]
     public private(set) var liveText: String
