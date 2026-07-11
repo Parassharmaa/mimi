@@ -1,9 +1,9 @@
 import MimiCore
 import SwiftUI
 
-/// Keeps final and still-changing ASR text visually distinct. A live
-/// hypothesis is intentionally secondary so people do not mistake it for a
-/// persisted final segment.
+/// Shows finalized and still-changing ASR text as one quiet transcript flow.
+/// The current hypothesis remains subtly secondary without adding a status
+/// label that competes with the words themselves.
 struct TranscriptContentView: View {
     let document: TranscriptDocument
     let emptyMessage: String
@@ -30,19 +30,12 @@ struct TranscriptContentView: View {
                 }
 
                 if !document.liveText.isEmpty {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("Live — not finalized")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                        Text(document.liveText)
-                            .font(font)
-                            .italic()
-                            .foregroundStyle(.secondary)
-                            .textSelection(.enabled)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Live transcription, not finalized: \(document.liveText)")
+                    Text(document.liveText)
+                        .font(font)
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityLabel("Current transcription: \(document.liveText)")
                 }
             }
         }

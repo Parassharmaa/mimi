@@ -36,12 +36,6 @@ struct InlineTranslationView: View {
                         .controlSize(.small)
                         .accessibilityLabel("Updating local translation")
                 }
-                if isLive {
-                    Text("LIVE")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(.green)
-                        .accessibilityLabel("Live translation enabled")
-                }
                 Button("Refresh") {
                     beginTranslation(of: sourceText)
                 }
