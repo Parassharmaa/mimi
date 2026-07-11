@@ -24,8 +24,8 @@
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
     <string>15.0</string>
-    <key>LSUIElement</key>
-    <true/>
+	<key>LSUIElement</key>
+	<false/>
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>Mimi captures audio played by an app you choose to create a local transcript.</string>
 	<key>NSScreenCaptureUsageDescription</key>

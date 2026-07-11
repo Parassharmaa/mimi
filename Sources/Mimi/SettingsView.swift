@@ -67,12 +67,16 @@ private struct CaptionSettingsPane: View {
                     Text(preferences.text("Bottom right", "右下")).tag(FloatingCaptionPosition.bottomRight)
                 }
                 Toggle(preferences.text("Let clicks pass through captions", "字幕の背後をクリックできるようにする"), isOn: $preferences.floatingCaptionClickThrough)
+                Button(preferences.text("Reset caption position", "字幕の位置をリセット")) {
+                    preferences.resetFloatingCaptionPosition()
+                }
+                .disabled(!preferences.floatingCaptionUsesCustomPosition)
             }
 
             Section {
                 Text(preferences.text(
-                    "Floating captions stay visible while you work in Zoom, Chrome, or another app. Turn off click-through temporarily if you need to move or inspect them.",
-                    "ZoomやChromeなどを使用中も字幕が表示されます。字幕を操作するときは、クリック透過を一時的にオフにしてください。"
+                    "Floating captions stay visible above other apps. Turn off click-through, then drag anywhere on the caption to place it exactly where you want.",
+                    "字幕は他のアプリの上に表示されます。クリック透過をオフにすると、字幕のどこからでもドラッグして好きな位置に置けます。"
                 ))
                 .foregroundStyle(.secondary)
             }

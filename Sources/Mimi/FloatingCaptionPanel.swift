@@ -5,14 +5,16 @@ import SwiftUI
 @preconcurrency import Translation
 
 @MainActor
-final class FloatingCaptionController {
+final class FloatingCaptionController: NSObject, NSWindowDelegate {
     private let store: AppStore
     private let preferences: UserPreferences
     private var panel: NSPanel?
+    private var isPositioningPanel = false
 
     init(store: AppStore, preferences: UserPreferences) {
         self.store = store
         self.preferences = preferences
+        super.init()
         observePreferences()
         updatePanel()
     }
@@ -22,6 +24,7 @@ final class FloatingCaptionController {
             _ = preferences.floatingCaptionsEnabled
             _ = preferences.floatingCaptionPosition
             _ = preferences.floatingCaptionClickThrough
+            _ = preferences.floatingCaptionUsesCustomPosition
         } onChange: { [weak self] in
             DispatchQueue.main.async {
                 self?.updatePanel()
@@ -62,6 +65,8 @@ final class FloatingCaptionController {
         panel.hidesOnDeactivate = false
         panel.animationBehavior = .utilityWindow
         panel.isReleasedWhenClosed = false
+        panel.isMovableByWindowBackground = true
+        panel.delegate = self
         self.panel = panel
         return panel
     }
@@ -74,7 +79,7 @@ final class FloatingCaptionController {
         case .subtitles, .top: NSSize(width: min(820, visible.width - 80), height: 150)
         case .topRight, .bottomRight: NSSize(width: min(460, visible.width - 80), height: 190)
         }
-        let origin: NSPoint = switch preferences.floatingCaptionPosition {
+        let presetOrigin: NSPoint = switch preferences.floatingCaptionPosition {
         case .subtitles:
             NSPoint(x: visible.midX - size.width / 2, y: visible.minY + margin)
         case .top:
@@ -84,7 +89,26 @@ final class FloatingCaptionController {
         case .bottomRight:
             NSPoint(x: visible.maxX - size.width - margin, y: visible.minY + margin)
         }
+        let origin = preferences.floatingCaptionUsesCustomPosition
+            ? clamped(preferences.floatingCaptionCustomOrigin ?? presetOrigin, size: size, in: visible)
+            : presetOrigin
+        isPositioningPanel = true
         panel.setFrame(NSRect(origin: origin, size: size), display: true, animate: panel.isVisible)
+        isPositioningPanel = false
+    }
+
+    func windowDidMove(_ notification: Notification) {
+        guard !isPositioningPanel,
+              let movedPanel = notification.object as? NSPanel,
+              movedPanel === panel else { return }
+        preferences.rememberFloatingCaptionOrigin(movedPanel.frame.origin)
+    }
+
+    private func clamped(_ origin: CGPoint, size: CGSize, in visibleFrame: CGRect) -> CGPoint {
+        CGPoint(
+            x: min(max(origin.x, visibleFrame.minX), visibleFrame.maxX - size.width),
+            y: min(max(origin.y, visibleFrame.minY), visibleFrame.maxY - size.height)
+        )
     }
 }
 
@@ -104,24 +128,41 @@ struct FloatingCaptionView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            if preferences.floatingCaptionContent != .translation {
-                caption(sourceText, secondary: preferences.floatingCaptionContent == .both)
+        ZStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 7) {
+                if preferences.floatingCaptionContent != .translation {
+                    caption(sourceText, secondary: preferences.floatingCaptionContent == .both)
+                }
+                if preferences.floatingCaptionContent != .original {
+                    caption(translatedText, secondary: false)
+                }
+                if sourceText.isEmpty && translatedText.isEmpty {
+                    Text(preferences.text("Captions will appear here", "字幕がここに表示されます"))
+                        .foregroundStyle(.secondary)
+                }
             }
-            if preferences.floatingCaptionContent != .original {
-                caption(translatedText, secondary: false)
-            }
-            if sourceText.isEmpty && translatedText.isEmpty {
-                Text(preferences.text("Captions will appear here", "字幕がここに表示されます"))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+
+            if !preferences.floatingCaptionClickThrough {
+                Image(systemName: "line.3.horizontal")
+                    .font(.caption2.weight(.semibold))
                     .foregroundStyle(.secondary)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(.quaternary, in: Capsule())
+                    .help(preferences.text("Drag captions", "字幕をドラッグ"))
+                    .accessibilityLabel(preferences.text("Drag captions", "字幕をドラッグ"))
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
         .padding(.horizontal, 24)
         .padding(.vertical, 18)
         .background {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(reduceTransparency ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor)) : AnyShapeStyle(.ultraThinMaterial))
+                .fill(
+                    reduceTransparency
+                        ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor))
+                        : AnyShapeStyle(.ultraThinMaterial.opacity(0.58))
+                )
                 .overlay {
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .strokeBorder(.white.opacity(reduceTransparency ? 0.18 : 0.10))

@@ -37,6 +37,9 @@ final class UserPreferences {
         static let floatingCaptionContent = "floatingCaptionContent"
         static let floatingCaptionPosition = "floatingCaptionPosition"
         static let floatingCaptionClickThrough = "floatingCaptionClickThrough"
+        static let floatingCaptionUsesCustomPosition = "floatingCaptionUsesCustomPosition"
+        static let floatingCaptionOriginX = "floatingCaptionOriginX"
+        static let floatingCaptionOriginY = "floatingCaptionOriginY"
     }
 
     private let defaults: UserDefaults
@@ -54,10 +57,28 @@ final class UserPreferences {
         didSet { defaults.set(floatingCaptionContent.rawValue, forKey: Key.floatingCaptionContent) }
     }
     var floatingCaptionPosition: FloatingCaptionPosition {
-        didSet { defaults.set(floatingCaptionPosition.rawValue, forKey: Key.floatingCaptionPosition) }
+        didSet {
+            defaults.set(floatingCaptionPosition.rawValue, forKey: Key.floatingCaptionPosition)
+            guard floatingCaptionPosition != oldValue else { return }
+            floatingCaptionUsesCustomPosition = false
+        }
     }
     var floatingCaptionClickThrough: Bool {
         didSet { defaults.set(floatingCaptionClickThrough, forKey: Key.floatingCaptionClickThrough) }
+    }
+    private(set) var floatingCaptionUsesCustomPosition: Bool {
+        didSet { defaults.set(floatingCaptionUsesCustomPosition, forKey: Key.floatingCaptionUsesCustomPosition) }
+    }
+    private(set) var floatingCaptionCustomOrigin: CGPoint? {
+        didSet {
+            guard let floatingCaptionCustomOrigin else {
+                defaults.removeObject(forKey: Key.floatingCaptionOriginX)
+                defaults.removeObject(forKey: Key.floatingCaptionOriginY)
+                return
+            }
+            defaults.set(floatingCaptionCustomOrigin.x, forKey: Key.floatingCaptionOriginX)
+            defaults.set(floatingCaptionCustomOrigin.y, forKey: Key.floatingCaptionOriginY)
+        }
     }
     var loginItemError: String?
 
@@ -77,6 +98,16 @@ final class UserPreferences {
         floatingCaptionClickThrough = defaults.object(forKey: Key.floatingCaptionClickThrough) == nil
             ? true
             : defaults.bool(forKey: Key.floatingCaptionClickThrough)
+        floatingCaptionUsesCustomPosition = defaults.bool(forKey: Key.floatingCaptionUsesCustomPosition)
+        if defaults.object(forKey: Key.floatingCaptionOriginX) != nil,
+           defaults.object(forKey: Key.floatingCaptionOriginY) != nil {
+            floatingCaptionCustomOrigin = CGPoint(
+                x: defaults.double(forKey: Key.floatingCaptionOriginX),
+                y: defaults.double(forKey: Key.floatingCaptionOriginY)
+            )
+        } else {
+            floatingCaptionCustomOrigin = nil
+        }
     }
 
     var startsAtLogin: Bool {
@@ -100,5 +131,15 @@ final class UserPreferences {
 
     func text(_ english: String, _ japanese: String) -> String {
         interfaceLanguage == .japanese ? japanese : english
+    }
+
+    func rememberFloatingCaptionOrigin(_ origin: CGPoint) {
+        floatingCaptionCustomOrigin = origin
+        floatingCaptionUsesCustomPosition = true
+    }
+
+    func resetFloatingCaptionPosition() {
+        floatingCaptionUsesCustomPosition = false
+        floatingCaptionCustomOrigin = nil
     }
 }

@@ -10,9 +10,9 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
     private var e2eStore: AppStore?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Mimi is intentionally a background/menu-bar utility. Opening the
-        // transcript window remains available from the menu extra.
-        NSApplication.shared.setActivationPolicy(.accessory)
+        // Mimi lives in the menu bar, but also remains a normal installed Mac
+        // app with a Dock presence and standard app menus.
+        NSApplication.shared.setActivationPolicy(.regular)
 
         let arguments = ProcessInfo.processInfo.arguments
         switch argument(after: "--e2e-appearance", in: arguments) {
