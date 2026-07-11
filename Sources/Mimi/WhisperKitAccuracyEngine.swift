@@ -218,6 +218,39 @@ final class WhisperKitAccuracyEngine {
         )
     }
 
+    func runLanguageDetectionBenchmark(
+        recordingAt url: URL,
+        windowSeconds: [Double] = [1, 2, 3]
+    ) async throws -> AcousticLanguageIDReport {
+        let loadStartedAt = ContinuousClock.now
+        try await loadInstalledModel()
+        let modelLoadSeconds = loadStartedAt.duration(to: .now).seconds
+        guard let whisperKit else { throw WhisperModelError.notInstalled }
+
+        let samples = try AudioProcessor.loadAudioAsFloatArray(fromPath: url.path)
+        let sampleRate = Double(WhisperKit.sampleRate)
+        let duration = Double(samples.count) / sampleRate
+        var windows: [AcousticLanguageIDWindow] = []
+        for requestedSeconds in windowSeconds where requestedSeconds <= duration + 0.05 {
+            let sampleCount = min(samples.count, max(1, Int(requestedSeconds * sampleRate)))
+            let startedAt = ContinuousClock.now
+            let result = try await whisperKit.detectLangauge(audioArray: Array(samples[..<sampleCount]))
+            windows.append(.init(
+                audioSeconds: Double(sampleCount) / sampleRate,
+                decodeSeconds: startedAt.duration(to: .now).seconds,
+                detectedLanguage: result.language,
+                englishScore: result.langProbs["en"],
+                japaneseScore: result.langProbs["ja"]
+            ))
+        }
+        return .init(
+            model: modelName,
+            modelLoadSeconds: modelLoadSeconds,
+            audioDurationSeconds: duration,
+            windows: windows
+        )
+    }
+
     nonisolated private static func downloadModel(
         named modelName: String,
         to modelCacheFolder: URL,
@@ -233,10 +266,36 @@ final class WhisperKitAccuracyEngine {
     }
 }
 
+struct AcousticLanguageIDReport: Codable {
+    let model: String
+    let modelLoadSeconds: Double
+    let audioDurationSeconds: Double
+    let windows: [AcousticLanguageIDWindow]
+
+    func printJSON() throws {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(self)
+        guard let text = String(data: data, encoding: .utf8) else {
+            throw WhisperModelError.languageReportEncodingFailed
+        }
+        print(text)
+    }
+}
+
+struct AcousticLanguageIDWindow: Codable {
+    let audioSeconds: Double
+    let decodeSeconds: Double
+    let detectedLanguage: String
+    let englishScore: Float?
+    let japaneseScore: Float?
+}
+
 private enum WhisperModelError: LocalizedError {
     case notInstalled
     case installMarkerFailed
     case externalBenchmarkModelCannotBeRemoved
+    case languageReportEncodingFailed
 
     var errorDescription: String? {
         switch self {
@@ -246,6 +305,8 @@ private enum WhisperModelError: LocalizedError {
             "Whisper downloaded, but Mimi could not mark the local model as ready. Check available disk space and try again."
         case .externalBenchmarkModelCannotBeRemoved:
             "Mimi will not remove a model supplied through the developer benchmark override."
+        case .languageReportEncodingFailed:
+            "Mimi could not encode the acoustic language-identification benchmark report."
         }
     }
 }

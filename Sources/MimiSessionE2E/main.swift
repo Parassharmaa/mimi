@@ -7,9 +7,11 @@ import MimiSession
 struct MimiSessionE2E {
     static func main() async {
         await appleStreamingEnglishSessionDrainsBoundedFrames()
+        await automaticAppleSpeechRoutesMixedEnglishAndJapanese()
         await whisperJapaneseAccuracySessionFreezesConfigurationAndCleansAudio()
         await nemotronJapaneseLiveSessionStreamsAndFinalizesWithoutAudioFiles()
         await qwenDualPassLiveSessionStreamsAndFinalizesWithoutAudioFiles()
+        await selectedOutputAudioFeedsAppleSpeechWithoutMicrophonePermission()
         await screenAudioSelectionAndLifecycle()
         await screenAudioPickerCancellationAndUnexpectedStop()
         await screenAudioLiveNemotronAndUnexpectedStopCleanLiveState()
@@ -22,6 +24,75 @@ struct MimiSessionE2E {
         liveFlowControlStaysBoundedAndFinalizesAtSafeBoundaries()
         transcriptAndTranslationRoutingEdgeCases()
         print("Mimi session E2E passed: model setup states, capture lifecycle, EN/JA routing, cleanup, persistence, and realtime queue edges.")
+    }
+
+    @MainActor
+    private static func automaticAppleSpeechRoutesMixedEnglishAndJapanese() async {
+        let capture = FakeCapture()
+        let automatic = FakeAutomaticAppleSpeech()
+        let session = makeSession(
+            capture: capture,
+            apple: FakeAppleProvider(),
+            automatic: automatic,
+            whisper: FakeWhisper(isDownloaded: true),
+            storage: FakeStorage()
+        )
+        session.engineID = .appleSpeechAnalyzer
+        session.languageMode = .automatic
+        await session.refreshSelectedModelReadiness()
+
+        await session.startRecording()
+        expect(session.recordingState == .recording, "Auto starts only after both Apple languages and its local router are ready")
+        automatic.emitLanguage(.english)
+        automatic.emit(.partial("good morning"), language: .english)
+        automatic.emit(.final("good morning"), language: .english)
+        automatic.emitLanguage(.japanese)
+        automatic.emit(.partial("おはようございます"), language: .japanese)
+        automatic.emit(.final("おはようございます"), language: .japanese)
+
+        expect(session.detectedLanguage == .japanese, "Auto publishes the most recently stable spoken language")
+        expect(session.document.segments.map(\.language) == [.english, .japanese], "One Auto session preserves per-segment English and Japanese routing")
+
+        await session.stopRecording()
+        let completed = session.document
+        automatic.emit(.final("stale"), language: .english)
+        expect(session.document == completed, "A callback retained after Auto Stop cannot mutate the saved session")
+        expect(automatic.stopCount == 1, "Auto routing stops exactly once at the session boundary")
+    }
+
+    @MainActor
+    private static func selectedOutputAudioFeedsAppleSpeechWithoutMicrophonePermission() async {
+        let microphone = FakeCapture(permissionGranted: false)
+        let output = FakeOutputCapture()
+        let apple = FakeAppleProvider()
+        let session = makeSession(
+            capture: microphone,
+            output: output,
+            apple: apple,
+            whisper: FakeWhisper(isDownloaded: true),
+            storage: FakeStorage()
+        )
+        session.source = .outputAudio
+        session.selectedOutputDeviceID = 84
+        session.engineID = .appleSpeechAnalyzer
+        session.sourceLanguage = .english
+        await session.refreshSelectedModelReadiness()
+
+        expect(session.canStartRecording, "A selected output-device lane is recordable without a ScreenCaptureKit picker")
+        await session.startRecording()
+        expect(session.recordingState == .recording, "Apple Speech starts from direct output-device PCM")
+        expect(microphone.permissionRequests == 0 && microphone.startCount == 0, "Output capture never requests or starts microphone capture")
+        expect(output.configureCalls == 1 && output.startCount == 1, "Output capture creates and starts its private Core Audio source")
+        expect(output.selectedDeviceIDs == [84, 84], "The selected output device is frozen across configure and start")
+
+        output.emitBuffer(FakeCapture.makeBuffer())
+        await yieldToMainActor()
+        expect(apple.engine.consumedBufferCount == 1, "Selected output PCM reaches Apple Speech through the bounded realtime queue")
+
+        apple.engine.emit(.final("meeting audio from the selected speakers"))
+        await session.stopRecording()
+        expect(output.stopCount == 1, "Stopping the session tears down the direct output capture exactly once")
+        expect(session.document.segments.last?.text == "meeting audio from the selected speakers", "Output-audio transcription persists normally")
     }
 
     @MainActor
@@ -941,8 +1012,10 @@ struct MimiSessionE2E {
     @MainActor
     private static func makeSession(
         capture: FakeCapture,
+        output: FakeOutputCapture = FakeOutputCapture(),
         screen: FakeScreenAudioCapture = FakeScreenAudioCapture(),
         apple: FakeAppleProvider,
+        automatic: FakeAutomaticAppleSpeech = FakeAutomaticAppleSpeech(),
         whisper: FakeWhisper,
         nemotron: FakeNemotron = FakeNemotron(isDownloaded: false),
         qwen: FakeNemotron = FakeNemotron(isDownloaded: false),
@@ -951,13 +1024,16 @@ struct MimiSessionE2E {
         TranscriptionSession(
             dependencies: .init(
                 microphoneCapture: capture,
+                outputAudioCapture: output,
                 screenAudioCapture: screen,
                 appleSpeech: apple,
+                automaticAppleSpeech: automatic,
                 whisper: whisper,
                 nemotron: nemotron,
                 qwen: qwen,
                 storage: storage,
-                inputDevices: [.init(id: 42, name: "Fixture Microphone")]
+                inputDevices: [.init(id: 42, name: "Fixture Microphone")],
+                outputDevices: [.init(id: 84, name: "Fixture Speakers")]
             ),
             loadPersistedTranscript: true
         )
@@ -1003,6 +1079,42 @@ struct MimiSessionE2E {
 
     private static func expect(_ condition: @autoclosure () -> Bool, _ message: String) {
         guard condition() else { fatalError("Mimi session E2E failure: \(message)") }
+    }
+}
+
+@MainActor
+private final class FakeOutputCapture: OutputAudioCapturing {
+    private(set) var configureCalls = 0
+    private(set) var startCount = 0
+    private(set) var stopCount = 0
+    private(set) var selectedDeviceIDs: [UInt32?] = []
+    private var onBuffer: (@Sendable (AVAudioPCMBuffer) -> Void)?
+
+    func configureInput(deviceID: UInt32?) throws -> AVAudioFormat {
+        configureCalls += 1
+        selectedDeviceIDs.append(deviceID)
+        return AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 1)!
+    }
+
+    func start(
+        recordingTo url: URL?,
+        deviceID: UInt32?,
+        onBuffer: @escaping @Sendable (AVAudioPCMBuffer) -> Void
+    ) throws {
+        _ = url
+        startCount += 1
+        selectedDeviceIDs.append(deviceID)
+        self.onBuffer = onBuffer
+    }
+
+    func emitBuffer(_ buffer: AVAudioPCMBuffer) {
+        onBuffer?(buffer)
+    }
+
+    func stop() throws -> URL? {
+        stopCount += 1
+        onBuffer = nil
+        return nil
     }
 }
 
@@ -1220,6 +1332,49 @@ private final class FakeAppleProvider: AppleSpeechProviding {
         makeEngineCalls += 1
         if let makeEngineError { throw makeEngineError }
         return engine
+    }
+}
+
+@MainActor
+private final class FakeAutomaticAppleSpeech: AutomaticAppleSpeechTranscribing {
+    var isLanguageDetectorInstalled = true
+    private(set) var stopCount = 0
+    private var onEvent: (@MainActor (TranscriptEvent, SpeechLanguage) -> Void)?
+    private var onLanguageChange: (@MainActor (SpeechLanguage) -> Void)?
+
+    func installLanguageDetector(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws {
+        isLanguageDetectorInstalled = true
+    }
+
+    func removeLanguageDetector() throws {
+        isLanguageDetectorInstalled = false
+    }
+
+    func start(
+        inputFormat: AVAudioFormat,
+        fallbackLanguage: SpeechLanguage,
+        onEvent: @escaping @MainActor (TranscriptEvent, SpeechLanguage) -> Void,
+        onLanguageChange: @escaping @MainActor (SpeechLanguage) -> Void
+    ) async throws {
+        self.onEvent = onEvent
+        self.onLanguageChange = onLanguageChange
+    }
+
+    func consume(_ buffer: AVAudioPCMBuffer) {}
+    func stop() async {
+        stopCount += 1
+        onEvent = nil
+        onLanguageChange = nil
+    }
+
+    func emit(_ event: TranscriptEvent, language: SpeechLanguage) {
+        onEvent?(event, language)
+    }
+
+    func emitLanguage(_ language: SpeechLanguage) {
+        onLanguageChange?(language)
     }
 }
 

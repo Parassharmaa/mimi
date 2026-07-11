@@ -3,208 +3,378 @@ import SwiftUI
 
 struct TranscriptWindow: View {
     @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
     @State private var isConfirmingClear = false
+
     private let fixtureTranslation: String?
+    private let initiallyFollowingLatest: Bool
 
     init(
         store: AppStore,
+        preferences: UserPreferences = UserPreferences(),
         isConfirmingClear: Bool = false,
-        fixtureTranslation: String? = nil
+        fixtureTranslation: String? = nil,
+        initiallyFollowingLatest: Bool = true
     ) {
         self.store = store
+        self.preferences = preferences
         self.fixtureTranslation = fixtureTranslation
+        self.initiallyFollowingLatest = initiallyFollowingLatest
         _isConfirmingClear = State(initialValue: isConfirmingClear)
     }
 
     var body: some View {
         NavigationSplitView {
-            Form {
-                Section("Session") {
-                    Picker("Input", selection: $store.source) {
-                        ForEach(AudioSource.allCases) { source in
-                            Text(source.displayName).tag(source)
-                        }
-                    }
-                    .disabled(store.controlsLocked)
-
-                    if store.source == .microphone {
-                        Picker("Microphone", selection: $store.selectedInputDeviceID) {
-                            Text("System Default").tag(UInt32?.none)
-                            ForEach(store.inputDevices) { device in
-                                Text(device.displayName).tag(Optional(device.id))
-                            }
-                        }
-                        .disabled(store.controlsLocked)
-
-                        Button("Refresh Input Devices") {
-                            store.refreshInputDevices()
-                        }
-                        .disabled(store.controlsLocked)
-                    } else {
-                        ScreenAudioSelectionControl(store: store)
-                    }
-                }
-
-                Section("Language and model") {
-                    Picker("Language", selection: $store.sourceLanguage) {
-                        ForEach(SpeechLanguage.allCases) { language in
-                            Text(language.nativeName).tag(language)
-                        }
-                    }
-                    .disabled(store.controlsLocked || store.isModelSetupActive)
-
-                    Picker("Model", selection: $store.engineID) {
-                        ForEach(TranscriptionEngineID.allCases) { engine in
-                            Text(engine.displayName).tag(engine)
-                        }
-                    }
-                    .disabled(store.controlsLocked || store.isModelSetupActive)
-
-                    if let message = store.selectedModelReadiness.message {
-                        Label(message, systemImage: "info.circle")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                Section("Translation") {
-                    Picker("Mode", selection: $store.translationMode) {
-                        ForEach(TranslationMode.allCases) { mode in
-                            Text(mode.displayName).tag(mode)
-                        }
-                    }
-                    .disabled(store.controlsLocked)
-                }
-            }
-            .formStyle(.grouped)
-            .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 300)
-            .navigationTitle("Session")
+            TranscriptHistorySidebar(store: store, preferences: preferences)
+                .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 310)
+                .navigationTitle(t("Sessions", "セッション"))
         } detail: {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Label(store.isRecording ? "Recording \(store.source.displayName.lowercased()) locally" : store.recordingState.label, systemImage: store.menuBarSymbolName)
-                        .foregroundStyle(store.isRecording ? .red : .primary)
-                        .accessibilityElement(children: .combine)
-                    Spacer()
-                    Button(store.isRecording ? "Stop Recording" : "Start Recording") {
-                        store.toggleRecording()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(store.isRecording ? .red : .accentColor)
-                    .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
-                }
+            VStack(spacing: 0) {
+                sessionStrip
 
                 if let message = store.lastError {
-                    Label(message, systemImage: "exclamationmark.triangle.fill")
-                        .font(.caption)
-                        .foregroundStyle(.orange)
-                        .accessibilityLabel("Recording warning: \(message)")
+                    inlineNotice(message, symbol: "exclamationmark.triangle.fill", tint: .orange)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 10)
                 }
 
-                let followsAppleSpeech = store.isRecording && store.engineID == .appleSpeechAnalyzer
-                let translationSourceText = followsAppleSpeech
-                    ? store.document.realtimeTranslationContext(for: store.sourceLanguage)
-                    : store.document.finalizedText(for: store.sourceLanguage)
+                if isConfirmingClear {
+                    clearConfirmation
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 10)
+                }
 
-                if store.translationMode == .translateFinalSegments {
-                    GeometryReader { proxy in
-                        HStack(alignment: .top, spacing: 12) {
-                            TranscriptLanguagePane(
-                                document: store.document,
-                                language: store.sourceLanguage
-                            )
-                            InlineTranslationView(
-                                sourceText: translationSourceText,
-                                sourceLanguage: store.sourceLanguage,
-                                isLive: followsAppleSpeech,
-                                fillsAvailableSpace: true,
-                                fixtureTranslation: fixtureTranslation
-                            )
+                transcriptContent
+            }
+            .frame(minWidth: 560, minHeight: 440)
+            .navigationTitle(t("Transcript", "文字起こし"))
+            .toolbar { transcriptToolbar }
+        }
+        .navigationSplitViewStyle(.balanced)
+    }
+
+    private var sessionStrip: some View {
+        HStack(spacing: 10) {
+            Image(systemName: store.menuBarSymbolName)
+                .foregroundStyle(store.isRecording ? .red : .accentColor)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(store.isRecording ? "Listening locally" : store.recordingState.label)
+                    .font(.callout.weight(.semibold))
+                Text("\(store.source.displayName) · \(store.sourceLanguage.nativeName) · \(store.engineID.displayName)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            if store.translationMode == .translateFinalSegments {
+                Label("Live translation", systemImage: "translate")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 11)
+        .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
+    private var transcriptContent: some View {
+        let displayedDocument = store.viewedDocument
+        let followsAppleSpeech = store.isRecording &&
+            store.selectedHistoryID == nil &&
+            store.engineID == .appleSpeechAnalyzer
+        let contentLanguage = followsAppleSpeech
+            ? (store.detectedLanguage ?? displayedDocument.contentLanguage(fallback: store.sourceLanguage))
+            : displayedDocument.contentLanguage(fallback: store.sourceLanguage)
+        let translationSourceText = displayedDocument.realtimeTranslationContext(
+            for: contentLanguage,
+            maximumCharacterCount: 480
+        )
+
+        if store.translationMode == .translateFinalSegments {
+            HSplitView {
+                TranscriptLanguagePane(
+                    document: displayedDocument,
+                    language: nil,
+                    initiallyFollowingLatest: initiallyFollowingLatest
+                )
+                .frame(minWidth: 250)
+
+                InlineTranslationView(
+                    sourceText: translationSourceText,
+                    sourceLanguage: contentLanguage,
+                    isLive: followsAppleSpeech,
+                    fillsAvailableSpace: true,
+                    fixtureTranslation: fixtureTranslation,
+                    initiallyFollowingLatest: initiallyFollowingLatest
+                )
+                .frame(minWidth: 250)
+            }
+        } else {
+            TranscriptLanguagePane(
+                document: displayedDocument,
+                language: nil,
+                initiallyFollowingLatest: initiallyFollowingLatest
+            )
+        }
+    }
+
+    private var clearConfirmation: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "trash")
+                .foregroundStyle(.red)
+                .accessibilityHidden(true)
+            Text(t("Clear the saved transcript?", "保存した文字起こしを消去しますか？"))
+                .font(.callout.weight(.semibold))
+            Text(t("This can’t be undone.", "この操作は取り消せません。"))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Button(t("Cancel", "キャンセル")) { setClearConfirmation(false) }
+                .keyboardShortcut(.cancelAction)
+            Button(t("Clear", "消去"), role: .destructive) {
+                store.clearTranscript()
+                setClearConfirmation(false)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.red)
+        }
+        .mimiCard(padding: 10)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Clear saved transcript confirmation")
+    }
+
+    @ToolbarContentBuilder
+    private var transcriptToolbar: some ToolbarContent {
+        ToolbarItemGroup(placement: .primaryAction) {
+            Button {
+                store.newSession()
+            } label: {
+                Label(t("New Session", "新しいセッション"), systemImage: "plus")
+            }
+            .keyboardShortcut("n", modifiers: .command)
+            .disabled(store.controlsLocked)
+
+            Button {
+                store.copyTranscript()
+            } label: {
+                Label("Copy Transcript", systemImage: "doc.on.doc")
+            }
+            .keyboardShortcut("c", modifiers: [.command, .shift])
+            .disabled(store.viewedDocument.renderedText.isEmpty)
+
+            Button(role: .destructive) {
+                setClearConfirmation(true)
+            } label: {
+                Label("Clear Transcript", systemImage: "trash")
+            }
+            .keyboardShortcut(.delete, modifiers: [.command, .option])
+            .disabled(store.viewedDocument.renderedText.isEmpty || isConfirmingClear)
+
+            Button {
+                store.toggleRecording()
+            } label: {
+                Label(
+                    store.isRecording ? "Stop Recording" : "Start Recording",
+                    systemImage: store.isRecording ? "stop.fill" : "record.circle"
+                )
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(store.isRecording ? .red : .accentColor)
+            .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
+        }
+    }
+
+    private func inlineNotice(_ text: String, symbol: String, tint: Color) -> some View {
+        Label(text, systemImage: symbol)
+            .font(.caption)
+            .foregroundStyle(tint)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .mimiCard(padding: 10)
+            .accessibilityLabel("Recording warning: \(text)")
+    }
+
+    private func setClearConfirmation(_ confirming: Bool) {
+        isConfirmingClear = confirming
+    }
+
+    private func t(_ english: String, _ japanese: String) -> String {
+        preferences.text(english, japanese)
+    }
+}
+
+private struct TranscriptHistorySidebar: View {
+    @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
+
+    var body: some View {
+        List(selection: $store.selectedHistoryID) {
+            Section("Now") {
+                Button {
+                    store.newSession()
+                } label: {
+                    Label(preferences.text("New Session", "新しいセッション"), systemImage: "plus.circle.fill")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.tint)
+                }
+                .buttonStyle(.plain)
+                .disabled(store.controlsLocked)
+
+                Button {
+                    store.selectCurrentSession()
+                } label: {
+                    Label(store.isRecording ? "Listening now" : "Current transcript", systemImage: store.isRecording ? "waveform" : "doc.text")
+                }
+                .buttonStyle(.plain)
+            }
+
+            if !store.historyRecords.isEmpty {
+                Section("Previous sessions") {
+                    ForEach(store.historyRecords) { record in
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(record.title).lineLimit(1)
+                            Text(record.startedAt, format: .dateTime.month().day().hour().minute())
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                    }
-                } else {
-                    ScrollView {
-                        TranscriptContentView(
-                            document: store.document,
-                            emptyMessage: "Your local transcript will appear here.",
-                            font: .title3
-                        )
-                        .padding(.vertical, 4)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .tag(Optional(record.id))
                     }
                 }
             }
-            .padding()
-            .frame(minWidth: 600, minHeight: 420, alignment: .topLeading)
-            .navigationTitle("Transcript")
-            .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-                    if isConfirmingClear {
-                        Text("Clear saved transcript?")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
 
-                        Button("Cancel") {
-                            isConfirmingClear = false
-                        }
-                        .keyboardShortcut(.cancelAction)
-                        .buttonStyle(.bordered)
-
-                        Button("Clear", role: .destructive) {
-                            store.clearTranscript()
-                            isConfirmingClear = false
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.red)
-                    } else {
-                        Button {
-                            store.copyTranscript()
-                        } label: {
-                            Label("Copy Transcript", systemImage: "doc.on.doc")
-                        }
-                        .keyboardShortcut("c", modifiers: [.command, .shift])
-                        .disabled(store.document.renderedText.isEmpty)
-
-                        Button(role: .destructive) {
-                            isConfirmingClear = true
-                        } label: {
-                            Label("Clear Transcript", systemImage: "trash")
-                        }
-                        .accessibilityHint("Shows an inline confirmation before removing the local transcript")
-                        .disabled(store.document.renderedText.isEmpty)
+            Section("Input") {
+                Picker("Source", selection: $store.source) {
+                    ForEach(AudioSource.allCases) { source in
+                        Label(source.displayName, systemImage: source.symbolName).tag(source)
                     }
                 }
+                .disabled(store.controlsLocked)
+
+                sourceConfiguration
             }
+
+            Section("Transcription") {
+                Picker("Language", selection: $store.languageMode) {
+                    ForEach(TranscriptionLanguageMode.allCases) { mode in
+                        Text(mode.displayName).tag(mode)
+                    }
+                }
+                .disabled(store.controlsLocked || store.isModelSetupActive)
+
+                Picker("Model", selection: $store.engineID) {
+                    ForEach(TranscriptionEngineID.selectableCases) { engine in
+                        Text(engine.displayName).tag(engine)
+                    }
+                }
+                .disabled(store.controlsLocked || store.isModelSetupActive)
+
+                ModelSetupStatusView(
+                    readiness: store.selectedModelReadiness,
+                    setupState: store.selectedModelSetupState,
+                    compact: true
+                )
+            }
+
+            Section("Translation") {
+                Picker("Mode", selection: $store.translationMode) {
+                    ForEach(TranslationMode.allCases) { mode in
+                        Text(mode == .off ? "Off" : "English ↔ Japanese").tag(mode)
+                    }
+                }
+                .disabled(store.controlsLocked)
+            }
+        }
+        .listStyle(.sidebar)
+    }
+
+    @ViewBuilder
+    private var sourceConfiguration: some View {
+        switch store.source {
+        case .microphone:
+            Picker("Microphone", selection: $store.selectedInputDeviceID) {
+                Text("System Default").tag(UInt32?.none)
+                ForEach(store.inputDevices) { device in
+                    Text(device.displayName).tag(Optional(device.id))
+                }
+            }
+            .disabled(store.controlsLocked)
+            Button("Refresh Microphones", action: store.refreshInputDevices)
+                .disabled(store.controlsLocked)
+        case .outputAudio:
+            Picker("Output", selection: $store.selectedOutputDeviceID) {
+                Text("System Default").tag(UInt32?.none)
+                ForEach(store.outputDevices) { device in
+                    Text(device.displayName).tag(Optional(device.id))
+                }
+            }
+            .disabled(store.controlsLocked)
+            Button("Refresh Outputs", action: store.refreshOutputDevices)
+                .disabled(store.controlsLocked)
+        case .applicationAudio, .systemAudio:
+            ScreenAudioSelectionControl(store: store)
         }
     }
 }
 
 private struct TranscriptLanguagePane: View {
     let document: TranscriptDocument
-    let language: SpeechLanguage
+    let language: SpeechLanguage?
+    let initiallyFollowingLatest: Bool
 
-    var body: some View {
-        let sourceDocument = TranscriptDocument(
+    private var displayedDocument: TranscriptDocument {
+        guard let language else { return document }
+        return TranscriptDocument(
             segments: document.segments.filter { $0.language == language },
             liveText: document.liveText
         )
-        VStack(alignment: .leading, spacing: 6) {
-            Label(language.nativeName, systemImage: "waveform")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+    }
 
-            ScrollView {
-                TranscriptContentView(
-                    document: sourceDocument,
-                    emptyMessage: "Speech will appear here.",
-                    font: .title3
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 7) {
+                Label(language?.nativeName ?? "Transcript", systemImage: language?.symbolName ?? "text.alignleft")
+                    .font(.callout.weight(.semibold))
+                Spacer()
+                if !document.liveText.isEmpty {
+                    Text("Listening")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 3)
+                        .background(.quaternary, in: Capsule())
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+
+            Divider()
+
+            if displayedDocument.segments.isEmpty && displayedDocument.liveText.isEmpty {
+                ContentUnavailableView(
+                    "No Transcript Yet",
+                    systemImage: "waveform",
+                    description: Text("Start recording and speech will appear here locally.")
                 )
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                FollowLatestScrollView(
+                    contentVersion: displayedDocument.renderedText,
+                    initiallyFollowing: initiallyFollowingLatest
+                ) {
+                    TranscriptContentView(
+                        document: displayedDocument,
+                        emptyMessage: "Speech will appear here.",
+                        font: .title3
+                    )
+                    .padding(18)
+                }
             }
         }
-        .padding(10)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(Color(nsColor: .textBackgroundColor))
     }
 }

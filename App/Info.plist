@@ -6,8 +6,10 @@
     <string>en</string>
     <key>CFBundleDisplayName</key>
     <string>Mimi</string>
-    <key>CFBundleExecutable</key>
-    <string>Mimi</string>
+	<key>CFBundleExecutable</key>
+	<string>Mimi</string>
+	<key>CFBundleIconFile</key>
+	<string>Mimi</string>
     <key>CFBundleIdentifier</key>
     <string>dev.paras.mimi</string>
     <key>CFBundleInfoDictionaryVersion</key>
@@ -22,8 +24,8 @@
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
     <string>15.0</string>
-    <key>LSUIElement</key>
-    <true/>
+	<key>LSUIElement</key>
+	<false/>
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>Mimi captures audio played by an app you choose to create a local transcript.</string>
 	<key>NSScreenCaptureUsageDescription</key>

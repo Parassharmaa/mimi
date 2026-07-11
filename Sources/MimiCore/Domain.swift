@@ -35,8 +35,102 @@ public enum SpeechLanguage: String, CaseIterable, Codable, Sendable, Identifiabl
     }
 }
 
+public enum TranscriptionLanguageMode: String, CaseIterable, Codable, Sendable, Identifiable {
+    case automatic
+    case english
+    case japanese
+
+    public var id: String { rawValue }
+
+    public var displayName: String {
+        switch self {
+        case .automatic: "Auto (English + Japanese)"
+        case .english: "English"
+        case .japanese: "日本語"
+        }
+    }
+
+    public var manualLanguage: SpeechLanguage? {
+        switch self {
+        case .automatic: nil
+        case .english: .english
+        case .japanese: .japanese
+        }
+    }
+
+    public init(language: SpeechLanguage) {
+        self = switch language {
+        case .english: .english
+        case .japanese: .japanese
+        }
+    }
+}
+
+public struct AutomaticLanguageHysteresis: Equatable, Sendable {
+    public private(set) var stableLanguage: SpeechLanguage?
+
+    private let minimumLogProbability: Float
+    private let minimumRMS: Float
+    private let confirmationsToSwitch: Int
+    private var candidateLanguage: SpeechLanguage?
+    private var candidateCount = 0
+
+    public init(
+        stableLanguage: SpeechLanguage? = nil,
+        minimumLogProbability: Float = -0.35,
+        minimumRMS: Float = 0.006,
+        confirmationsToSwitch: Int = 2
+    ) {
+        self.stableLanguage = stableLanguage
+        self.minimumLogProbability = minimumLogProbability
+        self.minimumRMS = minimumRMS
+        self.confirmationsToSwitch = max(1, confirmationsToSwitch)
+    }
+
+    /// Returns a language only when Auto should establish or change its stable
+    /// route. Silence and low-confidence observations clear pending evidence.
+    public mutating func observe(
+        _ language: SpeechLanguage,
+        logProbability: Float,
+        rms: Float
+    ) -> SpeechLanguage? {
+        guard rms >= minimumRMS, logProbability >= minimumLogProbability else {
+            candidateLanguage = nil
+            candidateCount = 0
+            return nil
+        }
+
+        guard language != stableLanguage else {
+            candidateLanguage = nil
+            candidateCount = 0
+            return nil
+        }
+
+        if stableLanguage == nil {
+            stableLanguage = language
+            candidateLanguage = nil
+            candidateCount = 0
+            return language
+        }
+
+        if candidateLanguage == language {
+            candidateCount += 1
+        } else {
+            candidateLanguage = language
+            candidateCount = 1
+        }
+
+        guard candidateCount >= confirmationsToSwitch else { return nil }
+        stableLanguage = language
+        candidateLanguage = nil
+        candidateCount = 0
+        return language
+    }
+}
+
 public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
     case microphone
+    case outputAudio
     case applicationAudio
     case systemAudio
 
@@ -45,6 +139,7 @@ public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
     public var displayName: String {
         switch self {
         case .microphone: "Microphone"
+        case .outputAudio: "Selected Audio Output"
         case .applicationAudio: "Selected App Audio"
         case .systemAudio: "Selected Display Audio"
         }
@@ -53,6 +148,7 @@ public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
     public var details: String {
         switch self {
         case .microphone: "Your selected microphone input"
+        case .outputAudio: "Everything playing through the selected output device"
         case .applicationAudio: "Zoom, Chrome, or another selected app"
         case .systemAudio: "Audio associated with a display you choose"
         }
@@ -66,6 +162,10 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
     case qwen3StreamingExperimental
 
     public var id: String { rawValue }
+
+    /// Mimi's live product surface is intentionally Apple-only. Legacy cases
+    /// remain decodable while existing installs migrate away from them.
+    public static let selectableCases: [TranscriptionEngineID] = [.appleSpeechAnalyzer]
 
     public var displayName: String {
         switch self {
@@ -151,30 +251,6 @@ public enum ModelCatalog {
             ownership: .systemManaged,
             estimatedDownloadMB: nil,
             recommendation: "Best first choice on macOS 26: fast live results and OS-managed language assets."
-        ),
-        .init(
-            id: "whisperkit-large-v3-626mb",
-            engine: .whisperKitLargeV3Turbo,
-            supportedLanguages: [.english, .japanese],
-            ownership: .appManaged,
-            estimatedDownloadMB: 626,
-            recommendation: "Use for an accuracy pass or when Apple Speech is unavailable."
-        ),
-        .init(
-            id: "nemotron-3.5-streaming",
-            engine: .nemotronStreamingExperimental,
-            supportedLanguages: [.english, .japanese],
-            ownership: .experimental,
-            estimatedDownloadMB: 756,
-            recommendation: "Experimental Apple-silicon MLX live captions. Mimi finalizes bounded local windows at a pause or 30 seconds to keep memory predictable."
-        ),
-        .init(
-            id: "qwen3-asr-0.6b-streaming",
-            engine: .qwen3StreamingExperimental,
-            supportedLanguages: [.english, .japanese],
-            ownership: .experimental,
-            estimatedDownloadMB: 713,
-            recommendation: "Experimental dual-pass MLX captions: a fast rolling hypothesis plus agreement-based confirmation and corrected 8-second windows."
         )
     ]
 
@@ -225,6 +301,19 @@ public struct TranscriptDocument: Codable, Equatable, Sendable {
     /// this rather than a volatile real-time ASR hypothesis.
     public var finalizedText: String {
         segments.map(\.text).joined(separator: "\n")
+    }
+
+    /// Caption overlays should follow the newest utterance, not a context
+    /// block whose first lines become stale when the view is truncated.
+    public var latestCaptionText: String {
+        let live = Self.normalized(liveText)
+        return live.isEmpty ? (segments.last?.text ?? "") : live
+    }
+
+    /// The transcript owns the language of existing speech. A later input
+    /// preference change must never relabel or filter already-saved segments.
+    public func contentLanguage(fallback: SpeechLanguage) -> SpeechLanguage {
+        segments.last?.language ?? fallback
     }
 
     public func finalizedText(for language: SpeechLanguage) -> String {

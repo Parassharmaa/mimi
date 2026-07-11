@@ -15,7 +15,7 @@ struct ScreenAudioSelectionControl: View {
     }
 
     var body: some View {
-        if store.source != .microphone {
+        if store.source == .applicationAudio || store.source == .systemAudio {
             VStack(alignment: .leading, spacing: compact ? 6 : 8) {
                 HStack(spacing: 8) {
                     Button(selectionButtonTitle) {
@@ -23,11 +23,12 @@ struct ScreenAudioSelectionControl: View {
                     }
                     .disabled(store.controlsLocked)
 
-                    if isSelected {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                            .accessibilityLabel("Audio source selected")
-                    }
+                    Spacer(minLength: 4)
+
+                    Label(isSelected ? "Selected" : "Required", systemImage: isSelected ? "checkmark.circle.fill" : "circle")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(isSelected ? .green : .secondary)
+                        .accessibilityLabel(isSelected ? "Audio source selected" : "Audio source selection required")
                 }
 
                 if let selection, isSelected {
@@ -36,10 +37,9 @@ struct ScreenAudioSelectionControl: View {
                         .foregroundStyle(.secondary)
                         .accessibilityElement(children: .combine)
                 } else {
-                    Label(selectionRequiredText, systemImage: "exclamationmark.circle")
+                    Text(selectionRequiredText)
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        .accessibilityElement(children: .combine)
                 }
 
                 if !compact {
@@ -74,7 +74,7 @@ struct ScreenAudioSelectionControl: View {
             "Choose App Audio…"
         case .systemAudio:
             "Choose Display Audio…"
-        case .microphone:
+        case .microphone, .outputAudio:
             ""
         }
     }
@@ -85,7 +85,7 @@ struct ScreenAudioSelectionControl: View {
             "Choose an app before recording."
         case .systemAudio:
             "Choose a display before recording."
-        case .microphone:
+        case .microphone, .outputAudio:
             ""
         }
     }
@@ -96,7 +96,7 @@ struct ScreenAudioSelectionControl: View {
             "macOS will show its content picker. Choose Zoom, Chrome, or another app; Mimi captures only that app's audio."
         case .systemAudio:
             "macOS will show its display picker. Choose the display carrying your speaker output; Mimi captures only associated audio."
-        case .microphone:
+        case .microphone, .outputAudio:
             ""
         }
     }

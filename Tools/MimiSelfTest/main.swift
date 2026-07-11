@@ -6,8 +6,34 @@ struct MimiSelfTest {
     static func main() {
         testRepeatedFinalTextIsPreserved()
         testStopFinalizesJapaneseVolatileResult()
+        testInputLanguageChangeDoesNotRewriteTranscriptLanguage()
+        testFloatingCaptionAlwaysUsesNewestUtterance()
         testRecommendedPacksCoverBothV1Languages()
         print("Mimi self-test passed: transcript coalescing, Japanese finalization, and model routing.")
+    }
+
+    private static func testFloatingCaptionAlwaysUsesNewestUtterance() {
+        var document = TranscriptDocument()
+        document.apply(.final("older line"), language: .english)
+        document.apply(.final("newest final line"), language: .english)
+        expect(document.latestCaptionText == "newest final line", "A stopped caption shows only the newest final utterance")
+
+        document.apply(.partial("current speech arriving now"), language: .english)
+        expect(document.latestCaptionText == "current speech arriving now", "A live caption immediately replaces history with the current partial")
+    }
+
+    private static func testInputLanguageChangeDoesNotRewriteTranscriptLanguage() {
+        var document = TranscriptDocument()
+        document.apply(.final("Existing English session"), language: .english)
+
+        expect(
+            document.contentLanguage(fallback: .japanese) == .english,
+            "Changing the next-input language never relabels an existing transcript"
+        )
+        expect(
+            document.renderedText == "Existing English session",
+            "Changing the next-input language never filters or rewrites existing text"
+        )
     }
 
     private static func testRepeatedFinalTextIsPreserved() {
@@ -35,10 +61,9 @@ struct MimiSelfTest {
     }
 
     private static func testRecommendedPacksCoverBothV1Languages() {
-        let packs = ModelCatalog.packs.filter { !$0.engine.isExperimental }
-
-        expect(packs.allSatisfy { $0.supportedLanguages == [.english, .japanese] }, "Every non-experimental v1 pack supports English and Japanese")
-        expect(ModelCatalog.pack(for: .whisperKitLargeV3Turbo)?.estimatedDownloadMB == 626, "WhisperKit download size is presented to the user")
+        expect(ModelCatalog.packs.count == 1, "Mimi presents one simple Apple Speech choice")
+        expect(ModelCatalog.packs[0].supportedLanguages == [.english, .japanese], "Apple Speech setup covers English and Japanese")
+        expect(TranscriptionEngineID.selectableCases == [.appleSpeechAnalyzer], "Removed experimental models never appear in the UI")
     }
 
     private static func expect(_ condition: @autoclosure () -> Bool, _ message: String) {

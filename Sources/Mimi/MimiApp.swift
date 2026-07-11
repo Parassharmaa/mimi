@@ -10,11 +10,67 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
     private var e2eStore: AppStore?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Mimi is intentionally a background/menu-bar utility. Opening the
-        // transcript window remains available from the menu extra.
-        NSApplication.shared.setActivationPolicy(.accessory)
+        // Mimi lives in the menu bar, but also remains a normal installed Mac
+        // app with a Dock presence and standard app menus.
+        NSApplication.shared.setActivationPolicy(.regular)
 
         let arguments = ProcessInfo.processInfo.arguments
+        switch argument(after: "--e2e-appearance", in: arguments) {
+        case "light":
+            NSApplication.shared.appearance = NSAppearance(named: .aqua)
+        case "dark":
+            NSApplication.shared.appearance = NSAppearance(named: .darkAqua)
+        default:
+            break
+        }
+        if arguments.contains("--benchmark-install-language-id") {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let detector = WhisperLanguageDetector()
+                    try await detector.install { progress in
+                        if let fraction = progress.fractionCompleted {
+                            print("Mimi language detector setup: \(Int((fraction * 100).rounded()))%")
+                        }
+                    }
+                    print("Mimi Whisper tiny language detector is installed and ready.")
+                    status = 0
+                } catch {
+                    print("Mimi language detector install failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if arguments.contains("--e2e-output-audio-smoke") {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let capture = OutputAudioCapture()
+                    let format = try capture.configureInput(deviceID: nil)
+                    let counter = OutputAudioSmokeCounter()
+                    try capture.start(recordingTo: nil, deviceID: nil) { _ in
+                        counter.increment()
+                    }
+                    let speech = AVSpeechSynthesizer()
+                    speech.speak(AVSpeechUtterance(string: "Mimi output audio capture smoke test."))
+                    try await Task.sleep(for: .seconds(4))
+                    speech.stopSpeaking(at: .immediate)
+                    _ = try capture.stop()
+                    guard counter.value > 0 else {
+                        throw RealtimeBenchmarkCommandError.outputAudioMissing
+                    }
+                    print("Mimi selected output audio smoke passed: \(counter.value) PCM callbacks at \(Int(format.sampleRate)) Hz.")
+                    status = 0
+                } catch {
+                    print("Mimi selected output audio smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
         if arguments.contains("--benchmark-install-qwen") {
             Task { @MainActor in
                 let status: Int32
@@ -115,6 +171,40 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                     status = 0
                 } catch {
                     print("Mimi Apple Speech asset install failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let audioPath = argument(after: "--benchmark-language-id", in: arguments) {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let report = try await WhisperKitAccuracyEngine().runLanguageDetectionBenchmark(
+                        recordingAt: URL(fileURLWithPath: audioPath)
+                    )
+                    try report.printJSON()
+                    status = 0
+                } catch {
+                    print("Mimi acoustic language-ID benchmark failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let audioPath = argument(after: "--benchmark-tiny-language-id", in: arguments) {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let report = try await WhisperLanguageDetector().runBenchmark(
+                        recordingAt: URL(fileURLWithPath: audioPath)
+                    )
+                    try report.printJSON()
+                    status = 0
+                } catch {
+                    print("Mimi tiny acoustic language-ID benchmark failed: \(error.localizedDescription)")
                     status = 1
                 }
                 Darwin.exit(status)
@@ -294,11 +384,12 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         guard arguments.contains("--e2e-window") else { return }
 
         let store = AppStore(loadPersistedTranscript: false)
-        store.sourceLanguage = .japanese
+        store.languageMode = .japanese
         store.engineID = .appleSpeechAnalyzer
         store.translationMode = .translateFinalSegments
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
+        let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
 
         let screen = argument(after: "--e2e-screen", in: arguments) ?? "menu"
         let presentationState = argument(after: "--e2e-state", in: arguments) ?? "ready"
@@ -318,18 +409,43 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         let view: AnyView
         let size: NSSize
         switch screen {
+        case "onboarding":
+            view = AnyView(OnboardingView(store: store, preferences: fixturePreferences))
+            size = NSSize(width: 620, height: 500)
+        case "captions":
+            fixturePreferences.floatingCaptionsEnabled = true
+            fixturePreferences.floatingCaptionContent = .both
+            fixturePreferences.floatingCaptionClickThrough = false
+            view = AnyView(FloatingCaptionView(store: store, preferences: fixturePreferences))
+            size = NSSize(width: 820, height: 150)
         case "transcript":
             view = AnyView(TranscriptWindow(
                 store: store,
+                preferences: fixturePreferences,
                 isConfirmingClear: presentationState == "clear-confirmation",
-                fixtureTranslation: "Hello. Mimi transcribes locally on this Mac."
+                fixtureTranslation: "Hello. Mimi transcribes locally on this Mac.",
+                initiallyFollowingLatest: presentationState != "follow-latest-paused"
             ))
             size = NSSize(width: 820, height: 600)
-        case "settings":
-            view = AnyView(SettingsView(store: store))
-            size = NSSize(width: 560, height: 540)
+        case "settings", "settings-models":
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .models))
+            size = NSSize(width: 620, height: 540)
+        case "settings-capture":
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .capture))
+            size = NSSize(width: 620, height: 540)
+        case "settings-privacy":
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .privacy))
+            size = NSSize(width: 620, height: 540)
+        case "settings-captions":
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .captions))
+            size = NSSize(width: 620, height: 540)
         default:
-            view = AnyView(MenuBarView(store: store, isConfirmingClear: presentationState == "clear-confirmation"))
+            view = AnyView(MenuBarView(
+                store: store,
+                preferences: fixturePreferences,
+                isConfirmingClear: presentationState == "clear-confirmation",
+                initiallyFollowingLatest: presentationState != "follow-latest-paused"
+            ))
             size = NSSize(width: 430, height: 580)
         }
 
@@ -340,8 +456,15 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         hostingController.sizingOptions = []
         let window = NSWindow(contentViewController: hostingController)
         window.title = "Mimi E2E \(screen.capitalized)"
-        window.styleMask = [.titled, .closable, .miniaturizable]
-        if screen != "menu" {
+        if screen == "captions" {
+            window.styleMask = [.borderless]
+            window.isOpaque = false
+            window.backgroundColor = .clear
+            window.level = .floating
+        } else {
+            window.styleMask = [.titled, .closable, .miniaturizable]
+        }
+        if screen != "menu", screen != "captions" {
             window.styleMask.insert(.resizable)
         }
         window.setContentSize(size)
@@ -382,6 +505,7 @@ private enum RealtimeBenchmarkCommandError: LocalizedError {
     case qwenDidNotBecomeReady
     case qwenFixtureBufferFailed
     case qwenLiveOutputMissing
+    case outputAudioMissing
     case unknownEngine(String)
 
     var errorDescription: String? {
@@ -396,9 +520,28 @@ private enum RealtimeBenchmarkCommandError: LocalizedError {
             "Mimi could not allocate a Qwen3-ASR fixture buffer."
         case .qwenLiveOutputMissing:
             "Qwen3-ASR did not produce both live and final output for the fixture."
+        case .outputAudioMissing:
+            "The Core Audio output tap started, but no output PCM arrived. Allow System Audio Recording and make sure the selected output is playing."
         case let .unknownEngine(engine):
             "Unknown realtime benchmark engine: \(engine)."
         }
+    }
+}
+
+private final class OutputAudioSmokeCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    var value: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return count
+    }
+
+    func increment() {
+        lock.lock()
+        count += 1
+        lock.unlock()
     }
 }
 
@@ -422,11 +565,23 @@ private enum NemotronLiveSmokeError: LocalizedError {
 @main
 struct MimiApp: App {
     @NSApplicationDelegateAdaptor(MimiAppDelegate.self) private var appDelegate
-    @State private var store = AppStore()
+    @State private var store: AppStore
+    @State private var preferences: UserPreferences
+    private let onboardingCoordinator: OnboardingWindowCoordinator
+    private let floatingCaptionController: FloatingCaptionController
+
+    init() {
+        let store = AppStore()
+        let preferences = UserPreferences()
+        _store = State(initialValue: store)
+        _preferences = State(initialValue: preferences)
+        onboardingCoordinator = OnboardingWindowCoordinator(store: store, preferences: preferences)
+        floatingCaptionController = FloatingCaptionController(store: store, preferences: preferences)
+    }
 
     var body: some Scene {
         MenuBarExtra {
-            MenuBarView(store: store)
+            MenuBarView(store: store, preferences: preferences)
         } label: {
             Label(store.isRecording ? "Mimi REC" : "Mimi", systemImage: store.menuBarSymbolName)
                 .accessibilityLabel(menuBarAccessibilityLabel)
@@ -434,17 +589,24 @@ struct MimiApp: App {
         .menuBarExtraStyle(.window)
 
         Settings {
-            SettingsView(store: store)
+            SettingsView(store: store, preferences: preferences)
         }
 
         WindowGroup("Mimi Transcript", id: "transcript") {
-            TranscriptWindow(store: store)
+            TranscriptWindow(store: store, preferences: preferences)
         }
-        .defaultSize(width: 760, height: 560)
+        .defaultSize(width: 920, height: 640)
+        .defaultPosition(.center)
         .windowToolbarStyle(.unified)
         .windowResizability(.contentMinSize)
         .commands {
             CommandMenu("Recording") {
+                Button(preferences.text("New Session", "新しいセッション")) {
+                    store.newSession()
+                }
+                .keyboardShortcut("n", modifiers: .command)
+                .disabled(store.controlsLocked)
+
                 Button(store.isRecording ? "Stop Recording" : "Start Recording") {
                     store.toggleRecording()
                 }
@@ -456,6 +618,7 @@ struct MimiApp: App {
                 }
                 .keyboardShortcut("c", modifiers: [.command, .shift])
                 .disabled(store.document.renderedText.isEmpty)
+
             }
         }
     }

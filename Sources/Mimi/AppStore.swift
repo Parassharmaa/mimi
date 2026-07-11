@@ -10,19 +10,32 @@ import Observation
 final class AppStore {
     @ObservationIgnored private let session: TranscriptionSession
     @ObservationIgnored private let inputDevicesProvider: () -> [AudioInputDevice]
+    @ObservationIgnored private let outputDevicesProvider: () -> [AudioOutputDevice]
+    @ObservationIgnored private let historyStore: TranscriptHistoryStore
+    @ObservationIgnored private var recordingStartedAt: Date?
+    var historyRecords: [TranscriptSessionRecord]
+    var selectedHistoryID: UUID?
 
     init(loadPersistedTranscript: Bool = true) {
+        let historyStore = TranscriptHistoryStore()
+        self.historyStore = historyStore
+        historyRecords = loadPersistedTranscript ? historyStore.load() : []
         inputDevicesProvider = AudioDeviceCatalog.inputDevices
+        outputDevicesProvider = AudioDeviceCatalog.outputDevices
+        let appleSpeech = SystemAppleSpeechProvider()
         let createdSession = TranscriptionSession(
             dependencies: .init(
                 microphoneCapture: MicrophoneCapture(),
+                outputAudioCapture: OutputAudioCapture(),
                 screenAudioCapture: ScreenAudioCapture(),
-                appleSpeech: SystemAppleSpeechProvider(),
+                appleSpeech: appleSpeech,
+                automaticAppleSpeech: AutomaticAppleSpeechEngine(appleSpeech: appleSpeech),
                 whisper: WhisperKitAccuracyEngine(),
                 nemotron: NemotronMLXLiveEngine(),
                 qwen: QwenMLXLiveEngine(),
                 storage: FileTranscriptStore(),
-                inputDevices: AudioDeviceCatalog.inputDevices()
+                inputDevices: AudioDeviceCatalog.inputDevices(),
+                outputDevices: AudioDeviceCatalog.outputDevices()
             ),
             loadPersistedTranscript: loadPersistedTranscript
         )
@@ -41,6 +54,11 @@ final class AppStore {
         get { session.sourceLanguage }
         set { session.sourceLanguage = newValue }
     }
+    var languageMode: TranscriptionLanguageMode {
+        get { session.languageMode }
+        set { session.languageMode = newValue }
+    }
+    var detectedLanguage: SpeechLanguage? { session.detectedLanguage }
     var engineID: TranscriptionEngineID {
         get { session.engineID }
         set { session.engineID = newValue }
@@ -50,12 +68,24 @@ final class AppStore {
         set { session.translationMode = newValue }
     }
     var document: TranscriptDocument { session.document }
+    var viewedDocument: TranscriptDocument {
+        guard let selectedHistoryID,
+              let record = historyRecords.first(where: { $0.id == selectedHistoryID }) else {
+            return session.document
+        }
+        return record.document
+    }
     var lastError: String? { session.lastError }
     var screenAudioSelection: ScreenAudioSelection? { session.screenAudioSelection }
     var inputDevices: [AudioInputDevice] { session.inputDevices }
+    var outputDevices: [AudioOutputDevice] { session.outputDevices }
     var selectedInputDeviceID: UInt32? {
         get { session.selectedInputDeviceID }
         set { session.selectedInputDeviceID = newValue }
+    }
+    var selectedOutputDeviceID: UInt32? {
+        get { session.selectedOutputDeviceID }
+        set { session.selectedOutputDeviceID = newValue }
     }
     var menuBarSymbolName: String { session.menuBarSymbolName }
     var isRecording: Bool { session.isRecording }
@@ -71,7 +101,22 @@ final class AppStore {
     var canCancelSelectedModelInstall: Bool { session.canCancelSelectedModelInstall }
 
     func toggleRecording() {
-        session.toggleRecording()
+        if session.isRecording {
+            Task {
+                await session.stopRecording()
+                archiveCurrentSessionIfNeeded()
+            }
+        } else {
+            Task {
+                if !session.document.renderedText.isEmpty {
+                    archiveCurrentSessionIfNeeded()
+                    session.clearTranscript()
+                }
+                selectedHistoryID = nil
+                recordingStartedAt = Date()
+                await session.startRecording()
+            }
+        }
     }
 
     func installSelectedModel() {
@@ -91,11 +136,63 @@ final class AppStore {
     }
 
     func clearTranscript() {
+        if let selectedHistoryID {
+            historyRecords.removeAll { $0.id == selectedHistoryID }
+            self.selectedHistoryID = nil
+            try? historyStore.save(historyRecords)
+        } else {
+            session.clearTranscript()
+        }
+    }
+
+    func selectCurrentSession() {
+        selectedHistoryID = nil
+    }
+
+    func newSession() {
+        guard !controlsLocked else { return }
+        if !session.document.renderedText.isEmpty {
+            archiveCurrentSessionIfNeeded()
+        }
         session.clearTranscript()
+        selectedHistoryID = nil
+        recordingStartedAt = nil
+    }
+
+    private func archiveCurrentSessionIfNeeded() {
+        let document = session.document
+        guard !document.renderedText.isEmpty else {
+            recordingStartedAt = nil
+            return
+        }
+        let start = recordingStartedAt ?? document.segments.first?.createdAt ?? Date()
+        if let existingIndex = historyRecords.firstIndex(where: { $0.document == document }) {
+            historyRecords.remove(at: existingIndex)
+        }
+        historyRecords.insert(
+            TranscriptSessionRecord(
+                id: UUID(),
+                startedAt: start,
+                endedAt: Date(),
+                source: session.source,
+                document: document
+            ),
+            at: 0
+        )
+        recordingStartedAt = nil
+        do {
+            try historyStore.save(historyRecords)
+        } catch {
+            session.lastError = error.localizedDescription
+        }
     }
 
     func refreshInputDevices() {
         session.replaceInputDevices(inputDevicesProvider())
+    }
+
+    func refreshOutputDevices() {
+        session.replaceOutputDevices(outputDevicesProvider())
     }
 
     func selectScreenAudioContent() {
@@ -105,7 +202,7 @@ final class AppStore {
     func copyTranscript() {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
-        pasteboard.setString(document.renderedText, forType: .string)
+        pasteboard.setString(viewedDocument.renderedText, forType: .string)
     }
 
     func applyFixture(_ event: TranscriptEvent, language: SpeechLanguage) {

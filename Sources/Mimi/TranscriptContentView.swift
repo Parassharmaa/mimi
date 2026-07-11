@@ -25,6 +25,7 @@ struct TranscriptContentView: View {
                 ForEach(document.segments) { segment in
                     Text(segment.text)
                         .font(font)
+                        .lineSpacing(3)
                         .textSelection(.enabled)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -32,6 +33,7 @@ struct TranscriptContentView: View {
                 if !document.liveText.isEmpty {
                     Text(document.liveText)
                         .font(font)
+                        .lineSpacing(3)
                         .foregroundStyle(.secondary)
                         .textSelection(.enabled)
                         .frame(maxWidth: .infinity, alignment: .leading)

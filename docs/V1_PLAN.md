@@ -14,13 +14,13 @@ Mimi is a native, local-first macOS transcription utility for English and Japane
 | Accuracy ASR pack | WhisperKit / Whisper Large-v3 Core ML (626 MB) | Mature Swift integration, multilingual Japanese + English, explicit model download. |
 | Experimental MLX ASR packs | Qwen3-ASR 0.6B 4-bit (713 MB) and Nemotron 3.5 streaming 8-bit (756 MB) | Direct Swift/MLX integration across every capture lane; Qwen adds provisional, agreement-confirmed, and retrospective completed-window passes. |
 | Translation | Apple Translation framework | EN↔JA is a local, on-demand language-pair download. Apple Speech drives a bounded rolling source/target view; other engines translate finalized text. |
-| Meeting/speaker capture | ScreenCaptureKit content picker | The implemented audio-only lanes capture a person-selected app or display without registering a video output; microphone, app, and display audio stay separate. Core Audio process taps remain a later alternative. |
+| Meeting/speaker capture | Core Audio output tap plus ScreenCaptureKit content picker | Direct output-device audio uses a private unmuted tap; scoped app/display lanes use the system picker. Every lane remains explicit and separate from microphone capture. |
 
 ## V1 user flow
 
 1. Open Mimi from the menu bar.
 2. Choose **English** or **日本語** and a local model.
-3. If using **Selected App Audio** or **Selected Display Audio**, click the matching **Choose … Audio** control and make an explicit choice in the macOS content picker.
+3. Choose a microphone, a direct **Selected Audio Output**, or an app/display through the matching macOS content picker.
 4. Click **Download Model** explicitly; no large model is fetched on launch.
 5. Click **Start**. The menu-bar glyph and red `LOCAL` indicator make the active recording state clear.
 6. Read/copy the live transcript, then optionally translate the latest English/Japanese snapshot live into the other language.
@@ -32,16 +32,18 @@ Mimi never blindly mixes your microphone and meeting audio. They are independent
 
 ```text
 Selected microphone ──┐
-Selected app audio ───┼─> PCM normalization ─> chosen ASR ─> final segments ─> local translation
+Selected audio output ├─> PCM normalization ─> chosen ASR ─> final segments ─> local translation
+Selected app audio ───┤
 Selected display audio┘
 ```
 
 - **Microphone** uses the selected microphone input and asks only for Microphone permission.
+- **Selected Audio Output** creates a private unmuted Core Audio process tap scoped to the chosen physical or virtual output device, attaches it to a temporary private aggregate input, and tears both down when capture stops. It may require System Audio Recording permission.
 - **Selected App Audio** presents the system ScreenCaptureKit picker in app-only mode. After an explicit selection, Mimi registers an audio output for that app's stream. On a browser this is app-level (for example, Chrome), not a specific Meet tab.
 - **Selected Display Audio** presents the system picker in display-only mode. After an explicit display selection, Mimi captures the audio associated with that display. It is deliberately not labeled unrestricted “all system audio.”
 - The implementation does not register a ScreenCaptureKit video output or build its own app/window picker. The system picker, its cancellation path, and the relevant macOS privacy flow remain visible to the person using Mimi.
 - Each lane is selected and started independently. Mimi does not mix microphone and speaker-output audio by default.
-- Core Audio process taps are still a planned alternative, not the capture mechanism claimed for this version.
+- No lane captures screen pixels, and no source is mixed with another unless a future explicit mixing mode is designed and tested.
 
 ## Model-pack contract
 
@@ -66,6 +68,7 @@ No optional model is auto-downloaded or bundled with Mimi. The rule is deliberat
 - Native MLX/Nemotron product compilation without fetching model weights.
 - Qwen lifecycle, live partial/final routing, stale callback isolation, and install/remove coverage without fetching weights.
 - A deterministic native menu-surface smoke launch that renders real SwiftUI sample data and exits automatically.
+- Deterministic menu and transcript fixtures for active follow-latest and paused-with-new-text states.
 - Swift package build, universal app packaging, signing verification, and `Info.plist` validation.
 
 ### Physical-Mac smoke suite
@@ -73,6 +76,9 @@ No optional model is auto-downloaded or bundled with Mimi. The rule is deliberat
 - `scripts/run-microphone-smoke.sh`: microphone grant and one-second realtime
   callback check without retaining source audio. Also verify deny/revoke and
   device route changes manually.
+- `.build/Mimi.app/Contents/MacOS/Mimi --e2e-output-audio-smoke`: signed-app
+  default-output tap check using a locally synthesized phrase. Also verify
+  permission denial, device changes, virtual outputs, headphones, and teardown.
 - `scripts/run-apple-speech-smoke.sh` and `scripts/run-whisper-smoke.sh`:
   opt-in one-second local model checks after a person explicitly installs the
   corresponding asset. They never download models from a test run.
