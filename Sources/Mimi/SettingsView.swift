@@ -1,174 +1,154 @@
 import MimiCore
 import SwiftUI
 
+enum SettingsTab: Hashable {
+    case models
+    case capture
+    case privacy
+}
+
 struct SettingsView: View {
     @Bindable var store: AppStore
+    @State private var selectedTab: SettingsTab
 
-    init(store: AppStore) {
+    init(store: AppStore, initialTab: SettingsTab = .models) {
         self.store = store
+        _selectedTab = State(initialValue: initialTab)
     }
 
     var body: some View {
-        TabView {
-            Form {
-                Section("Local model") {
-                    Picker("Transcription model", selection: $store.engineID) {
-                        ForEach(TranscriptionEngineID.allCases) { engine in
-                            Text(engine.displayName).tag(engine)
-                        }
-                    }
-                    .disabled(store.controlsLocked || store.isModelSetupActive)
-
-                    Picker("Language", selection: $store.sourceLanguage) {
-                        ForEach(SpeechLanguage.allCases) { language in
-                            Text(language.nativeName).tag(language)
-                        }
-                    }
-                    .disabled(store.controlsLocked || store.isModelSetupActive)
-
-                    VStack(alignment: .leading, spacing: 7) {
-                        Text("Status")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                        ModelSetupStatusView(
-                            readiness: store.selectedModelReadiness,
-                            setupState: store.selectedModelSetupState
-                        )
-                    }
-
-                    if let pack = store.modelPack {
-                        Text(pack.recommendation)
-                            .foregroundStyle(.secondary)
-                        if let size = pack.estimatedDownloadMB {
-                            Text("Estimated download: about \(size) MB")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        } else if pack.ownership == .systemManaged {
-                            Text("Apple manages this language asset at the system level. Download it explicitly before recording.")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-
-                    HStack(spacing: 8) {
-                        if store.canInstallSelectedModel {
-                            Button(modelActionTitle) {
-                                store.installSelectedModel()
-                            }
-                        }
-
-                        if store.canCancelSelectedModelInstall {
-                            Button("Cancel Download") {
-                                store.cancelSelectedModelInstall()
-                            }
-                        }
-
-                        if shouldShowAppleStatusCheck {
-                            Button("Check Apple Speech Status") {
-                                store.refreshSelectedModelReadiness()
-                            }
-                        }
-                    }
-
-                    if store.canRemoveSelectedModel {
-                        Button(removeButtonTitle, role: .destructive) {
-                            store.removeSelectedModel()
-                        }
-                        .disabled(store.controlsLocked)
-                    }
-
-                    if case .unavailable = store.selectedModelReadiness,
-                       store.engineID == .appleSpeechAnalyzer {
-                        Button("Use Whisper Large-v3 Instead") {
-                            store.engineID = .whisperKitLargeV3Turbo
-                        }
-                        .disabled(store.controlsLocked || store.isModelSetupActive)
-                    }
-                }
-
-                Section("Privacy") {
-                    Text("Mimi stores finalized transcript text locally. Temporary source audio exists only during Whisper's post-stop accuracy pass and is deleted after the session finishes; Apple Speech and live Nemotron process bounded PCM in memory without writing a source-audio file.")
-                    Text("Apple Translation processes text on-device; macOS may collect non-content performance metadata for the API.")
-                        .foregroundStyle(.secondary)
-                }
+        TabView(selection: $selectedTab) {
+            Tab("Models", systemImage: "cpu", value: .models) {
+                ModelsSettingsPane(store: store)
             }
-            .formStyle(.grouped)
-            .padding()
-            .tabItem { Label("Models", systemImage: "cpu") }
 
-            Form {
-                Section("Microphone") {
-                    LabeledContent("Microphone access") {
-                        Label("Requested when recording starts", systemImage: "mic")
-                            .foregroundStyle(.secondary)
-                    }
-                    Text("Choose a microphone from the Session panel. Mimi asks macOS for access only when you begin a microphone recording, then shows the active local recording state in its menu-bar control and transcript window.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-
-                Section("App and display audio") {
-                    LabeledContent("Selected App Audio") {
-                        selectionStatus(for: .applicationAudio)
-                    }
-                    Button("Choose App Audio…") {
-                        chooseScreenAudio(.applicationAudio)
-                    }
-                    .disabled(store.controlsLocked)
-
-                    LabeledContent("Selected Display Audio") {
-                        selectionStatus(for: .systemAudio)
-                    }
-                    Button("Choose Display Audio…") {
-                        chooseScreenAudio(.systemAudio)
-                    }
-                    .disabled(store.controlsLocked)
-
-                    Text("Selected Audio Output uses a private Core Audio tap and the system audio-recording permission. App and display choices use macOS's content picker. Mimi captures audio only and does not save screen images.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Text("For Google Meet, select Chrome; for Zoom, select Zoom. Display audio follows the display you choose, which is useful when your meeting audio is playing through that display.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    if let message = store.lastError, store.source != .microphone {
-                        Label(message, systemImage: "info.circle")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
-                Section("Future output route") {
-                    Text("A direct Core Audio tap for raw all-device speaker output is planned separately. Today's capture lane is intentionally scoped to an app or display chosen in macOS's picker.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+            Tab("Capture", systemImage: "waveform", value: .capture) {
+                CaptureSettingsPane(store: store)
             }
-            .formStyle(.grouped)
-            .padding()
-            .tabItem { Label("Capture", systemImage: "waveform") }
+
+            Tab("Privacy", systemImage: "hand.raised", value: .privacy) {
+                PrivacySettingsPane()
+            }
         }
-        .frame(width: 560, height: 520)
+        .scenePadding()
+        .frame(width: 620, height: 540)
         .background(SettingsWindowRegistrar())
+    }
+}
+
+private struct ModelsSettingsPane: View {
+    @Bindable var store: AppStore
+
+    var body: some View {
+        Form {
+            Section("Transcription") {
+                Picker("Model", selection: $store.engineID) {
+                    ForEach(TranscriptionEngineID.allCases) { engine in
+                        Text(engine.displayName).tag(engine)
+                    }
+                }
+                .disabled(store.controlsLocked || store.isModelSetupActive)
+
+                Picker("Language", selection: $store.sourceLanguage) {
+                    ForEach(SpeechLanguage.allCases) { language in
+                        Text(language.nativeName).tag(language)
+                    }
+                }
+                .disabled(store.controlsLocked || store.isModelSetupActive)
+
+                if let pack = store.modelPack {
+                    Text(pack.recommendation)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Section("Local availability") {
+                ModelSetupStatusView(
+                    readiness: store.selectedModelReadiness,
+                    setupState: store.selectedModelSetupState
+                )
+
+                if let pack = store.modelPack {
+                    LabeledContent("Storage") {
+                        Text(storageDescription(for: pack))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                modelActions
+            }
+
+            if store.engineID.isExperimental {
+                Section {
+                    Label(
+                        "This model is available locally, but remains experimental while Mimi evaluates Japanese accuracy, long-session stability, and thermal performance.",
+                        systemImage: "flask"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .formStyle(.grouped)
+    }
+
+    @ViewBuilder
+    private var modelActions: some View {
+        HStack(spacing: 8) {
+            if store.canInstallSelectedModel {
+                Button(modelActionTitle) {
+                    store.installSelectedModel()
+                }
+                .buttonStyle(.borderedProminent)
+            }
+
+            if store.canCancelSelectedModelInstall {
+                Button("Pause Download") {
+                    store.cancelSelectedModelInstall()
+                }
+            }
+
+            if shouldShowAppleStatusCheck {
+                Button("Check Status") {
+                    store.refreshSelectedModelReadiness()
+                }
+            }
+        }
+
+        if store.canRemoveSelectedModel {
+            Button(removeButtonTitle, role: .destructive) {
+                store.removeSelectedModel()
+            }
+            .disabled(store.controlsLocked)
+        }
+
+        if case .unavailable = store.selectedModelReadiness,
+           store.engineID == .appleSpeechAnalyzer {
+            Button("Use Whisper Large-v3 Instead") {
+                store.engineID = .whisperKitLargeV3Turbo
+            }
+            .disabled(store.controlsLocked || store.isModelSetupActive)
+        }
+    }
+
+    private func storageDescription(for pack: LocalModelPack) -> String {
+        if let size = pack.estimatedDownloadMB {
+            return "About \(size) MB, managed by Mimi"
+        }
+        return "Language asset managed by macOS"
     }
 
     private var modelActionTitle: String {
         let retry = switch store.selectedModelSetupState {
-        case .cancelled, .failed:
-            true
-        case .idle, .checking, .downloading, .prewarming, .removing, .waitingForSystem:
-            false
+        case .cancelled, .failed: true
+        case .idle, .checking, .downloading, .prewarming, .removing, .waitingForSystem: false
         }
-        let base: String
-        switch store.engineID {
-        case .appleSpeechAnalyzer:
-            base = "Download \(store.sourceLanguage.displayName) Apple Speech"
-        case .whisperKitLargeV3Turbo:
-            base = "Download Whisper Large-v3"
-        case .nemotronStreamingExperimental:
-            base = "Download Nemotron MLX"
-        case .qwen3StreamingExperimental:
-            base = "Download Qwen3-ASR MLX"
+        let base: String = switch store.engineID {
+        case .appleSpeechAnalyzer: "Download \(store.sourceLanguage.displayName)"
+        case .whisperKitLargeV3Turbo: "Download Whisper"
+        case .nemotronStreamingExperimental: "Download Nemotron"
+        case .qwen3StreamingExperimental: "Download Qwen3-ASR"
         }
         return retry ? "Retry \(base)" : base
     }
@@ -176,20 +156,73 @@ struct SettingsView: View {
     private var shouldShowAppleStatusCheck: Bool {
         guard store.engineID == .appleSpeechAnalyzer else { return false }
         return switch store.selectedModelReadiness {
-        case .checking, .needsDownload, .downloading, .ready:
-            true
-        case .unavailable, .experimental:
-            false
+        case .checking, .needsDownload, .downloading, .ready: true
+        case .unavailable, .experimental: false
         }
     }
 
     private var removeButtonTitle: String {
         switch store.engineID {
-        case .whisperKitLargeV3Turbo: "Remove Downloaded Whisper Model"
-        case .nemotronStreamingExperimental: "Remove Downloaded Nemotron Model"
-        case .qwen3StreamingExperimental: "Remove Downloaded Qwen3-ASR Model"
-        case .appleSpeechAnalyzer: "Remove Downloaded Model"
+        case .whisperKitLargeV3Turbo: "Remove Whisper Download"
+        case .nemotronStreamingExperimental: "Remove Nemotron Download"
+        case .qwen3StreamingExperimental: "Remove Qwen3-ASR Download"
+        case .appleSpeechAnalyzer: "Remove Download"
         }
+    }
+}
+
+private struct CaptureSettingsPane: View {
+    @Bindable var store: AppStore
+
+    var body: some View {
+        Form {
+            Section("Device audio") {
+                LabeledContent("Microphone") {
+                    Label("Asked when recording starts", systemImage: "mic")
+                        .foregroundStyle(.secondary)
+                }
+
+                LabeledContent("Audio Output") {
+                    Label("System Audio Recording", systemImage: "speaker.wave.2")
+                        .foregroundStyle(.secondary)
+                }
+
+                Text("Choose the exact microphone or output device in the Session sidebar. Mimi asks for the matching macOS permission only when capture begins.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Section("Scoped meeting audio") {
+                LabeledContent("App Audio") {
+                    selectionStatus(for: .applicationAudio)
+                }
+                Button("Choose App…") {
+                    chooseScreenAudio(.applicationAudio)
+                }
+                .disabled(store.controlsLocked)
+
+                LabeledContent("Display Audio") {
+                    selectionStatus(for: .systemAudio)
+                }
+                Button("Choose Display…") {
+                    chooseScreenAudio(.systemAudio)
+                }
+                .disabled(store.controlsLocked)
+
+                Text("For Google Meet, choose Chrome; for Zoom, choose Zoom. Mimi registers only an audio output for the selected app or display and never captures screen pixels.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            if let message = store.lastError, store.source != .microphone {
+                Section("Capture status") {
+                    Label(message, systemImage: "info.circle")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .formStyle(.grouped)
     }
 
     @ViewBuilder
@@ -208,5 +241,54 @@ struct SettingsView: View {
     private func chooseScreenAudio(_ source: AudioSource) {
         store.source = source
         store.selectScreenAudioContent()
+    }
+}
+
+private struct PrivacySettingsPane: View {
+    var body: some View {
+        Form {
+            Section("Local by design") {
+                privacyRow(
+                    "Transcript",
+                    detail: "Finalized text is stored only on this Mac.",
+                    symbol: "text.alignleft"
+                )
+                privacyRow(
+                    "Transcription",
+                    detail: "Apple Speech, Whisper, Qwen, and Nemotron run locally.",
+                    symbol: "waveform"
+                )
+                privacyRow(
+                    "Translation",
+                    detail: "Apple Translation processes English and Japanese on-device.",
+                    symbol: "translate"
+                )
+            }
+
+            Section("Temporary audio") {
+                Text("Apple Speech and live MLX models process working audio in memory without retaining a source file. Whisper writes a temporary source file for its post-stop accuracy pass, then Mimi deletes it when the session finishes.")
+                    .foregroundStyle(.secondary)
+            }
+
+            Section("System services") {
+                Text("macOS owns permission prompts and Apple language assets. Apple frameworks may collect non-content performance metadata, but Mimi does not send transcript or source-audio content to a cloud service.")
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+    }
+
+    private func privacyRow(_ title: String, detail: String, symbol: String) -> some View {
+        Label {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                Text(detail)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        } icon: {
+            Image(systemName: symbol)
+                .foregroundStyle(.secondary)
+        }
     }
 }

@@ -23,11 +23,12 @@ struct ScreenAudioSelectionControl: View {
                     }
                     .disabled(store.controlsLocked)
 
-                    if isSelected {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                            .accessibilityLabel("Audio source selected")
-                    }
+                    Spacer(minLength: 4)
+
+                    Label(isSelected ? "Selected" : "Required", systemImage: isSelected ? "checkmark.circle.fill" : "circle")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(isSelected ? .green : .secondary)
+                        .accessibilityLabel(isSelected ? "Audio source selected" : "Audio source selection required")
                 }
 
                 if let selection, isSelected {
@@ -36,10 +37,9 @@ struct ScreenAudioSelectionControl: View {
                         .foregroundStyle(.secondary)
                         .accessibilityElement(children: .combine)
                 } else {
-                    Label(selectionRequiredText, systemImage: "exclamationmark.circle")
+                    Text(selectionRequiredText)
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        .accessibilityElement(children: .combine)
                 }
 
                 if !compact {

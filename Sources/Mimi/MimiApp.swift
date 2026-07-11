@@ -15,6 +15,14 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         NSApplication.shared.setActivationPolicy(.accessory)
 
         let arguments = ProcessInfo.processInfo.arguments
+        switch argument(after: "--e2e-appearance", in: arguments) {
+        case "light":
+            NSApplication.shared.appearance = NSAppearance(named: .aqua)
+        case "dark":
+            NSApplication.shared.appearance = NSAppearance(named: .darkAqua)
+        default:
+            break
+        }
         if arguments.contains("--benchmark-install-language-id") {
             Task { @MainActor in
                 let status: Int32
@@ -408,9 +416,15 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"
             ))
             size = NSSize(width: 820, height: 600)
-        case "settings":
-            view = AnyView(SettingsView(store: store))
-            size = NSSize(width: 560, height: 540)
+        case "settings", "settings-models":
+            view = AnyView(SettingsView(store: store, initialTab: .models))
+            size = NSSize(width: 620, height: 540)
+        case "settings-capture":
+            view = AnyView(SettingsView(store: store, initialTab: .capture))
+            size = NSSize(width: 620, height: 540)
+        case "settings-privacy":
+            view = AnyView(SettingsView(store: store, initialTab: .privacy))
+            size = NSSize(width: 620, height: 540)
         default:
             view = AnyView(MenuBarView(
                 store: store,
@@ -547,7 +561,8 @@ struct MimiApp: App {
         WindowGroup("Mimi Transcript", id: "transcript") {
             TranscriptWindow(store: store)
         }
-        .defaultSize(width: 760, height: 560)
+        .defaultSize(width: 920, height: 640)
+        .defaultPosition(.center)
         .windowToolbarStyle(.unified)
         .windowResizability(.contentMinSize)
         .commands {
@@ -563,6 +578,7 @@ struct MimiApp: App {
                 }
                 .keyboardShortcut("c", modifiers: [.command, .shift])
                 .disabled(store.document.renderedText.isEmpty)
+
             }
         }
     }

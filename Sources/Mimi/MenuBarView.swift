@@ -4,9 +4,10 @@ import SwiftUI
 
 struct MenuBarView: View {
     @Bindable var store: AppStore
-    @Environment(\.openWindow) private var openWindow
     @Environment(\.openSettings) private var openSettings
+    @Environment(\.openWindow) private var openWindow
     @State private var isConfirmingClear = false
+
     private let initiallyFollowingLatest: Bool
 
     init(
@@ -20,205 +21,194 @@ struct MenuBarView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            header
-            controls
-            transcriptPreview
+        VStack(alignment: .leading, spacing: MimiMetrics.sectionSpacing) {
+            MimiStatusHeader(state: store.recordingState, source: store.source)
 
-            if store.translationMode == .translateFinalSegments,
-               !store.document.finalizedText(for: store.sourceLanguage).isEmpty {
-                Label("Live translation is available in the Transcript window.", systemImage: "translate")
+            recordingButton
+
+            if let message = store.lastError {
+                Label(message, systemImage: "exclamationmark.triangle.fill")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.orange)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .mimiCard(padding: 10)
+                    .accessibilityLabel("Recording warning: \(message)")
             }
 
-            Divider()
+            configuration
 
-            HStack(spacing: 10) {
-                Button {
-                    openWindow(id: "transcript")
-                } label: {
-                    Label("Open Transcript", systemImage: "text.alignleft")
-                }
-                .buttonStyle(.borderless)
-
-                Button {
-                    openMimiSettings()
-                } label: {
-                    Label("Settings", systemImage: "gearshape")
-                }
-                .buttonStyle(.borderless)
-
-                Spacer()
-
-                Button("Quit") {
-                    NSApplication.shared.terminate(nil)
-                }
-                .buttonStyle(.borderless)
+            if needsModelSetupAction {
+                modelSetup
             }
-            .font(.footnote)
+
+            transcriptPreview
+            footer
         }
         .padding(16)
-        .frame(width: 430)
+        .frame(width: 400)
     }
 
-    private var header: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: store.menuBarSymbolName)
-                .font(.title2)
-                .foregroundStyle(statusColor)
-                .accessibilityHidden(true)
+    private var recordingButton: some View {
+        Button {
+            store.toggleRecording()
+        } label: {
+            Label(
+                store.isRecording ? "Stop Recording" : "Start Recording",
+                systemImage: store.isRecording ? "stop.fill" : "record.circle"
+            )
+            .frame(maxWidth: .infinity)
+        }
+        .keyboardShortcut(.return, modifiers: [])
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .tint(store.isRecording ? .red : .accentColor)
+        .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
+    }
 
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Mimi")
-                    .font(.headline)
-                Text(store.isRecording ? "Recording \(store.source.displayName.lowercased()) locally" : store.recordingState.label)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+    private var configuration: some View {
+        VStack(spacing: 0) {
+            MimiControlRow(
+                "Input",
+                detail: sourceSummary,
+                symbol: store.source.symbolName
+            ) {
+                Picker("Input", selection: $store.source) {
+                    ForEach(AudioSource.allCases) { source in
+                        Text(source.displayName).tag(source)
+                    }
+                }
+                .pickerStyle(.menu)
+                .frame(maxWidth: 176)
+                .disabled(store.controlsLocked)
+                .accessibilityLabel("Input source")
             }
 
-            Spacer()
+            sourceConfiguration
+            rowDivider
 
-            if store.isRecording {
-                Text("REC")
-                    .font(.caption2.weight(.bold))
-                    .foregroundStyle(.red)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 4)
-                    .background(.red.opacity(0.12), in: Capsule())
-                    .accessibilityLabel("Recording \(store.source.displayName.lowercased()) locally")
+            MimiControlRow("Language", symbol: store.sourceLanguage.symbolName) {
+                Picker("Language", selection: $store.sourceLanguage) {
+                    ForEach(SpeechLanguage.allCases) { language in
+                        Text(language.nativeName).tag(language)
+                    }
+                }
+                .pickerStyle(.menu)
+                .disabled(store.controlsLocked || store.isModelSetupActive)
+                .accessibilityLabel("Transcription language")
+            }
+
+            rowDivider
+
+            MimiControlRow(
+                "Model",
+                detail: store.selectedModelReadiness.canStart ? "Local model ready" : "Setup required",
+                symbol: "cpu"
+            ) {
+                Picker("Model", selection: $store.engineID) {
+                    ForEach(TranscriptionEngineID.allCases) { engine in
+                        Text(engine.displayName).tag(engine)
+                    }
+                }
+                .pickerStyle(.menu)
+                .frame(maxWidth: 176)
+                .disabled(store.controlsLocked || store.isModelSetupActive)
+                .accessibilityLabel("Transcription model")
+            }
+
+            rowDivider
+
+            MimiControlRow("Translation", symbol: "translate") {
+                Picker("Translation", selection: $store.translationMode) {
+                    ForEach(TranslationMode.allCases) { mode in
+                        Text(mode == .off ? "Off" : "English ↔ Japanese").tag(mode)
+                    }
+                }
+                .pickerStyle(.menu)
+                .frame(maxWidth: 176)
+                .disabled(store.controlsLocked)
+                .accessibilityLabel("Translation mode")
             }
         }
-        .accessibilityElement(children: .combine)
+        .mimiCard()
     }
 
-    private var controls: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Picker("Input", selection: $store.source) {
-                ForEach(AudioSource.allCases) { source in
-                    Text(source.displayName).tag(source)
+    @ViewBuilder
+    private var sourceConfiguration: some View {
+        switch store.source {
+        case .microphone:
+            rowDivider
+            devicePickerRow(
+                title: "Microphone",
+                selection: $store.selectedInputDeviceID,
+                devices: store.inputDevices.map { ($0.id, $0.displayName) },
+                refreshLabel: "Refresh microphone inputs",
+                refresh: store.refreshInputDevices
+            )
+        case .outputAudio:
+            rowDivider
+            devicePickerRow(
+                title: "Output",
+                selection: $store.selectedOutputDeviceID,
+                devices: store.outputDevices.map { ($0.id, $0.displayName) },
+                refreshLabel: "Refresh audio outputs",
+                refresh: store.refreshOutputDevices
+            )
+        case .applicationAudio, .systemAudio:
+            rowDivider
+            ScreenAudioSelectionControl(store: store, compact: true)
+                .padding(.vertical, 8)
+        }
+    }
+
+    private func devicePickerRow(
+        title: String,
+        selection: Binding<UInt32?>,
+        devices: [(UInt32, String)],
+        refreshLabel: String,
+        refresh: @escaping () -> Void
+    ) -> some View {
+        HStack(spacing: 8) {
+            Picker(title, selection: selection) {
+                Text("System Default").tag(UInt32?.none)
+                ForEach(devices, id: \.0) { id, name in
+                    Text(name).tag(Optional(id))
                 }
             }
             .pickerStyle(.menu)
             .disabled(store.controlsLocked)
 
-            if store.source == .microphone {
-                HStack(spacing: 8) {
-                    Picker("Microphone", selection: $store.selectedInputDeviceID) {
-                        Text("System Default").tag(UInt32?.none)
-                        ForEach(store.inputDevices) { device in
-                            Text(device.displayName).tag(Optional(device.id))
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .disabled(store.controlsLocked)
-
-                    Button {
-                        store.refreshInputDevices()
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .buttonStyle(.borderless)
-                    .help("Refresh microphone inputs")
-                    .accessibilityLabel("Refresh microphone inputs")
-                    .disabled(store.controlsLocked)
-                }
-            } else if store.source == .outputAudio {
-                HStack(spacing: 8) {
-                    Picker("Output", selection: $store.selectedOutputDeviceID) {
-                        Text("System Default").tag(UInt32?.none)
-                        ForEach(store.outputDevices) { device in
-                            Text(device.displayName).tag(Optional(device.id))
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .disabled(store.controlsLocked)
-
-                    Button {
-                        store.refreshOutputDevices()
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .buttonStyle(.borderless)
-                    .help("Refresh audio outputs")
-                    .accessibilityLabel("Refresh audio outputs")
-                    .disabled(store.controlsLocked)
-                }
+            Button(action: refresh) {
+                Image(systemName: "arrow.clockwise")
             }
-
-            ScreenAudioSelectionControl(store: store, compact: true)
-
-            Picker("Language", selection: $store.sourceLanguage) {
-                ForEach(SpeechLanguage.allCases) { language in
-                    Text(language.nativeName).tag(language)
-                }
-            }
-            .pickerStyle(.menu)
-            .disabled(store.controlsLocked || store.isModelSetupActive)
-
-            Picker("Model", selection: $store.engineID) {
-                ForEach(TranscriptionEngineID.allCases) { engine in
-                    Text(engine.displayName).tag(engine)
-                }
-            }
-            .pickerStyle(.menu)
-            .disabled(store.controlsLocked || store.isModelSetupActive)
-
-            modelStatus
-
-            if let message = store.lastError {
-                HStack(alignment: .top, spacing: 6) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .accessibilityHidden(true)
-                    Text(message)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                    .font(.caption)
-                    .foregroundStyle(.orange)
-                    .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Recording warning: \(message)")
-            }
-
-            HStack(spacing: 8) {
-                Button(store.isRecording ? "Stop Recording" : "Start Recording") {
-                    store.toggleRecording()
-                }
-                .keyboardShortcut(.return, modifiers: [])
-                .buttonStyle(.borderedProminent)
-                .tint(store.isRecording ? .red : .accentColor)
-                .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
-
-                if needsModelSetupAction {
-                    Button("Set Up Model…") {
-                        openMimiSettings()
-                    }
-                    .buttonStyle(.bordered)
-                    .accessibilityHint("Opens the model setup window")
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .buttonStyle(.borderless)
+            .help(refreshLabel)
+            .accessibilityLabel(refreshLabel)
+            .disabled(store.controlsLocked)
         }
+        .padding(.leading, 28)
+        .padding(.vertical, 8)
     }
 
-    private var modelStatus: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if let pack = store.modelPack {
-                Text(pack.recommendation)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
+    private var modelSetup: some View {
+        VStack(alignment: .leading, spacing: 9) {
+            MimiSectionLabel("Model setup", symbol: "arrow.down.circle")
             ModelSetupStatusView(
                 readiness: store.selectedModelReadiness,
                 setupState: store.selectedModelSetupState,
                 compact: true
             )
+
+            Button("Open Model Settings…", action: openMimiSettings)
+                .buttonStyle(.bordered)
+                .accessibilityHint("Opens the model setup window")
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .mimiCard()
     }
 
     private var transcriptPreview: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             transcriptHeader
 
             FollowLatestScrollView(
@@ -227,32 +217,27 @@ struct MenuBarView: View {
             ) {
                 TranscriptContentView(
                     document: store.document,
-                    emptyMessage: "Choose a ready local model, then start speaking."
+                    emptyMessage: "Start recording to see local transcription here."
                 )
-                .padding(10)
+                .padding(.vertical, 2)
             }
-            .frame(height: 130)
-            .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .frame(height: 118)
         }
+        .mimiCard()
     }
 
     @ViewBuilder
     private var transcriptHeader: some View {
         if isConfirmingClear {
             HStack(spacing: 8) {
-                Text("Clear saved transcript?")
+                Text("Clear transcript?")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
                 Spacer()
-                Button("Cancel") {
-                    isConfirmingClear = false
-                }
-                .keyboardShortcut(.cancelAction)
-                .buttonStyle(.bordered)
-
+                Button("Cancel") { setClearConfirmation(false) }
+                    .keyboardShortcut(.cancelAction)
                 Button("Clear", role: .destructive) {
                     store.clearTranscript()
-                    isConfirmingClear = false
+                    setClearConfirmation(false)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.red)
@@ -260,48 +245,76 @@ struct MenuBarView: View {
             .accessibilityElement(children: .contain)
             .accessibilityLabel("Clear local transcript confirmation")
         } else {
-            HStack {
-                Text("Latest transcript")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+            HStack(spacing: 8) {
+                MimiSectionLabel("Latest transcript", symbol: "text.alignleft")
                 Spacer()
                 Button {
                     store.copyTranscript()
                 } label: {
                     Image(systemName: "doc.on.doc")
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderless)
                 .help("Copy transcript")
                 .accessibilityLabel("Copy transcript")
                 .disabled(store.document.renderedText.isEmpty)
 
                 Button {
-                    isConfirmingClear = true
+                    setClearConfirmation(true)
                 } label: {
                     Image(systemName: "trash")
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderless)
                 .help("Clear saved transcript")
                 .accessibilityLabel("Clear saved transcript")
-                .accessibilityHint("Shows an inline confirmation before removing the local transcript")
                 .disabled(store.document.renderedText.isEmpty)
             }
         }
+    }
+
+    private var footer: some View {
+        HStack(spacing: 14) {
+            Button {
+                openWindow(id: "transcript")
+            } label: {
+                Label("Transcript", systemImage: "rectangle.on.rectangle")
+            }
+
+            Button(action: openMimiSettings) {
+                Label("Settings", systemImage: "gearshape")
+            }
+
+            Spacer()
+
+            Button("Quit") {
+                NSApplication.shared.terminate(nil)
+            }
+        }
+        .buttonStyle(.borderless)
+        .font(.footnote)
+    }
+
+    private var rowDivider: some View {
+        Divider().padding(.leading, 28)
     }
 
     private var needsModelSetupAction: Bool {
         !store.selectedModelReadiness.canStart || store.selectedModelSetupState != .idle
     }
 
-    private var statusColor: Color {
-        store.isRecording ? .red : .accentColor
+    private var sourceSummary: String {
+        switch store.source {
+        case .microphone: "Selected input device"
+        case .outputAudio: "System mix from one output"
+        case .applicationAudio: "Audio from one app"
+        case .systemAudio: "Audio from one display"
+        }
+    }
+
+    private func setClearConfirmation(_ confirming: Bool) {
+        isConfirmingClear = confirming
     }
 
     private func openMimiSettings() {
-        // This is the real Mimi Settings window, not a passive app
-        // activation. Registering the native window lets a menu-bar utility
-        // reliably bring it in front even when another app currently owns
-        // focus.
         SettingsWindowFocusCoordinator.shared.requestFocus()
         openSettings()
     }

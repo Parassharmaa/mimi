@@ -6,6 +6,7 @@ struct FollowLatestScrollView<Content: View>: View {
     let contentVersion: String
     private let content: Content
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var followsLatest: Bool
     @State private var isAtBottom = true
     @State private var userIsScrolling = false
@@ -75,8 +76,9 @@ struct FollowLatestScrollView<Content: View>: View {
                             systemImage: "arrow.down"
                         )
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.bordered)
                     .controlSize(.small)
+                    .tint(hasUnseenContent ? .accentColor : .secondary)
                     .padding(8)
                     .help("Return to the newest transcript text and resume automatic scrolling")
                     .accessibilityHint("Resumes following new text automatically")
@@ -88,7 +90,7 @@ struct FollowLatestScrollView<Content: View>: View {
     private func scrollToLatest(using proxy: ScrollViewProxy, animated: Bool) {
         Task { @MainActor in
             await Task.yield()
-            if animated {
+            if animated && !reduceMotion {
                 withAnimation(.easeOut(duration: 0.2)) {
                     proxy.scrollTo(bottomAnchor, anchor: .bottom)
                 }

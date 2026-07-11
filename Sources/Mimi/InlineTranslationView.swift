@@ -39,11 +39,10 @@ struct InlineTranslationView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(spacing: 0) {
             HStack {
                 Label(targetLanguage.nativeName, systemImage: "translate")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
+                    .font(.callout.weight(.semibold))
                 Spacer()
                 if isTranslating {
                     ProgressView()
@@ -58,6 +57,10 @@ struct InlineTranslationView: View {
                     .disabled(sourceText.isEmpty || fixtureTranslation != nil)
                 }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+
+            Divider()
 
             if !translatedText.isEmpty {
                 FollowLatestScrollView(
@@ -68,20 +71,33 @@ struct InlineTranslationView: View {
                         .font(fillsAvailableSpace ? .title3 : .body)
                         .textSelection(.enabled)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(18)
                 }
                 .frame(maxHeight: fillsAvailableSpace ? .infinity : 160)
             } else if isTranslating {
-                Text("Preparing local translation…")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                ContentUnavailableView {
+                    Label("Preparing Translation", systemImage: "translate")
+                } description: {
+                    Text("Mimi is translating the newest stable speech locally.")
+                } actions: {
+                    ProgressView()
+                        .controlSize(.small)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                Text(isLive ? "Translation appears as speech becomes stable." : "Translate transcript text locally.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                ContentUnavailableView(
+                    "No Translation Yet",
+                    systemImage: "translate",
+                    description: Text(isLive ? "Translation appears as speech becomes stable." : "Start with transcript text to translate it locally.")
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 
             if let errorText {
                 HStack(alignment: .firstTextBaseline) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                        .accessibilityHidden(true)
                     Text(errorText)
                         .font(.caption)
                         .foregroundStyle(.red)
@@ -91,10 +107,11 @@ struct InlineTranslationView: View {
                     }
                     .buttonStyle(.borderless)
                 }
+                .padding(10)
+                .background(Color.red.opacity(0.08))
             }
         }
-        .padding(10)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .background(Color(nsColor: .textBackgroundColor))
         .frame(maxHeight: fillsAvailableSpace ? .infinity : nil, alignment: .topLeading)
         .translationTask(configuration) { @MainActor session in
             let text = requestedText
