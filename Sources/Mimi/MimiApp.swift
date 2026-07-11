@@ -384,7 +384,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         guard arguments.contains("--e2e-window") else { return }
 
         let store = AppStore(loadPersistedTranscript: false)
-        store.sourceLanguage = .japanese
+        store.languageMode = .japanese
         store.engineID = .appleSpeechAnalyzer
         store.translationMode = .translateFinalSegments
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
@@ -456,8 +456,15 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         hostingController.sizingOptions = []
         let window = NSWindow(contentViewController: hostingController)
         window.title = "Mimi E2E \(screen.capitalized)"
-        window.styleMask = [.titled, .closable, .miniaturizable]
-        if screen != "menu" {
+        if screen == "captions" {
+            window.styleMask = [.borderless]
+            window.isOpaque = false
+            window.backgroundColor = .clear
+            window.level = .floating
+        } else {
+            window.styleMask = [.titled, .closable, .miniaturizable]
+        }
+        if screen != "menu", screen != "captions" {
             window.styleMask.insert(.resizable)
         }
         window.setContentSize(size)

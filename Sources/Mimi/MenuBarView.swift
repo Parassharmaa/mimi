@@ -24,41 +24,47 @@ struct MenuBarView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: MimiMetrics.sectionSpacing) {
-            MimiStatusHeader(state: store.recordingState, source: store.source)
+        ZStack {
+            Color(nsColor: .windowBackgroundColor)
+                .ignoresSafeArea()
 
-            Button {
-                store.newSession()
-            } label: {
-                Label(t("New Session", "新しいセッション"), systemImage: "plus")
-                    .frame(maxWidth: .infinity)
+            VStack(alignment: .leading, spacing: MimiMetrics.sectionSpacing) {
+                MimiStatusHeader(state: store.recordingState, source: store.source)
+
+                if !store.controlsLocked {
+                    Button {
+                        store.newSession()
+                    } label: {
+                        Label(t("New Session", "新しいセッション"), systemImage: "plus")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                }
+
+                recordingButton
+
+                if let message = store.lastError {
+                    Label(message, systemImage: "exclamationmark.triangle.fill")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .mimiCard(padding: 10)
+                        .accessibilityLabel("Recording warning: \(message)")
+                }
+
+                configuration
+
+                if needsModelSetupAction {
+                    modelSetup
+                }
+
+                transcriptPreview
+                footer
             }
-            .buttonStyle(.bordered)
-            .controlSize(.large)
-            .disabled(store.controlsLocked)
-
-            recordingButton
-
-            if let message = store.lastError {
-                Label(message, systemImage: "exclamationmark.triangle.fill")
-                    .font(.caption)
-                    .foregroundStyle(.orange)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .mimiCard(padding: 10)
-                    .accessibilityLabel("Recording warning: \(message)")
-            }
-
-            configuration
-
-            if needsModelSetupAction {
-                modelSetup
-            }
-
-            transcriptPreview
-            footer
+            .padding(16)
         }
-        .padding(16)
         .frame(width: 430)
     }
 

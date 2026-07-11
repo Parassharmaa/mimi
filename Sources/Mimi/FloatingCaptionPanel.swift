@@ -118,6 +118,7 @@ struct FloatingCaptionView: View {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @State private var configuration: TranslationSession.Configuration?
     @State private var translatedText = ""
+    @State private var translatedSourceText = ""
     @State private var requestedText = ""
     @State private var pendingText = ""
     @State private var isTranslating = false
@@ -129,7 +130,10 @@ struct FloatingCaptionView: View {
         return store.document.contentLanguage(fallback: store.sourceLanguage)
     }
     private var sourceText: String {
-        store.document.realtimeTranslationContext(for: sourceLanguage, maximumCharacterCount: 320)
+        store.document.latestCaptionText
+    }
+    private var synchronizedTranslation: String {
+        translatedSourceText == sourceText ? translatedText : ""
     }
 
     var body: some View {
@@ -138,8 +142,14 @@ struct FloatingCaptionView: View {
                 if preferences.floatingCaptionContent != .translation {
                     caption(sourceText, secondary: preferences.floatingCaptionContent == .both)
                 }
-                if preferences.floatingCaptionContent != .original {
-                    caption(translatedText, secondary: false)
+            if preferences.floatingCaptionContent != .original {
+                if !synchronizedTranslation.isEmpty {
+                    caption(synchronizedTranslation, secondary: false)
+                } else if !sourceText.isEmpty {
+                    Text("…")
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
                 }
                 if sourceText.isEmpty && translatedText.isEmpty {
                     Text(preferences.text("Captions will appear here", "字幕がここに表示されます"))
@@ -186,8 +196,12 @@ struct FloatingCaptionView: View {
             do {
                 try await session.prepareTranslation()
                 let response = try await session.translate(text)
-                guard requestedText == text else { return }
+                guard requestedText == text, pendingText == text else {
+                    isTranslating = false
+                    return
+                }
                 translatedText = response.targetText
+                translatedSourceText = text
             } catch {
                 guard requestedText == text else { return }
                 translatedText = preferences.text("Translation is not ready yet.", "翻訳の準備がまだできていません。")
@@ -196,14 +210,18 @@ struct FloatingCaptionView: View {
         }
         .onChange(of: sourceText, initial: true) { _, text in
             pendingText = text
-            if text.isEmpty { translatedText = "" }
+            if text.isEmpty {
+                translatedText = ""
+                translatedSourceText = ""
+            }
         }
         .task(id: sourceLanguage) {
             configuration = nil
             translatedText = ""
+            translatedSourceText = ""
             requestedText = ""
             while !Task.isCancelled {
-                try? await Task.sleep(for: .milliseconds(700))
+                try? await Task.sleep(for: .milliseconds(250))
                 guard !Task.isCancelled,
                       preferences.floatingCaptionContent != .original,
                       !pendingText.isEmpty,

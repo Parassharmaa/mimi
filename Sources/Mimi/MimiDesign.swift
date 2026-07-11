@@ -155,13 +155,12 @@ private struct MimiCardModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding(padding)
-            .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: MimiMetrics.cardRadius, style: .continuous))
+            .background(Color.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: MimiMetrics.cardRadius, style: .continuous))
             .overlay {
-                RoundedRectangle(cornerRadius: MimiMetrics.cardRadius, style: .continuous)
-                    .strokeBorder(
-                        contrast == .increased ? Color.primary.opacity(0.32) : Color.primary.opacity(0.08),
-                        lineWidth: 1
-                    )
+                if contrast == .increased {
+                    RoundedRectangle(cornerRadius: MimiMetrics.cardRadius, style: .continuous)
+                        .strokeBorder(Color.primary.opacity(0.32), lineWidth: 1)
+                }
             }
     }
 }

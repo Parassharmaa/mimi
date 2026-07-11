@@ -303,6 +303,13 @@ public struct TranscriptDocument: Codable, Equatable, Sendable {
         segments.map(\.text).joined(separator: "\n")
     }
 
+    /// Caption overlays should follow the newest utterance, not a context
+    /// block whose first lines become stale when the view is truncated.
+    public var latestCaptionText: String {
+        let live = Self.normalized(liveText)
+        return live.isEmpty ? (segments.last?.text ?? "") : live
+    }
+
     /// The transcript owns the language of existing speech. A later input
     /// preference change must never relabel or filter already-saved segments.
     public func contentLanguage(fallback: SpeechLanguage) -> SpeechLanguage {

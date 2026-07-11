@@ -7,8 +7,19 @@ struct MimiSelfTest {
         testRepeatedFinalTextIsPreserved()
         testStopFinalizesJapaneseVolatileResult()
         testInputLanguageChangeDoesNotRewriteTranscriptLanguage()
+        testFloatingCaptionAlwaysUsesNewestUtterance()
         testRecommendedPacksCoverBothV1Languages()
         print("Mimi self-test passed: transcript coalescing, Japanese finalization, and model routing.")
+    }
+
+    private static func testFloatingCaptionAlwaysUsesNewestUtterance() {
+        var document = TranscriptDocument()
+        document.apply(.final("older line"), language: .english)
+        document.apply(.final("newest final line"), language: .english)
+        expect(document.latestCaptionText == "newest final line", "A stopped caption shows only the newest final utterance")
+
+        document.apply(.partial("current speech arriving now"), language: .english)
+        expect(document.latestCaptionText == "current speech arriving now", "A live caption immediately replaces history with the current partial")
     }
 
     private static func testInputLanguageChangeDoesNotRewriteTranscriptLanguage() {
