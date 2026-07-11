@@ -7,6 +7,7 @@ import MimiSession
 struct MimiSessionE2E {
     static func main() async {
         await appleStreamingEnglishSessionDrainsBoundedFrames()
+        await automaticAppleSpeechRoutesMixedEnglishAndJapanese()
         await whisperJapaneseAccuracySessionFreezesConfigurationAndCleansAudio()
         await nemotronJapaneseLiveSessionStreamsAndFinalizesWithoutAudioFiles()
         await qwenDualPassLiveSessionStreamsAndFinalizesWithoutAudioFiles()
@@ -23,6 +24,40 @@ struct MimiSessionE2E {
         liveFlowControlStaysBoundedAndFinalizesAtSafeBoundaries()
         transcriptAndTranslationRoutingEdgeCases()
         print("Mimi session E2E passed: model setup states, capture lifecycle, EN/JA routing, cleanup, persistence, and realtime queue edges.")
+    }
+
+    @MainActor
+    private static func automaticAppleSpeechRoutesMixedEnglishAndJapanese() async {
+        let capture = FakeCapture()
+        let automatic = FakeAutomaticAppleSpeech()
+        let session = makeSession(
+            capture: capture,
+            apple: FakeAppleProvider(),
+            automatic: automatic,
+            whisper: FakeWhisper(isDownloaded: true),
+            storage: FakeStorage()
+        )
+        session.engineID = .appleSpeechAnalyzer
+        session.languageMode = .automatic
+        await session.refreshSelectedModelReadiness()
+
+        await session.startRecording()
+        expect(session.recordingState == .recording, "Auto starts only after both Apple languages and its local router are ready")
+        automatic.emitLanguage(.english)
+        automatic.emit(.partial("good morning"), language: .english)
+        automatic.emit(.final("good morning"), language: .english)
+        automatic.emitLanguage(.japanese)
+        automatic.emit(.partial("おはようございます"), language: .japanese)
+        automatic.emit(.final("おはようございます"), language: .japanese)
+
+        expect(session.detectedLanguage == .japanese, "Auto publishes the most recently stable spoken language")
+        expect(session.document.segments.map(\.language) == [.english, .japanese], "One Auto session preserves per-segment English and Japanese routing")
+
+        await session.stopRecording()
+        let completed = session.document
+        automatic.emit(.final("stale"), language: .english)
+        expect(session.document == completed, "A callback retained after Auto Stop cannot mutate the saved session")
+        expect(automatic.stopCount == 1, "Auto routing stops exactly once at the session boundary")
     }
 
     @MainActor
@@ -980,6 +1015,7 @@ struct MimiSessionE2E {
         output: FakeOutputCapture = FakeOutputCapture(),
         screen: FakeScreenAudioCapture = FakeScreenAudioCapture(),
         apple: FakeAppleProvider,
+        automatic: FakeAutomaticAppleSpeech = FakeAutomaticAppleSpeech(),
         whisper: FakeWhisper,
         nemotron: FakeNemotron = FakeNemotron(isDownloaded: false),
         qwen: FakeNemotron = FakeNemotron(isDownloaded: false),
@@ -991,6 +1027,7 @@ struct MimiSessionE2E {
                 outputAudioCapture: output,
                 screenAudioCapture: screen,
                 appleSpeech: apple,
+                automaticAppleSpeech: automatic,
                 whisper: whisper,
                 nemotron: nemotron,
                 qwen: qwen,
@@ -1295,6 +1332,49 @@ private final class FakeAppleProvider: AppleSpeechProviding {
         makeEngineCalls += 1
         if let makeEngineError { throw makeEngineError }
         return engine
+    }
+}
+
+@MainActor
+private final class FakeAutomaticAppleSpeech: AutomaticAppleSpeechTranscribing {
+    var isLanguageDetectorInstalled = true
+    private(set) var stopCount = 0
+    private var onEvent: (@MainActor (TranscriptEvent, SpeechLanguage) -> Void)?
+    private var onLanguageChange: (@MainActor (SpeechLanguage) -> Void)?
+
+    func installLanguageDetector(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws {
+        isLanguageDetectorInstalled = true
+    }
+
+    func removeLanguageDetector() throws {
+        isLanguageDetectorInstalled = false
+    }
+
+    func start(
+        inputFormat: AVAudioFormat,
+        fallbackLanguage: SpeechLanguage,
+        onEvent: @escaping @MainActor (TranscriptEvent, SpeechLanguage) -> Void,
+        onLanguageChange: @escaping @MainActor (SpeechLanguage) -> Void
+    ) async throws {
+        self.onEvent = onEvent
+        self.onLanguageChange = onLanguageChange
+    }
+
+    func consume(_ buffer: AVAudioPCMBuffer) {}
+    func stop() async {
+        stopCount += 1
+        onEvent = nil
+        onLanguageChange = nil
+    }
+
+    func emit(_ event: TranscriptEvent, language: SpeechLanguage) {
+        onEvent?(event, language)
+    }
+
+    func emitLanguage(_ language: SpeechLanguage) {
+        onLanguageChange?(language)
     }
 }
 

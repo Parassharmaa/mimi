@@ -114,6 +114,23 @@ public protocol AppleSpeechProviding: AnyObject {
     func makeEngine() throws -> any AppleLiveTranscribing
 }
 
+@MainActor
+public protocol AutomaticAppleSpeechTranscribing: AnyObject {
+    var isLanguageDetectorInstalled: Bool { get }
+    func installLanguageDetector(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws
+    func removeLanguageDetector() throws
+    func start(
+        inputFormat: AVAudioFormat,
+        fallbackLanguage: SpeechLanguage,
+        onEvent: @escaping @MainActor (TranscriptEvent, SpeechLanguage) -> Void,
+        onLanguageChange: @escaping @MainActor (SpeechLanguage) -> Void
+    ) async throws
+    func consume(_ buffer: AVAudioPCMBuffer)
+    func stop() async
+}
+
 public struct ModelDownloadProgress: Equatable, Sendable {
     /// The downloader's aggregate work units. Do not assume these are bytes:
     /// WhisperKit currently reports equally weighted model-file units.
@@ -202,6 +219,7 @@ public struct TranscriptionSessionDependencies {
     public let outputAudioCapture: any OutputAudioCapturing
     public let screenAudioCapture: any ScreenAudioCapturing
     public let appleSpeech: any AppleSpeechProviding
+    public let automaticAppleSpeech: any AutomaticAppleSpeechTranscribing
     public let whisper: any WhisperAccuracyTranscribing
     public let nemotron: any NemotronMLXLiveTranscribing
     public let qwen: any QwenMLXLiveTranscribing
@@ -214,6 +232,7 @@ public struct TranscriptionSessionDependencies {
         outputAudioCapture: any OutputAudioCapturing,
         screenAudioCapture: any ScreenAudioCapturing,
         appleSpeech: any AppleSpeechProviding,
+        automaticAppleSpeech: any AutomaticAppleSpeechTranscribing,
         whisper: any WhisperAccuracyTranscribing,
         nemotron: any NemotronMLXLiveTranscribing,
         qwen: any QwenMLXLiveTranscribing,
@@ -225,6 +244,7 @@ public struct TranscriptionSessionDependencies {
         self.outputAudioCapture = outputAudioCapture
         self.screenAudioCapture = screenAudioCapture
         self.appleSpeech = appleSpeech
+        self.automaticAppleSpeech = automaticAppleSpeech
         self.whisper = whisper
         self.nemotron = nemotron
         self.qwen = qwen
@@ -319,6 +339,18 @@ public enum ModelSetupState: Equatable, Sendable {
 public final class TranscriptionSession {
     public var recordingState: RecordingState = .idle
     public var source: AudioSource = .microphone
+    public var languageMode: TranscriptionLanguageMode = .english {
+        didSet {
+            guard languageMode != oldValue else { return }
+            if let manualLanguage = languageMode.manualLanguage {
+                sourceLanguage = manualLanguage
+                detectedLanguage = manualLanguage
+            } else {
+                detectedLanguage = nil
+                scheduleSelectedModelReadinessRefresh()
+            }
+        }
+    }
     public var sourceLanguage: SpeechLanguage = .english {
         didSet {
             guard sourceLanguage != oldValue else { return }
@@ -339,6 +371,7 @@ public final class TranscriptionSession {
     public var outputDevices: [AudioOutputDevice]
     public var selectedInputDeviceID: UInt32?
     public var selectedOutputDeviceID: UInt32?
+    public private(set) var detectedLanguage: SpeechLanguage? = .english
     public private(set) var appleSpeechAssetStatuses: [SpeechLanguage: AppleSpeechAssetStatus] = [:]
     public private(set) var modelSetupState: ModelSetupState = .idle
 
@@ -346,11 +379,13 @@ public final class TranscriptionSession {
     private let outputAudioCapture: any OutputAudioCapturing
     private let screenAudioCapture: any ScreenAudioCapturing
     private let appleSpeech: any AppleSpeechProviding
+    private let automaticAppleSpeech: any AutomaticAppleSpeechTranscribing
     private let whisper: any WhisperAccuracyTranscribing
     private let nemotron: any NemotronMLXLiveTranscribing
     private let qwen: any QwenMLXLiveTranscribing
     private let storage: any TranscriptPersisting
     @ObservationIgnored private var appleEngine: (any AppleLiveTranscribing)?
+    @ObservationIgnored private var automaticAppleEngineActive = false
     @ObservationIgnored private var nemotronLiveSessionActive = false
     @ObservationIgnored private var qwenLiveSessionActive = false
     @ObservationIgnored private var activeSession: SessionConfiguration?
@@ -372,6 +407,7 @@ public final class TranscriptionSession {
         outputAudioCapture = dependencies.outputAudioCapture
         screenAudioCapture = dependencies.screenAudioCapture
         appleSpeech = dependencies.appleSpeech
+        automaticAppleSpeech = dependencies.automaticAppleSpeech
         whisper = dependencies.whisper
         nemotron = dependencies.nemotron
         qwen = dependencies.qwen
@@ -415,7 +451,8 @@ public final class TranscriptionSession {
         case .whisperKitLargeV3Turbo: whisper.isDownloaded
         case .nemotronStreamingExperimental: nemotron.isDownloaded
         case .qwen3StreamingExperimental: qwen.isDownloaded
-        case .appleSpeechAnalyzer: false
+        case .appleSpeechAnalyzer:
+            languageMode == .automatic && automaticAppleSpeech.isLanguageDetectorInstalled
         }
     }
 
@@ -428,6 +465,36 @@ public final class TranscriptionSession {
         case .appleSpeechAnalyzer:
             guard appleSpeech.isPlatformAvailable else {
                 return .unavailable("Apple Speech live transcription requires macOS 26 or later.")
+            }
+            if languageMode == .automatic {
+                _ = modelStorageRevision
+                guard automaticAppleSpeech.isLanguageDetectorInstalled else {
+                    return .needsDownload(
+                        "Set up Auto Language (about 73 MB) before recording mixed English and Japanese."
+                    )
+                }
+                for language in SpeechLanguage.allCases {
+                    guard let status = appleSpeechAssetStatuses[language] else {
+                        return .checking("Checking English and Japanese Apple Speech assets…")
+                    }
+                    switch status {
+                    case .installed:
+                        continue
+                    case .supported:
+                        return .needsDownload(
+                            "Download both English and Japanese Apple Speech assets for Auto Language."
+                        )
+                    case .downloading:
+                        return .downloading(
+                            "macOS is preparing the English and Japanese Apple Speech assets."
+                        )
+                    case .unsupported:
+                        return .unavailable(
+                            "Auto Language needs both English and Japanese Apple Speech assets on this Mac."
+                        )
+                    }
+                }
+                return .ready
             }
             guard let assetStatus = appleSpeechAssetStatuses[sourceLanguage] else {
                 return .checking("Checking the \(sourceLanguage.displayName) Apple Speech asset…")
@@ -552,7 +619,14 @@ public final class TranscriptionSession {
     public func refreshSelectedModelReadiness() async {
         switch engineID {
         case .appleSpeechAnalyzer:
-            _ = await refreshAppleSpeechAssetStatus(for: sourceLanguage)
+            if languageMode == .automatic {
+                for language in SpeechLanguage.allCases {
+                    _ = await refreshAppleSpeechAssetStatus(for: language)
+                }
+                modelStorageRevision += 1
+            } else {
+                _ = await refreshAppleSpeechAssetStatus(for: sourceLanguage)
+            }
         case .whisperKitLargeV3Turbo, .nemotronStreamingExperimental, .qwen3StreamingExperimental:
             modelStorageRevision += 1
         }
@@ -593,7 +667,7 @@ public final class TranscriptionSession {
         let request = ModelSetupRequest(
             id: UUID(),
             engine: engineID,
-            language: engineID == .appleSpeechAnalyzer ? sourceLanguage : nil
+            language: engineID == .appleSpeechAnalyzer && languageMode != .automatic ? sourceLanguage : nil
         )
         // Setup is its own recoverable workflow. Do not leave a stale
         // recording-start error pinned in the menu after the person chooses
@@ -620,7 +694,36 @@ public final class TranscriptionSession {
                 guard appleSpeech.isPlatformAvailable else {
                     throw TranscriptionSessionError.appleSpeechRequiresMacOS26
                 }
-                guard let language = request.language else { return }
+                guard let language = request.language else {
+                    for autoLanguage in SpeechLanguage.allCases {
+                        let status = await refreshAppleSpeechAssetStatus(for: autoLanguage)
+                        switch status {
+                        case .installed:
+                            break
+                        case .supported:
+                            updateModelSetup(
+                                .downloading(engine: request.engine, language: nil, progress: nil),
+                                for: request
+                            )
+                            try await appleSpeech.installAssets(for: autoLanguage)
+                            _ = await refreshAppleSpeechAssetStatus(for: autoLanguage)
+                        case .downloading:
+                            break
+                        case .unsupported:
+                            throw TranscriptionSessionError.appleSpeechLanguageUnavailable(autoLanguage)
+                        }
+                    }
+                    updateModelSetup(
+                        .downloading(engine: request.engine, language: nil, progress: nil),
+                        for: request
+                    )
+                    try await automaticAppleSpeech.installLanguageDetector { [weak self, request] progress in
+                        self?.updateModelDownloadProgress(progress, for: request)
+                    }
+                    modelStorageRevision += 1
+                    updateModelSetup(.idle, for: request)
+                    return
+                }
 
                 let initialStatus = await refreshAppleSpeechAssetStatus(for: language)
                 try Task.checkCancellation()
@@ -692,15 +795,20 @@ public final class TranscriptionSession {
                 try await qwen.removeDownloadedModel()
                 modelStorageRevision += 1
             case .appleSpeechAnalyzer:
-                updateModelSetup(
-                    .failed(
-                        engine: request.engine,
-                        language: request.language,
-                        message: "Apple manages this shared language asset. Mimi cannot remove it."
-                    ),
-                    for: request
-                )
-                return
+                if request.language == nil, languageMode == .automatic {
+                    try automaticAppleSpeech.removeLanguageDetector()
+                    modelStorageRevision += 1
+                } else {
+                    updateModelSetup(
+                        .failed(
+                            engine: request.engine,
+                            language: request.language,
+                            message: "Apple manages this shared language asset. Mimi cannot remove it."
+                        ),
+                        for: request
+                    )
+                    return
+                }
             }
             updateModelSetup(.idle, for: request)
         } catch {
@@ -712,7 +820,7 @@ public final class TranscriptionSession {
     }
 
     private var selectedModelSetupLanguage: SpeechLanguage? {
-        engineID == .appleSpeechAnalyzer ? sourceLanguage : nil
+        engineID == .appleSpeechAnalyzer && languageMode != .automatic ? sourceLanguage : nil
     }
 
     private var readinessDuringSelectedSetup: ModelReadiness? {
@@ -811,10 +919,15 @@ public final class TranscriptionSession {
             return
         }
 
-        let language = sourceLanguage
         modelReadinessRefreshTask = Task { [weak self] in
             guard let self, !Task.isCancelled else { return }
-            _ = await self.refreshAppleSpeechAssetStatus(for: language)
+            if self.languageMode == .automatic {
+                for language in SpeechLanguage.allCases {
+                    _ = await self.refreshAppleSpeechAssetStatus(for: language)
+                }
+            } else {
+                _ = await self.refreshAppleSpeechAssetStatus(for: self.sourceLanguage)
+            }
         }
     }
 
@@ -902,7 +1015,8 @@ public final class TranscriptionSession {
 
     private func configurationMatchesCurrentSelection(_ configuration: SessionConfiguration) -> Bool {
         configuration.source == source &&
-            configuration.language == sourceLanguage &&
+            configuration.languageMode == languageMode &&
+            (configuration.languageMode == .automatic || configuration.language == sourceLanguage) &&
             configuration.engine == engineID &&
             configuration.inputDeviceID == selectedInputDeviceID &&
             configuration.outputDeviceID == selectedOutputDeviceID
@@ -913,6 +1027,7 @@ public final class TranscriptionSession {
         let configuration = SessionConfiguration(
             source: source,
             language: sourceLanguage,
+            languageMode: languageMode,
             engine: engineID,
             inputDeviceID: selectedInputDeviceID,
             outputDeviceID: selectedOutputDeviceID
@@ -923,7 +1038,16 @@ public final class TranscriptionSession {
         // path from a system asset eviction or a stale UI refresh before any
         // microphone permission/capture side effect can occur.
         if configuration.engine == .appleSpeechAnalyzer {
-            switch await refreshAppleSpeechAssetStatus(for: configuration.language) {
+            let requiredLanguages = configuration.languageMode == .automatic
+                ? SpeechLanguage.allCases
+                : [configuration.language]
+            if configuration.languageMode == .automatic,
+               !automaticAppleSpeech.isLanguageDetectorInstalled {
+                record(TranscriptionSessionError.automaticLanguageNotPrepared)
+                return
+            }
+            for requiredLanguage in requiredLanguages {
+                switch await refreshAppleSpeechAssetStatus(for: requiredLanguage) {
             case .installed:
                 break
             case .supported:
@@ -933,8 +1057,9 @@ public final class TranscriptionSession {
                 record(TranscriptionSessionError.appleAssetsDownloading)
                 return
             case .unsupported:
-                record(TranscriptionSessionError.appleSpeechLanguageUnavailable(configuration.language))
+                    record(TranscriptionSessionError.appleSpeechLanguageUnavailable(requiredLanguage))
                 return
+                }
             }
         }
 
@@ -1000,11 +1125,26 @@ public final class TranscriptionSession {
             let audioFrames: RealtimeAudioFramePipe?
             switch configuration.engine {
             case .appleSpeechAnalyzer:
-                let engine = try appleSpeech.makeEngine()
-                try await engine.start(language: configuration.language, inputFormat: inputFormat) { [weak self] event in
-                    self?.receive(event, for: configuration)
+                if configuration.languageMode == .automatic {
+                    detectedLanguage = nil
+                    try await automaticAppleSpeech.start(
+                        inputFormat: inputFormat,
+                        fallbackLanguage: configuration.language,
+                        onEvent: { [weak self] event, language in
+                            self?.receive(event, language: language, for: configuration)
+                        },
+                        onLanguageChange: { [weak self] language in
+                            self?.routeAutomaticLanguage(language, for: configuration)
+                        }
+                    )
+                    automaticAppleEngineActive = true
+                } else {
+                    let engine = try appleSpeech.makeEngine()
+                    try await engine.start(language: configuration.language, inputFormat: inputFormat) { [weak self] event in
+                        self?.receive(event, for: configuration)
+                    }
+                    appleEngine = engine
                 }
-                appleEngine = engine
                 let frames = RealtimeAudioFramePipe(capacity: 32)
                 activeAudioFrames = frames
                 audioFrames = frames
@@ -1100,11 +1240,14 @@ public final class TranscriptionSession {
                 if let activeAudioFrames {
                     drainAudioFrames(activeAudioFrames, for: configuration)
                 }
-                if let engine = appleEngine {
+                if automaticAppleEngineActive {
+                    await automaticAppleSpeech.stop()
+                    automaticAppleEngineActive = false
+                } else if let engine = appleEngine {
                     await engine.stop()
                 }
                 appleEngine = nil
-                document.finalizeLiveText(language: configuration.language)
+                document.finalizeLiveText(language: detectedLanguage ?? configuration.language)
                 try persistDocument()
             case .whisperKitLargeV3Turbo:
                 guard let completedURL else { throw TranscriptionSessionError.missingRecording }
@@ -1215,6 +1358,10 @@ public final class TranscriptionSession {
             await engine.stop()
         }
         appleEngine = nil
+        if automaticAppleEngineActive {
+            await automaticAppleSpeech.stop()
+            automaticAppleEngineActive = false
+        }
         if nemotronLiveSessionActive {
             await nemotron.cancelLive()
             nemotronLiveSessionActive = false
@@ -1247,11 +1394,14 @@ public final class TranscriptionSession {
 
         switch configuration.engine {
         case .appleSpeechAnalyzer:
-            if let engine = appleEngine {
+            if automaticAppleEngineActive {
+                await automaticAppleSpeech.stop()
+                automaticAppleEngineActive = false
+            } else if let engine = appleEngine {
                 await engine.stop()
             }
             appleEngine = nil
-            document.finalizeLiveText(language: configuration.language)
+            document.finalizeLiveText(language: detectedLanguage ?? configuration.language)
             try? persistDocument()
         case .nemotronStreamingExperimental:
             if nemotronLiveSessionActive {
@@ -1293,6 +1443,10 @@ public final class TranscriptionSession {
             }
             switch configuration.engine {
             case .appleSpeechAnalyzer:
+                if configuration.languageMode == .automatic {
+                    automaticAppleSpeech.consume(frame.buffer)
+                    continue
+                }
                 guard let appleEngine else {
                     audioFrames.discard()
                     return
@@ -1310,8 +1464,16 @@ public final class TranscriptionSession {
     }
 
     private func receive(_ event: TranscriptEvent, for configuration: SessionConfiguration) {
+        receive(event, language: configuration.language, for: configuration)
+    }
+
+    private func receive(
+        _ event: TranscriptEvent,
+        language: SpeechLanguage,
+        for configuration: SessionConfiguration
+    ) {
         guard activeSession == configuration else { return }
-        document.apply(event, language: configuration.language)
+        document.apply(event, language: language)
         if case .final = event {
             do {
                 try persistDocument()
@@ -1319,6 +1481,19 @@ public final class TranscriptionSession {
                 lastError = error.localizedDescription
             }
         }
+    }
+
+    private func routeAutomaticLanguage(
+        _ language: SpeechLanguage,
+        for configuration: SessionConfiguration
+    ) {
+        guard activeSession == configuration, configuration.languageMode == .automatic else { return }
+        if let previousLanguage = detectedLanguage, previousLanguage != language {
+            document.finalizeLiveText(language: previousLanguage)
+            try? persistDocument()
+        }
+        detectedLanguage = language
+        sourceLanguage = language
     }
 
     private func receiveLiveWarning(_ message: String, for configuration: SessionConfiguration) {
@@ -1349,6 +1524,7 @@ private struct SessionConfiguration: Equatable, Sendable {
     let id: UUID
     let source: AudioSource
     let language: SpeechLanguage
+    let languageMode: TranscriptionLanguageMode
     let engine: TranscriptionEngineID
     let inputDeviceID: UInt32?
     let outputDeviceID: UInt32?
@@ -1356,6 +1532,7 @@ private struct SessionConfiguration: Equatable, Sendable {
     init(
         source: AudioSource,
         language: SpeechLanguage,
+        languageMode: TranscriptionLanguageMode,
         engine: TranscriptionEngineID,
         inputDeviceID: UInt32?,
         outputDeviceID: UInt32?
@@ -1363,6 +1540,7 @@ private struct SessionConfiguration: Equatable, Sendable {
         id = UUID()
         self.source = source
         self.language = language
+        self.languageMode = languageMode
         self.engine = engine
         self.inputDeviceID = inputDeviceID
         self.outputDeviceID = outputDeviceID
@@ -1468,6 +1646,7 @@ public enum TranscriptionSessionError: LocalizedError {
     case appleAssetsNeedExplicitDownload
     case appleAssetsDownloading
     case appleSpeechLanguageUnavailable(SpeechLanguage)
+    case automaticLanguageNotPrepared
     case missingRecording
     case screenAudioSelectionRequired(AudioSource)
     case screenAudioStreamStopped(String?)
@@ -1487,6 +1666,8 @@ public enum TranscriptionSessionError: LocalizedError {
             "macOS is still downloading Apple Speech's local language asset. Use Whisper Large-v3 while it finishes, then check the model status."
         case let .appleSpeechLanguageUnavailable(language):
             "Apple Speech does not provide a local \(language.displayName) asset on this Mac. Choose Whisper Large-v3 instead."
+        case .automaticLanguageNotPrepared:
+            "Finish preparing automatic English and Japanese recognition in Settings, then try again."
         case .missingRecording:
             "Mimi could not find the local audio used for this accuracy pass."
         case let .screenAudioSelectionRequired(source):

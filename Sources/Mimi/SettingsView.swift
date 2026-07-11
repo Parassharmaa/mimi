@@ -2,6 +2,8 @@ import MimiCore
 import SwiftUI
 
 enum SettingsTab: Hashable {
+    case general
+    case captions
     case models
     case capture
     case privacy
@@ -9,30 +11,112 @@ enum SettingsTab: Hashable {
 
 struct SettingsView: View {
     @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
     @State private var selectedTab: SettingsTab
 
-    init(store: AppStore, initialTab: SettingsTab = .models) {
+    init(store: AppStore, preferences: UserPreferences = UserPreferences(), initialTab: SettingsTab = .general) {
         self.store = store
+        self.preferences = preferences
         _selectedTab = State(initialValue: initialTab)
     }
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            Tab("Models", systemImage: "cpu", value: .models) {
+            Tab(preferences.text("General", "一般"), systemImage: "gearshape", value: .general) {
+                GeneralSettingsPane(preferences: preferences)
+            }
+
+            Tab(preferences.text("Captions", "字幕"), systemImage: "captions.bubble", value: .captions) {
+                CaptionSettingsPane(preferences: preferences)
+            }
+
+            Tab(preferences.text("Languages", "言語"), systemImage: "character.book.closed", value: .models) {
                 ModelsSettingsPane(store: store)
             }
 
-            Tab("Capture", systemImage: "waveform", value: .capture) {
+            Tab(preferences.text("Audio", "音声"), systemImage: "waveform", value: .capture) {
                 CaptureSettingsPane(store: store)
             }
 
-            Tab("Privacy", systemImage: "hand.raised", value: .privacy) {
+            Tab(preferences.text("Privacy", "プライバシー"), systemImage: "hand.raised", value: .privacy) {
                 PrivacySettingsPane()
             }
         }
         .scenePadding()
         .frame(width: 620, height: 540)
         .background(SettingsWindowRegistrar())
+    }
+}
+
+private struct CaptionSettingsPane: View {
+    @Bindable var preferences: UserPreferences
+
+    var body: some View {
+        Form {
+            Section("Floating captions") {
+                Toggle(preferences.text("Show captions above other apps", "他のアプリの上に字幕を表示"), isOn: $preferences.floatingCaptionsEnabled)
+                Picker(preferences.text("Show", "表示内容"), selection: $preferences.floatingCaptionContent) {
+                    Text(preferences.text("Original", "原文")).tag(FloatingCaptionContent.original)
+                    Text(preferences.text("Translation", "翻訳")).tag(FloatingCaptionContent.translation)
+                    Text(preferences.text("Original and translation", "原文と翻訳")).tag(FloatingCaptionContent.both)
+                }
+                Picker(preferences.text("Position", "位置"), selection: $preferences.floatingCaptionPosition) {
+                    Text(preferences.text("Subtitles at bottom", "下部に字幕")).tag(FloatingCaptionPosition.subtitles)
+                    Text(preferences.text("Top center", "上部中央")).tag(FloatingCaptionPosition.top)
+                    Text(preferences.text("Top right", "右上")).tag(FloatingCaptionPosition.topRight)
+                    Text(preferences.text("Bottom right", "右下")).tag(FloatingCaptionPosition.bottomRight)
+                }
+                Toggle(preferences.text("Let clicks pass through captions", "字幕の背後をクリックできるようにする"), isOn: $preferences.floatingCaptionClickThrough)
+            }
+
+            Section {
+                Text(preferences.text(
+                    "Floating captions stay visible while you work in Zoom, Chrome, or another app. Turn off click-through temporarily if you need to move or inspect them.",
+                    "ZoomやChromeなどを使用中も字幕が表示されます。字幕を操作するときは、クリック透過を一時的にオフにしてください。"
+                ))
+                .foregroundStyle(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+    }
+}
+
+private struct GeneralSettingsPane: View {
+    @Bindable var preferences: UserPreferences
+    @State private var startsAtLogin = false
+
+    var body: some View {
+        Form {
+            Section(preferences.text("Language", "言語")) {
+                Picker(preferences.text("Mimi speaks", "表示言語"), selection: $preferences.interfaceLanguage) {
+                    ForEach(InterfaceLanguage.allCases) { language in
+                        Text(language.nativeName).tag(language)
+                    }
+                }
+                Text(preferences.text(
+                    "Mimi can recognize and translate both English and Japanese regardless of this setting.",
+                    "この設定に関係なく、Mimiは英語と日本語の認識と翻訳ができます。"
+                ))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(preferences.text("At login", "ログイン時")) {
+                Toggle(preferences.text("Open Mimi automatically", "Mimiを自動的に開く"), isOn: $startsAtLogin)
+                    .onChange(of: startsAtLogin) { _, enabled in
+                        guard preferences.startsAtLogin != enabled else { return }
+                        preferences.setStartsAtLogin(enabled)
+                        startsAtLogin = preferences.startsAtLogin
+                    }
+                if let error = preferences.loginItemError {
+                    Label(error, systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .onAppear { startsAtLogin = preferences.startsAtLogin }
     }
 }
 
@@ -43,15 +127,15 @@ private struct ModelsSettingsPane: View {
         Form {
             Section("Transcription") {
                 Picker("Model", selection: $store.engineID) {
-                    ForEach(TranscriptionEngineID.allCases) { engine in
+                    ForEach(TranscriptionEngineID.selectableCases) { engine in
                         Text(engine.displayName).tag(engine)
                     }
                 }
                 .disabled(store.controlsLocked || store.isModelSetupActive)
 
-                Picker("Language", selection: $store.sourceLanguage) {
-                    ForEach(SpeechLanguage.allCases) { language in
-                        Text(language.nativeName).tag(language)
+                Picker("Language", selection: $store.languageMode) {
+                    ForEach(TranscriptionLanguageMode.allCases) { mode in
+                        Text(mode.displayName).tag(mode)
                     }
                 }
                 .disabled(store.controlsLocked || store.isModelSetupActive)
@@ -123,13 +207,6 @@ private struct ModelsSettingsPane: View {
             .disabled(store.controlsLocked)
         }
 
-        if case .unavailable = store.selectedModelReadiness,
-           store.engineID == .appleSpeechAnalyzer {
-            Button("Use Whisper Large-v3 Instead") {
-                store.engineID = .whisperKitLargeV3Turbo
-            }
-            .disabled(store.controlsLocked || store.isModelSetupActive)
-        }
     }
 
     private func storageDescription(for pack: LocalModelPack) -> String {
@@ -145,7 +222,8 @@ private struct ModelsSettingsPane: View {
         case .idle, .checking, .downloading, .prewarming, .removing, .waitingForSystem: false
         }
         let base: String = switch store.engineID {
-        case .appleSpeechAnalyzer: "Download \(store.sourceLanguage.displayName)"
+        case .appleSpeechAnalyzer:
+            store.languageMode == .automatic ? "Prepare English and Japanese" : "Prepare \(store.sourceLanguage.displayName)"
         case .whisperKitLargeV3Turbo: "Download Whisper"
         case .nemotronStreamingExperimental: "Download Nemotron"
         case .qwen3StreamingExperimental: "Download Qwen3-ASR"
@@ -255,7 +333,7 @@ private struct PrivacySettingsPane: View {
                 )
                 privacyRow(
                     "Transcription",
-                    detail: "Apple Speech, Whisper, Qwen, and Nemotron run locally.",
+                    detail: "Apple Speech turns audio into text on this Mac.",
                     symbol: "waveform"
                 )
                 privacyRow(
@@ -266,7 +344,7 @@ private struct PrivacySettingsPane: View {
             }
 
             Section("Temporary audio") {
-                Text("Apple Speech and live MLX models process working audio in memory without retaining a source file. Whisper writes a temporary source file for its post-stop accuracy pass, then Mimi deletes it when the session finishes.")
+                Text("Mimi processes working audio in memory and does not keep a source-audio recording after the session.")
                     .foregroundStyle(.secondary)
             }
 

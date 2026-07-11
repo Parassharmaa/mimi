@@ -12,7 +12,7 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$ROOT/.build/$CONFIGURATION/Mimi" "$APP/Contents/MacOS/Mimi"
 cp "$ROOT/App/Info.plist" "$APP/Contents/Info.plist"
-"$ROOT/scripts/prepare-mlx-metallib.sh" "$APP/Contents/MacOS" "$CONFIGURATION" optional
+cp "$ROOT/App/Resources/Mimi.icns" "$APP/Contents/Resources/Mimi.icns"
 codesign --force --deep --sign - --entitlements "$ROOT/App/Mimi.entitlements" "$APP"
 
 echo "$APP"

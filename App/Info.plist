@@ -6,8 +6,10 @@
     <string>en</string>
     <key>CFBundleDisplayName</key>
     <string>Mimi</string>
-    <key>CFBundleExecutable</key>
-    <string>Mimi</string>
+	<key>CFBundleExecutable</key>
+	<string>Mimi</string>
+	<key>CFBundleIconFile</key>
+	<string>Mimi</string>
     <key>CFBundleIdentifier</key>
     <string>dev.paras.mimi</string>
     <key>CFBundleInfoDictionaryVersion</key>

@@ -1,0 +1,190 @@
+import AppKit
+import MimiCore
+import Observation
+import SwiftUI
+@preconcurrency import Translation
+
+@MainActor
+final class FloatingCaptionController {
+    private let store: AppStore
+    private let preferences: UserPreferences
+    private var panel: NSPanel?
+
+    init(store: AppStore, preferences: UserPreferences) {
+        self.store = store
+        self.preferences = preferences
+        observePreferences()
+        updatePanel()
+    }
+
+    private func observePreferences() {
+        withObservationTracking {
+            _ = preferences.floatingCaptionsEnabled
+            _ = preferences.floatingCaptionPosition
+            _ = preferences.floatingCaptionClickThrough
+        } onChange: { [weak self] in
+            DispatchQueue.main.async {
+                self?.updatePanel()
+                self?.observePreferences()
+            }
+        }
+    }
+
+    private func updatePanel() {
+        guard preferences.floatingCaptionsEnabled else {
+            panel?.orderOut(nil)
+            return
+        }
+
+        let panel = panel ?? makePanel()
+        panel.ignoresMouseEvents = preferences.floatingCaptionClickThrough
+        position(panel)
+        panel.orderFrontRegardless()
+    }
+
+    private func makePanel() -> NSPanel {
+        let root = FloatingCaptionView(store: store, preferences: preferences)
+        let controller = NSHostingController(rootView: root)
+        controller.sizingOptions = []
+        let panel = NSPanel(
+            contentRect: .zero,
+            styleMask: [.borderless, .nonactivatingPanel, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        panel.contentViewController = controller
+        panel.isFloatingPanel = true
+        panel.level = .floating
+        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
+        panel.isOpaque = false
+        panel.backgroundColor = .clear
+        panel.hasShadow = false
+        panel.hidesOnDeactivate = false
+        panel.animationBehavior = .utilityWindow
+        panel.isReleasedWhenClosed = false
+        self.panel = panel
+        return panel
+    }
+
+    private func position(_ panel: NSPanel) {
+        guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
+        let visible = screen.visibleFrame
+        let margin: CGFloat = 24
+        let size: NSSize = switch preferences.floatingCaptionPosition {
+        case .subtitles, .top: NSSize(width: min(820, visible.width - 80), height: 150)
+        case .topRight, .bottomRight: NSSize(width: min(460, visible.width - 80), height: 190)
+        }
+        let origin: NSPoint = switch preferences.floatingCaptionPosition {
+        case .subtitles:
+            NSPoint(x: visible.midX - size.width / 2, y: visible.minY + margin)
+        case .top:
+            NSPoint(x: visible.midX - size.width / 2, y: visible.maxY - size.height - margin)
+        case .topRight:
+            NSPoint(x: visible.maxX - size.width - margin, y: visible.maxY - size.height - margin)
+        case .bottomRight:
+            NSPoint(x: visible.maxX - size.width - margin, y: visible.minY + margin)
+        }
+        panel.setFrame(NSRect(origin: origin, size: size), display: true, animate: panel.isVisible)
+    }
+}
+
+struct FloatingCaptionView: View {
+    @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @State private var configuration: TranslationSession.Configuration?
+    @State private var translatedText = ""
+    @State private var requestedText = ""
+    @State private var pendingText = ""
+    @State private var isTranslating = false
+
+    private var sourceLanguage: SpeechLanguage { store.detectedLanguage ?? store.sourceLanguage }
+    private var sourceText: String {
+        store.document.realtimeTranslationContext(for: sourceLanguage, maximumCharacterCount: 320)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            if preferences.floatingCaptionContent != .translation {
+                caption(sourceText, secondary: preferences.floatingCaptionContent == .both)
+            }
+            if preferences.floatingCaptionContent != .original {
+                caption(translatedText, secondary: false)
+            }
+            if sourceText.isEmpty && translatedText.isEmpty {
+                Text(preferences.text("Captions will appear here", "字幕がここに表示されます"))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 18)
+        .background {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(reduceTransparency ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor)) : AnyShapeStyle(.ultraThinMaterial))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .strokeBorder(.white.opacity(reduceTransparency ? 0.18 : 0.10))
+                }
+        }
+        .padding(8)
+        .translationTask(configuration) { @MainActor session in
+            let text = requestedText
+            guard !text.isEmpty else { return }
+            do {
+                try await session.prepareTranslation()
+                let response = try await session.translate(text)
+                guard requestedText == text else { return }
+                translatedText = response.targetText
+            } catch {
+                guard requestedText == text else { return }
+                translatedText = preferences.text("Translation is not ready yet.", "翻訳の準備がまだできていません。")
+            }
+            isTranslating = false
+        }
+        .onChange(of: sourceText, initial: true) { _, text in
+            pendingText = text
+            if text.isEmpty { translatedText = "" }
+        }
+        .task(id: sourceLanguage) {
+            configuration = nil
+            translatedText = ""
+            requestedText = ""
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .milliseconds(700))
+                guard !Task.isCancelled,
+                      preferences.floatingCaptionContent != .original,
+                      !pendingText.isEmpty,
+                      pendingText != requestedText,
+                      !isTranslating else { continue }
+                requestedText = pendingText
+                isTranslating = true
+                if var configuration {
+                    configuration.invalidate()
+                    self.configuration = configuration
+                } else if #available(macOS 26.4, *) {
+                    configuration = .init(
+                        source: .init(identifier: sourceLanguage.rawValue),
+                        target: .init(identifier: sourceLanguage.translationTarget.rawValue),
+                        preferredStrategy: .lowLatency
+                    )
+                } else {
+                    configuration = .init(
+                        source: .init(identifier: sourceLanguage.rawValue),
+                        target: .init(identifier: sourceLanguage.translationTarget.rawValue)
+                    )
+                }
+            }
+        }
+    }
+
+    private func caption(_ text: String, secondary: Bool) -> some View {
+        Text(text)
+            .font(secondary ? .title3 : .title2.weight(.semibold))
+            .foregroundStyle(secondary ? .secondary : .primary)
+            .lineLimit(preferences.floatingCaptionContent == .both ? 2 : 4)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentTransition(.opacity)
+    }
+}

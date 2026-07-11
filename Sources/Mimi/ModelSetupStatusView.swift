@@ -56,6 +56,7 @@ struct ModelSetupStatusView: View {
                 .controlSize(.small)
             Text(readiness.message ?? "Preparing local model…")
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -65,6 +66,7 @@ struct ModelSetupStatusView: View {
                 .controlSize(.small)
             Text(readiness.message ?? "macOS is continuing the Apple Speech download.")
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 

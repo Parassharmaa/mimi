@@ -1,7 +1,5 @@
 @preconcurrency import AVFoundation
 import Foundation
-import MLXAudioCore
-import MLXAudioSTT
 import MimiCore
 
 struct RealtimeBenchmarkReport: Codable, Sendable {
@@ -110,66 +108,8 @@ enum RealtimeBenchmarkRunner {
         language: SpeechLanguage,
         simulateRealtime: Bool
     ) async throws -> RealtimeBenchmarkReport {
-        let loadStartedAt = ContinuousClock.now
-        let model = try await Qwen3ASRModel.fromPretrained(
-            "mlx-community/Qwen3-ASR-0.6B-4bit"
-        )
-        let modelLoadSeconds = loadStartedAt.duration(to: .now).seconds
-        let (sampleRate, mlxAudio) = try loadAudioArray(from: url, sampleRate: model.sampleRate)
-        let samples = mlxAudio.asArray(Float.self)
-        let audioDuration = Double(samples.count) / Double(sampleRate)
-        let config = StreamingConfig(
-            decodeIntervalSeconds: 0.5,
-            boundaryDecodeIntervalSeconds: 0.2,
-            boundaryBoostSeconds: 1.0,
-            encoderWindowOverlapSeconds: 1.0,
-            maxCachedWindows: 4,
-            delayPreset: .realtime,
-            language: language.displayName,
-            temperature: 0,
-            maxTokensPerPass: 256,
-            minAgreementPasses: 2,
-            boundaryMinAgreementPasses: 3,
-            maxDecodeWindows: 2,
-            finalizeCompletedWindows: true
-        )
-        let session = StreamingInferenceSession(model: model, config: config)
-        let startedAt = ContinuousClock.now
-        let eventTask = Task {
-            await collectQwenEvents(session.events, startedAt: startedAt)
-        }
-
-        let chunkSampleCount = max(1, Int(Double(sampleRate) * 0.2))
-        var offset = 0
-        while offset < samples.count {
-            try Task.checkCancellation()
-            let end = min(samples.count, offset + chunkSampleCount)
-            session.feedAudio(samples: Array(samples[offset..<end]))
-            if simulateRealtime {
-                try await Task.sleep(for: .seconds(Double(end - offset) / Double(sampleRate)))
-            }
-            offset = end
-        }
-        session.stop()
-        let events = await eventTask.value
-        let wallSeconds = startedAt.duration(to: .now).seconds
-        return RealtimeBenchmarkReport(
-            engine: "qwen3-asr-0.6b-4bit-mlx",
-            mode: "dual-pass-streaming",
-            language: language.rawValue,
-            audioDurationSeconds: audioDuration,
-            wallSeconds: wallSeconds,
-            modelLoadSeconds: modelLoadSeconds,
-            firstTextAtSeconds: events.firstTextAtSeconds,
-            firstFinalAtSeconds: events.firstConfirmedAtSeconds,
-            updateCount: events.updates.count,
-            meanDecodeSeconds: nil,
-            maxDecodeSeconds: nil,
-            realTimeFactor: events.latestStats?.realTimeFactor,
-            hypothesisChurn: RealtimeBenchmarkReport.hypothesisChurn(events.updates),
-            finalText: events.finalText,
-            firstUpdates: Array(events.updates.prefix(8))
-        )
+        _ = (url, language, simulateRealtime)
+        throw RealtimeBenchmarkError.removedModel
     }
 
     @available(macOS 26.0, *)
@@ -245,62 +185,12 @@ enum RealtimeBenchmarkRunner {
         )
     }
 
-    private static func collectQwenEvents(
-        _ events: AsyncStream<MLXAudioSTT.TranscriptionEvent>,
-        startedAt: ContinuousClock.Instant
-    ) async -> QwenEventSummary {
-        var summary = QwenEventSummary()
-        for await event in events {
-            let elapsed = startedAt.duration(to: .now).seconds
-            switch event {
-            case .provisional:
-                // The session also emits a coalesced display update. Counting
-                // token-level provisional events would overstate UI churn.
-                break
-            case let .confirmed(text):
-                if summary.firstConfirmedAtSeconds == nil, !text.isEmpty {
-                    summary.firstConfirmedAtSeconds = elapsed
-                }
-            case let .displayUpdate(confirmedText, provisionalText):
-                summary.record(
-                    text: [confirmedText, provisionalText]
-                        .filter { !$0.isEmpty }
-                        .joined(separator: " "),
-                    elapsed: elapsed
-                )
-            case let .stats(stats):
-                summary.latestStats = stats
-            case let .ended(fullText):
-                summary.finalText = fullText.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-        }
-        if summary.finalText.isEmpty {
-            summary.finalText = summary.updates.last ?? ""
-        }
-        return summary
-    }
-}
-
-private struct QwenEventSummary: Sendable {
-    var firstTextAtSeconds: Double?
-    var firstConfirmedAtSeconds: Double?
-    var updates: [String] = []
-    var latestStats: StreamingStats?
-    var finalText = ""
-
-    mutating func record(text: String, elapsed: Double) {
-        let normalized = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !normalized.isEmpty, updates.last != normalized else { return }
-        if firstTextAtSeconds == nil {
-            firstTextAtSeconds = elapsed
-        }
-        updates.append(normalized)
-    }
 }
 
 private enum RealtimeBenchmarkError: LocalizedError {
     case couldNotAllocateAudioBuffer
     case couldNotEncodeReport
+    case removedModel
 
     var errorDescription: String? {
         switch self {
@@ -308,6 +198,8 @@ private enum RealtimeBenchmarkError: LocalizedError {
             "Mimi could not allocate a benchmark audio buffer."
         case .couldNotEncodeReport:
             "Mimi could not encode the benchmark report."
+        case .removedModel:
+            "This benchmark model is no longer included in Mimi."
         }
     }
 }

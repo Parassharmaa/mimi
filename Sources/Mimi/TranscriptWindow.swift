@@ -3,6 +3,7 @@ import SwiftUI
 
 struct TranscriptWindow: View {
     @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
     @State private var isConfirmingClear = false
 
     private let fixtureTranslation: String?
@@ -10,11 +11,13 @@ struct TranscriptWindow: View {
 
     init(
         store: AppStore,
+        preferences: UserPreferences = UserPreferences(),
         isConfirmingClear: Bool = false,
         fixtureTranslation: String? = nil,
         initiallyFollowingLatest: Bool = true
     ) {
         self.store = store
+        self.preferences = preferences
         self.fixtureTranslation = fixtureTranslation
         self.initiallyFollowingLatest = initiallyFollowingLatest
         _isConfirmingClear = State(initialValue: isConfirmingClear)
@@ -22,9 +25,9 @@ struct TranscriptWindow: View {
 
     var body: some View {
         NavigationSplitView {
-            SessionSidebar(store: store)
+            TranscriptHistorySidebar(store: store)
                 .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 310)
-                .navigationTitle("Session")
+                .navigationTitle(t("Sessions", "セッション"))
         } detail: {
             VStack(spacing: 0) {
                 sessionStrip
@@ -44,7 +47,7 @@ struct TranscriptWindow: View {
                 transcriptContent
             }
             .frame(minWidth: 560, minHeight: 440)
-            .navigationTitle("Transcript")
+            .navigationTitle(t("Transcript", "文字起こし"))
             .toolbar { transcriptToolbar }
         }
         .navigationSplitViewStyle(.balanced)
@@ -81,14 +84,15 @@ struct TranscriptWindow: View {
     @ViewBuilder
     private var transcriptContent: some View {
         let followsAppleSpeech = store.isRecording && store.engineID == .appleSpeechAnalyzer
-        let translationSourceText = followsAppleSpeech
+        let displayedDocument = store.viewedDocument
+        let translationSourceText = followsAppleSpeech && store.selectedHistoryID == nil
             ? store.document.realtimeTranslationContext(for: store.sourceLanguage)
-            : store.document.finalizedText(for: store.sourceLanguage)
+            : displayedDocument.finalizedText(for: store.sourceLanguage)
 
         if store.translationMode == .translateFinalSegments {
             HSplitView {
                 TranscriptLanguagePane(
-                    document: store.document,
+                    document: displayedDocument,
                     language: store.sourceLanguage,
                     initiallyFollowingLatest: initiallyFollowingLatest
                 )
@@ -106,7 +110,7 @@ struct TranscriptWindow: View {
             }
         } else {
             TranscriptLanguagePane(
-                document: store.document,
+                document: displayedDocument,
                 language: nil,
                 initiallyFollowingLatest: initiallyFollowingLatest
             )
@@ -118,15 +122,15 @@ struct TranscriptWindow: View {
             Image(systemName: "trash")
                 .foregroundStyle(.red)
                 .accessibilityHidden(true)
-            Text("Clear the saved transcript?")
+            Text(t("Clear the saved transcript?", "保存した文字起こしを消去しますか？"))
                 .font(.callout.weight(.semibold))
-            Text("This can’t be undone.")
+            Text(t("This can’t be undone.", "この操作は取り消せません。"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Spacer()
-            Button("Cancel") { setClearConfirmation(false) }
+            Button(t("Cancel", "キャンセル")) { setClearConfirmation(false) }
                 .keyboardShortcut(.cancelAction)
-            Button("Clear", role: .destructive) {
+            Button(t("Clear", "消去"), role: .destructive) {
                 store.clearTranscript()
                 setClearConfirmation(false)
             }
@@ -147,7 +151,7 @@ struct TranscriptWindow: View {
                 Label("Copy Transcript", systemImage: "doc.on.doc")
             }
             .keyboardShortcut("c", modifiers: [.command, .shift])
-            .disabled(store.document.renderedText.isEmpty)
+            .disabled(store.viewedDocument.renderedText.isEmpty)
 
             Button(role: .destructive) {
                 setClearConfirmation(true)
@@ -155,7 +159,7 @@ struct TranscriptWindow: View {
                 Label("Clear Transcript", systemImage: "trash")
             }
             .keyboardShortcut(.delete, modifiers: [.command, .option])
-            .disabled(store.document.renderedText.isEmpty || isConfirmingClear)
+            .disabled(store.viewedDocument.renderedText.isEmpty || isConfirmingClear)
 
             Button {
                 store.toggleRecording()
@@ -184,13 +188,40 @@ struct TranscriptWindow: View {
     private func setClearConfirmation(_ confirming: Bool) {
         isConfirmingClear = confirming
     }
+
+    private func t(_ english: String, _ japanese: String) -> String {
+        preferences.text(english, japanese)
+    }
 }
 
-private struct SessionSidebar: View {
+private struct TranscriptHistorySidebar: View {
     @Bindable var store: AppStore
 
     var body: some View {
-        Form {
+        List(selection: $store.selectedHistoryID) {
+            Section("Now") {
+                Button {
+                    store.selectCurrentSession()
+                } label: {
+                    Label(store.isRecording ? "Listening now" : "Current transcript", systemImage: store.isRecording ? "waveform" : "doc.text")
+                }
+                .buttonStyle(.plain)
+            }
+
+            if !store.historyRecords.isEmpty {
+                Section("Previous sessions") {
+                    ForEach(store.historyRecords) { record in
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(record.title).lineLimit(1)
+                            Text(record.startedAt, format: .dateTime.month().day().hour().minute())
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .tag(Optional(record.id))
+                    }
+                }
+            }
+
             Section("Input") {
                 Picker("Source", selection: $store.source) {
                     ForEach(AudioSource.allCases) { source in
@@ -203,15 +234,15 @@ private struct SessionSidebar: View {
             }
 
             Section("Transcription") {
-                Picker("Language", selection: $store.sourceLanguage) {
-                    ForEach(SpeechLanguage.allCases) { language in
-                        Text(language.nativeName).tag(language)
+                Picker("Language", selection: $store.languageMode) {
+                    ForEach(TranscriptionLanguageMode.allCases) { mode in
+                        Text(mode.displayName).tag(mode)
                     }
                 }
                 .disabled(store.controlsLocked || store.isModelSetupActive)
 
                 Picker("Model", selection: $store.engineID) {
-                    ForEach(TranscriptionEngineID.allCases) { engine in
+                    ForEach(TranscriptionEngineID.selectableCases) { engine in
                         Text(engine.displayName).tag(engine)
                     }
                 }
@@ -233,7 +264,7 @@ private struct SessionSidebar: View {
                 .disabled(store.controlsLocked)
             }
         }
-        .formStyle(.grouped)
+        .listStyle(.sidebar)
     }
 
     @ViewBuilder

@@ -389,6 +389,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         store.translationMode = .translateFinalSegments
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
+        let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
 
         let screen = argument(after: "--e2e-screen", in: arguments) ?? "menu"
         let presentationState = argument(after: "--e2e-state", in: arguments) ?? "ready"
@@ -408,26 +409,39 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         let view: AnyView
         let size: NSSize
         switch screen {
+        case "onboarding":
+            view = AnyView(OnboardingView(store: store, preferences: fixturePreferences))
+            size = NSSize(width: 620, height: 500)
+        case "captions":
+            fixturePreferences.floatingCaptionsEnabled = true
+            fixturePreferences.floatingCaptionContent = .both
+            view = AnyView(FloatingCaptionView(store: store, preferences: fixturePreferences))
+            size = NSSize(width: 820, height: 150)
         case "transcript":
             view = AnyView(TranscriptWindow(
                 store: store,
+                preferences: fixturePreferences,
                 isConfirmingClear: presentationState == "clear-confirmation",
                 fixtureTranslation: "Hello. Mimi transcribes locally on this Mac.",
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"
             ))
             size = NSSize(width: 820, height: 600)
         case "settings", "settings-models":
-            view = AnyView(SettingsView(store: store, initialTab: .models))
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .models))
             size = NSSize(width: 620, height: 540)
         case "settings-capture":
-            view = AnyView(SettingsView(store: store, initialTab: .capture))
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .capture))
             size = NSSize(width: 620, height: 540)
         case "settings-privacy":
-            view = AnyView(SettingsView(store: store, initialTab: .privacy))
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .privacy))
+            size = NSSize(width: 620, height: 540)
+        case "settings-captions":
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .captions))
             size = NSSize(width: 620, height: 540)
         default:
             view = AnyView(MenuBarView(
                 store: store,
+                preferences: fixturePreferences,
                 isConfirmingClear: presentationState == "clear-confirmation",
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"
             ))
@@ -543,11 +557,23 @@ private enum NemotronLiveSmokeError: LocalizedError {
 @main
 struct MimiApp: App {
     @NSApplicationDelegateAdaptor(MimiAppDelegate.self) private var appDelegate
-    @State private var store = AppStore()
+    @State private var store: AppStore
+    @State private var preferences: UserPreferences
+    private let onboardingCoordinator: OnboardingWindowCoordinator
+    private let floatingCaptionController: FloatingCaptionController
+
+    init() {
+        let store = AppStore()
+        let preferences = UserPreferences()
+        _store = State(initialValue: store)
+        _preferences = State(initialValue: preferences)
+        onboardingCoordinator = OnboardingWindowCoordinator(store: store, preferences: preferences)
+        floatingCaptionController = FloatingCaptionController(store: store, preferences: preferences)
+    }
 
     var body: some Scene {
         MenuBarExtra {
-            MenuBarView(store: store)
+            MenuBarView(store: store, preferences: preferences)
         } label: {
             Label(store.isRecording ? "Mimi REC" : "Mimi", systemImage: store.menuBarSymbolName)
                 .accessibilityLabel(menuBarAccessibilityLabel)
@@ -555,11 +581,11 @@ struct MimiApp: App {
         .menuBarExtraStyle(.window)
 
         Settings {
-            SettingsView(store: store)
+            SettingsView(store: store, preferences: preferences)
         }
 
         WindowGroup("Mimi Transcript", id: "transcript") {
-            TranscriptWindow(store: store)
+            TranscriptWindow(store: store, preferences: preferences)
         }
         .defaultSize(width: 920, height: 640)
         .defaultPosition(.center)

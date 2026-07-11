@@ -35,10 +35,9 @@ struct MimiSelfTest {
     }
 
     private static func testRecommendedPacksCoverBothV1Languages() {
-        let packs = ModelCatalog.packs.filter { !$0.engine.isExperimental }
-
-        expect(packs.allSatisfy { $0.supportedLanguages == [.english, .japanese] }, "Every non-experimental v1 pack supports English and Japanese")
-        expect(ModelCatalog.pack(for: .whisperKitLargeV3Turbo)?.estimatedDownloadMB == 626, "WhisperKit download size is presented to the user")
+        expect(ModelCatalog.packs.count == 1, "Mimi presents one simple Apple Speech choice")
+        expect(ModelCatalog.packs[0].supportedLanguages == [.english, .japanese], "Apple Speech setup covers English and Japanese")
+        expect(TranscriptionEngineID.selectableCases == [.appleSpeechAnalyzer], "Removed experimental models never appear in the UI")
     }
 
     private static func expect(_ condition: @autoclosure () -> Bool, _ message: String) {

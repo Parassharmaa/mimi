@@ -4,6 +4,7 @@ import SwiftUI
 
 struct MenuBarView: View {
     @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
     @Environment(\.openSettings) private var openSettings
     @Environment(\.openWindow) private var openWindow
     @State private var isConfirmingClear = false
@@ -12,10 +13,12 @@ struct MenuBarView: View {
 
     init(
         store: AppStore,
+        preferences: UserPreferences = UserPreferences(),
         isConfirmingClear: Bool = false,
         initiallyFollowingLatest: Bool = true
     ) {
         self.store = store
+        self.preferences = preferences
         self.initiallyFollowingLatest = initiallyFollowingLatest
         _isConfirmingClear = State(initialValue: isConfirmingClear)
     }
@@ -46,7 +49,7 @@ struct MenuBarView: View {
             footer
         }
         .padding(16)
-        .frame(width: 400)
+        .frame(width: 430)
     }
 
     private var recordingButton: some View {
@@ -54,7 +57,7 @@ struct MenuBarView: View {
             store.toggleRecording()
         } label: {
             Label(
-                store.isRecording ? "Stop Recording" : "Start Recording",
+                store.isRecording ? t("Stop Recording", "録音を停止") : t("Start Recording", "録音を開始"),
                 systemImage: store.isRecording ? "stop.fill" : "record.circle"
             )
             .frame(maxWidth: .infinity)
@@ -69,7 +72,7 @@ struct MenuBarView: View {
     private var configuration: some View {
         VStack(spacing: 0) {
             MimiControlRow(
-                "Input",
+                t("Input", "入力"),
                 detail: sourceSummary,
                 symbol: store.source.symbolName
             ) {
@@ -79,7 +82,7 @@ struct MenuBarView: View {
                     }
                 }
                 .pickerStyle(.menu)
-                .frame(maxWidth: 176)
+                .frame(width: 194)
                 .disabled(store.controlsLocked)
                 .accessibilityLabel("Input source")
             }
@@ -87,10 +90,10 @@ struct MenuBarView: View {
             sourceConfiguration
             rowDivider
 
-            MimiControlRow("Language", symbol: store.sourceLanguage.symbolName) {
-                Picker("Language", selection: $store.sourceLanguage) {
-                    ForEach(SpeechLanguage.allCases) { language in
-                        Text(language.nativeName).tag(language)
+            MimiControlRow(t("Language", "言語"), symbol: store.sourceLanguage.symbolName) {
+                Picker(t("Language", "言語"), selection: $store.languageMode) {
+                    ForEach(TranscriptionLanguageMode.allCases) { mode in
+                        Text(mode.displayName).tag(mode)
                     }
                 }
                 .pickerStyle(.menu)
@@ -101,31 +104,31 @@ struct MenuBarView: View {
             rowDivider
 
             MimiControlRow(
-                "Model",
-                detail: store.selectedModelReadiness.canStart ? "Local model ready" : "Setup required",
+                t("Speech", "音声認識"),
+                detail: store.selectedModelReadiness.canStart ? t("Ready", "準備完了") : t("Setup needed", "準備が必要"),
                 symbol: "cpu"
             ) {
                 Picker("Model", selection: $store.engineID) {
-                    ForEach(TranscriptionEngineID.allCases) { engine in
+                    ForEach(TranscriptionEngineID.selectableCases) { engine in
                         Text(engine.displayName).tag(engine)
                     }
                 }
                 .pickerStyle(.menu)
-                .frame(maxWidth: 176)
+                .frame(width: 194)
                 .disabled(store.controlsLocked || store.isModelSetupActive)
                 .accessibilityLabel("Transcription model")
             }
 
             rowDivider
 
-            MimiControlRow("Translation", symbol: "translate") {
+            MimiControlRow(t("Translation", "翻訳"), symbol: "translate") {
                 Picker("Translation", selection: $store.translationMode) {
                     ForEach(TranslationMode.allCases) { mode in
-                        Text(mode == .off ? "Off" : "English ↔ Japanese").tag(mode)
+                        Text(mode == .off ? t("Off", "オフ") : t("English ↔ Japanese", "英語 ↔ 日本語")).tag(mode)
                     }
                 }
                 .pickerStyle(.menu)
-                .frame(maxWidth: 176)
+                .frame(width: 194)
                 .disabled(store.controlsLocked)
                 .accessibilityLabel("Translation mode")
             }
@@ -168,43 +171,44 @@ struct MenuBarView: View {
         refreshLabel: String,
         refresh: @escaping () -> Void
     ) -> some View {
-        HStack(spacing: 8) {
-            Picker(title, selection: selection) {
-                Text("System Default").tag(UInt32?.none)
-                ForEach(devices, id: \.0) { id, name in
-                    Text(name).tag(Optional(id))
+        MimiControlRow(title, symbol: title == "Output" ? "hifispeaker" : "mic") {
+            HStack(spacing: 8) {
+                Picker(title, selection: selection) {
+                    Text("System Default").tag(UInt32?.none)
+                    ForEach(devices, id: \.0) { id, name in
+                        Text(name).tag(Optional(id))
+                    }
                 }
-            }
-            .pickerStyle(.menu)
-            .disabled(store.controlsLocked)
+                .pickerStyle(.menu)
+                .frame(width: 194)
+                .disabled(store.controlsLocked)
 
-            Button(action: refresh) {
-                Image(systemName: "arrow.clockwise")
+                Button(action: refresh) {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .buttonStyle(.borderless)
+                .help(refreshLabel)
+                .accessibilityLabel(refreshLabel)
+                .disabled(store.controlsLocked)
             }
-            .buttonStyle(.borderless)
-            .help(refreshLabel)
-            .accessibilityLabel(refreshLabel)
-            .disabled(store.controlsLocked)
         }
-        .padding(.leading, 28)
-        .padding(.vertical, 8)
     }
 
     private var modelSetup: some View {
         VStack(alignment: .leading, spacing: 9) {
-            MimiSectionLabel("Model setup", symbol: "arrow.down.circle")
+            MimiSectionLabel(t("Language setup", "言語の準備"), symbol: "arrow.down.circle")
             ModelSetupStatusView(
                 readiness: store.selectedModelReadiness,
                 setupState: store.selectedModelSetupState,
                 compact: true
             )
 
-            Button("Open Model Settings…", action: openMimiSettings)
+            Button(t("Open Language Settings…", "言語設定を開く…"), action: openMimiSettings)
                 .buttonStyle(.bordered)
                 .accessibilityHint("Opens the model setup window")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .mimiCard()
+        .mimiCard(padding: 14)
     }
 
     private var transcriptPreview: some View {
@@ -230,12 +234,12 @@ struct MenuBarView: View {
     private var transcriptHeader: some View {
         if isConfirmingClear {
             HStack(spacing: 8) {
-                Text("Clear transcript?")
+                Text(t("Clear transcript?", "文字起こしを消去しますか？"))
                     .font(.caption.weight(.semibold))
                 Spacer()
-                Button("Cancel") { setClearConfirmation(false) }
+                Button(t("Cancel", "キャンセル")) { setClearConfirmation(false) }
                     .keyboardShortcut(.cancelAction)
-                Button("Clear", role: .destructive) {
+                Button(t("Clear", "消去"), role: .destructive) {
                     store.clearTranscript()
                     setClearConfirmation(false)
                 }
@@ -246,7 +250,7 @@ struct MenuBarView: View {
             .accessibilityLabel("Clear local transcript confirmation")
         } else {
             HStack(spacing: 8) {
-                MimiSectionLabel("Latest transcript", symbol: "text.alignleft")
+                MimiSectionLabel(t("Latest transcript", "最新の文字起こし"), symbol: "text.alignleft")
                 Spacer()
                 Button {
                     store.copyTranscript()
@@ -276,16 +280,16 @@ struct MenuBarView: View {
             Button {
                 openWindow(id: "transcript")
             } label: {
-                Label("Transcript", systemImage: "rectangle.on.rectangle")
+                Label(t("Transcript", "文字起こし"), systemImage: "rectangle.on.rectangle")
             }
 
             Button(action: openMimiSettings) {
-                Label("Settings", systemImage: "gearshape")
+                Label(t("Settings", "設定"), systemImage: "gearshape")
             }
 
             Spacer()
 
-            Button("Quit") {
+            Button(t("Quit", "終了")) {
                 NSApplication.shared.terminate(nil)
             }
         }
@@ -317,5 +321,9 @@ struct MenuBarView: View {
     private func openMimiSettings() {
         SettingsWindowFocusCoordinator.shared.requestFocus()
         openSettings()
+    }
+
+    private func t(_ english: String, _ japanese: String) -> String {
+        preferences.text(english, japanese)
     }
 }

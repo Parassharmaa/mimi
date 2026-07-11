@@ -143,6 +143,7 @@ struct MimiControlRow<Control: View>: View {
             control
                 .labelsHidden()
         }
+        .padding(.vertical, 6)
     }
 }
 
