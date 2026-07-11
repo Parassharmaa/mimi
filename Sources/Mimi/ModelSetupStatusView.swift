@@ -40,7 +40,7 @@ struct ModelSetupStatusView: View {
             if let fraction = progress?.fractionCompleted {
                 let percent = Int((fraction * 100).rounded())
                 ProgressView(value: fraction)
-                    .accessibilityValue("\(percent) percent of model files downloaded")
+                    .accessibilityValue("\(percent) percent downloaded")
             } else {
                 ProgressView()
                     .accessibilityValue("Model download progress unavailable")
@@ -95,7 +95,7 @@ struct ModelSetupStatusView: View {
 
         if let fraction = progress.fractionCompleted {
             let percent = Int((fraction * 100).rounded())
-            return "Downloading \(engine.displayName) — \(percent)% of model files"
+            return "Downloading \(engine.displayName) — \(percent)%"
         }
         return readiness.message ?? "Downloading \(engine.displayName)…"
     }

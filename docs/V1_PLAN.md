@@ -12,8 +12,8 @@ Mimi is a native, local-first macOS transcription utility for English and Japane
 | Deployment target | macOS 15+ | Enables Apple Translation and Core Audio taps; macOS 26 unlocks the newer Apple live ASR engine. |
 | Default ASR on macOS 26 | Apple `SpeechAnalyzer` / `SpeechTranscriber` | On-device, designed for live/meeting transcription, system-managed locale assets. |
 | Accuracy ASR pack | WhisperKit / Whisper Large-v3 Core ML (626 MB) | Mature Swift integration, multilingual Japanese + English, explicit model download. |
-| Experimental MLX ASR pack | `mlx-community/nemotron-3.5-asr-streaming-0.6b-8bit` (756 MB) | Direct Swift/MLX integration for English/Japanese bounded live caption windows across every capture lane. |
-| Translation | Apple Translation framework | EN↔JA is a local, on-demand language-pair download. Translate finalized segments only. |
+| Experimental MLX ASR packs | Qwen3-ASR 0.6B 4-bit (713 MB) and Nemotron 3.5 streaming 8-bit (756 MB) | Direct Swift/MLX integration across every capture lane; Qwen adds provisional, agreement-confirmed, and retrospective completed-window passes. |
+| Translation | Apple Translation framework | EN↔JA is a local, on-demand language-pair download. Translate the newest snapshot on a bounded live cadence. |
 | Meeting/speaker capture | ScreenCaptureKit content picker | The implemented audio-only lanes capture a person-selected app or display without registering a video output; microphone, app, and display audio stay separate. Core Audio process taps remain a later alternative. |
 
 ## V1 user flow
@@ -23,8 +23,8 @@ Mimi is a native, local-first macOS transcription utility for English and Japane
 3. If using **Selected App Audio** or **Selected Display Audio**, click the matching **Choose … Audio** control and make an explicit choice in the macOS content picker.
 4. Click **Download Model** explicitly; no large model is fetched on launch.
 5. Click **Start**. The menu-bar glyph and red `LOCAL` indicator make the active recording state clear.
-6. Read/copy the live transcript, then optionally translate finalized text into the other language.
-7. Whisper's temporary source audio is deleted after its accuracy pass; Apple Speech and live Nemotron process bounded PCM in memory without writing a source-audio file. Transcript text remains local.
+6. Read/copy the live transcript, then optionally translate the latest English/Japanese snapshot live into the other language.
+7. Whisper's temporary source audio is deleted after its accuracy pass; Apple Speech and live MLX engines process bounded PCM in memory without writing a source-audio file. Transcript text remains local.
 
 ## Capture lanes
 
@@ -52,6 +52,7 @@ All engines conform to the same functional contract: report volatile partial tex
 | Apple Speech | Native live lane on macOS 26+ | Runtime-probed English/Japanese assets | System managed | Default where available |
 | Whisper Large-v3 (626 MB) | Local accuracy lane | English + Japanese | About 626 MB, selected by the user, stored in Mimi's app-managed model folder | Implemented and removable |
 | Nemotron 3.5 MLX (756 MB) | Experimental bounded live captions | English + Japanese | About 756 MB, selected by the user, revision-pinned in Mimi's app-managed cache | Streams 560 ms chunks, commits on a pause or hard 30-second cap, and is never the default without a Mac bake-off |
+| Qwen3-ASR MLX (713 MB) | Experimental dual-pass live captions | English + Japanese | About 713 MB, selected by the user, revision-pinned in Mimi's app-managed cache | Native Swift/MLX provisional decoding, agreement confirmation, cached encoder windows, and retrospective completed-window finalization |
 | TranslateGemma | Higher-quality local translation candidate | English + Japanese | Requires Gemma terms/notice | Deferred |
 
 No optional model is auto-downloaded or bundled with Mimi. The rule is deliberate: no model is advertised as a quality default merely because it is new. A model graduates only after repeatable Mac measurements on English and Japanese meeting audio.
@@ -63,6 +64,7 @@ No optional model is auto-downloaded or bundled with Mimi. The rule is deliberat
 - Dependency-free Swift self-tests for volatile/final transcript coalescing, Japanese rendering, and model routing (works with Command Line Tools, not just full Xcode).
 - Deterministic E2E executable covering English and Japanese source sessions, model install/remove gates, temporary-audio cleanup, and screen-audio selection/cancellation lifecycle.
 - Native MLX/Nemotron product compilation without fetching model weights.
+- Qwen lifecycle, live partial/final routing, stale callback isolation, and install/remove coverage without fetching weights.
 - A deterministic native menu-surface smoke launch that renders real SwiftUI sample data and exits automatically.
 - Swift package build, universal app packaging, signing verification, and `Info.plist` validation.
 
@@ -76,7 +78,7 @@ No optional model is auto-downloaded or bundled with Mimi. The rule is deliberat
   corresponding asset. They never download models from a test run.
 - ScreenCaptureKit app/display selection, picker cancellation, selected Zoom/Chrome audio, sleep/wake, app restart, and the relevant macOS privacy prompts.
 - Offline transcription after Apple, WhisperKit, or Nemotron installation. The real MLX Nemotron fixture and direct-executable live PCM smoke checks are opt-in and must use an already-downloaded local model; they never download weights as part of a test.
-- Apple versus WhisperKit versus Nemotron EN WER / JA CER, time-to-first-partial, finalization delay, real-time factor, memory, and thermal behavior. The bounded Nemotron path must be benchmarked on real Macs before it becomes a default or is described as seamless long-meeting ASR.
+- Apple versus WhisperKit versus Qwen versus Nemotron EN WER / JA CER, time-to-first-partial, first confirmation, hypothesis churn, finalization delay, real-time factor, memory, and thermal behavior. See [the repeatable realtime benchmark](REALTIME_BENCHMARK.md). Experimental MLX paths must be benchmarked on real Macs before either becomes a default.
 
 ## Explicit non-goals for the first PR
 

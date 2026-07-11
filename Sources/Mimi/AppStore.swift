@@ -20,6 +20,7 @@ final class AppStore {
                 appleSpeech: SystemAppleSpeechProvider(),
                 whisper: WhisperKitAccuracyEngine(),
                 nemotron: NemotronMLXLiveEngine(),
+                qwen: QwenMLXLiveEngine(),
                 storage: FileTranscriptStore(),
                 inputDevices: AudioDeviceCatalog.inputDevices()
             ),

@@ -167,6 +167,8 @@ struct SettingsView: View {
             base = "Download Whisper Large-v3"
         case .nemotronStreamingExperimental:
             base = "Download Nemotron MLX"
+        case .qwen3StreamingExperimental:
+            base = "Download Qwen3-ASR MLX"
         }
         return retry ? "Retry \(base)" : base
     }
@@ -185,6 +187,7 @@ struct SettingsView: View {
         switch store.engineID {
         case .whisperKitLargeV3Turbo: "Remove Downloaded Whisper Model"
         case .nemotronStreamingExperimental: "Remove Downloaded Nemotron Model"
+        case .qwen3StreamingExperimental: "Remove Downloaded Qwen3-ASR Model"
         case .appleSpeechAnalyzer: "Remove Downloaded Model"
         }
     }

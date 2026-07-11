@@ -9,6 +9,7 @@ struct MimiSessionE2E {
         await appleStreamingEnglishSessionDrainsBoundedFrames()
         await whisperJapaneseAccuracySessionFreezesConfigurationAndCleansAudio()
         await nemotronJapaneseLiveSessionStreamsAndFinalizesWithoutAudioFiles()
+        await qwenDualPassLiveSessionStreamsAndFinalizesWithoutAudioFiles()
         await screenAudioSelectionAndLifecycle()
         await screenAudioPickerCancellationAndUnexpectedStop()
         await screenAudioLiveNemotronAndUnexpectedStopCleanLiveState()
@@ -138,6 +139,45 @@ struct MimiSessionE2E {
         staleCallback?(FakeCapture.makeBuffer())
         await yieldToMainActor()
         expect(nemotron.liveConsumedBufferCount == 2, "A callback retained after Stop cannot feed a stale live Nemotron session")
+    }
+
+    @MainActor
+    private static func qwenDualPassLiveSessionStreamsAndFinalizesWithoutAudioFiles() async {
+        let capture = FakeCapture()
+        capture.framesToEmitOnStart = 2
+        let apple = FakeAppleProvider()
+        let whisper = FakeWhisper(isDownloaded: true)
+        let qwen = FakeNemotron(isDownloaded: true)
+        qwen.livePartialText = "Mimi keeps a corrected rolling hypothesis."
+        qwen.liveFinalText = "Mimi keeps a retrospectively corrected transcript."
+        let storage = FakeStorage()
+        let session = makeSession(
+            capture: capture,
+            apple: apple,
+            whisper: whisper,
+            qwen: qwen,
+            storage: storage
+        )
+        session.engineID = .qwen3StreamingExperimental
+        session.sourceLanguage = .english
+
+        await session.startRecording()
+        await yieldToMainActor()
+        expect(session.recordingState == .recording, "Installed Qwen starts a dual-pass local live session")
+        expect(capture.recordingURLs == [nil] && storage.createdTemporaryURLs.isEmpty, "Qwen keeps bounded PCM in memory and never writes source audio")
+        expect(qwen.liveStartLanguages == [.english], "Qwen receives the frozen English language route")
+        expect(session.document.liveText == qwen.livePartialText, "Qwen replaces its visible rolling hypothesis while audio arrives")
+
+        await session.stopRecording()
+        expect(qwen.liveStopCalls == 1 && qwen.liveCancelCalls == 0, "Qwen's normal Stop flushes its retrospective pass exactly once")
+        expect(session.document.segments.map(\.text) == [qwen.liveFinalText], "Qwen persists the retrospectively corrected final transcript")
+        expect(session.document.liveText.isEmpty, "Qwen finalization clears its volatile hypothesis")
+        expect(storage.removedTemporaryURLs.isEmpty, "Qwen cleanup has no source-audio file to remove")
+
+        let staleCallback = capture.lastCallback
+        staleCallback?(FakeCapture.makeBuffer())
+        await yieldToMainActor()
+        expect(qwen.liveConsumedBufferCount == 2, "A stale microphone callback cannot feed a stopped Qwen session")
     }
 
     @MainActor
@@ -493,6 +533,28 @@ struct MimiSessionE2E {
 
         do {
             let capture = FakeCapture()
+            let apple = FakeAppleProvider()
+            let whisper = FakeWhisper(isDownloaded: true)
+            let qwen = FakeNemotron(isDownloaded: false)
+            let storage = FakeStorage()
+            let session = makeSession(
+                capture: capture,
+                apple: apple,
+                whisper: whisper,
+                qwen: qwen,
+                storage: storage
+            )
+            session.engineID = .qwen3StreamingExperimental
+
+            await session.installSelectedModelNow()
+            expect(qwen.installCalls == 1 && qwen.isDownloaded, "Explicit Qwen install changes model readiness")
+            expect(session.selectedModelReadiness == .ready, "Installed Qwen becomes startable without a hidden download")
+            await session.removeSelectedModelNow()
+            expect(qwen.removeCalls == 1 && !qwen.isDownloaded, "Qwen removal revokes its app-owned local model")
+        }
+
+        do {
+            let capture = FakeCapture()
             let apple = FakeAppleProvider(isAvailable: false)
             let whisper = FakeWhisper(isDownloaded: true)
             let storage = FakeStorage()
@@ -795,12 +857,25 @@ struct MimiSessionE2E {
     private static func transcriptAndTranslationRoutingEdgeCases() {
         var document = TranscriptDocument()
         document.apply(.partial("volatile English"), language: .english)
+        expect(
+            document.renderedText(for: .english, includingLiveText: true) == "volatile English",
+            "Live translation receives the current provisional speech before any segment is final"
+        )
+        expect(
+            document.renderedText(for: .english, includingLiveText: false).isEmpty,
+            "Non-live translation excludes volatile speech"
+        )
         document.apply(.final("final English"), language: .english)
         document.apply(.final("最終の日本語"), language: .japanese)
+        document.apply(.partial("next live phrase"), language: .english)
         document.apply(.final("final English"), language: .english)
 
         expect(document.finalizedText(for: .english) == "final English\nfinal English", "Translation input preserves legitimate repeated final English speech")
         expect(document.finalizedText(for: .japanese) == "最終の日本語", "Translation input filters immutable text by its source language")
+        expect(
+            document.renderedText(for: .english, includingLiveText: true) == "final English\nfinal English",
+            "A final result replaces its provisional translation snapshot without duplication"
+        )
         expect(document.liveText.isEmpty, "Final events never leave a volatile translation input behind")
     }
 
@@ -833,6 +908,7 @@ struct MimiSessionE2E {
         apple: FakeAppleProvider,
         whisper: FakeWhisper,
         nemotron: FakeNemotron = FakeNemotron(isDownloaded: false),
+        qwen: FakeNemotron = FakeNemotron(isDownloaded: false),
         storage: FakeStorage
     ) -> TranscriptionSession {
         TranscriptionSession(
@@ -842,6 +918,7 @@ struct MimiSessionE2E {
                 appleSpeech: apple,
                 whisper: whisper,
                 nemotron: nemotron,
+                qwen: qwen,
                 storage: storage,
                 inputDevices: [.init(id: 42, name: "Fixture Microphone")]
             ),
@@ -1168,7 +1245,7 @@ private final class FakeWhisper: WhisperAccuracyTranscribing {
 }
 
 @MainActor
-private final class FakeNemotron: NemotronMLXLiveTranscribing {
+private final class FakeNemotron: NemotronMLXLiveTranscribing, QwenMLXLiveTranscribing {
     var runtimeAvailabilityMessage: String?
     var isDownloaded: Bool
     var ensureError: Error?

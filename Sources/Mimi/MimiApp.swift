@@ -15,6 +15,173 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         NSApplication.shared.setActivationPolicy(.accessory)
 
         let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("--benchmark-install-qwen") {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let engine = QwenMLXLiveEngine()
+                    try await engine.install { progress in
+                        if let fraction = progress.fractionCompleted {
+                            print("Mimi Qwen3-ASR setup: \(Int((fraction * 100).rounded()))%")
+                        }
+                    }
+                    guard engine.isDownloaded else {
+                        throw RealtimeBenchmarkCommandError.qwenDidNotBecomeReady
+                    }
+                    print("Mimi Qwen3-ASR MLX is installed and ready.")
+                    status = 0
+                } catch {
+                    print("Mimi Qwen3-ASR install failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let audioPath = argument(after: "--e2e-qwen-live-smoke", in: arguments) {
+            let language: SpeechLanguage = switch argument(after: "--language", in: arguments) {
+            case "ja", "ja-JP": .japanese
+            default: .english
+            }
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let engine = QwenMLXLiveEngine()
+                    let audioURL = URL(fileURLWithPath: audioPath)
+                    let file = try AVAudioFile(forReading: audioURL)
+                    var partialCount = 0
+                    var finalText = ""
+                    try await engine.startLive(
+                        language: language,
+                        inputFormat: file.processingFormat,
+                        onEvent: { event in
+                            switch event {
+                            case .partial:
+                                partialCount += 1
+                            case let .final(text):
+                                finalText = text
+                            }
+                        },
+                        onBackpressure: { message in
+                            print("Mimi Qwen3-ASR live smoke warning: \(message)")
+                        }
+                    )
+                    while file.framePosition < file.length {
+                        let remaining = AVAudioFrameCount(file.length - file.framePosition)
+                        let count = min(AVAudioFrameCount(3_200), remaining)
+                        guard let buffer = AVAudioPCMBuffer(
+                            pcmFormat: file.processingFormat,
+                            frameCapacity: count
+                        ) else {
+                            throw RealtimeBenchmarkCommandError.qwenFixtureBufferFailed
+                        }
+                        try file.read(into: buffer, frameCount: count)
+                        engine.consumeLive(buffer)
+                        try await Task.sleep(for: .seconds(
+                            Double(buffer.frameLength) / file.processingFormat.sampleRate
+                        ))
+                    }
+                    await engine.stopLive()
+                    guard partialCount > 0, !finalText.isEmpty else {
+                        throw RealtimeBenchmarkCommandError.qwenLiveOutputMissing
+                    }
+                    print("Mimi Qwen3-ASR \(language.displayName) live app smoke passed: \(partialCount) display updates; final text: \(finalText)")
+                    status = 0
+                } catch {
+                    print("Mimi Qwen3-ASR live app smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let installLanguage = argument(after: "--benchmark-install-apple-assets", in: arguments) {
+            let language: SpeechLanguage = switch installLanguage {
+            case "ja", "ja-JP": .japanese
+            default: .english
+            }
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    guard #available(macOS 26.0, *) else {
+                        throw RealtimeBenchmarkCommandError.appleSpeechUnavailable
+                    }
+                    try await AppleSpeechEngine.installAssets(for: language)
+                    let assetStatus = await AppleSpeechEngine.assetStatus(for: language)
+                    guard assetStatus == .installed else {
+                        throw RealtimeBenchmarkCommandError.appleAssetsDidNotBecomeReady(language)
+                    }
+                    print("Mimi Apple Speech \(language.displayName) assets are installed for realtime benchmarking.")
+                    status = 0
+                } catch {
+                    print("Mimi Apple Speech asset install failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let benchmarkEngine = argument(after: "--benchmark-realtime", in: arguments),
+           let audioPath = argument(after: "--audio", in: arguments) {
+            let language: SpeechLanguage = switch argument(after: "--language", in: arguments) {
+            case "ja", "ja-JP": .japanese
+            default: .english
+            }
+            let audioURL = URL(fileURLWithPath: audioPath)
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    var report: RealtimeBenchmarkReport
+                    switch benchmarkEngine {
+                    case "apple-accurate":
+                        guard #available(macOS 26.0, *) else {
+                            throw RealtimeBenchmarkCommandError.appleSpeechUnavailable
+                        }
+                        report = try await RealtimeBenchmarkRunner.runApple(
+                            recordingAt: audioURL,
+                            language: language,
+                            mode: .accurate,
+                            simulateRealtime: true
+                        )
+                    case "apple-progressive":
+                        guard #available(macOS 26.0, *) else {
+                            throw RealtimeBenchmarkCommandError.appleSpeechUnavailable
+                        }
+                        report = try await RealtimeBenchmarkRunner.runApple(
+                            recordingAt: audioURL,
+                            language: language,
+                            mode: .progressive,
+                            simulateRealtime: true
+                        )
+                    case "whisper":
+                        let step = Double(argument(after: "--step", in: arguments) ?? "2") ?? 2
+                        report = try await WhisperKitAccuracyEngine().runRollingBenchmark(
+                            recordingAt: audioURL,
+                            language: language,
+                            stepSeconds: step
+                        )
+                    case "qwen":
+                        report = try await RealtimeBenchmarkRunner.runQwen(
+                            recordingAt: audioURL,
+                            language: language,
+                            simulateRealtime: true
+                        )
+                    default:
+                        throw RealtimeBenchmarkCommandError.unknownEngine(benchmarkEngine)
+                    }
+                    if let reference = argument(after: "--reference", in: arguments) {
+                        report.score(against: reference, language: language)
+                    }
+                    try report.printJSON()
+                    status = 0
+                } catch {
+                    print("Mimi realtime benchmark failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
         if arguments.contains("--e2e-microphone-smoke") {
             let store = AppStore(loadPersistedTranscript: false)
             e2eStore = store
@@ -98,6 +265,8 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 engine = .whisperKitLargeV3Turbo
             case "nemotron":
                 engine = .nemotronStreamingExperimental
+            case "qwen":
+                engine = .qwen3StreamingExperimental
             default:
                 engine = .appleSpeechAnalyzer
             }
@@ -185,7 +354,12 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         if arguments.contains("--e2e-auto-quit") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 print("Mimi UI smoke passed: \(screen) \(presentationState) surface rendered deterministic English/Japanese sample data.")
-                NSApplication.shared.terminate(nil)
+                // TranslationSession may still own an asynchronous framework
+                // task for transcript fixtures. A CLI smoke harness must exit
+                // deterministically even when that framework task is pending;
+                // normal app launches continue to use AppKit termination.
+                fflush(stdout)
+                Darwin.exit(0)
             }
         }
     }
@@ -195,6 +369,32 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             return nil
         }
         return arguments[index + 1]
+    }
+}
+
+private enum RealtimeBenchmarkCommandError: LocalizedError {
+    case appleSpeechUnavailable
+    case appleAssetsDidNotBecomeReady(SpeechLanguage)
+    case qwenDidNotBecomeReady
+    case qwenFixtureBufferFailed
+    case qwenLiveOutputMissing
+    case unknownEngine(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .appleSpeechUnavailable:
+            "Apple Speech realtime benchmarking requires macOS 26 or later."
+        case let .appleAssetsDidNotBecomeReady(language):
+            "Apple finished the setup request, but its \(language.displayName) speech asset still is not installed."
+        case .qwenDidNotBecomeReady:
+            "Qwen3-ASR setup finished without a valid installed-model marker."
+        case .qwenFixtureBufferFailed:
+            "Mimi could not allocate a Qwen3-ASR fixture buffer."
+        case .qwenLiveOutputMissing:
+            "Qwen3-ASR did not produce both live and final output for the fixture."
+        case let .unknownEngine(engine):
+            "Unknown realtime benchmark engine: \(engine)."
+        }
     }
 }
 

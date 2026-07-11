@@ -7,6 +7,21 @@ import Speech
 @available(macOS 26.0, *)
 @MainActor
 final class AppleSpeechEngine {
+    enum ResultMode: String, Sendable {
+        case accurate
+        case progressive
+
+        var preset: SpeechTranscriber.Preset {
+            switch self {
+            case .accurate:
+                .transcription
+            case .progressive:
+                .progressiveTranscription
+            }
+        }
+    }
+
+    private let resultMode: ResultMode
     private var analyzer: SpeechAnalyzer?
     private var audioConverter: AVAudioConverter?
     private var analyzerFormat: AVAudioFormat?
@@ -14,8 +29,12 @@ final class AppleSpeechEngine {
     private var analysisTask: Task<Void, Never>?
     private var resultTask: Task<Void, Never>?
 
+    init(resultMode: ResultMode = .progressive) {
+        self.resultMode = resultMode
+    }
+
     static func installAssets(for language: SpeechLanguage) async throws {
-        let transcriber = try await makeTranscriber(for: language)
+        let transcriber = try await makeTranscriber(for: language, resultMode: .progressive)
         switch await AssetInventory.status(forModules: [transcriber]) {
         case .installed:
             return
@@ -33,7 +52,7 @@ final class AppleSpeechEngine {
     }
 
     static func assetStatus(for language: SpeechLanguage) async -> AppleSpeechAssetStatus {
-        guard let transcriber = try? await makeTranscriber(for: language) else {
+        guard let transcriber = try? await makeTranscriber(for: language, resultMode: .progressive) else {
             return .unsupported
         }
 
@@ -56,7 +75,7 @@ final class AppleSpeechEngine {
         inputFormat: AVAudioFormat,
         onEvent: @escaping @MainActor (TranscriptEvent) -> Void
     ) async throws {
-        let transcriber = try await Self.makeTranscriber(for: language)
+        let transcriber = try await Self.makeTranscriber(for: language, resultMode: resultMode)
         switch await AssetInventory.status(forModules: [transcriber]) {
         case .installed:
             break
@@ -163,12 +182,15 @@ final class AppleSpeechEngine {
         analyzer = nil
     }
 
-    private static func makeTranscriber(for language: SpeechLanguage) async throws -> SpeechTranscriber {
+    private static func makeTranscriber(
+        for language: SpeechLanguage,
+        resultMode: ResultMode
+    ) async throws -> SpeechTranscriber {
         let requestedLocale = Locale(identifier: language.rawValue)
         guard let supportedLocale = await SpeechTranscriber.supportedLocale(equivalentTo: requestedLocale) else {
             throw SpeechEngineError.unsupportedLanguage(language)
         }
-        return SpeechTranscriber(locale: supportedLocale, preset: .transcription)
+        return SpeechTranscriber(locale: supportedLocale, preset: resultMode.preset)
     }
 }
 

@@ -10,9 +10,13 @@ final class WhisperKitAccuracyEngine {
     private let modelName = "large-v3-v20240930_626MB"
     private let modelCacheFolder: URL
     private let installMarkerURL: URL
+    private let benchmarkModelFolderOverride: URL?
     private var whisperKit: WhisperKit?
 
-    init(fileManager: FileManager = .default) {
+    init(
+        fileManager: FileManager = .default,
+        environment: [String: String] = ProcessInfo.processInfo.environment
+    ) {
         let support = (try? fileManager.url(
             for: .applicationSupportDirectory,
             in: .userDomainMask,
@@ -21,6 +25,9 @@ final class WhisperKitAccuracyEngine {
         )) ?? fileManager.temporaryDirectory
         modelCacheFolder = support.appending(path: "Mimi/Models/WhisperKit", directoryHint: .isDirectory)
         installMarkerURL = support.appending(path: "Mimi/Models/WhisperKit/.mimi-large-v3-installed")
+        benchmarkModelFolderOverride = environment["MIMI_WHISPER_MODEL_DIR"].map {
+            URL(fileURLWithPath: $0, isDirectory: true).standardizedFileURL
+        }
     }
 
     var isDownloaded: Bool {
@@ -94,6 +101,9 @@ final class WhisperKitAccuracyEngine {
     }
 
     func removeDownloadedModel() async throws {
+        if benchmarkModelFolderOverride != nil {
+            throw WhisperModelError.externalBenchmarkModelCannotBeRemoved
+        }
         // Core ML may retain an operating-system specialization cache; Mimi
         // removes every app-owned model weight and tokenizer it manages.
         whisperKit = nil
@@ -109,6 +119,11 @@ final class WhisperKitAccuracyEngine {
     }
 
     private func installedModelFolder() throws -> URL {
+        if let benchmarkModelFolderOverride,
+           FileManager.default.fileExists(atPath: benchmarkModelFolderOverride.path) {
+            return benchmarkModelFolderOverride
+        }
+
         guard FileManager.default.fileExists(atPath: installMarkerURL.path),
               let data = try? Data(contentsOf: installMarkerURL),
               let path = String(data: data, encoding: .utf8),
@@ -134,6 +149,75 @@ final class WhisperKitAccuracyEngine {
         )
     }
 
+    func runRollingBenchmark(
+        recordingAt url: URL,
+        language: SpeechLanguage,
+        stepSeconds: Double
+    ) async throws -> RealtimeBenchmarkReport {
+        let loadStartedAt = ContinuousClock.now
+        try await loadInstalledModel()
+        let modelLoadSeconds = loadStartedAt.duration(to: .now).seconds
+        guard let whisperKit else { throw WhisperModelError.notInstalled }
+
+        let samples = try AudioProcessor.loadAudioAsFloatArray(fromPath: url.path)
+        let sampleRate = Double(WhisperKit.sampleRate)
+        let audioDuration = Double(samples.count) / sampleRate
+        let stepSampleCount = max(1, Int(stepSeconds * sampleRate))
+        var updates: [String] = []
+        var decodeDurations: [Double] = []
+        var firstTextAt: Double?
+        let runStartedAt = ContinuousClock.now
+
+        var endSample = min(stepSampleCount, samples.count)
+        while endSample > 0, endSample <= samples.count {
+            try Task.checkCancellation()
+            let prefix = Array(samples[..<endSample])
+            let prefixDuration = Double(endSample) / sampleRate
+            let decodeStartedAt = ContinuousClock.now
+            let options = DecodingOptions(
+                language: language.whisperLanguageCode,
+                detectLanguage: false,
+                wordTimestamps: true
+            )
+            let results = try await whisperKit.transcribe(
+                audioArray: prefix,
+                decodeOptions: options
+            )
+            let decodeSeconds = decodeStartedAt.duration(to: .now).seconds
+            decodeDurations.append(decodeSeconds)
+            let text = results.map(\.text).joined(separator: " ")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            if !text.isEmpty {
+                updates.append(text)
+                if firstTextAt == nil {
+                    firstTextAt = prefixDuration + decodeSeconds
+                }
+            }
+
+            if endSample == samples.count { break }
+            endSample = min(samples.count, endSample + stepSampleCount)
+        }
+
+        let wallSeconds = runStartedAt.duration(to: .now).seconds
+        return RealtimeBenchmarkReport(
+            engine: "whisperkit",
+            mode: "rolling-\(String(format: "%.2f", stepSeconds))s",
+            language: language.rawValue,
+            audioDurationSeconds: audioDuration,
+            wallSeconds: wallSeconds,
+            modelLoadSeconds: modelLoadSeconds,
+            firstTextAtSeconds: firstTextAt,
+            firstFinalAtSeconds: nil,
+            updateCount: updates.count,
+            meanDecodeSeconds: decodeDurations.isEmpty ? nil : decodeDurations.reduce(0, +) / Double(decodeDurations.count),
+            maxDecodeSeconds: decodeDurations.max(),
+            realTimeFactor: audioDuration > 0 ? decodeDurations.reduce(0, +) / audioDuration : nil,
+            hypothesisChurn: RealtimeBenchmarkReport.hypothesisChurn(updates),
+            finalText: updates.last ?? "",
+            firstUpdates: Array(updates.prefix(8))
+        )
+    }
+
     nonisolated private static func downloadModel(
         named modelName: String,
         to modelCacheFolder: URL,
@@ -152,6 +236,7 @@ final class WhisperKitAccuracyEngine {
 private enum WhisperModelError: LocalizedError {
     case notInstalled
     case installMarkerFailed
+    case externalBenchmarkModelCannotBeRemoved
 
     var errorDescription: String? {
         switch self {
@@ -159,6 +244,8 @@ private enum WhisperModelError: LocalizedError {
             "Download Whisper Large-v3 (626 MB) explicitly before starting an accuracy-pass recording."
         case .installMarkerFailed:
             "Whisper downloaded, but Mimi could not mark the local model as ready. Check available disk space and try again."
+        case .externalBenchmarkModelCannotBeRemoved:
+            "Mimi will not remove a model supplied through the developer benchmark override."
         }
     }
 }

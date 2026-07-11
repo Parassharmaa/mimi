@@ -105,11 +105,16 @@ struct TranscriptWindow: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
+                let translationSourceText = store.document.renderedText(
+                    for: store.sourceLanguage,
+                    includingLiveText: true
+                )
                 if store.translationMode == .translateFinalSegments,
-                   !store.document.finalizedText(for: store.sourceLanguage).isEmpty {
+                   !translationSourceText.isEmpty {
                     InlineTranslationView(
-                        sourceText: store.document.finalizedText(for: store.sourceLanguage),
-                        sourceLanguage: store.sourceLanguage
+                        sourceText: translationSourceText,
+                        sourceLanguage: store.sourceLanguage,
+                        isLive: store.isRecording
                     )
                 }
             }

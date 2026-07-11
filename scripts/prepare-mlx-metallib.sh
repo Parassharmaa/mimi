@@ -55,10 +55,10 @@ fi
 
 if [[ -z "$source_library" || ! -s "$source_library" ]]; then
   if [[ "$REQUIREMENT" == "required" ]]; then
-    print -u2 "Mimi cannot package native Nemotron without a matching MLX Metal shader. Install/select full Xcode or set MIMI_MLX_METALLIB explicitly."
+    print -u2 "Mimi cannot package native Qwen or Nemotron without a matching MLX Metal shader. Install/select full Xcode or set MIMI_MLX_METALLIB explicitly."
     exit 1
   fi
-  print -u2 "Warning: building Mimi without the optional native Nemotron runtime. Apple Speech and Whisper remain available."
+  print -u2 "Warning: building Mimi without the optional native Qwen and Nemotron runtimes. Apple Speech and Whisper remain available."
   exit 0
 fi
 

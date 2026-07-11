@@ -120,7 +120,7 @@ public protocol WhisperAccuracyTranscribing: AnyObject {
 /// microphone/app/display PCM stream directly and reports replaceable live
 /// hypotheses plus final bounded-window segments.
 @MainActor
-public protocol NemotronMLXLiveTranscribing: AnyObject {
+public protocol LocalLiveTranscribing: AnyObject {
     /// A nil value means the app contains a usable MLX Metal runtime on this
     /// machine. Keeping this separate from `isDownloaded` makes it impossible
     /// to promise a usable model merely because its weights are present.
@@ -128,6 +128,9 @@ public protocol NemotronMLXLiveTranscribing: AnyObject {
     var isDownloaded: Bool { get }
     func ensureInstalled() throws
     func install() async throws
+    func install(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws
     func startLive(
         language: SpeechLanguage,
         inputFormat: AVAudioFormat,
@@ -140,6 +143,21 @@ public protocol NemotronMLXLiveTranscribing: AnyObject {
     func transcribe(recordingAt url: URL, language: SpeechLanguage) async throws -> String
     func removeDownloadedModel() async throws
 }
+
+public extension LocalLiveTranscribing {
+    func install(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws {
+        _ = onProgress
+        try await install()
+    }
+}
+
+@MainActor
+public protocol NemotronMLXLiveTranscribing: LocalLiveTranscribing {}
+
+@MainActor
+public protocol QwenMLXLiveTranscribing: LocalLiveTranscribing {}
 
 @MainActor
 public protocol TranscriptPersisting: AnyObject {
@@ -158,6 +176,7 @@ public struct TranscriptionSessionDependencies {
     public let appleSpeech: any AppleSpeechProviding
     public let whisper: any WhisperAccuracyTranscribing
     public let nemotron: any NemotronMLXLiveTranscribing
+    public let qwen: any QwenMLXLiveTranscribing
     public let storage: any TranscriptPersisting
     public let inputDevices: [AudioInputDevice]
 
@@ -167,6 +186,7 @@ public struct TranscriptionSessionDependencies {
         appleSpeech: any AppleSpeechProviding,
         whisper: any WhisperAccuracyTranscribing,
         nemotron: any NemotronMLXLiveTranscribing,
+        qwen: any QwenMLXLiveTranscribing,
         storage: any TranscriptPersisting,
         inputDevices: [AudioInputDevice]
     ) {
@@ -175,6 +195,7 @@ public struct TranscriptionSessionDependencies {
         self.appleSpeech = appleSpeech
         self.whisper = whisper
         self.nemotron = nemotron
+        self.qwen = qwen
         self.storage = storage
         self.inputDevices = inputDevices
     }
@@ -291,9 +312,11 @@ public final class TranscriptionSession {
     private let appleSpeech: any AppleSpeechProviding
     private let whisper: any WhisperAccuracyTranscribing
     private let nemotron: any NemotronMLXLiveTranscribing
+    private let qwen: any QwenMLXLiveTranscribing
     private let storage: any TranscriptPersisting
     @ObservationIgnored private var appleEngine: (any AppleLiveTranscribing)?
     @ObservationIgnored private var nemotronLiveSessionActive = false
+    @ObservationIgnored private var qwenLiveSessionActive = false
     @ObservationIgnored private var activeSession: SessionConfiguration?
     @ObservationIgnored private var activeAudioFrames: RealtimeAudioFramePipe?
     @ObservationIgnored private var captureIsActive = false
@@ -314,6 +337,7 @@ public final class TranscriptionSession {
         appleSpeech = dependencies.appleSpeech
         whisper = dependencies.whisper
         nemotron = dependencies.nemotron
+        qwen = dependencies.qwen
         storage = dependencies.storage
         inputDevices = dependencies.inputDevices
         engineID = initialEngine ?? (dependencies.appleSpeech.isPlatformAvailable ? .appleSpeechAnalyzer : .whisperKitLargeV3Turbo)
@@ -352,6 +376,7 @@ public final class TranscriptionSession {
         return switch engineID {
         case .whisperKitLargeV3Turbo: whisper.isDownloaded
         case .nemotronStreamingExperimental: nemotron.isDownloaded
+        case .qwen3StreamingExperimental: qwen.isDownloaded
         case .appleSpeechAnalyzer: false
         }
     }
@@ -381,6 +406,13 @@ public final class TranscriptionSession {
             return nemotron.isDownloaded
                 ? .ready
                 : .needsDownload("Download Nemotron MLX (756 MB) before starting experimental bounded live transcription.")
+        case .qwen3StreamingExperimental:
+            if let runtimeAvailabilityMessage = qwen.runtimeAvailabilityMessage {
+                return .unavailable(runtimeAvailabilityMessage)
+            }
+            return qwen.isDownloaded
+                ? .ready
+                : .needsDownload("Download Qwen3-ASR MLX (713 MB) before starting experimental dual-pass live transcription.")
         }
     }
 
@@ -474,7 +506,7 @@ public final class TranscriptionSession {
         switch engineID {
         case .appleSpeechAnalyzer:
             _ = await refreshAppleSpeechAssetStatus(for: sourceLanguage)
-        case .whisperKitLargeV3Turbo, .nemotronStreamingExperimental:
+        case .whisperKitLargeV3Turbo, .nemotronStreamingExperimental, .qwen3StreamingExperimental:
             modelStorageRevision += 1
         }
     }
@@ -575,13 +607,20 @@ public final class TranscriptionSession {
             case .whisperKitLargeV3Turbo:
                 updateModelSetup(.downloading(engine: request.engine, language: nil, progress: nil), for: request)
                 try await whisper.install { [weak self, request] progress in
-                    self?.updateWhisperDownloadProgress(progress, for: request)
+                    self?.updateModelDownloadProgress(progress, for: request)
                 }
                 modelStorageRevision += 1
                 updateModelSetup(.idle, for: request)
             case .nemotronStreamingExperimental:
                 updateModelSetup(.downloading(engine: request.engine, language: nil, progress: nil), for: request)
                 try await nemotron.install()
+                modelStorageRevision += 1
+                updateModelSetup(.idle, for: request)
+            case .qwen3StreamingExperimental:
+                updateModelSetup(.downloading(engine: request.engine, language: nil, progress: nil), for: request)
+                try await qwen.install { [weak self, request] progress in
+                    self?.updateModelDownloadProgress(progress, for: request)
+                }
                 modelStorageRevision += 1
                 updateModelSetup(.idle, for: request)
             }
@@ -610,6 +649,9 @@ public final class TranscriptionSession {
                 modelStorageRevision += 1
             case .nemotronStreamingExperimental:
                 try await nemotron.removeDownloadedModel()
+                modelStorageRevision += 1
+            case .qwen3StreamingExperimental:
+                try await qwen.removeDownloadedModel()
                 modelStorageRevision += 1
             case .appleSpeechAnalyzer:
                 updateModelSetup(
@@ -704,6 +746,8 @@ public final class TranscriptionSession {
             "\(verb) Whisper Large-v3"
         case .nemotronStreamingExperimental:
             "\(verb) Nemotron MLX"
+        case .qwen3StreamingExperimental:
+            "\(verb) Qwen3-ASR MLX"
         }
     }
 
@@ -773,7 +817,7 @@ public final class TranscriptionSession {
         }
     }
 
-    private func updateWhisperDownloadProgress(
+    private func updateModelDownloadProgress(
         _ progress: ModelDownloadProgress,
         for request: ModelSetupRequest
     ) {
@@ -856,6 +900,8 @@ public final class TranscriptionSession {
                 try whisper.ensureInstalled()
             case .nemotronStreamingExperimental:
                 try nemotron.ensureInstalled()
+            case .qwen3StreamingExperimental:
+                try qwen.ensureInstalled()
             }
 
             let recordingURL: URL?
@@ -867,6 +913,10 @@ public final class TranscriptionSession {
             case .nemotronStreamingExperimental:
                 // The bounded live MLX session receives selected PCM frames
                 // directly, so it neither writes nor retains raw source audio.
+                recordingURL = nil
+            case .qwen3StreamingExperimental:
+                // Qwen's dual-pass session keeps bounded in-memory encoder
+                // windows and never retains a source-audio file.
                 recordingURL = nil
             }
             lastRecordingURL = recordingURL
@@ -910,6 +960,21 @@ public final class TranscriptionSession {
                     }
                 )
                 nemotronLiveSessionActive = true
+                let frames = RealtimeAudioFramePipe(capacity: 32)
+                activeAudioFrames = frames
+                audioFrames = frames
+            case .qwen3StreamingExperimental:
+                try await qwen.startLive(
+                    language: configuration.language,
+                    inputFormat: inputFormat,
+                    onEvent: { [weak self] event in
+                        self?.receive(event, for: configuration)
+                    },
+                    onBackpressure: { [weak self] message in
+                        self?.receiveLiveWarning(message, for: configuration)
+                    }
+                )
+                qwenLiveSessionActive = true
                 let frames = RealtimeAudioFramePipe(capacity: 32)
                 activeAudioFrames = frames
                 audioFrames = frames
@@ -984,6 +1049,13 @@ public final class TranscriptionSession {
                 }
                 await nemotron.stopLive()
                 nemotronLiveSessionActive = false
+                try persistDocument()
+            case .qwen3StreamingExperimental:
+                if let activeAudioFrames {
+                    drainAudioFrames(activeAudioFrames, for: configuration)
+                }
+                await qwen.stopLive()
+                qwenLiveSessionActive = false
                 try persistDocument()
             }
             await tearDownCapture(keepAudio: false)
@@ -1077,6 +1149,10 @@ public final class TranscriptionSession {
             await nemotron.cancelLive()
             nemotronLiveSessionActive = false
         }
+        if qwenLiveSessionActive {
+            await qwen.cancelLive()
+            qwenLiveSessionActive = false
+        }
 
         if !keepAudio, let lastRecordingURL {
             try? storage.removeTemporaryRecording(at: lastRecordingURL)
@@ -1111,6 +1187,12 @@ public final class TranscriptionSession {
             if nemotronLiveSessionActive {
                 await nemotron.stopLive()
                 nemotronLiveSessionActive = false
+            }
+            try? persistDocument()
+        case .qwen3StreamingExperimental:
+            if qwenLiveSessionActive {
+                await qwen.stopLive()
+                qwenLiveSessionActive = false
             }
             try? persistDocument()
         case .whisperKitLargeV3Turbo:
@@ -1148,6 +1230,8 @@ public final class TranscriptionSession {
                 appleEngine.consume(frame.buffer)
             case .nemotronStreamingExperimental:
                 nemotron.consumeLive(frame.buffer)
+            case .qwen3StreamingExperimental:
+                qwen.consumeLive(frame.buffer)
             case .whisperKitLargeV3Turbo:
                 audioFrames.discard()
                 return

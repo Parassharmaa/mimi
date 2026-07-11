@@ -63,6 +63,7 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
     case appleSpeechAnalyzer
     case whisperKitLargeV3Turbo
     case nemotronStreamingExperimental
+    case qwen3StreamingExperimental
 
     public var id: String { rawValue }
 
@@ -71,6 +72,7 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
         case .appleSpeechAnalyzer: "Apple Speech"
         case .whisperKitLargeV3Turbo: "Whisper Large-v3 (626 MB)"
         case .nemotronStreamingExperimental: "Nemotron 3.5 MLX (756 MB)"
+        case .qwen3StreamingExperimental: "Qwen3-ASR 0.6B MLX (713 MB)"
         }
     }
 
@@ -82,11 +84,16 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
             "Downloadable Core ML accuracy model for English and Japanese."
         case .nemotronStreamingExperimental:
             "Experimental on-device MLX live transcription for English and Japanese. Uses bounded local windows for predictable memory."
+        case .qwen3StreamingExperimental:
+            "Experimental on-device MLX dual-pass transcription with fast provisional captions and retrospective window correction."
         }
     }
 
     public var isExperimental: Bool {
-        self == .nemotronStreamingExperimental
+        switch self {
+        case .nemotronStreamingExperimental, .qwen3StreamingExperimental: true
+        case .appleSpeechAnalyzer, .whisperKitLargeV3Turbo: false
+        }
     }
 }
 
@@ -99,7 +106,7 @@ public enum TranslationMode: String, CaseIterable, Codable, Sendable, Identifiab
     public var displayName: String {
         switch self {
         case .off: "Off"
-        case .translateFinalSegments: "Translate Final Transcript"
+        case .translateFinalSegments: "Live Translation (English ↔ Japanese)"
         }
     }
 }
@@ -160,6 +167,14 @@ public enum ModelCatalog {
             ownership: .experimental,
             estimatedDownloadMB: 756,
             recommendation: "Experimental Apple-silicon MLX live captions. Mimi finalizes bounded local windows at a pause or 30 seconds to keep memory predictable."
+        ),
+        .init(
+            id: "qwen3-asr-0.6b-streaming",
+            engine: .qwen3StreamingExperimental,
+            supportedLanguages: [.english, .japanese],
+            ownership: .experimental,
+            estimatedDownloadMB: 713,
+            recommendation: "Experimental dual-pass MLX captions: a fast rolling hypothesis plus agreement-based confirmation and corrected 8-second windows."
         )
     ]
 
@@ -216,6 +231,14 @@ public struct TranscriptDocument: Codable, Equatable, Sendable {
         segments
             .filter { $0.language == language }
             .map(\.text)
+            .joined(separator: "\n")
+    }
+
+    public func renderedText(for language: SpeechLanguage, includingLiveText: Bool) -> String {
+        let finalized = finalizedText(for: language)
+        guard includingLiveText, !liveText.isEmpty else { return finalized }
+        return [finalized, liveText]
+            .filter { !$0.isEmpty }
             .joined(separator: "\n")
     }
 

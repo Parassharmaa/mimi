@@ -21,7 +21,7 @@ struct MenuBarView: View {
 
             if store.translationMode == .translateFinalSegments,
                !store.document.finalizedText(for: store.sourceLanguage).isEmpty {
-                Label("Translation is available in the Transcript window.", systemImage: "translate")
+                Label("Live translation is available in the Transcript window.", systemImage: "translate")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
