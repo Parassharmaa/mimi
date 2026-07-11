@@ -316,6 +316,10 @@ public struct TranscriptDocument: Codable, Equatable, Sendable {
         segments.last?.language ?? fallback
     }
 
+    public func nextSegmentNeedingTranslation(completedIDs: Set<UUID>) -> TranscriptSegment? {
+        segments.first { !completedIDs.contains($0.id) }
+    }
+
     public func finalizedText(for language: SpeechLanguage) -> String {
         segments
             .filter { $0.language == language }

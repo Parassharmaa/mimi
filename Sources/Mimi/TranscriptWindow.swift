@@ -84,16 +84,6 @@ struct TranscriptWindow: View {
     @ViewBuilder
     private var transcriptContent: some View {
         let displayedDocument = store.viewedDocument
-        let followsAppleSpeech = store.isRecording &&
-            store.selectedHistoryID == nil &&
-            store.engineID == .appleSpeechAnalyzer
-        let contentLanguage = followsAppleSpeech
-            ? (store.detectedLanguage ?? displayedDocument.contentLanguage(fallback: store.sourceLanguage))
-            : displayedDocument.contentLanguage(fallback: store.sourceLanguage)
-        let translationSourceText = displayedDocument.realtimeTranslationContext(
-            for: contentLanguage,
-            maximumCharacterCount: 480
-        )
 
         if store.translationMode == .translateFinalSegments {
             HSplitView {
@@ -105,9 +95,7 @@ struct TranscriptWindow: View {
                 .frame(minWidth: 250)
 
                 InlineTranslationView(
-                    sourceText: translationSourceText,
-                    sourceLanguage: contentLanguage,
-                    isLive: followsAppleSpeech,
+                    segments: displayedDocument.segments,
                     fillsAvailableSpace: true,
                     fixtureTranslation: fixtureTranslation,
                     initiallyFollowingLatest: initiallyFollowingLatest

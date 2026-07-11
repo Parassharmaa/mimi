@@ -66,6 +66,8 @@ struct MenuBarView: View {
             .padding(16)
         }
         .frame(width: 430)
+        .containerBackground(Color(nsColor: .windowBackgroundColor), for: .window)
+        .background(MenuBarWindowBackgroundConfigurator())
     }
 
     private var recordingButton: some View {
@@ -341,5 +343,25 @@ struct MenuBarView: View {
 
     private func t(_ english: String, _ japanese: String) -> String {
         preferences.text(english, japanese)
+    }
+}
+
+private struct MenuBarWindowBackgroundConfigurator: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        MenuBarWindowBackgroundView()
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
+}
+
+private final class MenuBarWindowBackgroundView: NSView {
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        DispatchQueue.main.async { [weak self] in
+            guard let window = self?.window, let contentView = window.contentView else { return }
+            window.backgroundColor = .windowBackgroundColor
+            contentView.wantsLayer = true
+            contentView.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
+        }
     }
 }

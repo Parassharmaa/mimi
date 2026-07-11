@@ -2,93 +2,97 @@ import MimiCore
 import SwiftUI
 @preconcurrency import Translation
 
+/// Translates immutable transcript segments one at a time. This deliberately
+/// avoids feeding a growing context block back through Translation whenever a
+/// new sentence arrives, which was slow and incorrect for mixed-language Auto
+/// sessions.
 struct InlineTranslationView: View {
-    let sourceText: String
-    let sourceLanguage: SpeechLanguage
-    let isLive: Bool
+    let segments: [TranscriptSegment]
     let fillsAvailableSpace: Bool
     let fixtureTranslation: String?
     let initiallyFollowingLatest: Bool
 
     @State private var configuration: TranslationSession.Configuration?
-    @State private var translatedText = ""
+    @State private var translations: [UUID: String] = [:]
+    @State private var pendingSegmentID: UUID?
     @State private var errorText: String?
     @State private var isTranslating = false
-    @State private var requestedText = ""
-    @State private var pendingText = ""
 
     init(
-        sourceText: String,
-        sourceLanguage: SpeechLanguage,
-        isLive: Bool = false,
+        segments: [TranscriptSegment],
         fillsAvailableSpace: Bool = false,
         fixtureTranslation: String? = nil,
         initiallyFollowingLatest: Bool = true
     ) {
-        self.sourceText = sourceText
-        self.sourceLanguage = sourceLanguage
-        self.isLive = isLive
+        self.segments = segments
         self.fillsAvailableSpace = fillsAvailableSpace
         self.fixtureTranslation = fixtureTranslation
         self.initiallyFollowingLatest = initiallyFollowingLatest
-        _translatedText = State(initialValue: fixtureTranslation ?? "")
     }
 
-    private var targetLanguage: SpeechLanguage {
-        sourceLanguage.translationTarget
+    private var renderedTranslation: String {
+        if let fixtureTranslation { return fixtureTranslation }
+        return segments.compactMap { translations[$0.id] }.joined(separator: "\n")
     }
 
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Label(targetLanguage.nativeName, systemImage: "translate")
+                Label("English ↔ 日本語", systemImage: "translate")
                     .font(.callout.weight(.semibold))
                 Spacer()
                 if isTranslating {
                     ProgressView()
                         .controlSize(.small)
-                        .accessibilityLabel("Updating local translation")
+                        .accessibilityLabel("Translating newest sentence locally")
                 }
-                if !isLive {
-                    Button("Refresh") {
-                        beginTranslation(of: sourceText)
-                    }
-                    .buttonStyle(.borderless)
-                    .disabled(sourceText.isEmpty || fixtureTranslation != nil)
+                Button("Refresh") {
+                    resetAndTranslate()
                 }
+                .buttonStyle(.borderless)
+                .disabled(segments.isEmpty || fixtureTranslation != nil)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
 
             Divider()
 
-            if !translatedText.isEmpty {
+            if !renderedTranslation.isEmpty {
                 FollowLatestScrollView(
-                    contentVersion: translatedText,
+                    contentVersion: renderedTranslation,
                     initiallyFollowing: initiallyFollowingLatest
                 ) {
-                    Text(translatedText)
-                        .font(fillsAvailableSpace ? .title3 : .body)
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(18)
+                    VStack(alignment: .leading, spacing: 12) {
+                        if let fixtureTranslation {
+                            Text(fixtureTranslation)
+                        } else {
+                            ForEach(segments) { segment in
+                                if let translation = translations[segment.id] {
+                                    Text(translation)
+                                }
+                            }
+                        }
+                    }
+                    .font(fillsAvailableSpace ? .title3 : .body)
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(18)
                 }
                 .frame(maxHeight: fillsAvailableSpace ? .infinity : 160)
             } else if isTranslating {
                 ContentUnavailableView {
-                    Label("Preparing Translation", systemImage: "translate")
+                    Label("Translating Newest Sentence", systemImage: "translate")
                 } description: {
-                    Text("Mimi is translating the newest stable speech locally.")
+                    Text("New finalized speech is translated locally, one sentence at a time.")
                 } actions: {
-                    ProgressView()
-                        .controlSize(.small)
+                    ProgressView().controlSize(.small)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ContentUnavailableView(
                     "No Translation Yet",
                     systemImage: "translate",
-                    description: Text(isLive ? "Translation appears as speech becomes stable." : "Start with transcript text to translate it locally.")
+                    description: Text("A translation appears after a sentence is finalized.")
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -102,10 +106,8 @@ struct InlineTranslationView: View {
                         .font(.caption)
                         .foregroundStyle(.red)
                     Spacer()
-                    Button("Try Again") {
-                        beginTranslation(of: sourceText)
-                    }
-                    .buttonStyle(.borderless)
+                    Button("Try Again") { translateNextSegment() }
+                        .buttonStyle(.borderless)
                 }
                 .padding(10)
                 .background(Color.red.opacity(0.08))
@@ -114,84 +116,77 @@ struct InlineTranslationView: View {
         .background(Color(nsColor: .textBackgroundColor))
         .frame(maxHeight: fillsAvailableSpace ? .infinity : nil, alignment: .topLeading)
         .translationTask(configuration) { @MainActor session in
-            let text = requestedText
-            guard !text.isEmpty else { return }
+            guard let pendingSegmentID,
+                  let segment = segments.first(where: { $0.id == pendingSegmentID }) else { return }
+            let segmentID = segment.id
+            let text = segment.text
             do {
                 try await session.prepareTranslation()
                 let response = try await session.translate(text)
-                guard requestedText == text else { return }
-                translatedText = response.targetText
+                guard self.pendingSegmentID == segmentID,
+                      segments.contains(where: { $0.id == segmentID && $0.text == text }) else { return }
+                translations[segmentID] = response.targetText
                 errorText = nil
-                isTranslating = false
-            } catch {
-                guard requestedText == text else { return }
-                errorText = "Translation is unavailable until macOS has the required local language pair."
-                isTranslating = false
-            }
-        }
-        .onChange(of: sourceText, initial: true) { _, newText in
-            pendingText = newText
-            guard fixtureTranslation == nil else { return }
-            guard !newText.isEmpty else {
-                translatedText = ""
-                requestedText = ""
-                isTranslating = false
-                return
-            }
-        }
-        .task(id: isLive) {
-            guard isLive, fixtureTranslation == nil else { return }
-            while !Task.isCancelled {
-                // Translate the newest snapshot at a steady cadence even when
-                // ASR partials keep changing continuously. Never queue more
-                // than one Translation framework request at a time.
-                try? await Task.sleep(for: .milliseconds(700))
-                guard !Task.isCancelled else { return }
-                let text = pendingText
-                if !text.isEmpty, text != requestedText, !isTranslating {
-                    beginTranslation(of: text)
+                finishCurrentTranslation()
+                Task { @MainActor in
+                    await Task.yield()
+                    translateNextSegment()
                 }
-            }
-        }
-        .task(id: sourceText) {
-            guard fixtureTranslation == nil, !isLive, !sourceText.isEmpty else { return }
-            do {
-                try await Task.sleep(for: .milliseconds(150))
-                try Task.checkCancellation()
-                beginTranslation(of: sourceText)
             } catch {
-                // A newer finalized snapshot superseded this request.
+                guard self.pendingSegmentID == segmentID else { return }
+                isTranslating = false
+                errorText = "Translation is unavailable until macOS has the required local English and Japanese languages."
             }
         }
-        .onChange(of: sourceLanguage) { _, _ in
-            configuration = nil
-            translatedText = ""
-            requestedText = ""
-            pendingText = ""
-            errorText = nil
-            isTranslating = false
+        .onChange(of: segments.map(\.id), initial: true) { _, currentIDs in
+            let validIDs = Set(currentIDs)
+            translations = translations.filter { validIDs.contains($0.key) }
+            if let pendingSegmentID, !validIDs.contains(pendingSegmentID) {
+                finishCurrentTranslation()
+            }
+            translateNextSegment()
         }
     }
 
-    private func beginTranslation(of text: String) {
-        guard fixtureTranslation == nil, !text.isEmpty else { return }
-        requestedText = text
+    private func resetAndTranslate() {
+        configuration = nil
+        translations = [:]
+        pendingSegmentID = nil
+        isTranslating = false
         errorText = nil
+        translateNextSegment()
+    }
+
+    private func translateNextSegment() {
+        guard fixtureTranslation == nil, !isTranslating,
+              let segment = TranscriptDocument(segments: segments)
+                .nextSegmentNeedingTranslation(completedIDs: Set(translations.keys)) else { return }
+
+        pendingSegmentID = segment.id
         isTranslating = true
-        if var configuration {
-            configuration.invalidate()
-            self.configuration = configuration
-        } else if #available(macOS 26.4, *) {
-            configuration = .init(
-                source: .init(identifier: sourceLanguage.rawValue),
-                target: .init(identifier: targetLanguage.rawValue),
-                preferredStrategy: .lowLatency
-            )
-        } else {
-            configuration = .init(
-                source: .init(identifier: sourceLanguage.rawValue),
-                target: .init(identifier: targetLanguage.rawValue)
-            )
+        errorText = nil
+        configuration = nil
+        Task { @MainActor in
+            await Task.yield()
+            guard pendingSegmentID == segment.id else { return }
+            if #available(macOS 26.4, *) {
+                configuration = .init(
+                    source: .init(identifier: segment.language.rawValue),
+                    target: .init(identifier: segment.language.translationTarget.rawValue),
+                    preferredStrategy: .lowLatency
+                )
+            } else {
+                configuration = .init(
+                    source: .init(identifier: segment.language.rawValue),
+                    target: .init(identifier: segment.language.translationTarget.rawValue)
+                )
+            }
         }
+    }
+
+    private func finishCurrentTranslation() {
+        configuration = nil
+        pendingSegmentID = nil
+        isTranslating = false
     }
 }

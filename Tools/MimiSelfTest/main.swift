@@ -8,8 +8,23 @@ struct MimiSelfTest {
         testStopFinalizesJapaneseVolatileResult()
         testInputLanguageChangeDoesNotRewriteTranscriptLanguage()
         testFloatingCaptionAlwaysUsesNewestUtterance()
+        testIncrementalMixedLanguageTranslationQueue()
         testRecommendedPacksCoverBothV1Languages()
         print("Mimi self-test passed: transcript coalescing, Japanese finalization, and model routing.")
+    }
+
+    private static func testIncrementalMixedLanguageTranslationQueue() {
+        let english = TranscriptSegment(text: "Hello", language: .english)
+        let japanese = TranscriptSegment(text: "こんにちは", language: .japanese)
+        let document = TranscriptDocument(segments: [english, japanese])
+
+        expect(
+            document.nextSegmentNeedingTranslation(completedIDs: [])?.id == english.id,
+            "Incremental translation starts with the first immutable segment"
+        )
+        let next = document.nextSegmentNeedingTranslation(completedIDs: [english.id])
+        expect(next?.id == japanese.id, "A completed sentence is never translated again")
+        expect(next?.language.translationTarget == .english, "Each Auto segment chooses the target opposite its detected language")
     }
 
     private static func testFloatingCaptionAlwaysUsesNewestUtterance() {

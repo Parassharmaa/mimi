@@ -383,16 +383,16 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         }
         guard arguments.contains("--e2e-window") else { return }
 
+        let screen = argument(after: "--e2e-screen", in: arguments) ?? "menu"
+        let presentationState = argument(after: "--e2e-state", in: arguments) ?? "ready"
         let store = AppStore(loadPersistedTranscript: false)
-        store.languageMode = .japanese
+        store.languageMode = presentationState == "incremental-translation" ? .automatic : .japanese
         store.engineID = .appleSpeechAnalyzer
         store.translationMode = .translateFinalSegments
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
         let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
 
-        let screen = argument(after: "--e2e-screen", in: arguments) ?? "menu"
-        let presentationState = argument(after: "--e2e-state", in: arguments) ?? "ready"
         switch presentationState {
         case "recording":
             store.applyPresentationFixture(state: .recording)
@@ -423,7 +423,9 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 store: store,
                 preferences: fixturePreferences,
                 isConfirmingClear: presentationState == "clear-confirmation",
-                fixtureTranslation: "Hello. Mimi transcribes locally on this Mac.",
+                fixtureTranslation: presentationState == "incremental-translation"
+                    ? nil
+                    : "Hello. Mimi transcribes locally on this Mac.",
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"
             ))
             size = NSSize(width: 820, height: 600)
