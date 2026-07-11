@@ -10,11 +10,17 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
     private var e2eStore: AppStore?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Mimi lives in the menu bar, but also remains a normal installed Mac
-        // app with a Dock presence and standard app menus.
-        NSApplication.shared.setActivationPolicy(.regular)
-
         let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("--e2e-insert-text") {
+            // This harness represents the already-running menu-bar app and
+            // must not become active or disturb the external focused field.
+            NSApplication.shared.setActivationPolicy(.accessory)
+        } else {
+            // Mimi lives in the menu bar, but also remains a normal installed
+            // Mac app with a Dock presence and standard app menus.
+            NSApplication.shared.setActivationPolicy(.regular)
+        }
+
         switch argument(after: "--e2e-appearance", in: arguments) {
         case "light":
             NSApplication.shared.appearance = NSAppearance(named: .aqua)
@@ -22,6 +28,26 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.appearance = NSAppearance(named: .darkAqua)
         default:
             break
+        }
+        if let insertionText = argument(after: "--e2e-insert-text", in: arguments) {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    // Give the harness time to return focus to the external
+                    // field. Mimi itself opens no window for this smoke path.
+                    try await Task.sleep(for: .seconds(3))
+                    print("Mimi Voice Type smoke frontmost app: \(NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "none"); accessibility trusted: \(AXIsProcessTrusted())")
+                    let target = try FocusedTextTarget.capture(promptIfNeeded: false)
+                    try target.insert(insertionText)
+                    print("Mimi Voice Type insertion smoke passed.")
+                    status = 0
+                } catch {
+                    print("Mimi Voice Type insertion smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
         }
         if arguments.contains("--benchmark-install-language-id") {
             Task { @MainActor in
@@ -394,6 +420,11 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
         let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
+        fixturePreferences.voiceTypingEnabled = false
+        let fixtureVoiceTyping = VoiceTypingController(preferences: fixturePreferences)
+        if presentationState == "voice-enabled" {
+            fixturePreferences.voiceTypingEnabled = true
+        }
 
         switch presentationState {
         case "recording", "translation-stream", "caption-stream":
@@ -412,7 +443,12 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         let size: NSSize
         switch screen {
         case "onboarding":
-            view = AnyView(OnboardingView(store: store, preferences: fixturePreferences))
+            view = AnyView(OnboardingView(
+                store: store,
+                preferences: fixturePreferences,
+                voiceTyping: fixtureVoiceTyping,
+                initialStep: ["ready", "voice-enabled"].contains(presentationState) ? 3 : 0
+            ))
             size = NSSize(width: 620, height: 500)
         case "captions":
             fixturePreferences.floatingCaptionsEnabled = true
@@ -420,6 +456,10 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             fixturePreferences.floatingCaptionClickThrough = false
             view = AnyView(FloatingCaptionView(store: store, preferences: fixturePreferences))
             size = NSSize(width: 820, height: 150)
+        case "voice-typing":
+            fixtureVoiceTyping.applyPresentationFixture(text: "Mimi types your voice into the selected field.")
+            view = AnyView(VoiceTypingPill(controller: fixtureVoiceTyping, preferences: fixturePreferences))
+            size = NSSize(width: 460, height: 86)
         case "transcript":
             view = AnyView(TranscriptWindow(
                 store: store,
@@ -432,16 +472,19 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             ))
             size = NSSize(width: 820, height: 600)
         case "settings", "settings-models":
-            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .models))
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .models))
             size = NSSize(width: 620, height: 540)
         case "settings-capture":
-            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .capture))
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .capture))
             size = NSSize(width: 620, height: 540)
         case "settings-privacy":
-            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .privacy))
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .privacy))
             size = NSSize(width: 620, height: 540)
         case "settings-captions":
-            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, initialTab: .captions))
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .captions))
+            size = NSSize(width: 620, height: 540)
+        case "settings-voice":
+            view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .voiceTyping))
             size = NSSize(width: 620, height: 540)
         default:
             view = AnyView(MenuBarView(
@@ -460,7 +503,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         hostingController.sizingOptions = []
         let window = NSWindow(contentViewController: hostingController)
         window.title = "Mimi E2E \(screen.capitalized)"
-        if screen == "captions" {
+        if screen == "captions" || screen == "voice-typing" {
             window.styleMask = [.borderless]
             window.isOpaque = false
             window.backgroundColor = .clear
@@ -468,7 +511,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         } else {
             window.styleMask = [.titled, .closable, .miniaturizable]
         }
-        if screen != "menu", screen != "captions" {
+        if screen != "menu", screen != "captions", screen != "voice-typing" {
             window.styleMask.insert(.resizable)
         }
         window.setContentSize(size)
@@ -596,14 +639,22 @@ struct MimiApp: App {
     @State private var preferences: UserPreferences
     private let onboardingCoordinator: OnboardingWindowCoordinator
     private let floatingCaptionController: FloatingCaptionController
+    private let voiceTypingController: VoiceTypingController
+    private let voiceTypingPanelController: VoiceTypingPanelController
 
     init() {
         let store = AppStore()
         let preferences = UserPreferences()
+        let voiceTyping = VoiceTypingController(
+            preferences: preferences,
+            isSessionRecording: { store.isRecording }
+        )
         _store = State(initialValue: store)
         _preferences = State(initialValue: preferences)
-        onboardingCoordinator = OnboardingWindowCoordinator(store: store, preferences: preferences)
+        onboardingCoordinator = OnboardingWindowCoordinator(store: store, preferences: preferences, voiceTyping: voiceTyping)
         floatingCaptionController = FloatingCaptionController(store: store, preferences: preferences)
+        voiceTypingController = voiceTyping
+        voiceTypingPanelController = VoiceTypingPanelController(controller: voiceTyping, preferences: preferences)
     }
 
     var body: some Scene {
@@ -616,7 +667,7 @@ struct MimiApp: App {
         .menuBarExtraStyle(.window)
 
         Settings {
-            SettingsView(store: store, preferences: preferences)
+            SettingsView(store: store, preferences: preferences, voiceTyping: voiceTypingController)
         }
 
         WindowGroup("Mimi Transcript", id: "transcript") {

@@ -3,6 +3,7 @@ import SwiftUI
 
 enum SettingsTab: Hashable {
     case general
+    case voiceTyping
     case captions
     case models
     case capture
@@ -12,11 +13,18 @@ enum SettingsTab: Hashable {
 struct SettingsView: View {
     @Bindable var store: AppStore
     @Bindable var preferences: UserPreferences
+    @Bindable var voiceTyping: VoiceTypingController
     @State private var selectedTab: SettingsTab
 
-    init(store: AppStore, preferences: UserPreferences = UserPreferences(), initialTab: SettingsTab = .general) {
+    init(
+        store: AppStore,
+        preferences: UserPreferences,
+        voiceTyping: VoiceTypingController,
+        initialTab: SettingsTab = .general
+    ) {
         self.store = store
         self.preferences = preferences
+        self.voiceTyping = voiceTyping
         _selectedTab = State(initialValue: initialTab)
     }
 
@@ -24,6 +32,10 @@ struct SettingsView: View {
         TabView(selection: $selectedTab) {
             Tab(preferences.text("General", "一般"), systemImage: "gearshape", value: .general) {
                 GeneralSettingsPane(preferences: preferences)
+            }
+
+            Tab(preferences.text("Voice Type", "音声入力"), systemImage: "keyboard.badge.ellipsis", value: .voiceTyping) {
+                VoiceTypingSettingsPane(preferences: preferences, voiceTyping: voiceTyping)
             }
 
             Tab(preferences.text("Captions", "字幕"), systemImage: "captions.bubble", value: .captions) {
@@ -45,6 +57,63 @@ struct SettingsView: View {
         .scenePadding()
         .frame(width: 620, height: 540)
         .background(SettingsWindowRegistrar())
+    }
+}
+
+private struct VoiceTypingSettingsPane: View {
+    @Bindable var preferences: UserPreferences
+    @Bindable var voiceTyping: VoiceTypingController
+
+    var body: some View {
+        Form {
+            Section(preferences.text("Type anywhere by speaking", "声でどこにでも入力")) {
+                Toggle(preferences.text("Enable Voice Type", "音声入力を有効にする"), isOn: $preferences.voiceTypingEnabled)
+                Picker(preferences.text("Shortcut", "ショートカット"), selection: $preferences.voiceTypingShortcut) {
+                    ForEach(VoiceTypingShortcut.allCases) { shortcut in
+                        Text(shortcut.displayName).tag(shortcut)
+                    }
+                }
+                .disabled(!preferences.voiceTypingEnabled)
+                Picker(preferences.text("Spoken language", "話す言語"), selection: $preferences.voiceTypingLanguage) {
+                    ForEach(SpeechLanguage.allCases) { language in
+                        Text(language.nativeName).tag(language)
+                    }
+                }
+                .disabled(!preferences.voiceTypingEnabled)
+            }
+
+            Section(preferences.text("Access", "アクセス")) {
+                LabeledContent(preferences.text("Accessibility", "アクセシビリティ")) {
+                    Label(
+                        voiceTyping.hasAccessibilityAccess ? preferences.text("Ready", "準備完了") : preferences.text("Permission needed", "許可が必要"),
+                        systemImage: voiceTyping.hasAccessibilityAccess ? "checkmark.circle.fill" : "exclamationmark.circle"
+                    )
+                    .foregroundStyle(voiceTyping.hasAccessibilityAccess ? .green : .secondary)
+                }
+                if !voiceTyping.hasAccessibilityAccess {
+                    Button(preferences.text("Allow in System Settings…", "システム設定で許可…")) {
+                        voiceTyping.requestAccessibilityAccess()
+                    }
+                }
+                if preferences.voiceTypingEnabled && !voiceTyping.shortcutRegistered {
+                    Label(
+                        preferences.text("That shortcut is already in use. Choose the other shortcut.", "そのショートカットは使用中です。もう一つを選んでください。"),
+                        systemImage: "exclamationmark.triangle"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                }
+            }
+
+            Section {
+                Text(preferences.text(
+                    "Place the cursor in a text field, press the shortcut, speak, then press it again to insert. Press Escape to cancel. Password fields are never supported.",
+                    "入力欄にカーソルを置き、ショートカットを押して話し、もう一度押すと入力されます。Escでキャンセルできます。パスワード欄では使用できません。"
+                ))
+                .foregroundStyle(.secondary)
+            }
+        }
+        .formStyle(.grouped)
     }
 }
 

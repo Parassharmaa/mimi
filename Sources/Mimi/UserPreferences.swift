@@ -1,4 +1,5 @@
 import Foundation
+import MimiCore
 import Observation
 import ServiceManagement
 
@@ -27,6 +28,20 @@ enum FloatingCaptionPosition: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+enum VoiceTypingShortcut: String, CaseIterable, Identifiable {
+    case optionSpace
+    case commandShiftD
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .optionSpace: "⌥Space"
+        case .commandShiftD: "⇧⌘D"
+        }
+    }
+}
+
 @MainActor
 @Observable
 final class UserPreferences {
@@ -40,6 +55,9 @@ final class UserPreferences {
         static let floatingCaptionUsesCustomPosition = "floatingCaptionUsesCustomPosition"
         static let floatingCaptionOriginX = "floatingCaptionOriginX"
         static let floatingCaptionOriginY = "floatingCaptionOriginY"
+        static let voiceTypingEnabled = "voiceTypingEnabled"
+        static let voiceTypingShortcut = "voiceTypingShortcut"
+        static let voiceTypingLanguage = "voiceTypingLanguage"
     }
 
     private let defaults: UserDefaults
@@ -66,6 +84,15 @@ final class UserPreferences {
     var floatingCaptionClickThrough: Bool {
         didSet { defaults.set(floatingCaptionClickThrough, forKey: Key.floatingCaptionClickThrough) }
     }
+    var voiceTypingEnabled: Bool {
+        didSet { defaults.set(voiceTypingEnabled, forKey: Key.voiceTypingEnabled) }
+    }
+    var voiceTypingShortcut: VoiceTypingShortcut {
+        didSet { defaults.set(voiceTypingShortcut.rawValue, forKey: Key.voiceTypingShortcut) }
+    }
+    var voiceTypingLanguage: SpeechLanguage {
+        didSet { defaults.set(voiceTypingLanguage.rawValue, forKey: Key.voiceTypingLanguage) }
+    }
     private(set) var floatingCaptionUsesCustomPosition: Bool {
         didSet { defaults.set(floatingCaptionUsesCustomPosition, forKey: Key.floatingCaptionUsesCustomPosition) }
     }
@@ -84,6 +111,9 @@ final class UserPreferences {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+        if defaults === UserDefaults.standard {
+            Self.importLegacySandboxPreferencesIfNeeded(into: defaults)
+        }
         interfaceLanguage = InterfaceLanguage(
             rawValue: defaults.string(forKey: Key.interfaceLanguage) ?? ""
         ) ?? .english
@@ -98,6 +128,15 @@ final class UserPreferences {
         floatingCaptionClickThrough = defaults.object(forKey: Key.floatingCaptionClickThrough) == nil
             ? true
             : defaults.bool(forKey: Key.floatingCaptionClickThrough)
+        // A global shortcut should never appear silently after an update.
+        // New and existing users opt in from onboarding or Voice Type settings.
+        voiceTypingEnabled = defaults.bool(forKey: Key.voiceTypingEnabled)
+        voiceTypingShortcut = VoiceTypingShortcut(
+            rawValue: defaults.string(forKey: Key.voiceTypingShortcut) ?? ""
+        ) ?? .optionSpace
+        voiceTypingLanguage = SpeechLanguage(
+            rawValue: defaults.string(forKey: Key.voiceTypingLanguage) ?? ""
+        ) ?? .english
         floatingCaptionUsesCustomPosition = defaults.bool(forKey: Key.floatingCaptionUsesCustomPosition)
         if defaults.object(forKey: Key.floatingCaptionOriginX) != nil,
            defaults.object(forKey: Key.floatingCaptionOriginY) != nil {
@@ -107,6 +146,19 @@ final class UserPreferences {
             )
         } else {
             floatingCaptionCustomOrigin = nil
+        }
+    }
+
+    private static func importLegacySandboxPreferencesIfNeeded(into defaults: UserDefaults) {
+        guard defaults.object(forKey: Key.completedOnboarding) == nil else { return }
+        let url = FileManager.default.homeDirectoryForCurrentUser
+            .appending(path: "Library/Containers/dev.paras.mimi/Data/Library/Preferences/dev.paras.mimi.plist")
+        guard let data = try? Data(contentsOf: url),
+              let values = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else {
+            return
+        }
+        for (key, value) in values where defaults.object(forKey: key) == nil {
+            defaults.set(value, forKey: key)
         }
     }
 
