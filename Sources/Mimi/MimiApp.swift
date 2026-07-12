@@ -11,7 +11,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
-        if arguments.contains("--e2e-insert-text") {
+        if arguments.contains("--e2e-insert-text") || arguments.contains("--e2e-stream-insert") {
             // This harness represents the already-running menu-bar app and
             // must not become active or disturb the external focused field.
             NSApplication.shared.setActivationPolicy(.accessory)
@@ -38,11 +38,32 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                     try await Task.sleep(for: .seconds(3))
                     print("Mimi Voice Type smoke frontmost app: \(NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? "none"); accessibility trusted: \(AXIsProcessTrusted())")
                     let target = try FocusedTextTarget.capture(promptIfNeeded: false)
-                    try target.insert(insertionText)
+                    try await target.replaceLiveText(with: insertionText)
                     print("Mimi Voice Type insertion smoke passed.")
                     status = 0
                 } catch {
                     print("Mimi Voice Type insertion smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let stream = argument(after: "--e2e-stream-insert", in: arguments) {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    try await Task.sleep(for: .seconds(30))
+                    let target = try FocusedTextTarget.capture(promptIfNeeded: false)
+                    let updates = stream.split(separator: "|", omittingEmptySubsequences: false).map(String.init)
+                    for update in updates {
+                        try await target.replaceLiveText(with: update)
+                    }
+                    try await target.rollback()
+                    print("Mimi realtime Voice Type smoke passed: \(updates.count) verified field updates and rollback.")
+                    status = 0
+                } catch {
+                    print("Mimi realtime Voice Type smoke failed: \(error.localizedDescription)")
                     status = 1
                 }
                 Darwin.exit(status)
@@ -457,9 +478,9 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             view = AnyView(FloatingCaptionView(store: store, preferences: fixturePreferences))
             size = NSSize(width: 820, height: 150)
         case "voice-typing":
-            fixtureVoiceTyping.applyPresentationFixture(text: "Mimi types your voice into the selected field.")
+            fixtureVoiceTyping.applyPresentationFixture(text: "")
             view = AnyView(VoiceTypingPill(controller: fixtureVoiceTyping, preferences: fixturePreferences))
-            size = NSSize(width: 460, height: 86)
+            size = NSSize(width: 64, height: 64)
         case "transcript":
             view = AnyView(TranscriptWindow(
                 store: store,

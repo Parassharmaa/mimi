@@ -46,7 +46,8 @@ open .build/Mimi.app
 macOS asks for microphone or system-audio access only when the selected source
 needs it. Languages are prepared in **Settings → Languages**. To dictate into
 another app, enable **Voice Type** during setup or in Settings, place the cursor
-in a text field, press the chosen shortcut, speak, and press it again to insert.
+in a text field, and press the chosen shortcut. Words appear directly in the
+field as you speak; press the shortcut again to stop.
 
 ## Test it
 

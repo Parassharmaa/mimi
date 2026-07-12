@@ -119,9 +119,24 @@ private final class GlobalHotKeyRegistration {
 }
 
 @MainActor
-struct FocusedTextTarget {
+final class FocusedTextTarget {
     let element: AXUIElement
     let processIdentifier: pid_t
+    private let insertionLocation: Int
+    private let replacedText: String
+    private var insertedUTF16Length = 0
+
+    private init(
+        element: AXUIElement,
+        processIdentifier: pid_t,
+        insertionRange: CFRange,
+        replacedText: String
+    ) {
+        self.element = element
+        self.processIdentifier = processIdentifier
+        insertionLocation = insertionRange.location
+        self.replacedText = replacedText
+    }
 
     static func capture(promptIfNeeded: Bool) throws -> FocusedTextTarget {
         if !AXIsProcessTrusted() {
@@ -152,49 +167,100 @@ struct FocusedTextTarget {
         if copyString(kAXSubroleAttribute as CFString, from: element) == (kAXSecureTextFieldSubrole as String) {
             throw VoiceTypingError.secureTextField
         }
+        guard let insertionRange = copyRange(kAXSelectedTextRangeAttribute as CFString, from: element) else {
+            throw VoiceTypingError.noTextField
+        }
         var pid: pid_t = 0
         AXUIElementGetPid(element, &pid)
-        return FocusedTextTarget(element: element, processIdentifier: pid)
+        return FocusedTextTarget(
+            element: element,
+            processIdentifier: pid,
+            insertionRange: insertionRange,
+            replacedText: copyString(kAXSelectedTextAttribute as CFString, from: element) ?? ""
+        )
     }
 
-    func insert(_ text: String) throws {
-        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw VoiceTypingError.noSpeech
+    func replaceLiveText(with text: String) async throws {
+        guard NSWorkspace.shared.frontmostApplication?.processIdentifier == processIdentifier else {
+            throw VoiceTypingError.focusChanged
         }
-        var settable = DarwinBoolean(false)
-        let canSet = AXUIElementIsAttributeSettable(
-            element,
-            kAXSelectedTextAttribute as CFString,
-            &settable
-        ) == .success && settable.boolValue
-        if canSet,
-           AXUIElementSetAttributeValue(
-               element,
-               kAXSelectedTextAttribute as CFString,
-               text as CFTypeRef
-           ) == .success {
-            return
-        }
-        try paste(text)
-    }
-
-    private func paste(_ text: String) throws {
-        let pasteboard = NSPasteboard.general
-        let snapshot = PasteboardSnapshot(pasteboard)
-        pasteboard.clearContents()
-        guard pasteboard.setString(text, forType: .string) else { throw VoiceTypingError.insertionFailed }
-        NSRunningApplication(processIdentifier: processIdentifier)?.activate()
-        guard let source = CGEventSource(stateID: .hidSystemState),
-              let down = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_ANSI_V), keyDown: true),
-              let up = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_ANSI_V), keyDown: false) else {
-            snapshot.restore(to: pasteboard)
+        try selectInsertedText()
+        try postReplacementText(text)
+        try await Task.sleep(for: .milliseconds(70))
+        guard containsInsertedText(text) else {
             throw VoiceTypingError.insertionFailed
         }
-        down.flags = .maskCommand
-        up.flags = .maskCommand
+        insertedUTF16Length = text.utf16.count
+    }
+
+    func rollback() async throws {
+        guard insertedUTF16Length > 0 || !replacedText.isEmpty else { return }
+        guard NSWorkspace.shared.frontmostApplication?.processIdentifier == processIdentifier else {
+            throw VoiceTypingError.focusChanged
+        }
+        try selectInsertedText()
+        try postReplacementText(replacedText)
+        try await Task.sleep(for: .milliseconds(70))
+        guard containsInsertedText(replacedText) else { throw VoiceTypingError.insertionFailed }
+        insertedUTF16Length = replacedText.utf16.count
+    }
+
+    private func selectInsertedText() throws {
+        var range = CFRange(location: insertionLocation, length: insertedUTF16Length)
+        guard let value = AXValueCreate(.cfRange, &range),
+              AXUIElementSetAttributeValue(
+                  element,
+                  kAXSelectedTextRangeAttribute as CFString,
+                  value
+              ) == .success else {
+            throw VoiceTypingError.insertionFailed
+        }
+    }
+
+    private func postReplacementText(_ text: String) throws {
+        if text.isEmpty {
+            guard insertedUTF16Length > 0 else { return }
+            try postKey(CGKeyCode(kVK_Delete))
+            return
+        }
+        guard let source = CGEventSource(stateID: .hidSystemState),
+              let down = CGEvent(keyboardEventSource: source, virtualKey: 0, keyDown: true),
+              let up = CGEvent(keyboardEventSource: source, virtualKey: 0, keyDown: false) else {
+            throw VoiceTypingError.insertionFailed
+        }
+        let codeUnits = Array(text.utf16)
+        codeUnits.withUnsafeBufferPointer { buffer in
+            down.keyboardSetUnicodeString(stringLength: buffer.count, unicodeString: buffer.baseAddress)
+        }
         down.post(tap: .cghidEventTap)
         up.post(tap: .cghidEventTap)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { snapshot.restore(to: pasteboard) }
+    }
+
+    private func postKey(_ key: CGKeyCode) throws {
+        guard let source = CGEventSource(stateID: .hidSystemState),
+              let down = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: true),
+              let up = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: false) else {
+            throw VoiceTypingError.insertionFailed
+        }
+        down.post(tap: .cghidEventTap)
+        up.post(tap: .cghidEventTap)
+    }
+
+    private func containsInsertedText(_ expected: String) -> Bool {
+        guard let value = Self.copyString(kAXValueAttribute as CFString, from: element) else {
+            return false
+        }
+        let utf16 = value.utf16
+        guard insertionLocation >= 0,
+              insertionLocation + expected.utf16.count <= utf16.count else {
+            return false
+        }
+        let start = String.Index(utf16Offset: insertionLocation, in: value)
+        let end = String.Index(
+            utf16Offset: insertionLocation + expected.utf16.count,
+            in: value
+        )
+        return String(value[start..<end]) == expected
     }
 
     private static func copyString(_ attribute: CFString, from element: AXUIElement) -> String? {
@@ -202,33 +268,22 @@ struct FocusedTextTarget {
         guard AXUIElementCopyAttributeValue(element, attribute, &value) == .success else { return nil }
         return value as? String
     }
-}
 
-private struct PasteboardSnapshot: @unchecked Sendable {
-    let items: [[NSPasteboard.PasteboardType: Data]]
-
-    init(_ pasteboard: NSPasteboard) {
-        items = (pasteboard.pasteboardItems ?? []).map { item in
-            Dictionary(uniqueKeysWithValues: item.types.compactMap { type in
-                item.data(forType: type).map { (type, $0) }
-            })
-        }
-    }
-
-    @MainActor func restore(to pasteboard: NSPasteboard) {
-        pasteboard.clearContents()
-        let restored = items.map { values -> NSPasteboardItem in
-            let item = NSPasteboardItem()
-            for (type, data) in values { item.setData(data, forType: type) }
-            return item
-        }
-        if !restored.isEmpty { pasteboard.writeObjects(restored) }
+    private static func copyRange(_ attribute: CFString, from element: AXUIElement) -> CFRange? {
+        var value: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(element, attribute, &value) == .success,
+              let value,
+              CFGetTypeID(value) == AXValueGetTypeID() else { return nil }
+        let axValue = unsafeDowncast(value as AnyObject, to: AXValue.self)
+        var range = CFRange()
+        guard AXValueGetValue(axValue, .cfRange, &range) else { return nil }
+        return range
     }
 }
 
 private enum VoiceTypingError: LocalizedError {
     case accessibilityPermission, noTextField, secureTextField, microphonePermission
-    case assetsUnavailable(SpeechLanguage), shortcutUnavailable, sessionRecording, noSpeech, insertionFailed
+    case assetsUnavailable(SpeechLanguage), shortcutUnavailable, sessionRecording, focusChanged, insertionFailed
 
     var errorDescription: String? {
         switch self {
@@ -239,8 +294,8 @@ private enum VoiceTypingError: LocalizedError {
         case let .assetsUnavailable(language): "Prepare Apple Speech for \(language.displayName) in Language settings."
         case .shortcutUnavailable: "That shortcut is already used by another app. Choose another one in Settings."
         case .sessionRecording: "Stop the current transcription session before using Voice Type."
-        case .noSpeech: "No speech was detected."
-        case .insertionFailed: "This field does not accept inserted text."
+        case .focusChanged: "Voice Type stopped because focus moved to another app."
+        case .insertionFailed: "Mimi couldn’t update this field. No success was reported."
         }
     }
 }
@@ -289,6 +344,8 @@ final class VoiceTypingController {
     private var target: FocusedTextTarget?
     private var hotKeys: GlobalHotKeyRegistration!
     private var messageTask: Task<Void, Never>?
+    private var fieldUpdateTask: Task<Void, Never>?
+    private var pendingFieldText: String?
     private var observingPreferences = false
     private var finalizedPhrases: [String] = []
 
@@ -309,13 +366,12 @@ final class VoiceTypingController {
         observePreferences()
     }
 
-    var shortcutLabel: String { preferences.voiceTypingShortcut.displayName }
     var language: SpeechLanguage { preferences.voiceTypingLanguage }
 
     func toggle() {
         switch state {
         case .idle, .message: start()
-        case .listening: finishAndInsert()
+        case .listening: finish()
         case .finishing: break
         }
     }
@@ -336,15 +392,21 @@ final class VoiceTypingController {
 
     func cancel() {
         guard state == .listening || state == .finishing else { return }
+        state = .finishing
         Task {
             _ = try? microphone.stop()
+            if let audioRelay { drain(audioRelay) }
             audioRelay = nil
             if let engine { await engine.stop() }
             self.engine = nil
+            pendingFieldText = nil
+            if let fieldUpdateTask { await fieldUpdateTask.value }
+            self.fieldUpdateTask = nil
+            try? await target?.rollback()
             target = nil
             text = ""
             hotKeys.setCancelEnabled(false)
-            showMessage("Cancelled", isError: false)
+            state = .idle
         }
     }
 
@@ -363,6 +425,8 @@ final class VoiceTypingController {
                 let engine = try speechProvider.makeEngine()
                 text = ""
                 finalizedPhrases = []
+                pendingFieldText = nil
+                fieldUpdateTask = nil
                 try await engine.start(language: language, inputFormat: format) { [weak self] event in
                     guard let self else { return }
                     switch event {
@@ -395,7 +459,7 @@ final class VoiceTypingController {
         }
     }
 
-    private func finishAndInsert() {
+    private func finish() {
         state = .finishing
         Task {
             _ = try? microphone.stop()
@@ -404,15 +468,12 @@ final class VoiceTypingController {
             if let engine { await engine.stop() }
             self.engine = nil
             hotKeys.setCancelEnabled(false)
-            do {
-                guard let target else { throw VoiceTypingError.noTextField }
-                try target.insert(text)
-                self.target = nil
-                showMessage("Inserted", isError: false)
-            } catch {
-                target = nil
-                showMessage(error.localizedDescription, isError: true)
-            }
+            if let fieldUpdateTask { await fieldUpdateTask.value }
+            self.fieldUpdateTask = nil
+            target = nil
+            guard case .finishing = state else { return }
+            state = .idle
+            text = ""
         }
     }
 
@@ -424,6 +485,42 @@ final class VoiceTypingController {
     private func updateDisplayedText(livePhrase: String) {
         let normalized = livePhrase.trimmingCharacters(in: .whitespacesAndNewlines)
         text = (finalizedPhrases + (normalized.isEmpty ? [] : [normalized])).joined(separator: " ")
+        scheduleFieldUpdate(text)
+    }
+
+    private func scheduleFieldUpdate(_ text: String) {
+        guard target != nil, state == .listening || state == .finishing else { return }
+        pendingFieldText = text
+        guard fieldUpdateTask == nil else { return }
+        fieldUpdateTask = Task { [weak self] in
+            await self?.runFieldUpdates()
+        }
+    }
+
+    private func runFieldUpdates() async {
+        while let next = pendingFieldText {
+            pendingFieldText = nil
+            do {
+                guard let target else { return }
+                try await target.replaceLiveText(with: next)
+            } catch {
+                fieldUpdateTask = nil
+                await stopAfterFieldFailure(error)
+                return
+            }
+        }
+        fieldUpdateTask = nil
+    }
+
+    private func stopAfterFieldFailure(_ error: Error) async {
+        pendingFieldText = nil
+        target = nil
+        _ = try? microphone.stop()
+        audioRelay = nil
+        if let engine { await engine.stop() }
+        self.engine = nil
+        hotKeys.setCancelEnabled(false)
+        showMessage(error.localizedDescription, isError: true)
     }
 
     private func showMessage(_ message: String, isError: Bool) {
@@ -486,7 +583,11 @@ final class VoiceTypingPanelController {
         guard controller.state.isVisible else { panel?.orderOut(nil); return }
         let panel = panel ?? makePanel()
         guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
-        let size = NSSize(width: 460, height: 86)
+        let size: NSSize = switch controller.state {
+        case .message: NSSize(width: 420, height: 70)
+        case .listening, .finishing: NSSize(width: 64, height: 64)
+        case .idle: .zero
+        }
         panel.setFrame(NSRect(
             x: screen.visibleFrame.midX - size.width / 2,
             y: screen.visibleFrame.minY + 48,
@@ -516,61 +617,47 @@ final class VoiceTypingPanelController {
 struct VoiceTypingPill: View {
     @Bindable var controller: VoiceTypingController
     let preferences: UserPreferences
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     var body: some View {
-        HStack(spacing: 13) {
-            Image(systemName: icon)
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(iconColor)
-                .symbolEffect(.pulse, options: .repeating, isActive: controller.state == .listening)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title).font(.headline).lineLimit(1)
-                Text(detail).font(.caption).foregroundStyle(.secondary).lineLimit(1)
-            }
-            Spacer(minLength: 8)
-            if controller.state == .listening {
-                Text("Esc")
-                    .font(.caption.monospaced())
-                    .padding(.horizontal, 7).padding(.vertical, 4)
-                    .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
+        Group {
+            switch controller.state {
+            case let .message(message, isError):
+                HStack(spacing: 10) {
+                    Image(systemName: isError ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
+                        .foregroundStyle(isError ? .orange : .green)
+                    Text(message)
+                        .font(.callout.weight(.medium))
+                        .lineLimit(2)
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 16)
+                .frame(width: 412, height: 62)
+                .background(surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            case .listening, .finishing:
+                Image(systemName: controller.state == .listening ? "waveform" : "ellipsis")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.tint)
+                    .symbolEffect(
+                        .pulse,
+                        options: .repeating.speed(1.15),
+                        isActive: controller.state == .listening && !reduceMotion
+                    )
+                    .frame(width: 52, height: 52)
+                    .background(surface, in: Circle())
+                    .overlay { Circle().stroke(.separator.opacity(0.45)) }
+                    .accessibilityLabel(preferences.text("Voice Type is listening", "音声入力中"))
+            case .idle:
+                EmptyView()
             }
         }
-        .padding(.horizontal, 20)
-        .frame(width: 460, height: 78)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 20).stroke(.separator.opacity(0.5)) }
         .padding(4)
     }
 
-    private var title: String {
-        switch controller.state {
-        case .listening: controller.text.isEmpty ? preferences.text("Listening…", "聞き取り中…") : controller.text
-        case .finishing: preferences.text("Finishing…", "確定中…")
-        case let .message(message, _): message
-        case .idle: ""
-        }
-    }
-
-    private var detail: String {
-        switch controller.state {
-        case .listening: preferences.text("Press \(controller.shortcutLabel) to insert · Esc to cancel", "\(controller.shortcutLabel)で入力 · Escでキャンセル")
-        case .finishing: preferences.text("Inserting into the selected field", "選択した入力欄に入力しています")
-        case .message: preferences.text("Voice Type", "音声入力")
-        case .idle: ""
-        }
-    }
-
-    private var icon: String {
-        switch controller.state {
-        case .listening: "waveform"
-        case .finishing: "ellipsis"
-        case let .message(_, isError): isError ? "exclamationmark.triangle.fill" : "checkmark.circle.fill"
-        case .idle: "mic"
-        }
-    }
-
-    private var iconColor: Color {
-        if case let .message(_, isError) = controller.state { return isError ? .orange : .green }
-        return .accentColor
+    private var surface: AnyShapeStyle {
+        reduceTransparency
+            ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor))
+            : AnyShapeStyle(.regularMaterial)
     }
 }

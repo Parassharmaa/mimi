@@ -107,8 +107,8 @@ private struct VoiceTypingSettingsPane: View {
 
             Section {
                 Text(preferences.text(
-                    "Place the cursor in a text field, press the shortcut, speak, then press it again to insert. Press Escape to cancel. Password fields are never supported.",
-                    "入力欄にカーソルを置き、ショートカットを押して話し、もう一度押すと入力されます。Escでキャンセルできます。パスワード欄では使用できません。"
+                    "Place the cursor in a text field and press the shortcut. Your words appear in the field as you speak. Press the shortcut again to stop, or Escape to undo this dictation. Password fields are never supported.",
+                    "入力欄にカーソルを置き、ショートカットを押すと、話した内容がその場で入力されます。もう一度押すと停止し、Escで今回の音声入力を取り消せます。パスワード欄では使用できません。"
                 ))
                 .foregroundStyle(.secondary)
             }
