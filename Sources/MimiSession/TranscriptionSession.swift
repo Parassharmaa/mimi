@@ -695,6 +695,7 @@ public final class TranscriptionSession {
                     throw TranscriptionSessionError.appleSpeechRequiresMacOS26
                 }
                 guard let language = request.language else {
+                    var assetsStillSettling = false
                     for autoLanguage in SpeechLanguage.allCases {
                         let status = await refreshAppleSpeechAssetStatus(for: autoLanguage)
                         switch status {
@@ -706,9 +707,10 @@ public final class TranscriptionSession {
                                 for: request
                             )
                             try await appleSpeech.installAssets(for: autoLanguage)
-                            _ = await refreshAppleSpeechAssetStatus(for: autoLanguage)
+                            let finalStatus = await refreshAppleSpeechAssetStatus(for: autoLanguage)
+                            assetsStillSettling = assetsStillSettling || finalStatus == .supported || finalStatus == .downloading
                         case .downloading:
-                            break
+                            assetsStillSettling = true
                         case .unsupported:
                             throw TranscriptionSessionError.appleSpeechLanguageUnavailable(autoLanguage)
                         }
@@ -721,7 +723,15 @@ public final class TranscriptionSession {
                         self?.updateModelDownloadProgress(progress, for: request)
                     }
                     modelStorageRevision += 1
-                    updateModelSetup(.idle, for: request)
+                    if assetsStillSettling {
+                        updateModelSetup(.waitingForSystem(engine: request.engine, language: nil), for: request)
+                        scheduleAppleSpeechDownloadRefresh(
+                            for: SpeechLanguage.allCases,
+                            setupLanguage: nil
+                        )
+                    } else {
+                        updateModelSetup(.idle, for: request)
+                    }
                     return
                 }
 
@@ -732,7 +742,7 @@ public final class TranscriptionSession {
                     updateModelSetup(.idle, for: request)
                 case .downloading:
                     updateModelSetup(.waitingForSystem(engine: request.engine, language: language), for: request)
-                    scheduleAppleSpeechDownloadRefresh(for: language)
+                    scheduleAppleSpeechDownloadRefresh(for: [language], setupLanguage: language)
                 case .supported:
                     updateModelSetup(.downloading(engine: request.engine, language: language, progress: nil), for: request)
                     try await appleSpeech.installAssets(for: language)
@@ -742,7 +752,7 @@ public final class TranscriptionSession {
                         updateModelSetup(.idle, for: request)
                     case .supported, .downloading:
                         updateModelSetup(.waitingForSystem(engine: request.engine, language: language), for: request)
-                        scheduleAppleSpeechDownloadRefresh(for: language)
+                        scheduleAppleSpeechDownloadRefresh(for: [language], setupLanguage: language)
                     }
                 }
             case .whisperKitLargeV3Turbo:
@@ -963,27 +973,45 @@ public final class TranscriptionSession {
         return status
     }
 
-    private func scheduleAppleSpeechDownloadRefresh(for language: SpeechLanguage) {
+    private func scheduleAppleSpeechDownloadRefresh(
+        for languages: [SpeechLanguage],
+        setupLanguage: SpeechLanguage?
+    ) {
         appleSpeechDownloadRefreshTask?.cancel()
         appleSpeechDownloadRefreshTask = Task { [weak self] in
-            var lastStatus: AppleSpeechAssetStatus = .supported
+            var lastPendingLanguages = languages
             for _ in 0..<12 {
                 try? await Task.sleep(for: .seconds(5))
                 guard let self, !Task.isCancelled else { return }
-                let status = await self.refreshAppleSpeechAssetStatus(for: language)
-                lastStatus = status
-                guard status == .supported || status == .downloading else { return }
+                var pendingLanguages: [SpeechLanguage] = []
+                for language in languages {
+                    let status = await self.refreshAppleSpeechAssetStatus(for: language)
+                    if status == .supported || status == .downloading {
+                        pendingLanguages.append(language)
+                    }
+                }
+                lastPendingLanguages = pendingLanguages
+                if pendingLanguages.isEmpty {
+                    if self.modelSetupState.matches(
+                        engine: .appleSpeechAnalyzer,
+                        language: setupLanguage
+                    ), case .waitingForSystem = self.modelSetupState {
+                        self.modelSetupState = .idle
+                    }
+                    return
+                }
             }
 
             guard let self,
                   !Task.isCancelled,
-                  lastStatus == .supported,
-                  modelSetupState.matches(engine: .appleSpeechAnalyzer, language: language),
+                  !lastPendingLanguages.isEmpty,
+                  modelSetupState.matches(engine: .appleSpeechAnalyzer, language: setupLanguage),
                   case .waitingForSystem = modelSetupState else { return }
+            let pendingNames = lastPendingLanguages.map(\.displayName).joined(separator: " and ")
             modelSetupState = .failed(
                 engine: .appleSpeechAnalyzer,
-                language: language,
-                message: "macOS has not confirmed the \(language.displayName) Apple Speech asset yet. Check status, then retry if it is still missing."
+                language: setupLanguage,
+                message: "macOS has not confirmed the \(pendingNames) Apple Speech asset yet. Check status, then retry if it is still missing."
             )
         }
     }

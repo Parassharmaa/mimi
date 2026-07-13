@@ -779,6 +779,35 @@ struct MimiSessionE2E {
         }
 
         do {
+            let apple = FakeAppleProvider()
+            apple.assetStatusSequence[.english] = [.supported, .downloading, .installed]
+            apple.assetStatusSequence[.japanese] = [.supported, .downloading, .installed]
+            apple.statusAfterInstall = .downloading
+            let automatic = FakeAutomaticAppleSpeech()
+            automatic.isLanguageDetectorInstalled = false
+            let session = makeSession(
+                capture: FakeCapture(),
+                apple: apple,
+                automatic: automatic,
+                whisper: FakeWhisper(isDownloaded: true),
+                storage: FakeStorage()
+            )
+            session.engineID = .appleSpeechAnalyzer
+            session.languageMode = .automatic
+
+            await session.installSelectedModelNow()
+            expect(apple.installCalls == 2, "Auto setup requests each missing Apple language asset once")
+            expect(isWaitingForSystem(session.selectedModelSetupState), "Auto setup stays in a truthful waiting state while either Apple asset is settling")
+            expect(!session.canStartRecording, "Auto recording remains gated until both Apple language assets are installed")
+
+            try? await Task.sleep(for: .seconds(6))
+            await yieldToMainActor()
+
+            expect(session.selectedModelSetupState == .idle, "Auto setup clears its shared waiting state after both Apple assets reconcile")
+            expect(session.selectedModelReadiness == .ready && session.canStartRecording, "Auto recording becomes ready after both Apple assets reconcile")
+        }
+
+        do {
             let capture = FakeCapture()
             let apple = FakeAppleProvider()
             let whisper = FakeWhisper(isDownloaded: false)

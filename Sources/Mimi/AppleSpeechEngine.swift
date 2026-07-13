@@ -70,19 +70,7 @@ final class AppleSpeechEngine {
         guard let transcriber = try? await makeTranscriber(for: language, resultMode: .progressive) else {
             return .unsupported
         }
-
-        switch await AssetInventory.status(forModules: [transcriber]) {
-        case .unsupported:
-            return .unsupported
-        case .supported:
-            return .supported
-        case .downloading:
-            return .downloading
-        case .installed:
-            return .installed
-        @unknown default:
-            return .unsupported
-        }
+        return await resolvedAssetStatus(for: transcriber, language: language)
     }
 
     func start(
@@ -91,7 +79,7 @@ final class AppleSpeechEngine {
         onEvent: @escaping @MainActor (TranscriptEvent) -> Void
     ) async throws {
         let transcriber = try await Self.makeTranscriber(for: language, resultMode: resultMode)
-        switch await AssetInventory.status(forModules: [transcriber]) {
+        switch await Self.resolvedAssetStatus(for: transcriber, language: language) {
         case .installed:
             break
         case .supported:
@@ -99,8 +87,6 @@ final class AppleSpeechEngine {
         case .downloading:
             throw TranscriptionSessionError.appleAssetsDownloading
         case .unsupported:
-            throw TranscriptionSessionError.appleSpeechLanguageUnavailable(language)
-        @unknown default:
             throw TranscriptionSessionError.appleSpeechLanguageUnavailable(language)
         }
 
@@ -215,6 +201,40 @@ final class AppleSpeechEngine {
         case .downloading: "downloading"
         case .installed: "installed"
         @unknown default: "unknown"
+        }
+    }
+
+    /// Resolves the small window where `status(forModules:)` can return an
+    /// older `.supported` snapshot even though the asset became installed.
+    /// Apple specifies that an installation request is nil only when nothing
+    /// further needs to be done, so readiness checks and recording start use
+    /// that result as the same authoritative truth.
+    private static func resolvedAssetStatus(
+        for transcriber: SpeechTranscriber,
+        language: SpeechLanguage
+    ) async -> AppleSpeechAssetStatus {
+        let status = await AssetInventory.status(forModules: [transcriber])
+        assetLogger.info("Apple Speech asset status for \(language.rawValue, privacy: .public): \(statusName(status), privacy: .public)")
+
+        switch status {
+        case .unsupported:
+            return .unsupported
+        case .supported:
+            do {
+                if try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) == nil {
+                    assetLogger.info("Apple Speech reconciled \(language.rawValue, privacy: .public) as installed because no installation request is needed")
+                    return .installed
+                }
+            } catch {
+                assetLogger.error("Apple Speech could not reconcile \(language.rawValue, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            }
+            return .supported
+        case .downloading:
+            return .downloading
+        case .installed:
+            return .installed
+        @unknown default:
+            return .unsupported
         }
     }
 }
