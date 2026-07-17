@@ -7,6 +7,7 @@ INTEL_BUILD="$ROOT/.build/package-x86_64"
 APP="$ROOT/.build/Mimi.app"
 DIST="$ROOT/.build/dist"
 ARCHIVE="$DIST/Mimi-macOS.zip"
+SIGNING_IDENTITY="${MIMI_CODESIGN_IDENTITY:--}"
 
 cd "$ROOT"
 
@@ -26,7 +27,16 @@ cp "$ROOT/App/Resources/Mimi.icns" "$APP/Contents/Resources/Mimi.icns"
 ARCHS="$(lipo -archs "$APP/Contents/MacOS/Mimi")"
 [[ "$ARCHS" == *arm64* && "$ARCHS" == *x86_64* ]]
 
-codesign --force --deep --sign - --entitlements "$ROOT/App/Mimi.entitlements" "$APP"
+SIGNING_ARGUMENTS=(
+  --force
+  --deep
+  --options runtime
+  --entitlements "$ROOT/App/Mimi.entitlements"
+)
+if [[ "$SIGNING_IDENTITY" != "-" ]]; then
+  SIGNING_ARGUMENTS+=(--timestamp)
+fi
+codesign "${SIGNING_ARGUMENTS[@]}" --sign "$SIGNING_IDENTITY" "$APP"
 codesign --verify --deep --strict "$APP"
 plutil -lint "$APP/Contents/Info.plist"
 
