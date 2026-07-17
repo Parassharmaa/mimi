@@ -93,6 +93,7 @@ final class AppStore {
     var modelPack: LocalModelPack? { session.modelPack }
     var canRemoveSelectedModel: Bool { session.canRemoveSelectedModel }
     var selectedModelReadiness: ModelReadiness { session.selectedModelReadiness }
+    var bilingualAppleSpeechReadiness: ModelReadiness { session.bilingualAppleSpeechReadiness }
     var modelSetupState: ModelSetupState { session.modelSetupState }
     var selectedModelSetupState: ModelSetupState { session.selectedModelSetupState }
     var isModelSetupActive: Bool { session.modelSetupState.isActive }
@@ -121,6 +122,10 @@ final class AppStore {
 
     func installSelectedModel() {
         session.installSelectedModel()
+    }
+
+    func prepareBilingualAppleSpeechNow() async {
+        await session.prepareBilingualAppleSpeechNow()
     }
 
     func cancelSelectedModelInstall() {

@@ -1,6 +1,22 @@
 import AVFoundation
 import MimiCore
 import SwiftUI
+@preconcurrency import Translation
+
+enum OnboardingPreparationFixture {
+    case live
+    case preparing
+    case ready
+    case failed
+}
+
+private enum TranslationPreparationState: Equatable {
+    case idle
+    case checking
+    case preparing
+    case ready
+    case failed(String)
+}
 
 struct OnboardingView: View {
     @Bindable var store: AppStore
@@ -10,23 +26,30 @@ struct OnboardingView: View {
     @State private var step: Int
     @State private var microphoneStatus = AVCaptureDevice.authorizationStatus(for: .audio)
     @State private var startAtLogin = false
+    @State private var speechPreparationStarted = false
+    @State private var translationState: TranslationPreparationState = .idle
+    @State private var translationSources: [SpeechLanguage] = []
+    @State private var translationConfiguration: TranslationSession.Configuration?
+    private let preparationFixture: OnboardingPreparationFixture
 
     init(
         store: AppStore,
         preferences: UserPreferences,
         voiceTyping: VoiceTypingController,
-        initialStep: Int = 0
+        initialStep: Int = 0,
+        preparationFixture: OnboardingPreparationFixture = .live
     ) {
         self.store = store
         self.preferences = preferences
         self.voiceTyping = voiceTyping
-        _step = State(initialValue: min(3, max(0, initialStep)))
+        self.preparationFixture = preparationFixture
+        _step = State(initialValue: min(4, max(0, initialStep)))
     }
 
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 6) {
-                ForEach(0..<4, id: \.self) { index in
+                ForEach(0..<5, id: \.self) { index in
                     Capsule()
                         .fill(index <= step ? Color.accentColor : Color.secondary.opacity(0.2))
                         .frame(height: 4)
@@ -39,7 +62,8 @@ struct OnboardingView: View {
                 switch step {
                 case 0: languageStep
                 case 1: listeningStep
-                case 2: permissionStep
+                case 2: preparationStep
+                case 3: permissionStep
                 default: readyStep
                 }
             }
@@ -52,16 +76,29 @@ struct OnboardingView: View {
                     Button(t("Back", "戻る")) { step -= 1 }
                 }
                 Spacer()
-                Button(step == 3 ? t("Start using Mimi", "Mimiを使い始める") : t("Continue", "続ける")) {
+                Button(step == 4 ? t("Start using Mimi", "Mimiを使い始める") : t("Continue", "続ける")) {
                     advance()
                 }
                 .buttonStyle(.borderedProminent)
                 .keyboardShortcut(.defaultAction)
+                .disabled(step == 2 && !preparationIsReady)
             }
             .padding(20)
         }
-        .frame(width: 620, height: 500)
+        .frame(width: 620, height: 560)
         .onAppear { startAtLogin = preferences.startsAtLogin }
+        .task(id: step) {
+            guard step == 2 else { return }
+            await prepareLanguagesIfNeeded()
+        }
+        .onChange(of: step) { _, newStep in
+            if newStep == 4, !preferences.completedOnboarding {
+                preferences.voiceTypingEnabled = true
+            }
+        }
+        .translationTask(translationConfiguration) { @MainActor session in
+            await prepareCurrentTranslation(using: session)
+        }
     }
 
     private var languageStep: some View {
@@ -104,7 +141,7 @@ struct OnboardingView: View {
         VStack(spacing: 22) {
             welcomeSymbol("hand.raised")
             title(t("Your audio stays on this Mac", "音声はこのMac内で処理されます"),
-                  t("Mimi asks only for access needed by the source you choose.", "選択した音声に必要なアクセスだけを求めます。"))
+                  t("Mimi asks only for access needed by the source you choose.", "選んだ音声ソースに必要な権限だけをリクエストします。"))
             VStack(spacing: 12) {
                 permissionRow(
                     symbol: "mic",
@@ -115,9 +152,43 @@ struct OnboardingView: View {
                 permissionRow(
                     symbol: "speaker.wave.2",
                     title: t("Mac audio", "Macの音声"),
-                    detail: t("macOS will ask when you first choose app or output audio", "アプリや出力音声を初めて選ぶときにmacOSが確認します"),
+                    detail: t("macOS asks the first time you choose Mac or app audio", "初めてMacやアプリの音声を選ぶときに、macOSが許可を求めます"),
                     canRequest: false
                 )
+            }
+        }
+    }
+
+    private var preparationStep: some View {
+        VStack(spacing: 22) {
+            welcomeSymbol("arrow.down.circle")
+            title(
+                t("Preparing English + Japanese", "英語と日本語の準備をしています"),
+                t(
+                    "Mimi downloads the speech and translation languages now, so recording starts smoothly later.",
+                    "文字起こしと翻訳に必要な言語データを今ダウンロードして、すぐに使えるようにします。"
+                )
+            )
+            VStack(spacing: 12) {
+                preparationRow(
+                    symbol: "waveform",
+                    title: t("Live transcription", "リアルタイム文字起こし"),
+                    state: speechPreparationState
+                )
+                preparationRow(
+                    symbol: "character.bubble",
+                    title: t("English ↔ Japanese translation", "英語 ↔ 日本語の翻訳"),
+                    state: translationPreparationDisplayState
+                )
+            }
+            Text(t(
+                "Downloads are managed by macOS and stay on this Mac.",
+                "ダウンロードはmacOSが管理し、このMacに保存されます。"
+            ))
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            if preparationHasFailed {
+                Button(t("Try again", "もう一度試す")) { retryPreparation() }
             }
         }
     }
@@ -147,13 +218,13 @@ struct OnboardingView: View {
                     }
                     Text(t(
                         "Mimi needs Accessibility access only to insert text into the field you selected.",
-                        "選択した入力欄に文字を入力するためにのみアクセシビリティ許可を使用します。"
+                        "アクセシビリティ権限は、選択中の入力欄に文字を入力するためだけに使用します。"
                     ))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     if !voiceTyping.shortcutRegistered {
                         Label(
-                            t("That shortcut is already in use. Choose the other one.", "そのショートカットは使用中です。もう一つを選んでください。"),
+                            t("That shortcut is already in use. Choose the other one.", "このショートカットは別のアプリで使用されています。もう一方を選んでください。"),
                             systemImage: "exclamationmark.triangle"
                         )
                         .font(.caption)
@@ -212,6 +283,71 @@ struct OnboardingView: View {
         .frame(width: 440)
     }
 
+    private func preparationRow(
+        symbol: String,
+        title: String,
+        state: (detail: String, kind: PreparationDisplayKind)
+    ) -> some View {
+        HStack(spacing: 14) {
+            Image(systemName: symbol).foregroundStyle(.secondary).frame(width: 24)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.headline)
+                Text(state.detail).font(.caption).foregroundStyle(state.kind == .failed ? .orange : .secondary)
+            }
+            Spacer()
+            switch state.kind {
+            case .working:
+                ProgressView().controlSize(.small)
+            case .ready:
+                Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+            case .failed:
+                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+            }
+        }
+        .padding(14)
+        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 12))
+        .frame(width: 460)
+    }
+
+    private enum PreparationDisplayKind: Equatable { case working, ready, failed }
+
+    private var speechPreparationState: (detail: String, kind: PreparationDisplayKind) {
+        if preparationFixture == .ready { return (t("Ready", "準備完了"), .ready) }
+        if preparationFixture == .preparing { return (t("Downloading…", "ダウンロード中…"), .working) }
+        if preparationFixture == .failed { return (t("Couldn’t finish the download", "ダウンロードを完了できませんでした"), .failed) }
+        return switch store.bilingualAppleSpeechReadiness {
+        case .ready: (t("Ready", "準備完了"), .ready)
+        case .needsDownload, .unavailable:
+            (t("Couldn’t finish speech setup. Try again.", "音声の準備を完了できませんでした。もう一度お試しください。"), .failed)
+        case .checking:
+            (t("Checking…", "確認中…"), .working)
+        case .downloading, .experimental:
+            (t("Downloading…", "ダウンロード中…"), .working)
+        }
+    }
+
+    private var translationPreparationDisplayState: (detail: String, kind: PreparationDisplayKind) {
+        if preparationFixture == .ready { return (t("Ready", "準備完了"), .ready) }
+        if preparationFixture == .preparing { return (t("Downloading…", "ダウンロード中…"), .working) }
+        if preparationFixture == .failed { return (t("Couldn’t finish the download", "ダウンロードを完了できませんでした"), .failed) }
+        return switch translationState {
+        case .idle, .checking: (t("Checking…", "確認中…"), .working)
+        case .preparing: (t("Downloading…", "ダウンロード中…"), .working)
+        case .ready: (t("Ready", "準備完了"), .ready)
+        case let .failed(message): (message, .failed)
+        }
+    }
+
+    private var preparationIsReady: Bool {
+        if preparationFixture == .ready { return true }
+        guard preparationFixture == .live else { return false }
+        return speechPreparationState.kind == .ready && translationPreparationDisplayState.kind == .ready
+    }
+
+    private var preparationHasFailed: Bool {
+        speechPreparationState.kind == .failed || translationPreparationDisplayState.kind == .failed
+    }
+
     private var autoLanguageBinding: Binding<Bool> {
         Binding(
             get: { store.languageMode == .automatic },
@@ -227,7 +363,7 @@ struct OnboardingView: View {
     }
 
     private func advance() {
-        guard step == 3 else { step += 1; return }
+        guard step == 4 else { step += 1; return }
         if preferences.startsAtLogin != startAtLogin {
             preferences.setStartsAtLogin(startAtLogin)
             if preferences.loginItemError != nil { return }
@@ -235,6 +371,93 @@ struct OnboardingView: View {
         preferences.completedOnboarding = true
         dismissWindow(id: "onboarding")
         NSApplication.shared.keyWindow?.close()
+    }
+
+    private func prepareLanguagesIfNeeded() async {
+        guard preparationFixture == .live else { return }
+        if !speechPreparationStarted {
+            speechPreparationStarted = true
+            Task { await store.prepareBilingualAppleSpeechNow() }
+        }
+        guard translationState == .idle else { return }
+        translationState = .checking
+        let availability: LanguageAvailability
+        if #available(macOS 26.4, *) {
+            availability = LanguageAvailability(preferredStrategy: .lowLatency)
+        } else {
+            availability = LanguageAvailability()
+        }
+        var missingSources: [SpeechLanguage] = []
+        for source in SpeechLanguage.allCases {
+            let status = await availability.status(
+                from: Locale.Language(identifier: source.rawValue),
+                to: Locale.Language(identifier: source.translationTarget.rawValue)
+            )
+            switch status {
+            case .installed:
+                continue
+            case .supported:
+                missingSources.append(source)
+            case .unsupported:
+                translationState = .failed(t(
+                    "English and Japanese translation is not available on this Mac.",
+                    "このMacでは英語と日本語の翻訳を利用できません。"
+                ))
+                return
+            @unknown default:
+                translationState = .failed(t(
+                    "Mimi couldn’t confirm translation availability.",
+                    "翻訳を利用できるか確認できませんでした。"
+                ))
+                return
+            }
+        }
+        translationSources = missingSources
+        guard let first = missingSources.first else {
+            translationState = .ready
+            return
+        }
+        translationState = .preparing
+        translationConfiguration = translationConfiguration(for: first)
+    }
+
+    private func prepareCurrentTranslation(using session: TranslationSession) async {
+        guard preparationFixture == .live, let source = translationSources.first else { return }
+        do {
+            try await session.prepareTranslation()
+            guard translationSources.first == source else { return }
+            translationSources.removeFirst()
+            if let next = translationSources.first {
+                translationConfiguration = translationConfiguration(for: next)
+            } else {
+                translationConfiguration = nil
+                translationState = .ready
+            }
+        } catch {
+            guard !(error is CancellationError) else { return }
+            translationConfiguration = nil
+            translationState = .failed(t(
+                "Couldn’t finish translation setup. Try again.",
+                "翻訳の準備を完了できませんでした。もう一度お試しください。"
+            ))
+        }
+    }
+
+    private func translationConfiguration(for source: SpeechLanguage) -> TranslationSession.Configuration {
+        let sourceLanguage = Locale.Language(identifier: source.rawValue)
+        let targetLanguage = Locale.Language(identifier: source.translationTarget.rawValue)
+        if #available(macOS 26.4, *) {
+            return .init(source: sourceLanguage, target: targetLanguage, preferredStrategy: .lowLatency)
+        }
+        return .init(source: sourceLanguage, target: targetLanguage)
+    }
+
+    private func retryPreparation() {
+        speechPreparationStarted = false
+        translationState = .idle
+        translationSources = []
+        translationConfiguration = nil
+        Task { await prepareLanguagesIfNeeded() }
     }
 
     private func t(_ english: String, _ japanese: String) -> String {

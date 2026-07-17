@@ -272,7 +272,7 @@ private struct SegmentTranslationLane: View {
             configuration = .init(
                 source: .init(identifier: segment.language.rawValue),
                 target: .init(identifier: segment.language.translationTarget.rawValue),
-                preferredStrategy: .lowLatency
+                preferredStrategy: .highFidelity
             )
         } else {
             configuration = .init(

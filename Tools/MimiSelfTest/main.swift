@@ -12,7 +12,8 @@ struct MimiSelfTest {
         testLongHorizonCaptionTranslationCoalescing()
         testLongHorizonFinalizedTranslationQueue()
         testRecommendedPacksCoverBothV1Languages()
-        print("Mimi self-test passed: transcript coalescing, long-horizon translation, Japanese finalization, and model routing.")
+        testTerminalLiveTextDiffDoesNotReplayOldText()
+        print("Mimi self-test passed: transcript coalescing, long-horizon translation, Japanese finalization, model routing, and Terminal live insertion.")
     }
 
     private static func testLongHorizonCaptionTranslationCoalescing() {
@@ -138,6 +139,17 @@ struct MimiSelfTest {
         expect(ModelCatalog.packs.count == 1, "Mimi presents one simple Apple Speech choice")
         expect(ModelCatalog.packs[0].supportedLanguages == [.english, .japanese], "Apple Speech setup covers English and Japanese")
         expect(TranscriptionEngineID.selectableCases == [.appleSpeechAnalyzer], "Removed experimental models never appear in the UI")
+    }
+
+    private static func testTerminalLiveTextDiffDoesNotReplayOldText() {
+        let growing = LiveTextEdit(previous: "hello", next: "hello world")
+        expect(growing.removalCount == 0 && growing.insertion == " world", "A growing partial inserts only newly spoken text")
+
+        let corrected = LiveTextEdit(previous: "I scream", next: "ice cream")
+        expect(corrected.removalCount == 8 && corrected.insertion == "ice cream", "A corrected partial replaces only its changed suffix")
+
+        let newActivation = LiveTextEdit(previous: "", next: "new phrase")
+        expect(newActivation.removalCount == 0 && newActivation.insertion == "new phrase", "A new dictation starts with no prior text")
     }
 
     private static func expect(_ condition: @autoclosure () -> Bool, _ message: String) {

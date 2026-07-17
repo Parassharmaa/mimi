@@ -26,7 +26,7 @@ final class OnboardingWindowCoordinator {
         window.styleMask = [.titled, .closable, .fullSizeContentView]
         window.titlebarAppearsTransparent = true
         window.isMovableByWindowBackground = true
-        window.setContentSize(NSSize(width: 620, height: 500))
+        window.setContentSize(NSSize(width: 620, height: 560))
         window.center()
         window.setFrameAutosaveName("MimiOnboarding")
         window.makeKeyAndOrderFront(nil)

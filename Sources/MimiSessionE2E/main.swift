@@ -8,6 +8,7 @@ struct MimiSessionE2E {
     static func main() async {
         await appleStreamingEnglishSessionDrainsBoundedFrames()
         await automaticAppleSpeechRoutesMixedEnglishAndJapanese()
+        await onboardingPreparesBothLanguagesWithoutChangingSelection()
         await whisperJapaneseAccuracySessionFreezesConfigurationAndCleansAudio()
         await nemotronJapaneseLiveSessionStreamsAndFinalizesWithoutAudioFiles()
         await qwenDualPassLiveSessionStreamsAndFinalizesWithoutAudioFiles()
@@ -24,6 +25,30 @@ struct MimiSessionE2E {
         liveFlowControlStaysBoundedAndFinalizesAtSafeBoundaries()
         transcriptAndTranslationRoutingEdgeCases()
         print("Mimi session E2E passed: model setup states, capture lifecycle, EN/JA routing, cleanup, persistence, and realtime queue edges.")
+    }
+
+    @MainActor
+    private static func onboardingPreparesBothLanguagesWithoutChangingSelection() async {
+        let apple = FakeAppleProvider()
+        apple.assetStatuses = [.english: .supported, .japanese: .supported]
+        let automatic = FakeAutomaticAppleSpeech()
+        automatic.isLanguageDetectorInstalled = false
+        let session = makeSession(
+            capture: FakeCapture(),
+            apple: apple,
+            automatic: automatic,
+            whisper: FakeWhisper(isDownloaded: true),
+            storage: FakeStorage()
+        )
+        session.engineID = .appleSpeechAnalyzer
+        session.languageMode = .english
+
+        await session.prepareBilingualAppleSpeechNow()
+
+        expect(apple.installCalls == 2, "Onboarding prepares English and Japanese speech even when English is selected")
+        expect(automatic.isLanguageDetectorInstalled, "Onboarding prepares the automatic language detector")
+        expect(session.languageMode == .english, "Onboarding model setup never changes the person’s language choice")
+        expect(session.bilingualAppleSpeechReadiness == .ready, "Onboarding becomes ready only after the complete bilingual speech pack is installed")
     }
 
     @MainActor

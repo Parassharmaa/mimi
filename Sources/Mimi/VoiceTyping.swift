@@ -8,6 +8,7 @@ import SwiftUI
 
 enum VoiceTypingState: Equatable {
     case idle
+    case preparing
     case listening
     case finishing
     case message(String, isError: Bool)
@@ -120,22 +121,26 @@ private final class GlobalHotKeyRegistration {
 
 @MainActor
 final class FocusedTextTarget {
-    let element: AXUIElement
+    let element: AXUIElement?
     let processIdentifier: pid_t
     private let insertionLocation: Int
     private let replacedText: String
+    private let usesKeyboardFallback: Bool
     private var insertedUTF16Length = 0
+    private var insertedText = ""
 
     private init(
-        element: AXUIElement,
+        element: AXUIElement?,
         processIdentifier: pid_t,
         insertionRange: CFRange,
-        replacedText: String
+        replacedText: String,
+        usesKeyboardFallback: Bool = false
     ) {
         self.element = element
         self.processIdentifier = processIdentifier
         insertionLocation = insertionRange.location
         self.replacedText = replacedText
+        self.usesKeyboardFallback = usesKeyboardFallback
     }
 
     static func capture(promptIfNeeded: Bool) throws -> FocusedTextTarget {
@@ -146,8 +151,10 @@ final class FocusedTextTarget {
             }
             throw VoiceTypingError.accessibilityPermission
         }
+        guard !IsSecureEventInputEnabled() else { throw VoiceTypingError.secureTextField }
         let system = AXUIElementCreateSystemWide()
-        let application = NSWorkspace.shared.frontmostApplication.map {
+        let frontmostApplication = NSWorkspace.shared.frontmostApplication
+        let application = frontmostApplication.map {
             AXUIElementCreateApplication($0.processIdentifier)
         }
         var value: CFTypeRef?
@@ -158,14 +165,35 @@ final class FocusedTextTarget {
             value = nil
             _ = AXUIElementCopyAttributeValue(system, kAXFocusedUIElementAttribute as CFString, &value)
         }
-        guard
-              let value,
-              CFGetTypeID(value) == AXUIElementGetTypeID() else {
+        guard let frontmostApplication else { throw VoiceTypingError.noTextField }
+        let isTerminal = frontmostApplication.bundleIdentifier == "com.apple.Terminal"
+        guard let value, CFGetTypeID(value) == AXUIElementGetTypeID() else {
+            if isTerminal {
+                return FocusedTextTarget(
+                    element: nil,
+                    processIdentifier: frontmostApplication.processIdentifier,
+                    insertionRange: CFRange(location: 0, length: 0),
+                    replacedText: "",
+                    usesKeyboardFallback: true
+                )
+            }
             throw VoiceTypingError.noTextField
         }
         let element = unsafeDowncast(value as AnyObject, to: AXUIElement.self)
         if copyString(kAXSubroleAttribute as CFString, from: element) == (kAXSecureTextFieldSubrole as String) {
             throw VoiceTypingError.secureTextField
+        }
+        // Terminal can advertise a selected text range for its text area, but
+        // that range is output history rather than a writable prompt range.
+        // Always use the reversible keyboard-diff lane for its active prompt.
+        if isTerminal {
+            return FocusedTextTarget(
+                element: element,
+                processIdentifier: frontmostApplication.processIdentifier,
+                insertionRange: CFRange(location: 0, length: 0),
+                replacedText: "",
+                usesKeyboardFallback: true
+            )
         }
         guard let insertionRange = copyRange(kAXSelectedTextRangeAttribute as CFString, from: element) else {
             throw VoiceTypingError.noTextField
@@ -184,6 +212,12 @@ final class FocusedTextTarget {
         guard NSWorkspace.shared.frontmostApplication?.processIdentifier == processIdentifier else {
             throw VoiceTypingError.focusChanged
         }
+        if usesKeyboardFallback {
+            try replaceUsingKeyboard(with: text)
+            insertedText = text
+            insertedUTF16Length = text.utf16.count
+            return
+        }
         try selectInsertedText()
         try postReplacementText(text)
         try await Task.sleep(for: .milliseconds(70))
@@ -191,12 +225,19 @@ final class FocusedTextTarget {
             throw VoiceTypingError.insertionFailed
         }
         insertedUTF16Length = text.utf16.count
+        insertedText = text
     }
 
     func rollback() async throws {
         guard insertedUTF16Length > 0 || !replacedText.isEmpty else { return }
         guard NSWorkspace.shared.frontmostApplication?.processIdentifier == processIdentifier else {
             throw VoiceTypingError.focusChanged
+        }
+        if usesKeyboardFallback {
+            for _ in insertedText { try postKey(CGKeyCode(kVK_Delete)) }
+            insertedText = ""
+            insertedUTF16Length = 0
+            return
         }
         try selectInsertedText()
         try postReplacementText(replacedText)
@@ -206,6 +247,7 @@ final class FocusedTextTarget {
     }
 
     private func selectInsertedText() throws {
+        guard let element else { throw VoiceTypingError.insertionFailed }
         var range = CFRange(location: insertionLocation, length: insertedUTF16Length)
         guard let value = AXValueCreate(.cfRange, &range),
               AXUIElementSetAttributeValue(
@@ -236,6 +278,17 @@ final class FocusedTextTarget {
         up.post(tap: .cghidEventTap)
     }
 
+    /// Terminal exposes its prompt as a keyboard destination, not as a normal
+    /// AX text field. Keep the already-inserted prefix and edit only the
+    /// changed suffix so volatile recognition results remain live and stable.
+    private func replaceUsingKeyboard(with text: String) throws {
+        let edit = LiveTextEdit(previous: insertedText, next: text)
+        for _ in 0..<edit.removalCount {
+            try postKey(CGKeyCode(kVK_Delete))
+        }
+        if !edit.insertion.isEmpty { try postReplacementText(edit.insertion) }
+    }
+
     private func postKey(_ key: CGKeyCode) throws {
         guard let source = CGEventSource(stateID: .hidSystemState),
               let down = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: true),
@@ -247,6 +300,7 @@ final class FocusedTextTarget {
     }
 
     private func containsInsertedText(_ expected: String) -> Bool {
+        guard let element else { return false }
         guard let value = Self.copyString(kAXValueAttribute as CFString, from: element) else {
             return false
         }
@@ -348,6 +402,7 @@ final class VoiceTypingController {
     private var pendingFieldText: String?
     private var observingPreferences = false
     private var finalizedPhrases: [String] = []
+    private var activationID: UUID?
 
     private(set) var state: VoiceTypingState = .idle
     private(set) var text = ""
@@ -372,7 +427,7 @@ final class VoiceTypingController {
         switch state {
         case .idle, .message: start()
         case .listening: finish()
-        case .finishing: break
+        case .preparing, .finishing: break
         }
     }
 
@@ -391,7 +446,8 @@ final class VoiceTypingController {
     }
 
     func cancel() {
-        guard state == .listening || state == .finishing else { return }
+        guard state == .preparing || state == .listening || state == .finishing else { return }
+        activationID = nil
         state = .finishing
         Task {
             _ = try? microphone.stop()
@@ -412,6 +468,9 @@ final class VoiceTypingController {
 
     private func start() {
         messageTask?.cancel()
+        let activationID = UUID()
+        self.activationID = activationID
+        state = .preparing
         Task {
             do {
                 guard shortcutRegistered else { throw VoiceTypingError.shortcutUnavailable }
@@ -427,8 +486,9 @@ final class VoiceTypingController {
                 finalizedPhrases = []
                 pendingFieldText = nil
                 fieldUpdateTask = nil
+                target = capturedTarget
                 try await engine.start(language: language, inputFormat: format) { [weak self] event in
-                    guard let self else { return }
+                    guard let self, self.activationID == activationID else { return }
                     switch event {
                     case let .partial(value):
                         self.updateDisplayedText(livePhrase: value)
@@ -438,8 +498,11 @@ final class VoiceTypingController {
                         self.updateDisplayedText(livePhrase: "")
                     }
                 }
+                guard self.activationID == activationID else {
+                    await engine.stop()
+                    return
+                }
                 self.engine = engine
-                target = capturedTarget
                 let relay = VoiceTypingAudioRelay()
                 audioRelay = relay
                 try microphone.start(recordingTo: nil, deviceID: nil) { [weak self, relay] buffer in
@@ -449,6 +512,8 @@ final class VoiceTypingController {
                 state = .listening
                 hotKeys.setCancelEnabled(true)
             } catch {
+                guard self.activationID == activationID else { return }
+                self.activationID = nil
                 _ = try? microphone.stop()
                 audioRelay = nil
                 if let engine { await engine.stop() }
@@ -460,6 +525,7 @@ final class VoiceTypingController {
     }
 
     private func finish() {
+        let finishingActivationID = activationID
         state = .finishing
         Task {
             _ = try? microphone.stop()
@@ -471,6 +537,7 @@ final class VoiceTypingController {
             if let fieldUpdateTask { await fieldUpdateTask.value }
             self.fieldUpdateTask = nil
             target = nil
+            if activationID == finishingActivationID { activationID = nil }
             guard case .finishing = state else { return }
             state = .idle
             text = ""
@@ -489,7 +556,8 @@ final class VoiceTypingController {
     }
 
     private func scheduleFieldUpdate(_ text: String) {
-        guard target != nil, state == .listening || state == .finishing else { return }
+        guard target != nil,
+              state == .preparing || state == .listening || state == .finishing else { return }
         pendingFieldText = text
         guard fieldUpdateTask == nil else { return }
         fieldUpdateTask = Task { [weak self] in
@@ -519,6 +587,7 @@ final class VoiceTypingController {
         audioRelay = nil
         if let engine { await engine.stop() }
         self.engine = nil
+        activationID = nil
         hotKeys.setCancelEnabled(false)
         showMessage(error.localizedDescription, isError: true)
     }
@@ -585,7 +654,7 @@ final class VoiceTypingPanelController {
         guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
         let size: NSSize = switch controller.state {
         case .message: NSSize(width: 420, height: 70)
-        case .listening, .finishing: NSSize(width: 64, height: 64)
+        case .preparing, .listening, .finishing: NSSize(width: 64, height: 64)
         case .idle: .zero
         }
         panel.setFrame(NSRect(
@@ -635,7 +704,7 @@ struct VoiceTypingPill: View {
                 .padding(.horizontal, 16)
                 .frame(width: 412, height: 62)
                 .background(surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-            case .listening, .finishing:
+            case .preparing, .listening, .finishing:
                 Image(systemName: controller.state == .listening ? "waveform" : "ellipsis")
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(.tint)

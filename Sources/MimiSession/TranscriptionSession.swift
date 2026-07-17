@@ -521,6 +521,47 @@ public final class TranscriptionSession {
         }
     }
 
+    /// Onboarding always prepares the complete v1 speech experience, even if
+    /// the person initially chooses a single language. This keeps switching
+    /// to Auto mode from causing a second, surprising setup flow later.
+    public var bilingualAppleSpeechReadiness: ModelReadiness {
+        if modelSetupState.matches(engine: .appleSpeechAnalyzer, language: nil) {
+            switch modelSetupState {
+            case .checking:
+                return .checking("Checking English and Japanese speech…")
+            case .downloading, .prewarming, .waitingForSystem:
+                return .downloading("Preparing English and Japanese speech…")
+            case let .failed(_, _, message):
+                return .needsDownload(message)
+            case .idle, .removing, .cancelled:
+                break
+            }
+        }
+        guard appleSpeech.isPlatformAvailable else {
+            return .unavailable("Apple Speech live transcription requires macOS 26 or later.")
+        }
+        _ = modelStorageRevision
+        guard automaticAppleSpeech.isLanguageDetectorInstalled else {
+            return .needsDownload("Prepare automatic English and Japanese recognition.")
+        }
+        for language in SpeechLanguage.allCases {
+            guard let status = appleSpeechAssetStatuses[language] else {
+                return .checking("Checking English and Japanese speech…")
+            }
+            switch status {
+            case .installed:
+                continue
+            case .supported:
+                return .needsDownload("Download English and Japanese speech for offline use.")
+            case .downloading:
+                return .downloading("macOS is preparing English and Japanese speech…")
+            case .unsupported:
+                return .unavailable("English and Japanese Apple Speech are not available on this Mac.")
+            }
+        }
+        return .ready
+    }
+
     public var canStartRecording: Bool {
         guard !controlsLocked, selectedModelReadiness.canStart else { return false }
         return switch source {
@@ -641,6 +682,20 @@ public final class TranscriptionSession {
 
     public func installSelectedModelNow() async {
         guard let request = beginModelSetup() else { return }
+        await performModelInstall(request)
+    }
+
+    public func prepareBilingualAppleSpeechNow() async {
+        guard !controlsLocked, !modelSetupState.isActive else { return }
+        let request = ModelSetupRequest(
+            id: UUID(),
+            engine: .appleSpeechAnalyzer,
+            language: nil
+        )
+        lastError = nil
+        if case .failed = recordingState { recordingState = .idle }
+        modelSetupID = request.id
+        modelSetupState = .checking(engine: request.engine, language: nil)
         await performModelInstall(request)
     }
 
