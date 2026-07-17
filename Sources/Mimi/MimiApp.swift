@@ -53,7 +53,8 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             Task { @MainActor in
                 let status: Int32
                 do {
-                    try await Task.sleep(for: .seconds(30))
+                    let delay = Double(argument(after: "--e2e-delay", in: arguments) ?? "3") ?? 3
+                    try await Task.sleep(for: .seconds(delay))
                     let target = try FocusedTextTarget.capture(promptIfNeeded: false)
                     let updates = stream.split(separator: "|", omittingEmptySubsequences: false).map(String.init)
                     for update in updates {
@@ -441,6 +442,9 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
         let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
+        if argument(after: "--e2e-language", in: arguments) == "japanese" {
+            fixturePreferences.interfaceLanguage = .japanese
+        }
         fixturePreferences.voiceTypingEnabled = false
         let fixtureVoiceTyping = VoiceTypingController(preferences: fixturePreferences)
         if presentationState == "voice-enabled" {
@@ -464,13 +468,22 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         let size: NSSize
         switch screen {
         case "onboarding":
+            let onboardingFixture: OnboardingPreparationFixture = switch presentationState {
+            case "model-preparing": .preparing
+            case "model-ready": .ready
+            case "model-failed": .failed
+            default: .live
+            }
             view = AnyView(OnboardingView(
                 store: store,
                 preferences: fixturePreferences,
                 voiceTyping: fixtureVoiceTyping,
-                initialStep: ["ready", "voice-enabled"].contains(presentationState) ? 3 : 0
+                initialStep: ["ready", "voice-enabled"].contains(presentationState)
+                    ? 4
+                    : (["model-preparing", "model-ready", "model-failed"].contains(presentationState) ? 2 : 0),
+                preparationFixture: onboardingFixture
             ))
-            size = NSSize(width: 620, height: 500)
+            size = NSSize(width: 620, height: 560)
         case "captions":
             fixturePreferences.floatingCaptionsEnabled = true
             fixturePreferences.floatingCaptionContent = .both
