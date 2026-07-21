@@ -33,6 +33,11 @@ esac
 source_library=""
 if [[ -n "${MIMI_MLX_METALLIB:-}" ]]; then
   source_library="$MIMI_MLX_METALLIB"
+elif [[ -s "$ROOT/.build/pinned-mlx-0.30.6.metallib" ]]; then
+  # Translation development freezes the shader beside its matching MLX Swift
+  # dependency so machines with Command Line Tools selected can reproduce the
+  # app bundle. Clean CI checkouts build the same library from source below.
+  source_library="$ROOT/.build/pinned-mlx-0.30.6.metallib"
 elif xcrun --find xcodebuild >/dev/null 2>&1 && xcrun --find metallib >/dev/null 2>&1; then
   mlx_checkout=""
   for candidate in \

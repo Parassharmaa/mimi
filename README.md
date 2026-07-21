@@ -70,5 +70,6 @@ For implementation details, benchmarks, and physical-Mac checks, see:
 
 ## Release status
 
-Mimi is under active development. CI builds a locally testable app, but the
-release is not yet Developer ID signed or notarized.
+Mimi is under active development. Official tagged GitHub releases are built by
+CI, signed with Developer ID, notarized by Apple, stapled, and verified with
+Gatekeeper before the archive is published.

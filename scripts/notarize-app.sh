@@ -38,6 +38,7 @@ xcrun notarytool submit "$ARCHIVE" "${AUTHENTICATION[@]}" --wait
 xcrun stapler staple "$APP"
 xcrun stapler validate "$APP"
 spctl --assess --type execute --verbose=4 "$APP"
+python3 "$ROOT/scripts/translation/verify_shipped_translation_pack.py" --app "$APP"
 
 # Stapling changes the app bundle, so rebuild the downloadable archive and
 # checksum only after the ticket is attached.

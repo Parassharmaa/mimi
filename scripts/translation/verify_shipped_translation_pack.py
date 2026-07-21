@@ -12,6 +12,7 @@ from pathlib import Path
 
 EXPECTED_MANIFEST_SHA256 = "8e55e8f24eed07e89bdad6db0ca1d65aa791905123f764130ed021bc2380807a"
 EXPECTED_MODEL_BYTES = 73_403_427
+MAX_APP_BYTES = 500_000_000
 EXPECTED_REVISIONS = {
     "en-ja": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
     "ja-en": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
@@ -126,6 +127,9 @@ def verify_licenses(license_root: Path) -> None:
         fail("release contract model byte count changed")
     if model_record.get("manifestSha256") != EXPECTED_MANIFEST_SHA256:
         fail("release contract model manifest hash changed")
+    ceiling = model_record.get("preferredCeilingBytes")
+    if ceiling != 150_000_000 or EXPECTED_MODEL_BYTES >= ceiling:
+        fail("model pack does not satisfy its preferred size ceiling")
 
     notices = contract.get("requiredNotices")
     if not isinstance(notices, dict) or not notices:
@@ -155,6 +159,9 @@ def verify_app(app: Path) -> None:
     ).stdout.split()
     if "arm64" not in architectures:
         fail("app has no Apple Silicon executable slice")
+    app_bytes = sum(path.stat().st_size for path in app.rglob("*") if path.is_file())
+    if app_bytes >= MAX_APP_BYTES:
+        fail(f"app payload is {app_bytes} bytes, over the {MAX_APP_BYTES}-byte ceiling")
 
 
 def main() -> None:

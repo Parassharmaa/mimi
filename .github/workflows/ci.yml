@@ -44,6 +44,8 @@ jobs:
           ditto -x -k .build/dist/Mimi-macOS.zip .build/package-check
           codesign --verify --deep --strict .build/package-check/Mimi.app
           plutil -lint .build/package-check/Mimi.app/Contents/Info.plist
+          python3 scripts/translation/verify_shipped_translation_pack.py \
+            --app .build/package-check/Mimi.app
           ARCHS="$(lipo -archs .build/package-check/Mimi.app/Contents/MacOS/Mimi)"
           [[ "$ARCHS" == *arm64* && "$ARCHS" == *x86_64* ]]
 

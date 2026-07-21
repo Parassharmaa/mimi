@@ -4,6 +4,20 @@ Mimi releases must be signed with a **Developer ID Application** certificate,
 submitted to Apple's notary service, and stapled before sharing them with other
 people. Ad-hoc signatures are suitable only for local development.
 
+## Bundled translation component
+
+Official direct-download releases include Mimi's pinned 73.4 MB ElanMT
+English↔Japanese model pack. The pack and Mimi's 4-bit quantized adaptations
+are separately licensed under CC BY-SA 4.0. Packaging fails unless every model
+hash, source revision, attribution file, license file, Metal shader, and the
+500 MB app ceiling pass `verify_shipped_translation_pack.py`.
+
+This component is authorized only for Mimi's signed, notarized direct GitHub
+download. Do not submit the model-bearing bundle to the Mac App Store. Its
+offline attribution, modification notice, full license, and release contract
+are available from **Settings → Languages → Open Model License** and inside the
+app's `TranslationLicenses` resources.
+
 ## One-time Apple setup
 
 1. Join the Apple Developer Program.
@@ -33,6 +47,7 @@ base64 -i AuthKey_XXXXXXXXXX.p8 | pbcopy
 Pushing a `v*` tag then runs `.github/workflows/release.yml`. It imports the
 certificate into an ephemeral keychain, builds a universal app with hardened
 runtime and a secure timestamp, notarizes it with `notarytool`, staples the
-ticket, verifies it with Gatekeeper, and replaces the GitHub release assets.
+ticket, verifies it with Gatekeeper, re-verifies the embedded translation
+payload, and replaces the GitHub release assets.
 
 Never commit `.p12` or `.p8` files to the repository.
