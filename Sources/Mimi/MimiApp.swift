@@ -717,6 +717,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
         let screen = argument(after: "--e2e-screen", in: arguments) ?? "menu"
         let presentationState = argument(after: "--e2e-state", in: arguments) ?? "ready"
+        let exercisesLiveTranslation = arguments.contains("--e2e-live-translation")
         let store = AppStore(loadPersistedTranscript: false)
         store.languageMode = ["incremental-translation", "translation-stream", "caption-stream"].contains(presentationState)
             ? .automatic
@@ -783,7 +784,8 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 store: store,
                 preferences: fixturePreferences,
                 isConfirmingClear: presentationState == "clear-confirmation",
-                fixtureTranslation: ["incremental-translation", "translation-stream"].contains(presentationState)
+                fixtureTranslation: exercisesLiveTranslation
+                    && ["incremental-translation", "translation-stream"].contains(presentationState)
                     ? nil
                     : "Hello. Mimi transcribes locally on this Mac.",
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"
