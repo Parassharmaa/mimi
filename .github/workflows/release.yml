@@ -1,0 +1,94 @@
+name: Signed release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to build
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  sign-notarize-release:
+    name: Sign, notarize, and publish
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      CERTIFICATE_BASE64: ${{ secrets.DEVELOPER_ID_APPLICATION_P12_BASE64 }}
+      CERTIFICATE_PASSWORD: ${{ secrets.DEVELOPER_ID_APPLICATION_P12_PASSWORD }}
+      NOTARY_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8_BASE64 }}
+      MIMI_NOTARY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      MIMI_NOTARY_ISSUER: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Require release credentials
+        run: |
+          [[ -n "$CERTIFICATE_BASE64" ]]
+          [[ -n "$CERTIFICATE_PASSWORD" ]]
+          [[ -n "$NOTARY_KEY_BASE64" ]]
+          [[ -n "$MIMI_NOTARY_KEY_ID" ]]
+          [[ -n "$MIMI_NOTARY_ISSUER" ]]
+
+      - name: Import Developer ID certificate
+        env:
+          KEYCHAIN_PASSWORD: ${{ runner.temp }}-${{ github.run_id }}
+        run: |
+          CERTIFICATE_PATH="$RUNNER_TEMP/developer-id-application.p12"
+          KEYCHAIN_PATH="$RUNNER_TEMP/mimi-signing.keychain-db"
+          echo "$CERTIFICATE_BASE64" | base64 --decode > "$CERTIFICATE_PATH"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERTIFICATE_PATH" -P "$CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
+          IDENTITY="$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" | sed -n 's/.*"\(Developer ID Application:.*\)"/\1/p' | head -1)"
+          [[ -n "$IDENTITY" ]]
+          echo "MIMI_CODESIGN_IDENTITY=$IDENTITY" >> "$GITHUB_ENV"
+
+      - name: Write notarization API key
+        run: |
+          MIMI_NOTARY_KEY_PATH="$RUNNER_TEMP/AuthKey_${MIMI_NOTARY_KEY_ID}.p8"
+          echo "$NOTARY_KEY_BASE64" | base64 --decode > "$MIMI_NOTARY_KEY_PATH"
+          chmod 600 "$MIMI_NOTARY_KEY_PATH"
+          echo "MIMI_NOTARY_KEY_PATH=$MIMI_NOTARY_KEY_PATH" >> "$GITHUB_ENV"
+
+      - name: Run tests
+        run: scripts/test.sh
+
+      - name: Build signed universal app
+        run: scripts/package-app.sh
+
+      - name: Notarize, staple, and verify Gatekeeper
+        run: scripts/notarize-app.sh
+
+      - name: Upload signed release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          gh release view "$RELEASE_TAG" >/dev/null 2>&1 || gh release create "$RELEASE_TAG" --generate-notes
+          gh release upload "$RELEASE_TAG" \
+            .build/dist/Mimi-macOS.zip \
+            .build/dist/Mimi-macOS.zip.sha256 \
+            --clobber
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: Mimi-macOS-signed-notarized
+          path: |
+            .build/dist/Mimi-macOS.zip
+            .build/dist/Mimi-macOS.zip.sha256
+          if-no-files-found: error
+          retention-days: 30

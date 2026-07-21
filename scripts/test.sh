@@ -10,3 +10,4 @@ swift build --product Mimi
 swift run MimiE2E
 swift run MimiSessionE2E
 scripts/run-ui-smoke.sh
+"$ROOT/.build/Mimi.app/Contents/MacOS/Mimi" --e2e-main-window-lifecycle

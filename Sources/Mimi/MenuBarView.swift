@@ -6,7 +6,6 @@ struct MenuBarView: View {
     @Bindable var store: AppStore
     @Bindable var preferences: UserPreferences
     @Environment(\.openSettings) private var openSettings
-    @Environment(\.openWindow) private var openWindow
     @State private var isConfirmingClear = false
 
     private let initiallyFollowingLatest: Bool
@@ -296,7 +295,7 @@ struct MenuBarView: View {
     private var footer: some View {
         HStack(spacing: 14) {
             Button {
-                openWindow(id: "transcript")
+                AppWindowCoordinator.shared.showTranscript()
             } label: {
                 Label(t("Transcript", "文字起こし"), systemImage: "rectangle.on.rectangle")
             }

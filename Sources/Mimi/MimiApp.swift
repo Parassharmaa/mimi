@@ -429,7 +429,16 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             }
             return
         }
-        guard arguments.contains("--e2e-window") else { return }
+        if arguments.contains("--e2e-main-window-lifecycle") {
+            runMainWindowLifecycleSmoke()
+            return
+        }
+        guard arguments.contains("--e2e-window") else {
+            if UserDefaults.standard.bool(forKey: "completedOnboarding") {
+                AppWindowCoordinator.shared.showTranscript()
+            }
+            return
+        }
 
         let screen = argument(after: "--e2e-screen", in: arguments) ?? "menu"
         let presentationState = argument(after: "--e2e-state", in: arguments) ?? "ready"
@@ -595,6 +604,46 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    func applicationShouldHandleReopen(
+        _ sender: NSApplication,
+        hasVisibleWindows flag: Bool
+    ) -> Bool {
+        AppWindowCoordinator.shared.showTranscript()
+        return false
+    }
+
+    private func runMainWindowLifecycleSmoke() {
+        Task { @MainActor in
+            AppWindowCoordinator.shared.showTranscript()
+            try? await Task.sleep(for: .milliseconds(600))
+            guard let firstWindow = transcriptWindow else {
+                print("Mimi main-window lifecycle smoke failed: launch did not open the transcript window.")
+                Darwin.exit(1)
+            }
+            let firstWindowNumber = firstWindow.windowNumber
+            firstWindow.close()
+            try? await Task.sleep(for: .milliseconds(250))
+
+            AppWindowCoordinator.shared.showTranscript()
+            try? await Task.sleep(for: .milliseconds(600))
+            guard let reopenedWindow = transcriptWindow, reopenedWindow.isVisible else {
+                print("Mimi main-window lifecycle smoke failed: reopen did not restore the transcript window.")
+                Darwin.exit(1)
+            }
+            let visibleTranscriptWindows = AppWindowCoordinator.shared.visibleTranscriptWindows
+            guard visibleTranscriptWindows.count == 1 else {
+                print("Mimi main-window lifecycle smoke failed: reopen created duplicate transcript windows.")
+                Darwin.exit(1)
+            }
+            print("Mimi main-window lifecycle smoke passed: launch opened window \(firstWindowNumber), and Dock-style reopen restored one transcript window.")
+            Darwin.exit(0)
+        }
+    }
+
+    private var transcriptWindow: NSWindow? {
+        AppWindowCoordinator.shared.visibleTranscriptWindows.first
+    }
+
     private func argument(after flag: String, in arguments: [String]) -> String? {
         guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else {
             return nil
@@ -685,6 +734,7 @@ struct MimiApp: App {
         )
         _store = State(initialValue: store)
         _preferences = State(initialValue: preferences)
+        AppWindowCoordinator.shared.configure(store: store, preferences: preferences)
         onboardingCoordinator = OnboardingWindowCoordinator(store: store, preferences: preferences, voiceTyping: voiceTyping)
         floatingCaptionController = FloatingCaptionController(store: store, preferences: preferences)
         voiceTypingController = voiceTyping
@@ -704,13 +754,6 @@ struct MimiApp: App {
             SettingsView(store: store, preferences: preferences, voiceTyping: voiceTypingController)
         }
 
-        WindowGroup("Mimi Transcript", id: "transcript") {
-            TranscriptWindow(store: store, preferences: preferences)
-        }
-        .defaultSize(width: 920, height: 640)
-        .defaultPosition(.center)
-        .windowToolbarStyle(.unified)
-        .windowResizability(.contentMinSize)
         .commands {
             CommandMenu("Recording") {
                 Button(preferences.text("New Session", "新しいセッション")) {

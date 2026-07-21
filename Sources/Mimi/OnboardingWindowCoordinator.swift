@@ -6,8 +6,10 @@ final class OnboardingWindowCoordinator {
     private var window: NSWindow?
 
     init(store: AppStore, preferences: UserPreferences, voiceTyping: VoiceTypingController) {
+        let arguments = ProcessInfo.processInfo.arguments
         guard !preferences.completedOnboarding,
-              !ProcessInfo.processInfo.arguments.contains("--e2e-window") else { return }
+              !arguments.contains("--e2e-window"),
+              !arguments.contains("--e2e-main-window-lifecycle") else { return }
         DispatchQueue.main.async { [weak self, weak store, weak preferences, weak voiceTyping] in
             guard let self, let store, let preferences, let voiceTyping else { return }
             self.show(store: store, preferences: preferences, voiceTyping: voiceTyping)
