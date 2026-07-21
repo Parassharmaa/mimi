@@ -8,9 +8,236 @@ import SwiftUI
 final class MimiAppDelegate: NSObject, NSApplicationDelegate {
     private var e2eWindow: NSWindow?
     private var e2eStore: AppStore?
+    private var translationBenchmarkCoordinator: AppleTranslationBenchmarkCoordinator?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
+        if let outputPath = argument(after: "--verify-translation-runtime-cache", in: arguments) {
+            let report = verifyExperimentalTranslationRuntimeCacheContract()
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                try encoder.encode(report).write(
+                    to: URL(filePath: outputPath),
+                    options: .atomic
+                )
+                print("Mimi translation runtime cache verification \(report.status): \(outputPath)")
+                fflush(stdout)
+                Darwin.exit(report.status == "passed" ? 0 : 1)
+            } catch {
+                print("Mimi translation runtime cache verification failed to write: \(error.localizedDescription)")
+                fflush(stdout)
+                Darwin.exit(1)
+            }
+        }
+        if let outputPath = argument(after: "--verify-translation-fallback", in: arguments) {
+            let report = verifyExperimentalTranslationFallbackContract()
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                try encoder.encode(report).write(
+                    to: URL(filePath: outputPath),
+                    options: .atomic
+                )
+                print("Mimi translation fallback verification \(report.status): \(outputPath)")
+                fflush(stdout)
+                Darwin.exit(report.status == "passed" ? 0 : 1)
+            } catch {
+                print("Mimi translation fallback verification failed to write: \(error.localizedDescription)")
+                fflush(stdout)
+                Darwin.exit(1)
+            }
+        }
+        if let outputPath = argument(after: "--verify-translation-critical-token-failure", in: arguments),
+           let modelRoot = argument(after: "--model-root", in: arguments),
+           let text = argument(after: "--text", in: arguments) {
+            let sourceLanguage: SpeechLanguage =
+                argument(after: "--direction", in: arguments) == "ja-en"
+                ? .japanese : .english
+            Task { @MainActor in
+                let report = await verifyExperimentalTranslationCriticalTokenFailure(
+                    modelRoot: URL(filePath: modelRoot, directoryHint: .isDirectory),
+                    source: text,
+                    sourceLanguage: sourceLanguage
+                )
+                let status: Int32
+                do {
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                    try encoder.encode(report).write(
+                        to: URL(filePath: outputPath),
+                        options: .atomic
+                    )
+                    print("Mimi critical-token failure verification \(report.status): \(outputPath)")
+                    status = report.status == "passed" ? 0 : 1
+                } catch {
+                    print("Mimi critical-token failure verification failed to write: \(error.localizedDescription)")
+                    status = 1
+                }
+                fflush(stdout)
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let outputPath = argument(after: "--verify-translation-moe-router", in: arguments),
+           let enJARouterPath = argument(after: "--en-ja-router", in: arguments),
+           let jaENRouterPath = argument(after: "--ja-en-router", in: arguments),
+           let pythonReportPath = argument(after: "--python-report", in: arguments) {
+            do {
+                let report = try verifyMarianSourceExpertRouterParity(
+                    enJARouterURL: URL(filePath: enJARouterPath),
+                    jaENRouterURL: URL(filePath: jaENRouterPath),
+                    pythonReportURL: URL(filePath: pythonReportPath)
+                )
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                try encoder.encode(report).write(
+                    to: URL(filePath: outputPath),
+                    options: .atomic
+                )
+                print("Mimi source-expert router parity \(report.status): \(outputPath)")
+                fflush(stdout)
+                Darwin.exit(report.status == "passed" ? 0 : 1)
+            } catch {
+                print("Mimi source-expert router parity failed: \(error.localizedDescription)")
+                fflush(stdout)
+                Darwin.exit(1)
+            }
+        }
+        if let outputPath = argument(after: "--verify-translation-memory", in: arguments),
+           let memoryPath = argument(after: "--memory", in: arguments),
+           let pythonReportPath = argument(after: "--python-report", in: arguments) {
+            do {
+                let report = try verifyTranslationMemoryParity(
+                    memoryURL: URL(filePath: memoryPath),
+                    pythonReportURL: URL(filePath: pythonReportPath)
+                )
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                try encoder.encode(report).write(
+                    to: URL(filePath: outputPath),
+                    options: .atomic
+                )
+                print("Mimi exact translation-memory parity \(report.status): \(outputPath)")
+                fflush(stdout)
+                Darwin.exit(report.status == "passed" ? 0 : 1)
+            } catch {
+                print("Mimi exact translation-memory parity failed: \(error.localizedDescription)")
+                fflush(stdout)
+                Darwin.exit(1)
+            }
+        }
+        if let modelRoot = argument(after: "--validate-translation-mlx", in: arguments) {
+            do {
+                let directory = URL(filePath: modelRoot, directoryHint: .isDirectory)
+                try ExperimentalMLXTranslationEngine.validateModelPack(at: directory)
+                print("Mimi MLX Marian model-pack validation passed: \(directory.path)")
+                fflush(stdout)
+                Darwin.exit(0)
+            } catch {
+                print("Mimi MLX Marian model-pack validation failed: \(error.localizedDescription)")
+                fflush(stdout)
+                Darwin.exit(1)
+            }
+        }
+        if let outputPath = argument(after: "--verify-translation-mlx-parity", in: arguments),
+           let modelRoot = argument(after: "--model-root", in: arguments),
+           let suitePath = argument(after: "--suite", in: arguments),
+           let pythonReportPath = argument(after: "--python-report", in: arguments) {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let warmRuns: Int
+                    if let value = argument(after: "--translation-mlx-warm-runs", in: arguments) {
+                        guard let parsed = Int(value), parsed >= 0 else {
+                            throw TranslationMLXBenchmarkCommandError.invalidWarmRuns(value)
+                        }
+                        warmRuns = parsed
+                    } else {
+                        warmRuns = 0
+                    }
+                    let report = try await verifyTranslationMLXParity(
+                        modelRoot: URL(filePath: modelRoot, directoryHint: .isDirectory),
+                        suiteURL: URL(filePath: suitePath),
+                        pythonReportURL: URL(filePath: pythonReportPath),
+                        warmRuns: warmRuns,
+                        cachedDecoding: !arguments.contains("--translation-mlx-full-prefix")
+                    )
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                    try encoder.encode(report).write(
+                        to: URL(filePath: outputPath),
+                        options: .atomic
+                    )
+                    print("Mimi Swift/MLX translation parity \(report.status): \(outputPath)")
+                    status = report.status == "passed" ? 0 : 1
+                } catch {
+                    print("Mimi Swift/MLX translation parity failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                fflush(stdout)
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let outputPath = argument(after: "--smoke-translation-mlx-moe", in: arguments),
+           let modelRoot = argument(after: "--model-root", in: arguments),
+           let text = argument(after: "--text", in: arguments),
+           let expectedEngine = argument(after: "--expected-engine", in: arguments),
+           ["generalist", "expert", "translation-memory"].contains(expectedEngine) {
+            let sourceLanguage: SpeechLanguage =
+                argument(after: "--direction", in: arguments) == "ja-en"
+                ? .japanese : .english
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let report = try await verifyExperimentalMLXTranslationMoESmoke(
+                        modelRoot: URL(filePath: modelRoot, directoryHint: .isDirectory),
+                        source: text,
+                        sourceLanguage: sourceLanguage,
+                        expectedEngine: expectedEngine
+                    )
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                    try encoder.encode(report).write(
+                        to: URL(filePath: outputPath),
+                        options: .atomic
+                    )
+                    print("Mimi MLX Marian MoE smoke \(report.status): \(outputPath)")
+                    status = report.status == "passed" ? 0 : 1
+                } catch {
+                    print("Mimi MLX Marian MoE smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                fflush(stdout)
+                Darwin.exit(status)
+            }
+            return
+        }
+        if let modelRoot = argument(after: "--smoke-translation-mlx", in: arguments),
+           let text = argument(after: "--text", in: arguments) {
+            let direction = argument(after: "--direction", in: arguments) == "ja-en"
+                ? "ja-en" : "en-ja"
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let output = try await Task.detached {
+                        let directory = URL(filePath: modelRoot, directoryHint: .isDirectory)
+                            .appending(path: direction, directoryHint: .isDirectory)
+                        let runtime = try await MarianMLXTranslationRuntime.load(directory: directory)
+                        return runtime.translate(text)
+                    }.value
+                    print("Mimi MLX Marian \(direction) smoke passed: \(output)")
+                    status = 0
+                } catch {
+                    print("Mimi MLX Marian smoke failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                fflush(stdout)
+                Darwin.exit(status)
+            }
+            return
+        }
         if arguments.contains("--e2e-insert-text") || arguments.contains("--e2e-stream-insert") {
             // This harness represents the already-running menu-bar app and
             // must not become active or disturb the external focused field.
@@ -28,6 +255,54 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.appearance = NSAppearance(named: .darkAqua)
         default:
             break
+        }
+        if let suitePath = argument(after: "--benchmark-translation-apple", in: arguments),
+           let outputPath = argument(after: "--output", in: arguments) {
+            do {
+                let warmRuns = try benchmarkWarmRuns(arguments)
+                let suite = try TranslationBenchmarkCase.loadJSONL(
+                    from: URL(fileURLWithPath: suitePath)
+                )
+                let coordinator = AppleTranslationBenchmarkCoordinator(
+                    suite: suite,
+                    warmRuns: warmRuns
+                ) { result in
+                    let status: Int32
+                    do {
+                        let report = try result.get()
+                        let encoder = JSONEncoder()
+                        encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+                        encoder.dateEncodingStrategy = .iso8601
+                        let data = try encoder.encode(report)
+                        try data.write(
+                            to: URL(fileURLWithPath: outputPath),
+                            options: .atomic
+                        )
+                        print("Mimi Apple Translation benchmark wrote \(report.results.count) cases to \(outputPath).")
+                        status = 0
+                    } catch {
+                        print("Mimi Apple Translation benchmark failed: \(error.localizedDescription)")
+                        status = 1
+                    }
+                    fflush(stdout)
+                    Darwin.exit(status)
+                }
+                translationBenchmarkCoordinator = coordinator
+                let hostingController = NSHostingController(rootView: AppleTranslationBenchmarkView(
+                    suite: suite,
+                    coordinator: coordinator
+                ))
+                hostingController.sizingOptions = []
+                let window = NSWindow(contentViewController: hostingController)
+                window.setContentSize(NSSize(width: 1, height: 1))
+                window.alphaValue = 0.01
+                window.orderBack(nil)
+                e2eWindow = window
+            } catch {
+                print("Mimi Apple Translation benchmark failed: \(error.localizedDescription)")
+                Darwin.exit(1)
+            }
+            return
         }
         if let insertionText = argument(after: "--e2e-insert-text", in: arguments) {
             Task { @MainActor in
@@ -644,11 +919,44 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         AppWindowCoordinator.shared.visibleTranscriptWindows.first
     }
 
+    private func benchmarkWarmRuns(_ arguments: [String]) throws -> Int {
+        guard let value = argument(
+            after: "--benchmark-translation-apple-warm-runs",
+            in: arguments
+        ) else { return 3 }
+        guard let count = Int(value), count >= 0 else {
+            throw AppleTranslationBenchmarkCommandError.invalidWarmRuns(value)
+        }
+        return count
+    }
+
     private func argument(after flag: String, in arguments: [String]) -> String? {
         guard let index = arguments.firstIndex(of: flag), arguments.indices.contains(index + 1) else {
             return nil
         }
         return arguments[index + 1]
+    }
+}
+
+private enum AppleTranslationBenchmarkCommandError: LocalizedError {
+    case invalidWarmRuns(String)
+
+    var errorDescription: String? {
+        switch self {
+        case let .invalidWarmRuns(value):
+            "Apple Translation benchmark warm runs must be a non-negative integer, not \(value)."
+        }
+    }
+}
+
+private enum TranslationMLXBenchmarkCommandError: LocalizedError {
+    case invalidWarmRuns(String)
+
+    var errorDescription: String? {
+        switch self {
+        case let .invalidWarmRuns(value):
+            "Translation MLX warm runs must be a nonnegative integer, got: \(value)."
+        }
     }
 }
 

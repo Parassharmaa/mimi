@@ -2,6 +2,7 @@ import MimiCore
 import Observation
 import SwiftUI
 @preconcurrency import Translation
+import os
 
 /// Presents finalized translations in transcript order while two persistent,
 /// direction-pinned lanes serially drive English→Japanese and Japanese→English.
@@ -119,19 +120,25 @@ struct InlineTranslationView: View {
         .frame(maxHeight: fillsAvailableSpace ? .infinity : nil, alignment: .topLeading)
         .background {
             HStack(spacing: 0) {
-                SegmentTranslationLane(
+                ExperimentalSegmentTranslationLane(
                     segments: segments,
-                    sourceLanguage: .english,
                     model: model,
                     retryGeneration: retryGeneration,
                     isEnabled: fixtureTranslation == nil
                 )
                 SegmentTranslationLane(
                     segments: segments,
+                    sourceLanguage: .english,
+                    model: model,
+                    retryGeneration: retryGeneration,
+                    isEnabled: fixtureTranslation == nil && !model.isUsingExperimentalLocalCandidate
+                )
+                SegmentTranslationLane(
+                    segments: segments,
                     sourceLanguage: .japanese,
                     model: model,
                     retryGeneration: retryGeneration,
-                    isEnabled: fixtureTranslation == nil
+                    isEnabled: fixtureTranslation == nil && !model.isUsingExperimentalLocalCandidate
                 )
             }
             .frame(width: 0, height: 0)
@@ -145,11 +152,27 @@ struct InlineTranslationView: View {
 
 @MainActor
 @Observable
-private final class SegmentTranslationModel {
+final class SegmentTranslationModel {
+    let experimentalConfiguration: ExperimentalMLXTranslationConfiguration?
+
     private(set) var translations: [UUID: String] = [:]
     private(set) var activeLanguage: SpeechLanguage?
     private(set) var errors: [SpeechLanguage: String] = [:]
     private(set) var workGeneration = 0
+    private(set) var isUsingExperimentalLocalCandidate = false
+
+    private let logger = Logger(subsystem: "com.paras.mimi", category: "experimental-translation")
+
+    init(
+        environment: [String: String] = ProcessInfo.processInfo.environment,
+        bundle: Bundle = .main
+    ) {
+        experimentalConfiguration = ExperimentalMLXTranslationConfiguration.resolved(
+            environment: environment,
+            bundle: bundle
+        )
+        isUsingExperimentalLocalCandidate = experimentalConfiguration != nil
+    }
 
     var isTranslating: Bool { activeLanguage != nil }
     var errorText: String? { errors.values.sorted().first }
@@ -182,6 +205,13 @@ private final class SegmentTranslationModel {
         errors = [:]
     }
 
+    func failLocalCandidate(after error: Error, for language: SpeechLanguage) {
+        logger.error("Experimental local translation failed closed without Apple fallback: \(error.localizedDescription, privacy: .public)")
+        activeLanguage = nil
+        errors[language] = "Local translation failed. The source transcript is preserved; try again when ready."
+        workGeneration &+= 1
+    }
+
     func prune(validIDs: Set<UUID>) {
         translations = translations.filter { validIDs.contains($0.key) }
     }
@@ -190,9 +220,130 @@ private final class SegmentTranslationModel {
         translations = [:]
         activeLanguage = nil
         errors = [:]
+        isUsingExperimentalLocalCandidate = experimentalConfiguration != nil
         workGeneration &+= 1
         prune(validIDs: Set(segments.map(\.id)))
     }
+}
+
+private enum TranslationFallbackVerificationFixtureError: Error {
+    case candidateFailure
+}
+
+struct TranslationFallbackVerificationReport: Codable {
+    let schemaVersion: Int
+    let status: String
+    let appleDefaultWhenExperimentalDisabled: Bool
+    let candidateFailureDoesNotUseApple: Bool
+    let candidateFailurePreservesLocalResults: Bool
+    let candidateFailureShowsRetryableError: Bool
+    let applePartialsWhenExperimentalDisabled: Bool
+    let experimentalPartialsDoNotUseApple: Bool
+    let invalidModelPackRejected: Bool
+}
+
+@MainActor
+func verifyExperimentalTranslationFallbackContract() -> TranslationFallbackVerificationReport {
+    let disabled = SegmentTranslationModel(environment: [:])
+    let environment = [
+        ExperimentalMLXTranslationConfiguration.enabledEnvironmentKey: "1",
+        ExperimentalMLXTranslationConfiguration.modelDirectoryEnvironmentKey: "/invalid/mimi-model-pack",
+    ]
+    let candidate = SegmentTranslationModel(environment: environment)
+    let segmentID = UUID()
+    candidate.store("candidate output", for: segmentID)
+    _ = candidate.claim(.english)
+    candidate.failLocalCandidate(
+        after: TranslationFallbackVerificationFixtureError.candidateFailure,
+        for: .english
+    )
+    let appleDefault = !disabled.isUsingExperimentalLocalCandidate
+    let failureDoesNotUseApple = candidate.isUsingExperimentalLocalCandidate
+    let preservesResults = candidate.translations[segmentID] == "candidate output"
+        && candidate.activeLanguage == nil
+    let showsRetryableError = candidate.errorText != nil
+    let appleDefaultPartials = FloatingCaptionView.usesAppleTranslationForLivePartials(
+        environment: [:]
+    )
+    let experimentalPartialsDoNotUseApple = !FloatingCaptionView
+        .usesAppleTranslationForLivePartials(environment: environment)
+    let invalidPackRejected: Bool
+    do {
+        try ExperimentalMLXTranslationEngine.validateModelPack(
+            at: URL(filePath: "/invalid/mimi-model-pack", directoryHint: .isDirectory)
+        )
+        invalidPackRejected = false
+    } catch {
+        invalidPackRejected = true
+    }
+    let passed = appleDefault
+        && failureDoesNotUseApple
+        && preservesResults
+        && showsRetryableError
+        && appleDefaultPartials
+        && experimentalPartialsDoNotUseApple
+        && invalidPackRejected
+    return .init(
+        schemaVersion: 1,
+        status: passed ? "passed" : "failed",
+        appleDefaultWhenExperimentalDisabled: appleDefault,
+        candidateFailureDoesNotUseApple: failureDoesNotUseApple,
+        candidateFailurePreservesLocalResults: preservesResults,
+        candidateFailureShowsRetryableError: showsRetryableError,
+        applePartialsWhenExperimentalDisabled: appleDefaultPartials,
+        experimentalPartialsDoNotUseApple: experimentalPartialsDoNotUseApple,
+        invalidModelPackRejected: invalidPackRejected
+    )
+}
+
+private struct ExperimentalSegmentTranslationLane: View {
+    let segments: [TranscriptSegment]
+    let model: SegmentTranslationModel
+    let retryGeneration: Int
+    let isEnabled: Bool
+
+    private var input: ExperimentalSegmentTranslationLaneInput {
+        .init(
+            segmentIDs: segments.map(\.id),
+            retryGeneration: retryGeneration,
+            isEnabled: isEnabled && model.isUsingExperimentalLocalCandidate
+        )
+    }
+
+    var body: some View {
+        Color.clear
+            .task(id: input) {
+                guard input.isEnabled, let configuration = model.experimentalConfiguration else { return }
+                for segment in segments where model.translations[segment.id] == nil {
+                    guard !Task.isCancelled, model.claim(segment.language) else { return }
+                    do {
+                        let translated = try await ExperimentalMLXTranslationEngine.shared.translate(
+                            segment.text,
+                            sourceLanguage: segment.language,
+                            configuration: configuration
+                        )
+                        guard !Task.isCancelled else {
+                            model.release(segment.language)
+                            return
+                        }
+                        model.store(translated, for: segment.id)
+                        model.release(segment.language)
+                    } catch is CancellationError {
+                        model.release(segment.language)
+                        return
+                    } catch {
+                        model.failLocalCandidate(after: error, for: segment.language)
+                        return
+                    }
+                }
+            }
+    }
+}
+
+private struct ExperimentalSegmentTranslationLaneInput: Equatable {
+    let segmentIDs: [UUID]
+    let retryGeneration: Int
+    let isEnabled: Bool
 }
 
 private struct SegmentTranslationLane: View {

@@ -1,0 +1,5 @@
+# Frozen upstream legal texts are hash-bound release evidence. Preserve their
+# exact bytes, including source-site whitespace, and exclude them from style
+# whitespace checks.
+Research/translation/release/**/licenses/** -whitespace
+App/Resources/TranslationLicenses/*.txt -whitespace

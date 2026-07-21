@@ -1,0 +1,461 @@
+{
+  "attributionSummary": {
+    "datasetRows": 264300,
+    "licenses": {
+      "CC-BY-2.0-FR": 40376,
+      "CC-BY-4.0": 35600,
+      "CC-BY-SA-3.0": 71967,
+      "PDL-1.0-compatible-CC-BY-4.0": 110000,
+      "project-owned": 6357
+    },
+    "origins": {
+      "finalized-japanese-law-translation": 110000,
+      "human-alt-parallel": 35600,
+      "human-kftt-replay": 70967,
+      "human-kftt-validation": 400,
+      "human-tatoeba-bidirectional-agreement-filtered": 40376,
+      "licensed-human-hard-reference": 665,
+      "mimi-shipped-ui-pair": 6292
+    },
+    "promotionExcludedOrigins": {},
+    "promotionExcludedRows": 0,
+    "promotionExclusionReasons": {},
+    "uniqueTatoebaAttributions": 9305
+  },
+  "blockers": [
+    "dataset-policy-manifest-does-not-authorize-promotion",
+    "sealed-automated-400x2-quality-evaluation-pending",
+    "license-compatibility-and-distribution-review-pending",
+    "app-distribution-terms-review-pending"
+  ],
+  "conversionProvenance": {
+    "formal-en-ja": {
+      "operation": "float16-normalize-then-mlx-affine-quantize",
+      "outputWeightsSha256": "f1d9abc7104fe71262f62ec834ca451d740a2f99df72e67559068598abb8e7ff",
+      "quantization": {
+        "bits": 4,
+        "computeDtype": "float16",
+        "groupSize": 64
+      },
+      "runtime": {
+        "mlx": "0.30.6",
+        "python": "3.12.12",
+        "sentencepiece": "0.2.2",
+        "tokenizers": "0.22.2"
+      },
+      "schemaVersion": 1,
+      "sourceWeightsSha256": "eb9aa8db0e99d371036b0c55635cfdb3a5ee4d5715e32ab58bebe6173aa17ee5",
+      "tool": {
+        "path": "scripts/translation/prepare_elanmt_mlx.py",
+        "sha256": "eb3a4eaff3da82bd2e7680cf29aaa9a6b172fb8ed5bed5abdd6a48e186ff4fb7"
+      }
+    },
+    "generalist-en-ja": {
+      "operation": "float16-normalize-then-mlx-affine-quantize",
+      "outputWeightsSha256": "d7e6e0b514d244adeb6c4a59e4ad16f902c6f9c977f9c62ff41d4402fc093fcc",
+      "quantization": {
+        "bits": 4,
+        "computeDtype": "float16",
+        "groupSize": 64
+      },
+      "runtime": {
+        "mlx": "0.30.6",
+        "python": "3.12.12",
+        "sentencepiece": "0.2.2",
+        "tokenizers": "0.22.2"
+      },
+      "schemaVersion": 1,
+      "sourceWeightsSha256": "ce0ad1efebd0f69e52528c1df2e072304616242d8963edb98d61f60e57e0739e",
+      "tool": {
+        "path": "scripts/translation/prepare_elanmt_mlx.py",
+        "sha256": "eb3a4eaff3da82bd2e7680cf29aaa9a6b172fb8ed5bed5abdd6a48e186ff4fb7"
+      }
+    },
+    "generalist-ja-en": {
+      "operation": "float16-normalize-then-mlx-affine-quantize",
+      "outputWeightsSha256": "f798f2314b225c4640d4802e3cb5554be68ef9389bf38a03e019682a2252f76d",
+      "quantization": {
+        "bits": 4,
+        "computeDtype": "float16",
+        "groupSize": 64
+      },
+      "runtime": {
+        "mlx": "0.30.6",
+        "python": "3.12.12",
+        "sentencepiece": "0.2.2",
+        "tokenizers": "0.22.2"
+      },
+      "schemaVersion": 1,
+      "sourceWeightsSha256": "5b789463dae3cb0c2e9bff50996f58cf9bd1ca4fbe9b07af0e2531f8ae132754",
+      "tool": {
+        "path": "scripts/translation/prepare_elanmt_mlx.py",
+        "sha256": "eb3a4eaff3da82bd2e7680cf29aaa9a6b172fb8ed5bed5abdd6a48e186ff4fb7"
+      }
+    },
+    "legal-ja-en": {
+      "operation": "float16-normalize-then-mlx-affine-quantize",
+      "outputWeightsSha256": "a01fa5b06b877322f1bad83e5b7bd871f13c7ab094d549cbaf6f63b46469d862",
+      "quantization": {
+        "bits": 4,
+        "computeDtype": "float16",
+        "groupSize": 64
+      },
+      "runtime": {
+        "mlx": "0.30.6",
+        "python": "3.12.12",
+        "sentencepiece": "0.2.2",
+        "tokenizers": "0.22.2"
+      },
+      "schemaVersion": 1,
+      "sourceWeightsSha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+      "tool": {
+        "path": "scripts/translation/prepare_elanmt_mlx.py",
+        "sha256": "eb3a4eaff3da82bd2e7680cf29aaa9a6b172fb8ed5bed5abdd6a48e186ff4fb7"
+      }
+    }
+  },
+  "datasetFiles": {
+    "Research/translation/work/conversational-control-en-ja/train.jsonl": {
+      "declaredBy": "Research/translation/models/elanmt-conversational-control-en-ja/mimi_training_manifest.json",
+      "path": "Research/translation/work/conversational-control-en-ja/train.jsonl",
+      "rows": 4346,
+      "sha256": "985e66ba98f02dca5c6a796129d83c16c6b5b125644715207211ba293092ea4e",
+      "split": "train"
+    },
+    "Research/translation/work/conversational-control-en-ja/valid.jsonl": {
+      "declaredBy": "Research/translation/models/elanmt-conversational-control-en-ja/mimi_training_manifest.json",
+      "path": "Research/translation/work/conversational-control-en-ja/valid.jsonl",
+      "rows": 1085,
+      "sha256": "28d23f456964992ee961308f74b7a20bcaef12cad03d901da43e51a261586bb9",
+      "split": "valid"
+    },
+    "Research/translation/work/hard-reference-ja-en/train.jsonl": {
+      "declaredBy": "Research/translation/models/elanmt-hard-reference-ja-en/mimi_training_manifest.json",
+      "path": "Research/translation/work/hard-reference-ja-en/train.jsonl",
+      "rows": 2465,
+      "sha256": "fc08853383f92edbf7c67a888ce918da70027d5c2bf16561913979ef16801b3b",
+      "split": "train"
+    },
+    "Research/translation/work/hard-reference-ja-en/valid.jsonl": {
+      "declaredBy": "Research/translation/models/elanmt-hard-reference-ja-en/mimi_training_manifest.json",
+      "path": "Research/translation/work/hard-reference-ja-en/valid.jsonl",
+      "rows": 414,
+      "sha256": "d0defd68034d8a77afb9d55b2f6d4d9126dd0c8bd111c7f7a0be702bfe34ad4a",
+      "split": "valid"
+    },
+    "Research/translation/work/licensed-unified-ja-en-v1/train.jsonl": {
+      "declaredBy": "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/mimi_training_manifest.json",
+      "path": "Research/translation/work/licensed-unified-ja-en-v1/train.jsonl",
+      "rows": 6035,
+      "sha256": "81615ff015931411b4563e1364e1f44ff9c5ae07de435eaf4e9c2bc942d7dafb",
+      "split": "train"
+    },
+    "Research/translation/work/licensed-unified-ja-en-v1/valid.jsonl": {
+      "declaredBy": "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/mimi_training_manifest.json",
+      "path": "Research/translation/work/licensed-unified-ja-en-v1/valid.jsonl",
+      "rows": 1285,
+      "sha256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096",
+      "split": "valid"
+    },
+    "Research/translation/work/release-clean-full-depth-en-ja-v1/train.jsonl": {
+      "declaredBy": "Research/translation/work/release-clean-full-depth-en-ja-v1/manifest.json",
+      "path": "Research/translation/work/release-clean-full-depth-en-ja-v1/train.jsonl",
+      "rows": 123050,
+      "sha256": "30043b643175ea033343643985735e157f9833f1435ad1dcbb4008790e9691da",
+      "split": "train"
+    },
+    "Research/translation/work/release-clean-full-depth-en-ja-v1/valid.jsonl": {
+      "declaredBy": "Research/translation/work/release-clean-full-depth-en-ja-v1/manifest.json",
+      "path": "Research/translation/work/release-clean-full-depth-en-ja-v1/valid.jsonl",
+      "rows": 1285,
+      "sha256": "ab2b957f9b000f182bd8c459d34da34db02105e42e97e1efb6979097acdacc71",
+      "split": "valid"
+    },
+    "Research/translation/work/release-clean-legal-specialist-ja-en-v1/train.jsonl": {
+      "declaredBy": "Research/translation/work/release-clean-legal-specialist-ja-en-v1/manifest.json",
+      "path": "Research/translation/work/release-clean-legal-specialist-ja-en-v1/train.jsonl",
+      "rows": 123050,
+      "sha256": "39d9d91238f53c0113e8c95e25e073a2e5c1838e05afc4f0dabc9104d19804cb",
+      "split": "train"
+    },
+    "Research/translation/work/release-clean-legal-specialist-ja-en-v1/valid.jsonl": {
+      "declaredBy": "Research/translation/work/release-clean-legal-specialist-ja-en-v1/manifest.json",
+      "path": "Research/translation/work/release-clean-legal-specialist-ja-en-v1/valid.jsonl",
+      "rows": 1285,
+      "sha256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096",
+      "split": "valid"
+    }
+  },
+  "datasetManifests": {
+    "Research/translation/work/conversational-control-en-ja/manifest.json": {
+      "authenticatedOutputs": [
+        "train",
+        "valid"
+      ],
+      "declaredPromotionEligible": null,
+      "outputs": {
+        "train": {
+          "path": "Research/translation/work/conversational-control-en-ja/train.jsonl",
+          "sha256": "985e66ba98f02dca5c6a796129d83c16c6b5b125644715207211ba293092ea4e"
+        },
+        "valid": {
+          "path": "Research/translation/work/conversational-control-en-ja/valid.jsonl",
+          "sha256": "28d23f456964992ee961308f74b7a20bcaef12cad03d901da43e51a261586bb9"
+        }
+      },
+      "path": "Research/translation/work/conversational-control-en-ja/manifest.json",
+      "promotionEligible": false,
+      "sha256": "4823f8cdd22224e764cd0a4a5041887dc8b5bc05f298420833a5fa49beec01ae"
+    },
+    "Research/translation/work/hard-reference-ja-en/manifest.json": {
+      "authenticatedOutputs": [
+        "train",
+        "valid"
+      ],
+      "declaredPromotionEligible": null,
+      "outputs": {
+        "train": {
+          "path": "Research/translation/work/hard-reference-ja-en/train.jsonl",
+          "sha256": "fc08853383f92edbf7c67a888ce918da70027d5c2bf16561913979ef16801b3b"
+        },
+        "valid": {
+          "path": "Research/translation/work/hard-reference-ja-en/valid.jsonl",
+          "sha256": "d0defd68034d8a77afb9d55b2f6d4d9126dd0c8bd111c7f7a0be702bfe34ad4a"
+        }
+      },
+      "path": "Research/translation/work/hard-reference-ja-en/manifest.json",
+      "promotionEligible": false,
+      "sha256": "243247d3231c130e71452101fe34812e2cf506eb1122ccd0de0ec3c7cee83d1f"
+    },
+    "Research/translation/work/licensed-unified-ja-en-v1/manifest.json": {
+      "authenticatedOutputs": [
+        "train",
+        "valid"
+      ],
+      "declaredPromotionEligible": true,
+      "outputs": {
+        "train": {
+          "path": "Research/translation/work/licensed-unified-ja-en-v1/train.jsonl",
+          "sha256": "81615ff015931411b4563e1364e1f44ff9c5ae07de435eaf4e9c2bc942d7dafb"
+        },
+        "valid": {
+          "path": "Research/translation/work/licensed-unified-ja-en-v1/valid.jsonl",
+          "sha256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096"
+        }
+      },
+      "path": "Research/translation/work/licensed-unified-ja-en-v1/manifest.json",
+      "promotionEligible": true,
+      "sha256": "f14a7bb4e590b4b093640e38ef30043de924809895dfeaf722e01d46590eedc0"
+    },
+    "Research/translation/work/release-clean-full-depth-en-ja-v1/manifest.json": {
+      "authenticatedOutputs": [
+        "train",
+        "valid"
+      ],
+      "declaredPromotionEligible": false,
+      "outputs": {
+        "train": {
+          "path": "Research/translation/work/release-clean-full-depth-en-ja-v1/train.jsonl",
+          "sha256": "30043b643175ea033343643985735e157f9833f1435ad1dcbb4008790e9691da"
+        },
+        "valid": {
+          "path": "Research/translation/work/release-clean-full-depth-en-ja-v1/valid.jsonl",
+          "sha256": "ab2b957f9b000f182bd8c459d34da34db02105e42e97e1efb6979097acdacc71"
+        }
+      },
+      "path": "Research/translation/work/release-clean-full-depth-en-ja-v1/manifest.json",
+      "promotionEligible": false,
+      "sha256": "9d12ebc933aeda35129606c44c43f197a9482e6be45b4bf42d5c1344ce660c21"
+    },
+    "Research/translation/work/release-clean-legal-specialist-ja-en-v1/manifest.json": {
+      "authenticatedOutputs": [
+        "train",
+        "valid"
+      ],
+      "declaredPromotionEligible": false,
+      "outputs": {
+        "train": {
+          "path": "Research/translation/work/release-clean-legal-specialist-ja-en-v1/train.jsonl",
+          "sha256": "39d9d91238f53c0113e8c95e25e073a2e5c1838e05afc4f0dabc9104d19804cb"
+        },
+        "valid": {
+          "path": "Research/translation/work/release-clean-legal-specialist-ja-en-v1/valid.jsonl",
+          "sha256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096"
+        }
+      },
+      "path": "Research/translation/work/release-clean-legal-specialist-ja-en-v1/manifest.json",
+      "promotionEligible": false,
+      "sha256": "87bf857532dd23beb08136c88ffa200723397969911e3b421f43d0d9db03f9f6"
+    }
+  },
+  "datasetPolicy": {
+    "filesWithoutManifest": [],
+    "promotionEligible": false,
+    "promotionIneligibleManifests": [
+      "Research/translation/work/conversational-control-en-ja/manifest.json",
+      "Research/translation/work/hard-reference-ja-en/manifest.json",
+      "Research/translation/work/release-clean-full-depth-en-ja-v1/manifest.json",
+      "Research/translation/work/release-clean-legal-specialist-ja-en-v1/manifest.json"
+    ]
+  },
+  "distributionStatus": "blocked-promotion-ineligible-training-data",
+  "doesNotAuthorizeAppIntegration": true,
+  "doesNotAuthorizeDistribution": true,
+  "engineLineages": {
+    "formal-en-ja": {
+      "kind": "direct-training-checkpoint",
+      "modelPath": "Research/translation/models/elanmt-release-clean-human-only-full-depth-en-ja-v2/model.safetensors",
+      "modelSha256": "eb9aa8db0e99d371036b0c55635cfdb3a5ee4d5715e32ab58bebe6173aa17ee5",
+      "path": "Research/translation/models/elanmt-release-clean-human-only-full-depth-en-ja-v2/mimi_training_manifest.json",
+      "sha256": "35bf93c0bc7da7de519ce34b51b5ee8ba7ebbf67bcb36afc61d1cea075a0c548"
+    },
+    "generalist-en-ja": {
+      "kind": "direct-training-checkpoint",
+      "modelSha256": "ce0ad1efebd0f69e52528c1df2e072304616242d8963edb98d61f60e57e0739e",
+      "path": "Research/translation/models/elanmt-conversational-control-en-ja/mimi_training_manifest.json",
+      "sha256": "2f69ec06eaf729c4ee62b599677553fd4dce091256f33f880636dc6ec923544c"
+    },
+    "generalist-ja-en": {
+      "kind": "arithmetic-mean-of-best-adjacent-full-precision-checkpoints",
+      "modelSha256": "5b789463dae3cb0c2e9bff50996f58cf9bd1ca4fbe9b07af0e2531f8ae132754",
+      "path": "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-avg3/mimi_checkpoint_averaging_manifest.json",
+      "sha256": "bee6dd96814b80b471c88d452b62afba3f0e2baee81425a2833bc829c646e6fa"
+    },
+    "legal-ja-en": {
+      "kind": "direct-training-checkpoint",
+      "modelPath": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "modelSha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "jltAccessDate": "2026-07-18",
+  "licenseBundle": {
+    "doesNotResolveLicenseCompatibility": true,
+    "files": 8,
+    "frozenOn": "2026-07-21",
+    "manifestPath": "licenses/license-bundle-manifest.json",
+    "manifestSha256": "54c9334674e45dd3ba3ea55845fc0b1801a23dbe6b62a19b77eeb22eb4728bac",
+    "offlinePayloadComplete": true,
+    "sourcePortableContractSha256": "3d8ccfdfb95d2365de21a0912bd2c370c8ebf6061c903d758798720a8dc0a8f6"
+  },
+  "lineageManifests": {
+    "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-avg3/mimi_checkpoint_averaging_manifest.json": {
+      "sha256": "bee6dd96814b80b471c88d452b62afba3f0e2baee81425a2833bc829c646e6fa"
+    }
+  },
+  "modelPromotionEligible": false,
+  "pack": {
+    "bytes": 140875791,
+    "manifestSha256": "71f330302559a0948c1b35f6def2d6107b4b57728cf53e1e99e0279141d84e79",
+    "path": "Research/translation/models/elanmt-release-clean-human-only-routed-moe-v4-portable-mlx-4bit-shared-tokenizer-pack"
+  },
+  "portableRelease": {
+    "modelPayloadUnchanged": true,
+    "repositoryRelativePathsOnly": true,
+    "sourceInternalContractSha256": "b56eb15418d8661626fdfc428611783671eabf2c24ba88456e2d23165fa0af0b",
+    "sourceInternalPackManifestSha256": "8fd2dd3ecf39ab86ff535e8a2f77576390898fb92a7600a923efd90dbed8704e"
+  },
+  "provenanceComplete": true,
+  "purpose": "hash-bound release provenance and attribution contract",
+  "qualityAuthorization": "blocked-pending-sealed-automated-400x2-evaluation",
+  "releaseAuthorization": "blocked",
+  "releaseFiles": {
+    "ATTRIBUTIONS.md": {
+      "bytes": 2776,
+      "sha256": "304add47324d0315278b5945e2e20aae56292dfd6688eba73b9c3f84872a18b4"
+    },
+    "licenses/CC-BY-2.0-FR.html": {
+      "bytes": 39707,
+      "sha256": "af0d7ada8b9be52a6874238f4533512d0b2568595bf7cb3427e41f7c38847b71"
+    },
+    "licenses/CC-BY-2.5.html": {
+      "bytes": 35261,
+      "sha256": "1bb857c739b56f5e6835cc6e517cc002c69ea6b0bf6476a4473442dc5dfe4688"
+    },
+    "licenses/CC-BY-4.0.txt": {
+      "bytes": 18657,
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+    },
+    "licenses/CC-BY-SA-3.0.txt": {
+      "bytes": 22240,
+      "sha256": "3f941b3b89cf7b8370ceb83cc76d2120d471b58735d8ca60238a751a48d7f72f"
+    },
+    "licenses/CC-BY-SA-4.0.txt": {
+      "bytes": 20138,
+      "sha256": "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5"
+    },
+    "licenses/JAPANESE-LAW-TRANSLATION-TERMS-EN.html": {
+      "bytes": 12007,
+      "sha256": "d24abba0b3588453a7fbdce4698061f1ddbb0bf2b11fb61ac7766320ee13289c"
+    },
+    "licenses/PDL-1.0-EN-reference.html": {
+      "bytes": 58110,
+      "sha256": "28dfbec088af1eb2ca547e04dc7351c0089c4bd01cdae6c795546ac445737534"
+    },
+    "licenses/PDL-1.0-JA.pdf": {
+      "bytes": 207095,
+      "sha256": "48153b4bf7130d07ff58ec620d05f24d8402a0a5c18f1583287cfe8ea93f3a5a"
+    },
+    "licenses/license-bundle-manifest.json": {
+      "bytes": 4947,
+      "sha256": "54c9334674e45dd3ba3ea55845fc0b1801a23dbe6b62a19b77eeb22eb4728bac"
+    },
+    "tatoeba-attributions.jsonl.gz": {
+      "bytes": 233555,
+      "sha256": "a82507020792da4cc6fdcdfec1ef2a37fbf44ba0527fc44ca8b3ca80ed6b0b0f"
+    }
+  },
+  "schemaVersion": 1,
+  "trainingManifests": {
+    "Research/translation/models/elanmt-conversational-control-en-ja/mimi_training_manifest.json": {
+      "modelPath": "Research/translation/models/elanmt-conversational-control-en-ja/model.safetensors",
+      "modelSha256": "ce0ad1efebd0f69e52528c1df2e072304616242d8963edb98d61f60e57e0739e",
+      "sha256": "2f69ec06eaf729c4ee62b599677553fd4dce091256f33f880636dc6ec923544c"
+    },
+    "Research/translation/models/elanmt-hard-reference-ja-en/mimi_training_manifest.json": {
+      "modelPath": "Research/translation/models/elanmt-hard-reference-ja-en/model.safetensors",
+      "modelSha256": "5db9827d673f9445862407cb807a3320e80fdf1a3a57507fca6792d8c7a4b412",
+      "sha256": "61708ba80370a88cadf6929f516890e970728eb20629fa2ed8cc8c0ffbccd0a4"
+    },
+    "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000150/mimi_training_manifest.json": {
+      "modelPath": "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000150/model.safetensors",
+      "modelSha256": "9737458a662e175fe9784f4fc947380a6ee313cc12ab356ee32c70a489437866",
+      "sha256": "9c77e74dde3575b5c5baa84b93da5cb98e2d570a893fa4b4d24cf60d6285747f"
+    },
+    "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000225/mimi_training_manifest.json": {
+      "modelPath": "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000225/model.safetensors",
+      "modelSha256": "6ddb12f6f00b663aa81874d372a55825c46165c97bfa09d4e59846911b07543d",
+      "sha256": "ee4b6cc110732ed051672e7dab3756543f97e6af4231fcdc1bc694a067875a41"
+    },
+    "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/mimi_training_manifest.json": {
+      "modelPath": "Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/model.safetensors",
+      "modelSha256": "61c912350bac7f4d9f43d346535870c1c63008830b5acb85ad7cedb3a4406d62",
+      "sha256": "33561d38d29d955b0a46f088893092f282e4aab0372ffe75ef44365cf63e2b49"
+    },
+    "Research/translation/models/elanmt-release-clean-human-only-full-depth-en-ja-v2/mimi_training_manifest.json": {
+      "modelPath": "Research/translation/models/elanmt-release-clean-human-only-full-depth-en-ja-v2/model.safetensors",
+      "modelSha256": "eb9aa8db0e99d371036b0c55635cfdb3a5ee4d5715e32ab58bebe6173aa17ee5",
+      "sha256": "35bf93c0bc7da7de519ce34b51b5ee8ba7ebbf67bcb36afc61d1cea075a0c548"
+    },
+    "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json": {
+      "modelPath": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "modelSha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "upstreamModels": {
+    "Mitsua/elan-mt-bt-en-ja@02c48e7031386cd2d41974b0ff1aaf52f010c5fa": {
+      "license": "CC-BY-SA-4.0",
+      "repository": "Mitsua/elan-mt-bt-en-ja",
+      "revision": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
+      "url": "https://huggingface.co/Mitsua/elan-mt-bt-en-ja/tree/02c48e7031386cd2d41974b0ff1aaf52f010c5fa"
+    },
+    "Mitsua/elan-mt-bt-ja-en@539f80eb05306e27a166b45e4264c7fa2eb4de97": {
+      "license": "CC-BY-SA-4.0",
+      "repository": "Mitsua/elan-mt-bt-ja-en",
+      "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+      "url": "https://huggingface.co/Mitsua/elan-mt-bt-ja-en/tree/539f80eb05306e27a166b45e4264c7fa2eb4de97"
+    }
+  }
+}

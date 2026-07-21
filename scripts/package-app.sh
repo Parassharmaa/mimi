@@ -8,6 +8,8 @@ APP="$ROOT/.build/Mimi.app"
 DIST="$ROOT/.build/dist"
 ARCHIVE="$DIST/Mimi-macOS.zip"
 SIGNING_IDENTITY="${MIMI_CODESIGN_IDENTITY:--}"
+MODEL_RESOURCES="$ROOT/App/Resources/TranslationModels"
+LICENSE_RESOURCES="$ROOT/App/Resources/TranslationLicenses"
 
 cd "$ROOT"
 
@@ -23,6 +25,13 @@ lipo -create \
   -output "$APP/Contents/MacOS/Mimi"
 cp "$ROOT/App/Info.plist" "$APP/Contents/Info.plist"
 cp "$ROOT/App/Resources/Mimi.icns" "$APP/Contents/Resources/Mimi.icns"
+python3 "$ROOT/scripts/translation/verify_shipped_translation_pack.py" \
+  --model-root "$MODEL_RESOURCES" \
+  --license-root "$LICENSE_RESOURCES"
+cp -R "$MODEL_RESOURCES" "$APP/Contents/Resources/TranslationModels"
+cp -R "$LICENSE_RESOURCES" "$APP/Contents/Resources/TranslationLicenses"
+"$ROOT/scripts/prepare-mlx-metallib.sh" "$APP/Contents/MacOS" release required
+python3 "$ROOT/scripts/translation/verify_shipped_translation_pack.py" --app "$APP"
 
 ARCHS="$(lipo -archs "$APP/Contents/MacOS/Mimi")"
 [[ "$ARCHS" == *arm64* && "$ARCHS" == *x86_64* ]]

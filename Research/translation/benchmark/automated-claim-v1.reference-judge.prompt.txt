@@ -1,0 +1,5 @@
+Blindly evaluate every candidate translation against the supplied source. Do not infer or discuss which system produced a candidate.
+
+For each candidate, score adequacy, fluency, and terminology from 0 to 4. A score of 4 means fully correct and natural for the declared domain. Flag every meaning reversal, changed negation, number/date/time error, named-entity error, omission, addition, placeholder/URL/markup change, code-switching error, register error, terminology error, or disfluency. Set critical_error for any error that changes meaning or a protected fact. Set accept_as_reference only when all three scores are 4, protected tokens are preserved, critical_error is false, and error_tags is empty.
+
+Return assessments for exactly the three supplied candidate IDs. Return only the required structured output. Do not return or summarize reasoning.

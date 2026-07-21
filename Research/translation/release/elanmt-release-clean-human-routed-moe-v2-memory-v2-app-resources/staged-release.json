@@ -1,0 +1,28 @@
+{
+  "distributionStatus": "blocked-training-only-runtime-memory-and-final-review",
+  "doesNotAuthorizeDistribution": true,
+  "files": {
+    "ATTRIBUTIONS.md": {
+      "bytes": 3291,
+      "sha256": "09cd60002e802fcc8f2f9de8aa6ec58ee3db63215dca445cc05d0fe957b3e78a"
+    },
+    "exact-translation-memory-audit.json.gz": {
+      "bytes": 635338,
+      "sha256": "2f96c7542de1fc6dd09e341c8bdf5f647e7db622bb903bee9f72d75d0131229e"
+    },
+    "release-contract.json": {
+      "bytes": 13321,
+      "sha256": "b30a1cb5dccff8e750a84652e8b94a6d844ca1d66a9d47d443369d8ddd03647c"
+    },
+    "tatoeba-attributions.jsonl.gz": {
+      "bytes": 233555,
+      "sha256": "a82507020792da4cc6fdcdfec1ef2a37fbf44ba0527fc44ca8b3ca80ed6b0b0f"
+    }
+  },
+  "modelBytes": 141488564,
+  "modelManifestSha256": "75ae72c87f0f3607571e6c5bbd9ccfd99d129d880ff6daf2e5559341248cd6db",
+  "provenanceComplete": true,
+  "purpose": "hash-bound translation licenses and provenance staged inside Mimi",
+  "releaseContractSha256": "b30a1cb5dccff8e750a84652e8b94a6d844ca1d66a9d47d443369d8ddd03647c",
+  "schemaVersion": 1
+}

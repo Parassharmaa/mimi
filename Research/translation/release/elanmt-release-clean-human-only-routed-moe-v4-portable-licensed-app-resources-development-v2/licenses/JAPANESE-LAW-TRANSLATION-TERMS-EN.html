@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Terms of Use - Japanese Law Translation</title>
+    <link href="/favicon.ico" type="image/x-icon" rel="icon"><link href="/favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+	<link rel="stylesheet" href="/css/color.css">
+    
+	<link rel="stylesheet" href="/css/light.css" id="colorMode">
+    
+	<script src="/js/main.js"></script>
+    
+	<script src="/js/setting.js"></script>
+    
+	<script src="/js/color.js"></script>
+    
+	<script src="/js/font.js"></script>
+    
+	<link rel="stylesheet" href="/css/main.css">
+        <link rel="stylesheet" href="/css/index.css">    
+    </head>
+
+<body class="en">
+    <header>
+        <nav>
+            <div class="top-header">
+    <div class="site-name">
+        <a id="pageTop" href="/en" class="title">Japanese Law Translation</a>
+    </div>
+    <div class="top-links">
+        <a href="#" class="language" onclick="langChange(event, '/ja/index/terms')">
+            <span class="material-icons">language</span>
+            <span class="menu-label">日本語</span>
+        </a>
+        <a class="pc" href="/help/en" target="_blank">
+            <span class="material-icons">menu_book</span>
+            <span class="menu-label">User Guide</span>
+        </a>
+        <div class="font-size pc">
+            <div class="icon">
+                <a id="fstSmall" href="#" class="small" onclick="applyFontSize(event, 1)">A</a>
+                <a id="fstMedium" href="#" class="medium" onclick="applyFontSize(event, 2)">A</a>
+                <a id="fstLarge" href="#" class="large" onclick="applyFontSize(event, 3)">A</a>
+            </div>
+            <script>
+                if (fontSize == 2) {
+                    document.getElementById('fstSmall').classList.remove('selected');
+                    document.getElementById('fstMedium').classList.add('selected');
+                    document.getElementById('fstLarge').classList.remove('selected');
+                } else if (fontSize == 3) {
+                    document.getElementById('fstSmall').classList.remove('selected');
+                    document.getElementById('fstMedium').classList.remove('selected');
+                    document.getElementById('fstLarge').classList.add('selected');
+                } else {
+                    document.getElementById('fstSmall').classList.add('selected');
+                    document.getElementById('fstMedium').classList.remove('selected');
+                    document.getElementById('fstLarge').classList.remove('selected');
+                }
+            </script>
+            <div class="menu-label">Text Size</div>
+        </div>
+        <a href="#" class="invert pc" onclick="changeColor(event)">
+            <span class="material-icons">invert_colors</span>
+            <span class="menu-label">Invert</span>
+        </a>
+    </div>
+</div>        </nav>
+        <nav>
+            <div class="main-menu-control">
+    <a href="#" class="toggle x" id="toggleButton" onclick="toggleMainMenu(event)">
+        <s class="bar"></s>
+        <s class="bar"></s>
+    </a>
+</div>
+<script>
+    if (this.window.innerWidth <= 768) {
+        hideMenuOnToggleButton();
+    }
+</script>
+<div class="main-menu" id="mainMenu">
+    <script>
+        if (this.window.innerWidth <= 768) {
+            hideMenuOnMainMenu();
+        }
+    </script>
+    <ul>
+        <li>
+            <a href="/en/">TOP</a>
+        </li>
+        <li>
+            <a href="/en/laws">Law Search</a>
+        </li>
+        <li>
+            <a href="/en/dicts">Dictionary Search</a>
+        </li>
+        <li>
+            <a href="/en/kwic">Keyword in Context Search</a>
+        </li>
+        <li>
+            <a href="/en/outlines">Outline</a>
+        </li>
+        <li>
+            <a href="/en/sitemap">Site Map</a>
+        </li>
+        <li onmouseenter="slideToggleEnter(this)" onmouseleave="slideToggleLeave(this)">
+            <a class="accordion-item" href="#" onclick="slideToggleClick(event)">Others</a>
+            <ul class="accordion-menu">
+                <li>
+                    <a href="/en/news">What's New</a>
+                </li>
+                <li>
+                    <a href="/en/infos/guidelines">Other Information</a>
+                </li>
+                <li>
+                    <a href="/en/links">Links</a>
+                </li>
+            </ul>
+        </li>
+        <li class="sp">
+            <a href="/help/en" target="_blank">
+                <span class="material-icons">menu_book</span>
+                <span class="menu-label">
+                    User Guide                </span>
+            </a>
+        </li>
+        <li class="sp">
+            <div class="font-size">
+                <div class="icon">
+                    <a id="fsmSmall" href="#" class="small" onclick="applyFontSize(event, 1)">A</a>
+                    <a id="fsmMedium" href="#" class="medium" onclick="applyFontSize(event, 2)">A</a>
+                    <a id="fsmLarge" href="#" class="large" onclick="applyFontSize(event, 3)">A</a>
+                </div>
+                <script>
+                    if (fontSize == 2) {
+                        document.getElementById('fsmSmall').classList.remove('selected');
+                        document.getElementById('fsmMedium').classList.add('selected');
+                        document.getElementById('fsmLarge').classList.remove('selected');
+                    } else if (fontSize == 3) {
+                        document.getElementById('fsmSmall').classList.remove('selected');
+                        document.getElementById('fsmMedium').classList.remove('selected');
+                        document.getElementById('fsmLarge').classList.add('selected');
+                    } else {
+                        document.getElementById('fsmSmall').classList.add('selected');
+                        document.getElementById('fsmMedium').classList.remove('selected');
+                        document.getElementById('fsmLarge').classList.remove('selected');
+                    }
+                </script>
+            </div>
+        </li>
+        <li class="sp">
+            <a href="#" class="invert" onclick="changeColor(event)">
+                <span class="material-icons">invert_colors</span>
+                <span class="menu-label">Invert</span>
+            </a>
+        </li>
+    </ul>
+</div>        </nav>
+    </header>
+    <div class="menu-bg" id="menuBg" onclick="toggleMainMenu(event)">
+    </div>
+    <script>
+        if (this.window.innerWidth <= 768) {
+            hideMenuOnMenuBg();
+        }
+    </script>
+    <main class="main" id="main">
+        <script>
+            if (this.window.innerWidth <= 768) {
+                hideMenuOnMain();
+            }
+        </script>
+                    <div class="container">
+                <div class="main-contents terms-of-use">
+    <div class="title">Terms of Use</div>
+    <div class="section">
+    <div class="title">Japanese Law Translation Database System Standard Terms of Use</div>
+    <div class="contents">
+        <div class="terms2">Information published on this site (referred to below as "content") is subject to the "<a href="https://www.digital.go.jp/en/resources/open_data/public_data_license_v1.0" target="_blank">Public Data License (Version 1.0)</a>" (PDL1.0) unless stated otherwise. In addition, the copyright belongs to the Ministry of Justice of Japan unless stated otherwise.</div>
+        <div class="terms2">For information on the parts of PDL1.0 that differ depending on the site, such as examples of source descriptions unique to this site and content to which the terms of use specified in PDL1.0 do not apply, refer to "Important note on Public Data License (Version 1.0)".</div>
+        <br>
+        <div class="terms1">Important note on Public Data License (Version 1.0)</div>
+        <div class="terms2">1.4 "This Content" where "This Terms of Use" does not apply</div>
+        <div class="terms3">"This Terms of Use" herein does not apply to the following Content. Please refer to the linked page for more information.</div>
+        <div class="terms4"><a href="/en/index/logo-use" target="_blank">○Use of the Japanese Law Translation logo and character</a></div>
+    </div>
+</div></div>                                    <div class="disclaimer">
+            <div class="wrapper">
+            <div class="title">NOTICE TO USERS</div>
+            <dl>
+                <dt>Translations</dt>
+                <dd>The translations contained in the Japanese Law Translation Database
+                    System are not official texts, and not all of the translations are
+                    finalized versions. Only the original Japanese texts of the laws and
+                    regulations have legal effect, and the translations are to be used
+                    solely as reference materials to aid in the understanding of Japanese
+                    laws and regulations. The government of Japan is not responsible for
+                    the accuracy, reliability or currency of the legislative material
+                    provided in this website, or for any consequence resulting from use of
+                    the information in this website. For all purposes of interpreting and
+                    applying law to any legal issue or dispute, users should consult the
+                    original Japanese texts published in the Official Gazette.<br>
+                    Translation of laws and regulations is carried out in accordance with 
+                    the plan (<a href="/en/infos/index">Translation Development Plan</a>) decided by the 
+                    "Liaison Conference of Relevant Ministries and Agencies on the Development 
+                    of Infrastructure for Promoting Translation of Laws and Regulations into 
+                    Foreign Languages".</dd>
+                <dt>, etc.</dt>
+                <dd>", etc." has a special meaning in Japanese law that differs
+                  from the common use of ", etc." in the English language. ",
+                  etc." may be used to define a series of words, refer to the
+                  existence of similar items, or indicate the wider range of
+                  application of laws or regulations.</dd>
+                <dt>Tentative Translations</dt>
+                <dd>Any translation that the title of a law indicates to be a tentative
+                    translation has not yet been proofread or corrected by a native English
+                    speaker or legal translation expert; this translation may be revised in
+                    the future.</dd>
+                <dt>Citation, Reproduction and Reprinting</dt>
+                <dd>The data contained in the Japanese Law Translation Database System
+                    may be cited, reproduced, or reprinted in accordance with the <a href="/en/index/terms">Terms of
+                    Use.</a></dd>
+            </dl>
+        </div>
+    </div>                            </div>
+                <form id="hiddenForm" action="" method="post">
+            <input type="hidden" name="_csrfToken" autocomplete="off" value="__REDACTED_VOLATILE_CSRF_TOKEN__">                    </form>
+    </main>
+    <footer id="footer">
+        <div class="copyright">Japanese Law Translation Database System<br/>Copyright &copy; 2026 Ministry of Justice, Japan. All Rights Reserved.</div>
+    </footer>
+    <script>
+        if (this.window.innerWidth <= 768) {
+            hideMenuOnFooter();
+        }
+    </script>
+</body>
+
+</html>

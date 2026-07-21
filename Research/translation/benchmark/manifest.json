@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "suiteID": "mimi-en-ja-heldout-v1",
+  "status": "template-not-claim-ready",
+  "randomSeed": 20260717,
+  "exactCasesPerDirection": 400,
+  "minimumCasesPerDirection": 400,
+  "directions": ["en-US>ja-JP", "ja-JP>en-US"],
+  "domains": {
+    "meeting-and-live-speech": 0.30,
+    "everyday-conversation": 0.20,
+    "macos-and-technical-ui": 0.15,
+    "numbers-dates-and-entities": 0.15,
+    "politeness-ambiguity-and-omission": 0.15,
+    "code-switching": 0.05
+  },
+  "referencePolicy": {
+    "syntheticReferencesAllowed": false,
+    "syntheticSourcesAllowed": false,
+    "minimumReferencesPerCase": 2,
+    "minimumIndependentReferenceAuthors": 2,
+    "minimumIndependentBilingualReviewers": 2,
+    "requiresBlindReview": true,
+    "requiresAdjudication": true,
+    "requiresExternalReviewRecord": true,
+    "requiresHumanAttestation": true,
+    "requiresBilingualQualificationAttestation": true,
+    "requiresReviewerIndependenceAttestation": true,
+    "requiresNoAIAssistanceAttestation": true,
+    "requiresReviewerAuthorSeparation": true,
+    "splitBeforeAnyAugmentation": true,
+    "documentLevelSplit": true
+  },
+  "contaminationPolicy": {
+    "neverExposeHeldoutToTeacher": true,
+    "unicodeNormalization": "NFKC-lowercase-whitespace-collapse",
+    "exactHashDedup": true,
+    "characterNgramSize": 5,
+    "maximumTrainHeldoutJaccard": 0.80,
+    "forbidTrainingDocumentIDOverlap": true,
+    "quarantineKnownPublicBenchmarks": true
+  },
+  "measurement": {
+    "appleStrategy": "highFidelity",
+    "warmRuns": 3,
+    "coldRuns": 1,
+    "qualityMetrics": ["chrF++", "sacreBLEU", "COMET-22", "blind-human-error-score"],
+    "learnedMetric": {
+      "name": "COMET-22",
+      "modelRepository": "Unbabel/wmt22-comet-da",
+      "modelRevision": "371e9839ca4e213dde891b066cf3080f75ec7e72",
+      "modelLicense": "Apache-2.0",
+      "package": "unbabel-comet",
+      "packageVersion": "2.2.7",
+      "setuptoolsVersion": "80.9.0",
+      "precision": "float32",
+      "multipleReferenceAggregation": "mean"
+    },
+    "performanceMetrics": ["p50-latency", "p95-latency", "peak-resident-bytes", "model-bytes"],
+    "reportByDirectionAndDomain": true
+  },
+  "humanComparisonPolicy": {
+    "minimumIndependentBilingualReviewers": 2,
+    "requiresBlindEngineIdentity": true,
+    "adequacyRange": [0, 4],
+    "fluencyRange": [0, 4],
+    "terminologyRange": [0, 2],
+    "score": "adequacy + fluency + terminology",
+    "criticalErrorIfAnyReviewerFlags": true
+  },
+  "promotionGate": {
+    "requiredInBothDirections": true,
+    "pairedBootstrapSamples": 10000,
+    "confidenceLevel": 0.95,
+    "minimumChrFDeltaLowerBound": 0.0,
+    "minimumLearnedMetricDeltaLowerBound": 0.0,
+    "minimumHumanQualityDeltaLowerBound": 0.0,
+    "maximumCriticalMeaningErrors": 0,
+    "maximumWarmP95LatencyRatioToApple": 1.25,
+    "maximumPeakResidentBytes": 786432000,
+    "maximumModelBytes": 157286400,
+    "maximumDistributionArchiveBytes": 150000000,
+    "appleFallbackMustRemainEnabled": true
+  }
+}

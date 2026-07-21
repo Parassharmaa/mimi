@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "suiteID": "mimi-en-ja-automated-heldout-v1",
+  "status": "preregistered-sources-frozen-references-pending",
+  "randomSeed": 20260720,
+  "frozenSources": {
+    "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+    "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c",
+    "cases": 800,
+    "claimEligible": false
+  },
+  "exactCasesPerDirection": 400,
+  "minimumCasesPerDirection": 400,
+  "directions": [
+    "en-US>ja-JP",
+    "ja-JP>en-US"
+  ],
+  "domains": {
+    "meeting-and-live-speech": 0.30,
+    "everyday-conversation": 0.20,
+    "macos-and-technical-ui": 0.15,
+    "numbers-dates-and-entities": 0.15,
+    "politeness-ambiguity-and-omission": 0.15,
+    "code-switching": 0.05
+  },
+  "sourcePolicy": {
+    "sourceGeneratedByAI": false,
+    "minimumCreationDate": "2026-07-20",
+    "allowedLicenses": [
+      "CC0-1.0",
+      "Project-owned"
+    ],
+    "sealedBeforeCandidateEvaluation": true,
+    "forbidExistingPublicBenchmarkMaterial": true,
+    "forbidParaphrasesOfTrainingOrDevelopmentMaterial": true
+  },
+  "referencePolicy": {
+    "mode": "automated-two-judge-consensus-v1",
+    "referenceGeneratedByAI": true,
+    "minimumGeneratedCandidatesPerCase": 3,
+    "exactAcceptedReferencesPerCase": 2,
+    "minimumIndependentBilingualJudges": 2,
+    "generatorMustDifferFromTrainingTeachers": true,
+    "judgesMustDifferFromGeneratorAndTrainingTeachers": true,
+    "judgesMustBeDistinctModelFamilies": true,
+    "requiresPinnedGeneratorRevision": true,
+    "requiresPinnedJudgeRevisions": true,
+    "requiresPromptHashes": true,
+    "requiresRequestAndResponseHashes": true,
+    "requiresNoReasoningTraceRetention": true,
+    "requiresStoreFalse": true,
+    "requiresExactCoverage": true,
+    "minimumAdequacy": 4,
+    "minimumFluency": 4,
+    "minimumTerminology": 4,
+    "maximumScore": 4,
+    "criticalErrorIfAnyJudgeFlags": true
+  },
+  "contaminationPolicy": {
+    "requiresCompleteExposureManifest": true,
+    "requiredExposureScopes": [
+      "training",
+      "development",
+      "teacher-input",
+      "teacher-output",
+      "router",
+      "model-selection",
+      "exact-memory"
+    ],
+    "neverExposeHeldoutToTeacher": true,
+    "unicodeNormalization": "NFKC-lowercase-whitespace-collapse",
+    "exactHashDedup": true,
+    "characterNgramSize": 5,
+    "maximumTrainHeldoutJaccard": 0.65,
+    "forbidTrainingDocumentIDOverlap": true,
+    "requiresSemanticNeighborScan": true,
+    "maximumSemanticSimilarity": 0.82,
+    "quarantineKnownPublicBenchmarks": true
+  },
+  "measurement": {
+    "warmRuns": 3,
+    "qualityMetrics": [
+      "chrF++",
+      "sacreBLEU",
+      "COMET-22",
+      "blinded-automated-pairwise-score"
+    ],
+    "learnedMetric": {
+      "name": "COMET-22",
+      "modelRepository": "Unbabel/wmt22-comet-da",
+      "modelRevision": "371e9839ca4e213dde891b066cf3080f75ec7e72",
+      "modelLicense": "Apache-2.0",
+      "package": "unbabel-comet",
+      "packageVersion": "2.2.7",
+      "setuptoolsVersion": "80.9.0",
+      "precision": "float32",
+      "multipleReferenceAggregation": "mean"
+    },
+    "performanceMetrics": [
+      "p50-latency",
+      "p95-latency",
+      "peak-resident-bytes",
+      "model-bytes",
+      "distribution-bytes"
+    ],
+    "reportByDirectionAndDomain": true
+  },
+  "promotionGate": {
+    "baseline": "frozen-best-prior-local-model",
+    "appleComparisonIsDiagnosticOnly": true,
+    "requiredInBothDirections": true,
+    "pairedBootstrapSamples": 10000,
+    "confidenceLevel": 0.95,
+    "minimumChrFPlusPlus": {
+      "en-US>ja-JP": 50.0,
+      "ja-JP>en-US": 50.0
+    },
+    "minimumLearnedMetric": {
+      "en-US>ja-JP": 0.80,
+      "ja-JP>en-US": 0.80
+    },
+    "minimumChrFDeltaLowerBound": 0.0,
+    "minimumLearnedMetricDeltaLowerBound": 0.0,
+    "minimumAutomatedPairwiseDeltaLowerBound": 0.0,
+    "minimumAutomatedCandidateMeanScore": 8.5,
+    "maximumCriticalMeaningErrors": 0,
+    "maximumWarmP95LatencySeconds": 0.25,
+    "maximumPeakResidentBytes": 805306368,
+    "preferredModelBytes": 150000000,
+    "maximumModelBytes": 500000000,
+    "preferredDistributionArchiveBytes": 150000000,
+    "maximumDistributionArchiveBytes": 500000000,
+    "requiresNonAppleFailurePath": true,
+    "currentDefaultMustRemainUnchangedUntilAllGatesPass": true
+  }
+}

@@ -3,9 +3,10 @@ set -euo pipefail
 
 # MLX Swift's command-line SwiftPM build cannot produce Metal shaders. Build
 # the matching shader through its checked-out Xcode project, then put it where
-# the statically linked MLX runtime looks first: beside Mimi's executable.
+# the statically linked MLX runtime looks first: beside Mimi's executable. The
+# shader is used by Mimi's bundled translation model and optional ASR runtimes.
 # A local developer may supply an already-built matching library explicitly;
-# release packaging never accepts a missing shader.
+# release packaging invokes this helper with `required`.
 
 ROOT="${0:A:h:h}"
 DESTINATION="${1:?usage: prepare-mlx-metallib.sh <resources-dir> <debug|release> <optional|required>}"
@@ -33,8 +34,17 @@ source_library=""
 if [[ -n "${MIMI_MLX_METALLIB:-}" ]]; then
   source_library="$MIMI_MLX_METALLIB"
 elif xcrun --find xcodebuild >/dev/null 2>&1 && xcrun --find metallib >/dev/null 2>&1; then
-  mlx_checkout="$ROOT/.build/checkouts/mlx-swift"
-  if [[ ! -d "$mlx_checkout/xcode/MLX.xcodeproj" ]]; then
+  mlx_checkout=""
+  for candidate in \
+    "$ROOT/.build/checkouts/mlx-swift" \
+    "$ROOT/.build/package-arm64/checkouts/mlx-swift" \
+    "$ROOT/.build/package-x86_64/checkouts/mlx-swift"; do
+    if [[ -d "$candidate/xcode/MLX.xcodeproj" ]]; then
+      mlx_checkout="$candidate"
+      break
+    fi
+  done
+  if [[ -z "$mlx_checkout" ]]; then
     print -u2 "MLX Swift checkout is missing; resolve Swift packages before packaging Mimi."
     exit 1
   fi
@@ -55,10 +65,10 @@ fi
 
 if [[ -z "$source_library" || ! -s "$source_library" ]]; then
   if [[ "$REQUIREMENT" == "required" ]]; then
-    print -u2 "Mimi cannot package native Qwen or Nemotron without a matching MLX Metal shader. Install/select full Xcode or set MIMI_MLX_METALLIB explicitly."
+    print -u2 "Mimi cannot package its local MLX translator without a matching Metal shader. Install/select full Xcode or set MIMI_MLX_METALLIB explicitly."
     exit 1
   fi
-  print -u2 "Warning: building Mimi without the optional native Qwen and Nemotron runtimes. Apple Speech and Whisper remain available."
+  print -u2 "Warning: building Mimi without optional MLX runtimes. Apple Speech and Whisper remain available."
   exit 0
 fi
 

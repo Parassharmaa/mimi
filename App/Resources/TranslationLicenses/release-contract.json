@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "component": "Mimi local English-Japanese translation model v1",
+  "releaseAuthorization": "direct-github-release",
+  "distributionChannel": "signed-notarized-direct-download",
+  "macAppStoreAuthorized": false,
+  "qualityStatus": "initial-preview-not-accuracy-gated",
+  "modelPromotionEligible": false,
+  "license": "CC-BY-SA-4.0",
+  "licenseScope": "TranslationModels and Mimi quantized adaptations only",
+  "modelPack": {
+    "bytes": 73403427,
+    "manifestSha256": "8e55e8f24eed07e89bdad6db0ca1d65aa791905123f764130ed021bc2380807a",
+    "preferredCeilingBytes": 150000000
+  },
+  "sourceModels": {
+    "en-ja": {
+      "repository": "Mitsua/elan-mt-bt-en-ja",
+      "revision": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
+      "sourceWeightsSha256": "d36a6549863d02a42ad0085ed7eb58d3a81c537e455173bb1e6ce434ecb2eeb8"
+    },
+    "ja-en": {
+      "repository": "Mitsua/elan-mt-bt-ja-en",
+      "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+      "sourceWeightsSha256": "3cf25766912e952e353fd7632273e6ddb400d4627531bfd749ddd9194e699850"
+    }
+  },
+  "conversion": {
+    "operation": "MLX affine quantization",
+    "bits": 4,
+    "groupSize": 64,
+    "computeDtype": "float16",
+    "fineTunedByMimi": false,
+    "tool": "scripts/translation/prepare_elanmt_mlx.py",
+    "toolSha256": "eb3a4eaff3da82bd2e7680cf29aaa9a6b172fb8ed5bed5abdd6a48e186ff4fb7"
+  },
+  "requiredNotices": {
+    "ATTRIBUTIONS.md": "c8a00c33f1de6a0f83314d49100d9945dc8de779396162bd93350c5fb85f9f19",
+    "CC-BY-SA-4.0.txt": "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5"
+  },
+  "knownLimitations": [
+    "Translation quality is not guaranteed and outputs may be incorrect or biased.",
+    "The bundled MLX translator requires Apple Silicon.",
+    "This initial upstream-model release has not passed Mimi's sealed improvement gate.",
+    "Mimi's stronger routed fine-tuned research pack is not included in this release."
+  ]
+}

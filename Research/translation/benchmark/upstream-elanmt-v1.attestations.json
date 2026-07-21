@@ -1,0 +1,33 @@
+{
+  "models": [
+    {
+      "license": "CC-BY-SA-4.0",
+      "modelCardURL": "https://huggingface.co/Mitsua/elan-mt-bt-en-ja/blob/02c48e7031386cd2d41974b0ff1aaf52f010c5fa/README.md",
+      "repository": "Mitsua/elan-mt-bt-en-ja",
+      "revision": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
+      "revisionAPIURL": "https://huggingface.co/api/models/Mitsua/elan-mt-bt-en-ja/revision/02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
+      "revisionMetadata": {
+        "createdAt": "2024-05-20T01:51:18.000Z",
+        "id": "Mitsua/elan-mt-bt-en-ja",
+        "lastModified": "2024-05-20T01:53:38.000Z",
+        "sha": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa"
+      }
+    },
+    {
+      "license": "CC-BY-SA-4.0",
+      "modelCardURL": "https://huggingface.co/Mitsua/elan-mt-bt-ja-en/blob/539f80eb05306e27a166b45e4264c7fa2eb4de97/README.md",
+      "repository": "Mitsua/elan-mt-bt-ja-en",
+      "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+      "revisionAPIURL": "https://huggingface.co/api/models/Mitsua/elan-mt-bt-ja-en/revision/539f80eb05306e27a166b45e4264c7fa2eb4de97",
+      "revisionMetadata": {
+        "createdAt": "2024-05-20T01:56:12.000Z",
+        "id": "Mitsua/elan-mt-bt-ja-en",
+        "lastModified": "2024-05-20T01:56:57.000Z",
+        "sha": "539f80eb05306e27a166b45e4264c7fa2eb4de97"
+      }
+    }
+  ],
+  "purpose": "Offline pin of Hugging Face revision metadata used only for temporal contamination exclusion",
+  "retrievedAt": "2026-07-20T15:13:14Z",
+  "schemaVersion": 1
+}

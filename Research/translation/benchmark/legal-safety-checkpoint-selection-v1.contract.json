@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-07-20T23:23:43Z",
+  "purpose": "predeclared clean EN-to-JA checkpoint selection on validation-only Japanese Law groups",
+  "direction": "en-ja",
+  "candidateSteps": [250, 500, 750, 1000],
+  "suite": {
+    "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+    "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91",
+    "manifestPath": "Research/translation/benchmark/legal-safety-validation-v1.manifest.json",
+    "manifestSha256": "aa8d813cc59a6cceac9db97564f49f957434cc40f612fdc572a5215a7c79f46a",
+    "cases": 400,
+    "lawGroupRelationship": "validation law IDs are disjoint from JLT train and public-test law IDs"
+  },
+  "baseline": {
+    "reportPath": "Research/translation/results/elanmt-release-clean-full-depth-en-ja-v1-legal-safety-validation-v1-declared-models.json",
+    "reportSha256": "d76b04f42f007f232bac633eac1618a865ad402442fd77bfeb76564ee979c7ea",
+    "structureAuditPath": "Research/translation/results/elanmt-release-clean-full-depth-en-ja-v1-legal-safety-validation-v1-declared-models-structure-audit.json",
+    "structureAuditSha256": "2dcf7f37bf49af7e1cfdda3e22eb42eabeff823d1fae4dd166d841632b49b768",
+    "trainingManifestPath": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1/mimi_training_manifest.json",
+    "trainingManifestSha256": "02724cc7ee3decf672f57c652e6023a46f5a907b423d9b2565d7f75b919dd2b1",
+    "bestGeneralDevelopmentChrFPlusPlus": 31.05959515966979,
+    "exactCriticalTokenMismatches": 208,
+    "negationMarkerMismatches": 101
+  },
+  "candidateRequirements": {
+    "pairedSentenceChrFPlusPlusBootstrap": {
+      "samples": 10000,
+      "seed": 20260717,
+      "confidence": 0.95,
+      "minimumLowerBound": -0.1
+    },
+    "maximumExactCriticalTokenMismatches": 208,
+    "maximumNegationMarkerMismatches": 101,
+    "minimumGeneralDevelopmentChrFPlusPlus": 30.90959515966979,
+    "quantization": {
+      "bits": 4,
+      "groupSize": 64,
+      "mlxVersion": "0.30.6"
+    }
+  },
+  "selection": {
+    "filter": "all candidate requirements must pass",
+    "rank": [
+      "highest legal validation corpus chrF++",
+      "fewest exact critical-token mismatches",
+      "fewest negation-marker mismatches",
+      "highest general development chrF++",
+      "smallest training step"
+    ],
+    "ifNonePass": "reject the clean checkpoint family"
+  },
+  "selectionUsesPublicStressV3Outputs": false,
+  "claimEligible": false,
+  "doesNotAuthorizeModelPromotion": true,
+  "doesNotAuthorizeAppIntegration": true
+}

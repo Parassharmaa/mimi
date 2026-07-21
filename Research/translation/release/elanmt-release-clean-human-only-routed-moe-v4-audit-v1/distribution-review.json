@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-07-21",
+  "reviewKind": "compliance-engineering-not-legal-advice",
+  "candidate": {
+    "pack": "Research/translation/models/elanmt-release-clean-human-only-routed-moe-v4-mlx-4bit-shared-tokenizer-pack",
+    "bytes": 140875806,
+    "manifestSha256": "8fd2dd3ecf39ab86ff535e8a2f77576390898fb92a7600a923efd90dbed8704e",
+    "releaseContractSha256": "b56eb15418d8661626fdfc428611783671eabf2c24ba88456e2d23165fa0af0b",
+    "preferredCeilingBytes": 150000000,
+    "bytesBelowPreferredCeiling": 9124194,
+    "provenanceComplete": true,
+    "modelPromotionEligible": false,
+    "releaseAuthorization": "blocked",
+    "doesNotAuthorizeDistribution": true,
+    "doesNotAuthorizeAppIntegration": true
+  },
+  "portableArtifact": {
+    "pack": "Research/translation/models/elanmt-release-clean-human-only-routed-moe-v4-portable-mlx-4bit-shared-tokenizer-pack",
+    "bytes": 140875791,
+    "manifestSha256": "71f330302559a0948c1b35f6def2d6107b4b57728cf53e1e99e0279141d84e79",
+    "releaseContractSha256": "3d8ccfdfb95d2365de21a0912bd2c370c8ebf6061c903d758798720a8dc0a8f6",
+    "inventorySha256": "fb62b633e56c5c2fc5aa983e71f8475db6da2588c99479fae6031dcd5b8f01e7",
+    "repositoryRelativePathsOnly": true,
+    "modelPayloadUnchanged": true,
+    "releaseAuthorization": "blocked",
+    "stagedReleaseAuthorization": "blocked-development-only",
+    "behaviorEquivalence": {
+      "cases": 12,
+      "exactCases": 12,
+      "comparisonSha256": "885502fa4d31b595ccc76b74993ff24ad3e4d40a88d6f5965c6172c4544d1b58",
+      "swiftLoaderValidation": "passed",
+      "swiftRoleSmokes": {
+        "en-ja-generalist": "df0b9524ece072bca2a23fbb9317dad9dcc03e9a584d7d77385179a69179a91d",
+        "en-ja-expert": "e03cc29cd671277c320b42426c00171a6a1d30cd0d527f1f31357874ec102c44",
+        "ja-en-generalist": "e8539ffcd11860e854ecf85d4b8ad19205f8850c8a576e570c404eba4679a34a",
+        "ja-en-expert": "b10d287d2de17ae28f35bffe61a6091d88a3afac29c8647b7e0a7d07685fcefb"
+      }
+    }
+  },
+  "rights": [
+    {
+      "component": "ElanMT upstream and Mimi-adapted weights",
+      "license": "CC-BY-SA-4.0",
+      "commercialUse": "permitted-subject-to-conditions",
+      "obligations": [
+        "creator-and-copyright-attribution-when-supplied",
+        "license-reference",
+        "modification-indication",
+        "sharealike-for-adapted-material",
+        "no-additional-legal-or-effective-technological-restrictions",
+        "no-endorsement"
+      ],
+      "evidence": [
+        "https://huggingface.co/Mitsua/elan-mt-bt-en-ja",
+        "https://huggingface.co/Mitsua/elan-mt-bt-ja-en",
+        "https://creativecommons.org/licenses/by-sa/4.0/legalcode.en"
+      ],
+      "status": "terms-identified-final-channel-review-pending"
+    },
+    {
+      "component": "Kyoto Free Translation Task rows",
+      "license": "CC-BY-SA-3.0",
+      "commercialUse": "permitted-subject-to-conditions",
+      "obligations": [
+        "nict-kftt-attribution",
+        "license-reference",
+        "modification-indication-if-adaptation",
+        "sharealike-if-adaptation"
+      ],
+      "notAnObligation": "gpl-style-source-code-offer",
+      "evidence": [
+        "https://www.phontron.com/kftt/",
+        "https://creativecommons.org/licenses/by-sa/3.0/legalcode.en"
+      ],
+      "status": "trained-weight-adaptation-question-pending-qualified-review"
+    },
+    {
+      "component": "Tatoeba textual sentences via ManyThings",
+      "license": "CC-BY-2.0-FR-per-row",
+      "commercialUse": "permitted-subject-to-conditions",
+      "obligations": [
+        "per-sentence-contributor-attribution",
+        "per-sentence-license-preservation"
+      ],
+      "attributionSidecar": {
+        "path": "tatoeba-attributions.jsonl.gz",
+        "uniqueRecords": 9305,
+        "sha256": "a82507020792da4cc6fdcdfec1ef2a37fbf44ba0527fc44ca8b3ca80ed6b0b0f",
+        "uncompressedSha256": "d7b5d6e2988d2cea2f19da341e54f40c481ee320ce3b3958e40e92e703a19d63"
+      },
+      "evidence": [
+        "https://tatoeba.org/en/terms_of_use"
+      ],
+      "status": "sidecar-present-release-time-coverage-recheck-required"
+    },
+    {
+      "component": "NICT ALT parallel sentence text",
+      "license": "CC-BY-4.0-with-English-Wikinews-CC-BY-2.5-layer",
+      "commercialUse": "permitted-subject-to-conditions",
+      "obligations": [
+        "nict-attribution",
+        "english-wikinews-attribution-and-license-layer",
+        "riza-et-al-2016-citation"
+      ],
+      "excludedComponent": {
+        "name": "annotated-English-and-Japanese-ALT-treebanks",
+        "license": "CC-BY-NC-SA-4.0",
+        "used": false
+      },
+      "evidence": [
+        "https://www2.nict.go.jp/astrec-att/member/mutiyama/ALT/"
+      ],
+      "status": "parallel-text-boundary-verified"
+    },
+    {
+      "component": "Japanese Law Translation Database System finalized snapshot",
+      "license": "PDL-1.0-with-site-specific-terms",
+      "commercialUse": "permitted-subject-to-conditions",
+      "accessDate": "2026-07-18",
+      "tentativeTitlesIncluded": false,
+      "obligations": [
+        "ministry-of-justice-source-citation",
+        "pdl-1.0-reference",
+        "mimi-editing-statement",
+        "must-not-appear-as-unaltered-government-content",
+        "unofficial-reference-material-disclaimer",
+        "accuracy-reliability-currency-no-warranty-notice"
+      ],
+      "evidence": [
+        "https://www.japaneselawtranslation.go.jp/en/index/terms",
+        "https://www.digital.go.jp/en/resources/open_data/public_data_license_v1.0"
+      ],
+      "status": "terms-identified-notice-present"
+    },
+    {
+      "component": "Mimi-authored UI pairs",
+      "license": "project-owned",
+      "commercialUse": "permitted",
+      "obligations": [
+        "retain-authenticated-repository-revision-and-source-lines"
+      ],
+      "status": "provenance-present"
+    }
+  ],
+  "distributionChannels": {
+    "directSignedNotarizedMacOS": {
+      "status": "conditionally-feasible-not-approved",
+      "requirements": [
+        "separately-scope-cc-by-sa-4.0-to-model-files",
+        "bundle-complete-offline-license-and-attribution-payload",
+        "provide-in-app-legal-acknowledgements-access",
+        "exclude-model-files-from-restrictive-app-eula-terms",
+        "confirm-signing-and-notarization-do-not-restrict-licensed-rights",
+        "replace-absolute-paths-with-portable-repository-relative-inventory"
+      ]
+    },
+    "macAppStore": {
+      "status": "blocked-pending-qualified-review-or-licensor-permission",
+      "issues": [
+        "standard-eula-scope-versus-sharealike-rights",
+        "fairplay-or-other-effective-technological-measures",
+        "component-license-carveout-enforceability"
+      ],
+      "evidence": [
+        "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+        "https://developer.apple.com/app-store/review/guidelines/",
+        "https://creativecommons.org/faq/#can-i-use-effective-technological-measures-such-as-drm-when-i-share-cc-licensed-material"
+      ]
+    }
+  },
+  "requiredReleasePayload": [
+    "exact-model-pack",
+    "portable-release-contract",
+    "ATTRIBUTIONS.md",
+    "tatoeba-attributions.jsonl.gz",
+    "canonical-or-frozen-license-and-site-terms-files",
+    "weight-file-license-scope-and-modification-notice",
+    "offline-app-legal-acknowledgements-entry",
+    "distribution-channel-eula-signing-notarization-and-drm-declaration"
+  ],
+  "blockers": [
+    "dataset-policy-manifest-does-not-authorize-promotion",
+    "sealed-automated-400x2-quality-evaluation-pending",
+    "independent-structure-fallback-positive-quality-bound-failed",
+    "zero-critical-failure-quality-gate-not-met",
+    "trained-weight-relationship-to-sharealike-training-text-unresolved",
+    "mac-app-store-eula-and-technological-measure-review-pending",
+    "public-license-text-bundle-pending"
+  ]
+}

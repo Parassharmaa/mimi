@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Pinned official license texts required by the Mimi EN-JA model release audit",
+  "sources": [
+    {
+      "bytes": 20138,
+      "canonical": true,
+      "filename": "CC-BY-SA-4.0.txt",
+      "id": "cc-by-sa-4.0",
+      "language": "en",
+      "mediaType": "text/plain",
+      "purpose": "ElanMT upstream and adapted model-weight license",
+      "sha256": "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5",
+      "sourceUrl": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt"
+    },
+    {
+      "bytes": 22240,
+      "canonical": true,
+      "filename": "CC-BY-SA-3.0.txt",
+      "id": "cc-by-sa-3.0",
+      "language": "en",
+      "mediaType": "text/plain",
+      "purpose": "Kyoto Free Translation Task license",
+      "sha256": "3f941b3b89cf7b8370ceb83cc76d2120d471b58735d8ca60238a751a48d7f72f",
+      "sourceUrl": "https://creativecommons.org/licenses/by-sa/3.0/legalcode.txt"
+    },
+    {
+      "bytes": 18657,
+      "canonical": true,
+      "filename": "CC-BY-4.0.txt",
+      "id": "cc-by-4.0",
+      "language": "en",
+      "mediaType": "text/plain",
+      "purpose": "NICT ALT translations and PDL 1.0 compatibility license",
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411",
+      "sourceUrl": "https://creativecommons.org/licenses/by/4.0/legalcode.txt"
+    },
+    {
+      "bytes": 35261,
+      "canonical": true,
+      "filename": "CC-BY-2.5.html",
+      "id": "cc-by-2.5",
+      "language": "en",
+      "mediaType": "text/html",
+      "purpose": "English Wikinews source layer in NICT ALT",
+      "sha256": "1bb857c739b56f5e6835cc6e517cc002c69ea6b0bf6476a4473442dc5dfe4688",
+      "sourceUrl": "https://creativecommons.org/licenses/by/2.5/legalcode.en"
+    },
+    {
+      "bytes": 39707,
+      "canonical": true,
+      "filename": "CC-BY-2.0-FR.html",
+      "id": "cc-by-2.0-fr",
+      "language": "fr",
+      "mediaType": "text/html",
+      "purpose": "Tatoeba textual-sentence license",
+      "sha256": "af0d7ada8b9be52a6874238f4533512d0b2568595bf7cb3427e41f7c38847b71",
+      "sourceUrl": "https://creativecommons.org/licenses/by/2.0/fr/legalcode.fr"
+    },
+    {
+      "bytes": 207095,
+      "canonical": true,
+      "filename": "PDL-1.0-JA.pdf",
+      "id": "pdl-1.0-ja",
+      "language": "ja",
+      "mediaType": "application/pdf",
+      "purpose": "Official Japan Public Data License 1.0",
+      "sha256": "48153b4bf7130d07ff58ec620d05f24d8402a0a5c18f1583287cfe8ea93f3a5a",
+      "sourceUrl": "https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/f7fde41d-ffca-4b2a-9b25-94b8a701a037/24afdf33/20240705_resources_data_outline_05.pdf"
+    },
+    {
+      "bytes": 58110,
+      "canonical": false,
+      "filename": "PDL-1.0-EN-reference.html",
+      "id": "pdl-1.0-en-reference",
+      "language": "en",
+      "mediaType": "text/html",
+      "purpose": "English reference for Japan Public Data License 1.0; Japanese PDF controls",
+      "sha256": "28dfbec088af1eb2ca547e04dc7351c0089c4bd01cdae6c795546ac445737534",
+      "sourceUrl": "https://www.digital.go.jp/en/resources/open_data/public_data_license_v1.0"
+    },
+    {
+      "bytes": 12007,
+      "canonical": true,
+      "filename": "JAPANESE-LAW-TRANSLATION-TERMS-EN.html",
+      "id": "japanese-law-translation-terms-en",
+      "language": "en",
+      "mediaType": "text/html",
+      "purpose": "Site-specific terms for Japanese Law Translation Database content",
+      "rawBytes": 12127,
+      "sha256": "d24abba0b3588453a7fbdce4698061f1ddbb0bf2b11fb61ac7766320ee13289c",
+      "transform": "redact-cakephp-csrf-token-v1",
+      "sourceUrl": "https://www.japaneselawtranslation.go.jp/en/index/terms"
+    }
+  ]
+}

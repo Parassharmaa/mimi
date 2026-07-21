@@ -1,0 +1,346 @@
+{
+  "assetCount": 17,
+  "assets": [
+    {
+      "path": "../models/elanmt-release-clean-human-routed-moe-v2-memory-v2-mlx-4bit-pack/memory/exact-translation-memory.json",
+      "projectControlled": true,
+      "scopes": [
+        "exact-memory"
+      ],
+      "sha256": "d0cdc2416cf7d65a83b0914be96a94eb80812ef660edf3ad81672de18461633e",
+      "textCount": 12358,
+      "textExtractionJSONL": "automated-claim-v1.exposure/exact-memory.jsonl",
+      "textExtractionSHA256": "747f5658fd3628a703550f209f8edfda8061fa7f33af067252013bdffaf29efb"
+    },
+    {
+      "path": "../work/conversational-control-en-ja/train.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "training"
+      ],
+      "sha256": "985e66ba98f02dca5c6a796129d83c16c6b5b125644715207211ba293092ea4e",
+      "textCount": 8692,
+      "textExtractionJSONL": "../work/conversational-control-en-ja/train.jsonl",
+      "textExtractionSHA256": "985e66ba98f02dca5c6a796129d83c16c6b5b125644715207211ba293092ea4e"
+    },
+    {
+      "path": "../work/conversational-control-en-ja/valid.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection"
+      ],
+      "sha256": "28d23f456964992ee961308f74b7a20bcaef12cad03d901da43e51a261586bb9",
+      "textCount": 2170,
+      "textExtractionJSONL": "../work/conversational-control-en-ja/valid.jsonl",
+      "textExtractionSHA256": "28d23f456964992ee961308f74b7a20bcaef12cad03d901da43e51a261586bb9"
+    },
+    {
+      "path": "../work/hard-reference-ja-en/train.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "training"
+      ],
+      "sha256": "fc08853383f92edbf7c67a888ce918da70027d5c2bf16561913979ef16801b3b",
+      "textCount": 4930,
+      "textExtractionJSONL": "../work/hard-reference-ja-en/train.jsonl",
+      "textExtractionSHA256": "fc08853383f92edbf7c67a888ce918da70027d5c2bf16561913979ef16801b3b"
+    },
+    {
+      "path": "../work/hard-reference-ja-en/valid.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection"
+      ],
+      "sha256": "d0defd68034d8a77afb9d55b2f6d4d9126dd0c8bd111c7f7a0be702bfe34ad4a",
+      "textCount": 828,
+      "textExtractionJSONL": "../work/hard-reference-ja-en/valid.jsonl",
+      "textExtractionSHA256": "d0defd68034d8a77afb9d55b2f6d4d9126dd0c8bd111c7f7a0be702bfe34ad4a"
+    },
+    {
+      "path": "../work/japanese-law-translation-finalized-v1/train.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "exact-memory",
+        "training"
+      ],
+      "sha256": "65b5607b190cfe4730c69e15f175ce3ee87380ff0871fd86cb069d904aacaf58",
+      "textCount": 817628,
+      "textExtractionJSONL": "../work/japanese-law-translation-finalized-v1/train.jsonl",
+      "textExtractionSHA256": "65b5607b190cfe4730c69e15f175ce3ee87380ff0871fd86cb069d904aacaf58"
+    },
+    {
+      "path": "../work/licensed-unified-ja-en-v1/train.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "training"
+      ],
+      "sha256": "81615ff015931411b4563e1364e1f44ff9c5ae07de435eaf4e9c2bc942d7dafb",
+      "textCount": 12070,
+      "textExtractionJSONL": "../work/licensed-unified-ja-en-v1/train.jsonl",
+      "textExtractionSHA256": "81615ff015931411b4563e1364e1f44ff9c5ae07de435eaf4e9c2bc942d7dafb"
+    },
+    {
+      "path": "../work/licensed-unified-ja-en-v1/valid.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection"
+      ],
+      "sha256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096",
+      "textCount": 2570,
+      "textExtractionJSONL": "../work/licensed-unified-ja-en-v1/valid.jsonl",
+      "textExtractionSHA256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096"
+    },
+    {
+      "path": "../work/release-clean-full-depth-en-ja-v1/train.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "training"
+      ],
+      "sha256": "30043b643175ea033343643985735e157f9833f1435ad1dcbb4008790e9691da",
+      "textCount": 246100,
+      "textExtractionJSONL": "../work/release-clean-full-depth-en-ja-v1/train.jsonl",
+      "textExtractionSHA256": "30043b643175ea033343643985735e157f9833f1435ad1dcbb4008790e9691da"
+    },
+    {
+      "path": "../work/release-clean-full-depth-en-ja-v1/valid.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection"
+      ],
+      "sha256": "ab2b957f9b000f182bd8c459d34da34db02105e42e97e1efb6979097acdacc71",
+      "textCount": 2570,
+      "textExtractionJSONL": "../work/release-clean-full-depth-en-ja-v1/valid.jsonl",
+      "textExtractionSHA256": "ab2b957f9b000f182bd8c459d34da34db02105e42e97e1efb6979097acdacc71"
+    },
+    {
+      "path": "../work/release-clean-legal-specialist-ja-en-v1/train.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "training"
+      ],
+      "sha256": "39d9d91238f53c0113e8c95e25e073a2e5c1838e05afc4f0dabc9104d19804cb",
+      "textCount": 246100,
+      "textExtractionJSONL": "../work/release-clean-legal-specialist-ja-en-v1/train.jsonl",
+      "textExtractionSHA256": "39d9d91238f53c0113e8c95e25e073a2e5c1838e05afc4f0dabc9104d19804cb"
+    },
+    {
+      "path": "../work/release-clean-legal-specialist-ja-en-v1/valid.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection"
+      ],
+      "sha256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096",
+      "textCount": 2570,
+      "textExtractionJSONL": "../work/release-clean-legal-specialist-ja-en-v1/valid.jsonl",
+      "textExtractionSHA256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096"
+    },
+    {
+      "path": "automated-claim-v1.exposure/model-selection-results.inventory.json",
+      "projectControlled": true,
+      "scopes": [
+        "model-selection"
+      ],
+      "sha256": "27be67a65a9f44f50c3caf2c66be9b7454669a608e1c51cf74e5d3dcdf414326",
+      "textCount": 40454,
+      "textExtractionJSONL": "automated-claim-v1.exposure/model-selection-results.jsonl",
+      "textExtractionSHA256": "2f611d07e1bf5fde45ed311200449c32d92149bb3b18b56003831115a5c3d87f"
+    },
+    {
+      "path": "canary.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection",
+        "router"
+      ],
+      "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70",
+      "textCount": 36,
+      "textExtractionJSONL": "canary.jsonl",
+      "textExtractionSHA256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+    },
+    {
+      "path": "public-stress-v1.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection",
+        "router"
+      ],
+      "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a",
+      "textCount": 1600,
+      "textExtractionJSONL": "public-stress-v1.jsonl",
+      "textExtractionSHA256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+    },
+    {
+      "path": "public-stress-v2.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection",
+        "router"
+      ],
+      "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f",
+      "textCount": 4800,
+      "textExtractionJSONL": "public-stress-v2.jsonl",
+      "textExtractionSHA256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+    },
+    {
+      "path": "public-stress-v3.jsonl",
+      "projectControlled": true,
+      "scopes": [
+        "development",
+        "model-selection",
+        "router"
+      ],
+      "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06",
+      "textCount": 5600,
+      "textExtractionJSONL": "public-stress-v3.jsonl",
+      "textExtractionSHA256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+    }
+  ],
+  "coverageBasis": "exact-project-controlled-plus-upstream-revision-temporal-exclusion",
+  "evidenceAssetCount": 14,
+  "evidenceAssets": [
+    {
+      "path": "automated-claim-v1.exposure/model-selection-results.inventory.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "27be67a65a9f44f50c3caf2c66be9b7454669a608e1c51cf74e5d3dcdf414326"
+    },
+    {
+      "path": "upstream-elanmt-v1.attestations.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "1d61652d609d9339e7b02c5422135755d7ea7814618172baf1b342f82a9978e2"
+    },
+    {
+      "path": "../models/elanmt-conversational-control-en-ja/mimi_training_manifest.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "2f69ec06eaf729c4ee62b599677553fd4dce091256f33f880636dc6ec923544c"
+    },
+    {
+      "path": "../models/elanmt-hard-reference-ja-en/mimi_training_manifest.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "61708ba80370a88cadf6929f516890e970728eb20629fa2ed8cc8c0ffbccd0a4"
+    },
+    {
+      "path": "../models/elanmt-licensed-unified-regularized-ja-en-v1-avg3/mimi_checkpoint_averaging_manifest.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "bee6dd96814b80b471c88d452b62afba3f0e2baee81425a2833bc829c646e6fa"
+    },
+    {
+      "path": "../models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000150/mimi_training_manifest.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "9c77e74dde3575b5c5baa84b93da5cb98e2d570a893fa4b4d24cf60d6285747f"
+    },
+    {
+      "path": "../models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000225/mimi_training_manifest.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "ee4b6cc110732ed051672e7dab3756543f97e6af4231fcdc1bc694a067875a41"
+    },
+    {
+      "path": "../models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/mimi_training_manifest.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "33561d38d29d955b0a46f088893092f282e4aab0372ffe75ef44365cf63e2b49"
+    },
+    {
+      "path": "../models/elanmt-release-clean-human-routed-moe-v2-memory-v2-mlx-4bit-pack/manifest.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "c9df31e506c28c870f49c8bcb24589f8ffff74b285bb0ffb16686089d1649a0a"
+    },
+    {
+      "path": "../models/elanmt-release-clean-human-routed-moe-v2-memory-v2-mlx-4bit-pack/routers/formal-en-ja.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "711771965375e3796bba2715824b3d28f8888ca8c82f8d83f95afde109747071"
+    },
+    {
+      "path": "../models/elanmt-release-clean-human-routed-moe-v2-memory-v2-mlx-4bit-pack/routers/legal-ja-en.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "47e9a959e8c9549fb6435a85897442121ec15750a6f44e6a59def222b9964e81"
+    },
+    {
+      "path": "../release/elanmt-release-clean-human-routed-moe-v2-memory-v2/release-contract.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "498d4110c8a00a1e15e6dfa5c5fd869f04d90b34308b65cd4009481c27114fcf"
+    },
+    {
+      "path": "../results/release-clean-human-full-depth-en-ja-expert-router-v1.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "3477b1b99b04a5e6068cf563983a7d41d82ec5715c6901822129ed1898a1afbd"
+    },
+    {
+      "path": "../results/release-clean-legal-specialist-ja-en-legal-router-v1.json",
+      "purpose": "hash-bound release-lineage or exposure evidence",
+      "sha256": "ee0c7b9c7d6bb173b15160825bd2321f25c0f1debae796751c397493b4cbd650"
+    }
+  ],
+  "frozenSourcesSHA256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c",
+  "projectControlledExposureComplete": true,
+  "purpose": "claim benchmark contamination exposure contract",
+  "releaseContract": {
+    "path": "../release/elanmt-release-clean-human-routed-moe-v2-memory-v2/release-contract.json",
+    "sha256": "498d4110c8a00a1e15e6dfa5c5fd869f04d90b34308b65cd4009481c27114fcf"
+  },
+  "schemaVersion": 2,
+  "trainingTeacherModels": [],
+  "trainingTeacherModelsComplete": true,
+  "upstreamExactRowsComplete": false,
+  "upstreamLimitation": "Exact upstream ElanMT pretraining rows are not locally enumerable; only the pinned model revisions are temporally excluded because they predate creation of this private project-owned source suite.",
+  "upstreamRevisionAttestations": [
+    {
+      "license": "CC-BY-SA-4.0",
+      "modelCardURL": "https://huggingface.co/Mitsua/elan-mt-bt-en-ja/blob/02c48e7031386cd2d41974b0ff1aaf52f010c5fa/README.md",
+      "repository": "Mitsua/elan-mt-bt-en-ja",
+      "revision": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
+      "revisionAPIURL": "https://huggingface.co/api/models/Mitsua/elan-mt-bt-en-ja/revision/02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
+      "revisionMetadata": {
+        "createdAt": "2024-05-20T01:51:18.000Z",
+        "id": "Mitsua/elan-mt-bt-en-ja",
+        "lastModified": "2024-05-20T01:53:38.000Z",
+        "sha": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa"
+      },
+      "revisionMetadataSHA256": "24f993ae7eae9d3863cbd635932b116a7086df6efba399aced7d9283e80d00f3"
+    },
+    {
+      "license": "CC-BY-SA-4.0",
+      "modelCardURL": "https://huggingface.co/Mitsua/elan-mt-bt-ja-en/blob/539f80eb05306e27a166b45e4264c7fa2eb4de97/README.md",
+      "repository": "Mitsua/elan-mt-bt-ja-en",
+      "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+      "revisionAPIURL": "https://huggingface.co/api/models/Mitsua/elan-mt-bt-ja-en/revision/539f80eb05306e27a166b45e4264c7fa2eb4de97",
+      "revisionMetadata": {
+        "createdAt": "2024-05-20T01:56:12.000Z",
+        "id": "Mitsua/elan-mt-bt-ja-en",
+        "lastModified": "2024-05-20T01:56:57.000Z",
+        "sha": "539f80eb05306e27a166b45e4264c7fa2eb4de97"
+      },
+      "revisionMetadataSHA256": "cc002f99ffc2de5d3a331e65157fb8f75e6bbbcf1b4b057cc1b2643395da2db9"
+    }
+  ],
+  "zeroTextScopeAttestations": [
+    {
+      "evidenceAssetSHA256s": [
+        "2f69ec06eaf729c4ee62b599677553fd4dce091256f33f880636dc6ec923544c",
+        "33561d38d29d955b0a46f088893092f282e4aab0372ffe75ef44365cf63e2b49",
+        "61708ba80370a88cadf6929f516890e970728eb20629fa2ed8cc8c0ffbccd0a4",
+        "9c77e74dde3575b5c5baa84b93da5cb98e2d570a893fa4b4d24cf60d6285747f",
+        "ee4b6cc110732ed051672e7dab3756543f97e6af4231fcdc1bc694a067875a41"
+      ],
+      "reason": "The current release contract declares licensed human-reference targets and no synthetic or model teacher inputs/outputs in the shipped model lineage.",
+      "scope": "teacher-input"
+    },
+    {
+      "evidenceAssetSHA256s": [
+        "2f69ec06eaf729c4ee62b599677553fd4dce091256f33f880636dc6ec923544c",
+        "33561d38d29d955b0a46f088893092f282e4aab0372ffe75ef44365cf63e2b49",
+        "61708ba80370a88cadf6929f516890e970728eb20629fa2ed8cc8c0ffbccd0a4",
+        "9c77e74dde3575b5c5baa84b93da5cb98e2d570a893fa4b4d24cf60d6285747f",
+        "ee4b6cc110732ed051672e7dab3756543f97e6af4231fcdc1bc694a067875a41"
+      ],
+      "reason": "The current release contract declares licensed human-reference targets and no synthetic or model teacher inputs/outputs in the shipped model lineage.",
+      "scope": "teacher-output"
+    }
+  ]
+}
