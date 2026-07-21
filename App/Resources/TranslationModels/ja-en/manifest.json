@@ -1,0 +1,48 @@
+{
+  "format": "mimi-mlx-marian-v1",
+  "architecture": "Marian encoder-decoder",
+  "direction": "ja-en",
+  "source_repository": "Mitsua/elan-mt-bt-ja-en",
+  "source_revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+  "source_weights_sha256": "3cf25766912e952e353fd7632273e6ddb400d4627531bfd749ddd9194e699850",
+  "license": "CC-BY-SA-4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "attribution": "ElanMT by ELAN MITSUA Project / Abstract Engine",
+  "bits": 4,
+  "group_size": 64,
+  "compute_dtype": "float16",
+  "files": {
+    "config.json": {
+      "bytes": 1075,
+      "sha256": "78298efb7b70a119900886b41de089e2543c1234bb7d767defa09ea494cb7ab7"
+    },
+    "generation_config.json": {
+      "bytes": 304,
+      "sha256": "5d847b8f088fee7f2093601bdc7734e3204d37ad58dd3e8616e5ef0242774f36"
+    },
+    "model.safetensors": {
+      "bytes": 34297451,
+      "sha256": "8259f86e4e053b8757593f2cd809c2e6ddcedb1e91897a2cd4cf20958b90f152"
+    },
+    "source.spm": {
+      "bytes": 792751,
+      "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+    },
+    "target.spm": {
+      "bytes": 792751,
+      "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+    },
+    "tokenizer.json": {
+      "bytes": 2400891,
+      "sha256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+    },
+    "tokenizer_config.json": {
+      "bytes": 812,
+      "sha256": "3058dd21398fe86efd9cd02fbe340735d14e00e78c035a1cccab46afe2953ce2"
+    },
+    "vocab.json": {
+      "bytes": 881911,
+      "sha256": "f508b75734ee21cf16b3816b7b29dea400f1f5998f47b7695cef1979ca49e106"
+    }
+  }
+}

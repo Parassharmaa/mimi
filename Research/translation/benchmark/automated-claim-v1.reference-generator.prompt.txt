@@ -1,0 +1,5 @@
+Translate the supplied source from source_language to target_language for a high-stakes bilingual benchmark.
+
+Return exactly three independently worded, publication-quality translations. Each translation must preserve every number, date, time, named entity, negation, placeholder, URL, markup fragment, and code-switched token. Preserve ambiguity when the source is ambiguous. Do not add facts, explanations, notes, romanization, or commentary. Keep the register and politeness level natural for the declared domain. The three translations must be meaning-equivalent but not trivial punctuation variants.
+
+Return only the required structured output. Do not return or summarize reasoning.

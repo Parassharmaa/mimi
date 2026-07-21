@@ -1,0 +1,106 @@
+{
+  "blockers": [
+    "dataset-policy-manifest-does-not-authorize-promotion",
+    "sealed-automated-400x2-quality-evaluation-pending",
+    "license-compatibility-and-distribution-review-pending",
+    "app-distribution-terms-review-pending"
+  ],
+  "doesNotAuthorizeAppIntegration": true,
+  "doesNotAuthorizeDistribution": true,
+  "modelPayloadUnchanged": true,
+  "modelPromotionEligible": false,
+  "pack": {
+    "bytes": 140875791,
+    "files": {
+      "engines/formal-en-ja/manifest.json": {
+        "bytes": 6287,
+        "sha256": "45a6936f1bb8e5b58713b5e0da313ce7956a09dd3dd0b5dcaa591207c9accb79"
+      },
+      "engines/formal-en-ja/model.safetensors": {
+        "bytes": 34297451,
+        "sha256": "f1d9abc7104fe71262f62ec834ca451d740a2f99df72e67559068598abb8e7ff"
+      },
+      "engines/formal-en-ja/tokenizer_config.json": {
+        "bytes": 842,
+        "sha256": "71423f6f597fa69018035b8a4f21432b0693f5eeca83cc8a34d268002add5cce"
+      },
+      "engines/generalist-en-ja/manifest.json": {
+        "bytes": 1839,
+        "sha256": "a107537f288ab44ec563c35526d8e270792805a13f44174d30098de75f445fd8"
+      },
+      "engines/generalist-en-ja/model.safetensors": {
+        "bytes": 34297451,
+        "sha256": "d7e6e0b514d244adeb6c4a59e4ad16f902c6f9c977f9c62ff41d4402fc093fcc"
+      },
+      "engines/generalist-en-ja/tokenizer_config.json": {
+        "bytes": 812,
+        "sha256": "53b937ad26d17b236e283a181b175025a06697d8d1752ea70dfd359d3a30c716"
+      },
+      "engines/generalist-ja-en/manifest.json": {
+        "bytes": 1839,
+        "sha256": "58674c3ca2794bdca7b460eb4b048cd0d081597dd098309d89f562a9d588cc9e"
+      },
+      "engines/generalist-ja-en/model.safetensors": {
+        "bytes": 34297451,
+        "sha256": "f798f2314b225c4640d4802e3cb5554be68ef9389bf38a03e019682a2252f76d"
+      },
+      "engines/generalist-ja-en/tokenizer_config.json": {
+        "bytes": 842,
+        "sha256": "bead3a53ffe20e0a85fe3df6ed183565ec36db885deeec21fb7849daf23b7d05"
+      },
+      "engines/legal-ja-en/manifest.json": {
+        "bytes": 6291,
+        "sha256": "ccb74b11e6bbb154bc94dffa0d8451629147378cbdf9ce40cc09e1766c157337"
+      },
+      "engines/legal-ja-en/model.safetensors": {
+        "bytes": 34297451,
+        "sha256": "a01fa5b06b877322f1bad83e5b7bd871f13c7ab094d549cbaf6f63b46469d862"
+      },
+      "engines/legal-ja-en/tokenizer_config.json": {
+        "bytes": 842,
+        "sha256": "bead3a53ffe20e0a85fe3df6ed183565ec36db885deeec21fb7849daf23b7d05"
+      },
+      "manifest.json": {
+        "bytes": 18730,
+        "sha256": "71f330302559a0948c1b35f6def2d6107b4b57728cf53e1e99e0279141d84e79"
+      },
+      "routers/formal-en-ja.json": {
+        "bytes": 849816,
+        "sha256": "711771965375e3796bba2715824b3d28f8888ca8c82f8d83f95afde109747071"
+      },
+      "routers/legal-ja-en.json": {
+        "bytes": 396956,
+        "sha256": "47e9a959e8c9549fb6435a85897442121ec15750a6f44e6a59def222b9964e81"
+      },
+      "shared/tokenizer.json": {
+        "bytes": 2400891,
+        "sha256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+      }
+    },
+    "manifestSha256": "71f330302559a0948c1b35f6def2d6107b4b57728cf53e1e99e0279141d84e79",
+    "path": "Research/translation/models/elanmt-release-clean-human-only-routed-moe-v4-portable-mlx-4bit-shared-tokenizer-pack"
+  },
+  "purpose": "portable hash-bound Marian model and release inventory",
+  "release": {
+    "contractSha256": "3d8ccfdfb95d2365de21a0912bd2c370c8ebf6061c903d758798720a8dc0a8f6",
+    "files": {
+      "ATTRIBUTIONS.md": {
+        "bytes": 2776,
+        "sha256": "304add47324d0315278b5945e2e20aae56292dfd6688eba73b9c3f84872a18b4"
+      },
+      "release-contract.json": {
+        "bytes": 19798,
+        "sha256": "3d8ccfdfb95d2365de21a0912bd2c370c8ebf6061c903d758798720a8dc0a8f6"
+      },
+      "tatoeba-attributions.jsonl.gz": {
+        "bytes": 233555,
+        "sha256": "a82507020792da4cc6fdcdfec1ef2a37fbf44ba0527fc44ca8b3ca80ed6b0b0f"
+      }
+    },
+    "path": "Research/translation/release/elanmt-release-clean-human-only-routed-moe-v4-portable-audit-v2"
+  },
+  "releaseAuthorization": "blocked",
+  "repositoryRelativePathsOnly": true,
+  "schemaVersion": 1,
+  "sourceInternalContractSha256": "b56eb15418d8661626fdfc428611783671eabf2c24ba88456e2d23165fa0af0b"
+}

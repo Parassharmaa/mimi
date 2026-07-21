@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-07-21T00:05:13Z",
+  "purpose": "bounded token-local structure calibration of the clean step-250 legal-quality checkpoint",
+  "direction": "en-ja",
+  "training": {
+    "initialCheckpointPath": "/tmp/mimi-clean-continuation-v1.271828/checkpoints/step-0000250",
+    "initialCheckpointModelSha256": "ee4de9149392dff92bcec820414e8f6feb0ce68be41c899eb8a50a682761b983",
+    "initialCheckpointTrainingManifestSha256": "b5d180f44c1ed40162392dceefbd6413609070aadd0fcc69ca88b1f89ea159ca",
+    "negativeDatasetPath": "Research/translation/work/negative-space-en-ja-v1",
+    "negativeDatasetManifestSha256": "082b1545e41762aa0f18c79f55e9c224b592a68a2c7d4710aa36622256899e04",
+    "negativeTrainSha256": "b5775c05fd3c303e80c1fee8f573d0d85b117c3f80c634778ffe47d499c45b44",
+    "negativeValidSha256": "ead1e6ac88bca9e0621101195017706b6bda3433043649e1b17411f67fd350dc",
+    "positiveTargets": "authenticated licensed human or project-owned references only",
+    "negativeEvidence": "deterministic corruptions never presented as positive translation targets",
+    "freeFormSyntheticTranslationsUsed": false,
+    "privateReasoningTracesUsed": false,
+    "seed": 161803,
+    "batchSize": 8,
+    "gradientAccumulation": 2,
+    "maximumSteps": 125,
+    "learningRate": 0.0000005,
+    "weightDecay": 0.01,
+    "warmupSteps": 10,
+    "evaluationSteps": 125,
+    "negativeWeight": 3.0,
+    "maximumSourceTokens": 128,
+    "maximumTargetTokens": 128
+  },
+  "developmentEvaluation": {
+    "suitePath": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+    "suiteSha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91",
+    "baselineReportPath": "Research/translation/results/elanmt-release-clean-full-depth-en-ja-v1-legal-safety-validation-v1-declared-models.json",
+    "baselineReportSha256": "d76b04f42f007f232bac633eac1618a865ad402442fd77bfeb76564ee979c7ea",
+    "rawParentReportPath": "Research/translation/results/elanmt-release-clean-human-only-en-ja-continuation-0250-legal-safety-validation-v1.json",
+    "rawParentReportSha256": "b7e9c1653207ffc3758a970bdd239972799321eaa1d3f4ebb7ee9b8acc093948",
+    "selectionUsesIndependentTestV1Outputs": false,
+    "selectionUsesPublicStressV3Outputs": false
+  },
+  "gates": {
+    "minimumGeneralDevelopmentChrFPlusPlus": 30.9,
+    "negativeValidationRejectedTokenProbabilityMustDecrease": true,
+    "minimumPairedLegalChrFPlusPlusLower95VersusBaseline": 0.0,
+    "maximumExactCriticalTokenMismatches": 207,
+    "maximumNegationMarkerMismatches": 101,
+    "quantization": {
+      "bits": 4,
+      "groupSize": 64,
+      "mlxVersion": "0.30.6"
+    }
+  },
+  "implementation": {
+    "trainerPath": "scripts/translation/train_marian_negative_space.py",
+    "trainerSha256": "7339ec74dc7159b87f0cda4da97717789886244eaaf3291afd8850b7e51ced3a",
+    "benchmarkScriptSha256": "682f41160bd628414a48775bb7bdcbc470e44c6171a438120968d77315e29f75",
+    "marianRuntimeSha256": "661a1eb2a745c40ecbe6d7e042d60eaccee5527897032a3fbe6880b0d68693b3",
+    "structureAuditScriptSha256": "bb4edf46dc0a9932aaf6ebe29e84a65c2713919aa710e4ced969c61106070075"
+  },
+  "claimEligible": false,
+  "doesNotAuthorizeModelPromotion": true,
+  "doesNotAuthorizeAppIntegration": true
+}

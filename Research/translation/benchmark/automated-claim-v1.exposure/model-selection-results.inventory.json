@@ -1,0 +1,2221 @@
+{
+  "files": [
+    {
+      "bytes": 9221,
+      "path": "Research/translation/results/apple-canary-warm3.json",
+      "sha256": "98005219b528808be485f5326451baac726cafaee710b0cb8ddc054c2df32ac9"
+    },
+    {
+      "bytes": 8013,
+      "path": "Research/translation/results/apple-canary.json",
+      "sha256": "a22d603460d0f4223a117f6aa693187aa4c372ac93fa5dfaceee162b455077ec"
+    },
+    {
+      "bytes": 512881,
+      "path": "Research/translation/results/apple-public-stress-v1.json",
+      "sha256": "208d9c12d994907b0282fb6c1c2e1112a56447c20303920f233c393ab504dad6"
+    },
+    {
+      "bytes": 669397,
+      "path": "Research/translation/results/apple-public-stress-v2-comet22.json",
+      "sha256": "2670dfbdad3e5c436c66f0a863f848933e7cb6cb8cd3711f4bfcdb92b096eadf"
+    },
+    {
+      "bytes": 3034,
+      "path": "Research/translation/results/apple-public-stress-v2-score.json",
+      "sha256": "f89f480b235783bd8217b516018e0872c3bda8057ce874db9f54e2c72bbf4411"
+    },
+    {
+      "bytes": 1532526,
+      "path": "Research/translation/results/apple-public-stress-v2.json",
+      "sha256": "ed64ee8d5d3388d1c70b69615477165d9d5dc866c23b2aa2ccaa44983a4e0b07"
+    },
+    {
+      "bytes": 370470,
+      "path": "Research/translation/results/apple-public-v2-v3-overlap-comet22.json",
+      "sha256": "8ecd59b870758a6e7f0b585758f986ff69adcbcf9d7fba4240bdc913af722458"
+    },
+    {
+      "bytes": 3113,
+      "path": "Research/translation/results/apple-public-v2-v3-overlap-score.json",
+      "sha256": "4c70892e9d0ee2e220692c179bdaaa25ac37df8438618b858cbbe01aeff32405"
+    },
+    {
+      "bytes": 890442,
+      "path": "Research/translation/results/apple-public-v2-v3-overlap.json",
+      "sha256": "a08cfe374a9ef11fe65120013131dc0ab789eb2e1b39a7697603997183152538"
+    },
+    {
+      "bytes": 5083,
+      "path": "Research/translation/results/automated-claim-v1-source-release-lineage-contamination.json",
+      "sha256": "c32af3d5e839cbfd0a003f0976dbe8f6daaf234a8838924e385d0860d5786054"
+    },
+    {
+      "bytes": 682262,
+      "path": "Research/translation/results/balanced-reference-teacher-v3-student-comet22.json",
+      "sha256": "cb18ba24c3de18c37b3a3865c0c4f0a9d6e51687806a3ce27e72adf7ded348b4"
+    },
+    {
+      "bytes": 901566,
+      "path": "Research/translation/results/btec-local-teacher-2000-cat-q4.json",
+      "sha256": "69b502fe08c0ccff1b76afc02fab1b2fc4f49232431a2dbf1fd8783a182f54b2"
+    },
+    {
+      "bytes": 899517,
+      "path": "Research/translation/results/btec-local-teacher-2000-hplt-v2.json",
+      "sha256": "bbaee8ac49adf81a1bbc0bcee9fb0a66861493d94fe0078ab7e84b3c4a862301"
+    },
+    {
+      "bytes": 1201276,
+      "path": "Research/translation/results/btec-local-teacher-2000-preferred-v2.json",
+      "sha256": "95462a83f6047bb402099b08da1917f463d9d74311f92a0bcb486413a1ce8f78"
+    },
+    {
+      "bytes": 134435,
+      "path": "Research/translation/results/btec-local-teacher-283-qwen3-8b-judge-v4.json",
+      "sha256": "041b6707b1aa8096141650ac10cb7ab3b3db8845470e7263231468f5446ada5f"
+    },
+    {
+      "bytes": 247517,
+      "path": "Research/translation/results/btec-local-teacher-542-back-cat-q4.json",
+      "sha256": "471f14224e00e9851c73a827d0a9de79d56ac996cc2aa7bde41c24c855cf8efc"
+    },
+    {
+      "bytes": 246054,
+      "path": "Research/translation/results/btec-local-teacher-542-back-hplt-v2.json",
+      "sha256": "4639aca2dedfaecde7c8ed28735b38191d1fc90a681735112deba12a6de9a1aa"
+    },
+    {
+      "bytes": 332711,
+      "path": "Research/translation/results/btec-local-teacher-542-back-preferred-v2.json",
+      "sha256": "5a046795bce99e3f538ab726660a53734d16c0d61813522209296ac2ccfac6d9"
+    },
+    {
+      "bytes": 765343,
+      "path": "Research/translation/results/btec-local-teacher-542-roundtrip-nli-v1.json",
+      "sha256": "632df6f773974b60027a952de51154098fb8ba215fabf5857e4c39923233ab8f"
+    },
+    {
+      "bytes": 765343,
+      "path": "Research/translation/results/btec-local-teacher-542-roundtrip-nli-v2.json",
+      "sha256": "58095843409d4608f0ca986e8a4ed45874502ef525acb51c81926668d506d60c"
+    },
+    {
+      "bytes": 136125,
+      "path": "Research/translation/results/btec-local-teacher-back-cat-q4.json",
+      "sha256": "460904aab3aec293ddea8118700f30ed5745a38bea72d850144ea81b1f65c3a1"
+    },
+    {
+      "bytes": 134985,
+      "path": "Research/translation/results/btec-local-teacher-back-hplt-v2.json",
+      "sha256": "ec8f75d2d559871e6555e8121ccbc4cf32b6d36afc45884d6c67c29a3c1eb507"
+    },
+    {
+      "bytes": 183121,
+      "path": "Research/translation/results/btec-local-teacher-back-preferred-v2.json",
+      "sha256": "95022dd32f5eacd0e6198df24e558bf2b87aacca10d35ea60331f7583f00c176"
+    },
+    {
+      "bytes": 135931,
+      "path": "Research/translation/results/btec-local-teacher-cat-q4.json",
+      "sha256": "656073767431d234eca0fb56f42be814c1d76ada8b64260eab7acb3e29577618"
+    },
+    {
+      "bytes": 135718,
+      "path": "Research/translation/results/btec-local-teacher-hplt-v2.json",
+      "sha256": "40b85b1fa96e341cc0ce51b2758b76ad5619f41d29045924433e69f108cc4de9"
+    },
+    {
+      "bytes": 182042,
+      "path": "Research/translation/results/btec-local-teacher-preferred-v2.json",
+      "sha256": "282a804e1980b1bfe37b376a2df6cebf99ce857b92c6bc5941801efc1059d93b"
+    },
+    {
+      "bytes": 4652,
+      "path": "Research/translation/results/btec-local-teacher-qwen3-8b-batch-smoke.json",
+      "sha256": "d3ba2d828999c0f0ddd34044b278bc388a81ee340aeb68c44fa5e8af571e682d"
+    },
+    {
+      "bytes": 8378,
+      "path": "Research/translation/results/btec-local-teacher-qwen3-8b-batch16-smoke.json",
+      "sha256": "b8252b3e5d49e9af609094c673f60efa714be531fe2f2eb7570399e7882152fe"
+    },
+    {
+      "bytes": 19129,
+      "path": "Research/translation/results/btec-local-teacher-qwen3-8b-judge-v1.json",
+      "sha256": "9c269b90863a4ca9467046595b360904ab09957724dde2b72d1c11203f9dc347"
+    },
+    {
+      "bytes": 19279,
+      "path": "Research/translation/results/btec-local-teacher-qwen3-8b-judge-v2.json",
+      "sha256": "e51a93f529139797250903291bdf5095f4ab4285571ee5e5548fdc46c97bbcf2"
+    },
+    {
+      "bytes": 8412,
+      "path": "Research/translation/results/btec-local-teacher-qwen3-8b-prefix-cache-smoke.json",
+      "sha256": "e8f65ce03d97f9778a8fd221e9803fefe7303efef69551da8a5d08d43bd3e5ca"
+    },
+    {
+      "bytes": 421691,
+      "path": "Research/translation/results/btec-local-teacher-roundtrip-nli-v1.json",
+      "sha256": "d6179cbe5a1ae8f6124ae20e864fbe3edbe9c38d20c0823bc764ba9c9220d5f1"
+    },
+    {
+      "bytes": 3784,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step100-canary-score.json",
+      "sha256": "07db96fd81dd632d3f34360cca784eecc00535ab5af5c44a517da96a5d0297cb"
+    },
+    {
+      "bytes": 8460,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step100-canary.json",
+      "sha256": "eb7d183518379f1ffa4365318080e173d973146d29faf696405d8a812bee9be4"
+    },
+    {
+      "bytes": 1406,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step100-ja-en-public-stress-v1-score.json",
+      "sha256": "93c9141eba31d6d48f027f4e25f1f1fc5da78f8b73cc3db5241ea73ff64fc5ca"
+    },
+    {
+      "bytes": 251513,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step100-ja-en-public-stress-v1.json",
+      "sha256": "158a0178495ce3b585c2dda4ff48ac7db5eb9eaa1a6e82f6da5d0b50c2fde70d"
+    },
+    {
+      "bytes": 3779,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step150-canary-score.json",
+      "sha256": "20ff11fc8f6bff8393074eb58cc0047dc7566e38d9d4e2fd9a86e49cb0ad55f0"
+    },
+    {
+      "bytes": 8414,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step150-canary.json",
+      "sha256": "9bfe55814ad29e176572c30a61784c3848c8f96191d09fdaf97d20b54d5bfc7c"
+    },
+    {
+      "bytes": 3791,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step450-canary-score.json",
+      "sha256": "4d9aa40b98d6e13058b99bda7d85cd02613e99a752fdf087d0dbd3b976d9b79f"
+    },
+    {
+      "bytes": 8406,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step450-canary.json",
+      "sha256": "d34cd8c8730203ad5ed4870a50951ac80cb04eca484c480bd92ff3de202e460b"
+    },
+    {
+      "bytes": 3784,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step500-canary-score.json",
+      "sha256": "8687c52445a5e4bfdc37611edf78562cb7f2c647c3a684fb918c6043007901b2"
+    },
+    {
+      "bytes": 8427,
+      "path": "Research/translation/results/cat-translate-0.8b-conversational-ui-lora-step500-canary.json",
+      "sha256": "d362075bb6fa60dd0237e4e7aeded419d57efab0233f47c7cfec4e81651ce8fe"
+    },
+    {
+      "bytes": 3781,
+      "path": "Research/translation/results/cat-translate-0.8b-licensed-unified-lora-step100-canary-score.json",
+      "sha256": "7a72ab4c0b145935a3940d2f338296d9e4968e8f87750464bd17461574b1ea39"
+    },
+    {
+      "bytes": 8456,
+      "path": "Research/translation/results/cat-translate-0.8b-licensed-unified-lora-step100-canary.json",
+      "sha256": "439abef26b16377f53cd0c99b5c7a3202a1130c5272b4aa5d8b3e9a161c9398c"
+    },
+    {
+      "bytes": 3793,
+      "path": "Research/translation/results/cat-translate-0.8b-licensed-unified-lora-step150-canary-score.json",
+      "sha256": "c8a528bf0293f2725130209690cf7934182be17504bb6e0420e54eb35f5e8c43"
+    },
+    {
+      "bytes": 8499,
+      "path": "Research/translation/results/cat-translate-0.8b-licensed-unified-lora-step150-canary.json",
+      "sha256": "98e9a95ccd13b4ee89319886d95bce4e9e42fa789f353d5e48391e27f6e57869"
+    },
+    {
+      "bytes": 3782,
+      "path": "Research/translation/results/cat-translate-0.8b-licensed-unified-lora-step200-canary-score.json",
+      "sha256": "fa4ec46503f19d981c0831b22ba275e44eca5f44ffa9802527005afa3912f9a2"
+    },
+    {
+      "bytes": 8821,
+      "path": "Research/translation/results/cat-translate-0.8b-licensed-unified-lora-step200-canary.json",
+      "sha256": "122e641e192d7268be1b568a6a76143c92eb956e3b4f72ac0834ca0274b61f38"
+    },
+    {
+      "bytes": 3782,
+      "path": "Research/translation/results/cat-translate-0.8b-licensed-unified-lora-step50-canary-score.json",
+      "sha256": "10420d10ddec0260243ab1fc0dd571c7f78928f41a6d6ba312b21cf81e8b4e34"
+    },
+    {
+      "bytes": 8351,
+      "path": "Research/translation/results/cat-translate-0.8b-licensed-unified-lora-step50-canary.json",
+      "sha256": "59f893a2b8d9997af83771dcf71dd5b03a8208bd9c3ee84313b5a050e2126933"
+    },
+    {
+      "bytes": 3793,
+      "path": "Research/translation/results/cat-translate-0.8b-mlx-q4-canary-score.json",
+      "sha256": "81c0eda93969af50109992943b23e6d06f16986078942e38bc2a01a336896541"
+    },
+    {
+      "bytes": 8888,
+      "path": "Research/translation/results/cat-translate-0.8b-mlx-q4-canary.json",
+      "sha256": "882e2f1b3badabab6ee93e9e7cc5496db87a618a3efaa2636513ba682b7796ae"
+    },
+    {
+      "bytes": 222587,
+      "path": "Research/translation/results/cat-translate-0.8b-mlx-q4-public-stress-v1-comet22.json",
+      "sha256": "fc1251965a1ecc846c304f287e6ce05ddc0d2c9fdd3bd56d52479c1bc95400cf"
+    },
+    {
+      "bytes": 507378,
+      "path": "Research/translation/results/cat-translate-0.8b-mlx-q4-public-stress-v1.json",
+      "sha256": "4a29946de8a55f1810547aaf94954e709d53e5a97f8873cbca4400dfc18f9bc7"
+    },
+    {
+      "bytes": 4576,
+      "path": "Research/translation/results/cat-translate-0.8b-mlx-q4-vs-apple-public-stress-v1-score.json",
+      "sha256": "12ecd92d6210fa41a7d78d7c04b3719ea15e6509011c19e602aad3b950f96864"
+    },
+    {
+      "bytes": 9532,
+      "path": "Research/translation/results/conversational-control-canary.json",
+      "sha256": "4455e3c3259a60d9a9a1643e64a78d632100237845fa57eaf12a251c19e66fca"
+    },
+    {
+      "bytes": 9641,
+      "path": "Research/translation/results/dqrd-preferred-fused-4bit-beam2-canary.json",
+      "sha256": "de3c6d1f6c53be7827efc2e7d00b224ad19e070549e1d4ca320a658f2edce6ae"
+    },
+    {
+      "bytes": 9594,
+      "path": "Research/translation/results/dqrd-preferred-fused-4bit-beam4-canary.json",
+      "sha256": "4a1c7bf351f0f3fa2decf920d5135ed6aae601ce05dd4db0a64d2af164bdcba9"
+    },
+    {
+      "bytes": 4467,
+      "path": "Research/translation/results/dqrd-preferred-fused-4bit-g128-canary-parity.json",
+      "sha256": "eae018c5a0f63b076ec96aeb903f0fc22d665975033e6e202cf5e86db06cd796"
+    },
+    {
+      "bytes": 9603,
+      "path": "Research/translation/results/dqrd-preferred-fused-4bit-g128-canary.json",
+      "sha256": "0f0f1514e74853495232203752d5618d9a28e80218900d896899819150f3388a"
+    },
+    {
+      "bytes": 4407,
+      "path": "Research/translation/results/dqrd-preferred-fused-4bit-g32-canary-parity.json",
+      "sha256": "4977f622c6acdf7f57098de2e8c7890d419090f8bf2093de21284e341885cb58"
+    },
+    {
+      "bytes": 9582,
+      "path": "Research/translation/results/dqrd-preferred-fused-4bit-g32-canary.json",
+      "sha256": "a0d3a8e2e916f761b9f3dd47df98639208b495dd51ef87a87e59e8a56976a872"
+    },
+    {
+      "bytes": 4477,
+      "path": "Research/translation/results/dqrd-preferred-fused-6bit-canary-parity.json",
+      "sha256": "65f634144b01f202c3854c9f8e2faa1e0ea236cb57200f1a7058c3d13ad75f0b"
+    },
+    {
+      "bytes": 9611,
+      "path": "Research/translation/results/dqrd-preferred-fused-6bit-canary.json",
+      "sha256": "4fe63629a6cefdf8d03156f2f8a5b954f61781596ef55c21a624656bb1b73226"
+    },
+    {
+      "bytes": 4437,
+      "path": "Research/translation/results/dqrd-preferred-fused-8bit-canary-parity.json",
+      "sha256": "3da618c39a73c2507cde026f253970cef3d70eef2b5c8d0427847b8e1881b4b0"
+    },
+    {
+      "bytes": 9601,
+      "path": "Research/translation/results/dqrd-preferred-fused-8bit-canary.json",
+      "sha256": "f3e094834e57f4d14aba634e87fd7daef41c3f0d69c1ff3f5ba28fac8b24037a"
+    },
+    {
+      "bytes": 4511,
+      "path": "Research/translation/results/dqrd-preferred-fused-canary-parity.json",
+      "sha256": "331ec7d165dc82149303bc3f76b2d0c74ad7aee721aec834fac8a021414388f7"
+    },
+    {
+      "bytes": 9642,
+      "path": "Research/translation/results/dqrd-preferred-fused-canary.json",
+      "sha256": "d0f16347527c9126b5ff5b0559b944cb7ffc97ff4ed14530127bab54d6b8aad3"
+    },
+    {
+      "bytes": 1206,
+      "path": "Research/translation/results/dqrd-preferred-fused-distribution.json",
+      "sha256": "d7e7a9a0cbad5be1b770a9582992e80793b0ac5d1e73bc6be3f355044df812c4"
+    },
+    {
+      "bytes": 495525,
+      "path": "Research/translation/results/dqrd-preferred-public-stress-v1.json",
+      "sha256": "873d5c54de48cff25cb48117e5d8596298847d6b610c5341b107fcbc125eb1da"
+    },
+    {
+      "bytes": 1209,
+      "path": "Research/translation/results/dqrd-preferred-v2-distribution-verification.json",
+      "sha256": "8ea3e1807b80786ddc0599f7eb3958f2f3466d3036206cb5cfe3b253a5547109"
+    },
+    {
+      "bytes": 258,
+      "path": "Research/translation/results/dqrd-preferred-v2-fallback-verification.json",
+      "sha256": "4f6bcffe91d8a96a7690aa9e72f92d17f2d255a3031d25d0a482fe478aea6b5f"
+    },
+    {
+      "bytes": 7931,
+      "path": "Research/translation/results/dqrd-preferred-v2-full-prefix-swift-parity-release-warm10.json",
+      "sha256": "926b865567d781794b84242228955dac3299e0e0f484327ff581f5d3d680bec2"
+    },
+    {
+      "bytes": 16572,
+      "path": "Research/translation/results/dqrd-preferred-v2-full-prefix-swift-parity-release-warm30.json",
+      "sha256": "d821a95d8f3df146867dea5e94c6f647926d5fa7ffeb01e4b9262579763b63f0"
+    },
+    {
+      "bytes": 339587,
+      "path": "Research/translation/results/dqrd-preferred-v2-full-prefix-swift-public-stress-v1-parity.json",
+      "sha256": "bf19dc6fe0e3814ec6a2502f9924f7d2bb7675dd24a09751929b73ad3d137bf4"
+    },
+    {
+      "bytes": 4511,
+      "path": "Research/translation/results/dqrd-preferred-v2-fused-canary-parity.json",
+      "sha256": "4f9c04296d1788d893731311ad8421f72398ea54b814cd893aa677497ab3ef0f"
+    },
+    {
+      "bytes": 1209,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-distribution-verification.json",
+      "sha256": "198dbb533e2cc11fb41f03c3332e8ed5e337d8d7c882111ebb8db34021cbafb8"
+    },
+    {
+      "bytes": 258,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-fallback-verification.json",
+      "sha256": "4f6bcffe91d8a96a7690aa9e72f92d17f2d255a3031d25d0a482fe478aea6b5f"
+    },
+    {
+      "bytes": 222561,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-public-stress-v1-comet22.json",
+      "sha256": "3646c7a8aaa35a53151b27562c0461fa76b94d9c67c7ca9cd2cf1cf0661eb825"
+    },
+    {
+      "bytes": 2562,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-public-stress-v1-score.json",
+      "sha256": "592a3d286313dd8887303f575d1640cb61950f901edd96f87a5b83b030aeee32"
+    },
+    {
+      "bytes": 701177,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-public-stress-v1.json",
+      "sha256": "90ac25b275b5cb8d582d9f86a859f7e2838986bb13d5d9659c9463e43fb2d9ae"
+    },
+    {
+      "bytes": 2562,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-public-stress-v2-score.json",
+      "sha256": "442df1fe18df0f295d32a43579187581e7e71b9a54a902ed7c6e9ab1cb062cdb"
+    },
+    {
+      "bytes": 2086892,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-public-stress-v2.json",
+      "sha256": "61a54168d02b8842f347e7d05d90a00e7574cf3b9569787347927c3fd6862814"
+    },
+    {
+      "bytes": 15268,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-swift-parity-release-warm10.json",
+      "sha256": "b7dfb7fe14fada03a947081f91e3573cb8f58df0546058cdaddfd4c26c42c330"
+    },
+    {
+      "bytes": 20244,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-swift-parity-release-warm30.json",
+      "sha256": "6daab5b886607583f16feacbbdaeed76652b8149358a50f18a95ad20ef5def3d"
+    },
+    {
+      "bytes": 7919,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-swift-parity-warm10.json",
+      "sha256": "6555f754cd67ac9002eabba2db0002b103023847142ef6bd85a169decb406acc"
+    },
+    {
+      "bytes": 4511,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-swift-parity.json",
+      "sha256": "0150b9454e000ca38ca80c41d561cd0f7c61b18cfcceef9b37587bccc7e2f83e"
+    },
+    {
+      "bytes": 339519,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-swift-public-stress-v1-parity.json",
+      "sha256": "75f6caeb8329b6b625ea7fc56f1b0bb23d609ba9d1f96a7dbdb38df2e78c1fc3"
+    },
+    {
+      "bytes": 2405,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-swift-public-stress-v1-score.json",
+      "sha256": "5d62e907dbfff33704c26d5a9da09d6b31c61ef81bcfcad0df2dbe2bbc6ce6a2"
+    },
+    {
+      "bytes": 1193640,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-swift-public-stress-v1-token-parity.json",
+      "sha256": "d4a22c4eb3dfe836a62869bc9828bb645bda14b055ff9d6ac243ae71a3314e76"
+    },
+    {
+      "bytes": 3548442,
+      "path": "Research/translation/results/dqrd-preferred-v2-kv-cache-swift-public-stress-v2-token-parity.json",
+      "sha256": "dcc474c1fd6d8e5f2bc4455cde0cf49c193ff263a64c7ed6538f140c6b67cf28"
+    },
+    {
+      "bytes": 9670,
+      "path": "Research/translation/results/dqrd-preferred-v2-mlx-4bit-canary.json",
+      "sha256": "d68be3df8a4a568c8f4ebd8d8bd78bc47238f91fb1db131d2f3148bed3945abf"
+    },
+    {
+      "bytes": 3752,
+      "path": "Research/translation/results/dqrd-preferred-v2-mlx-4bit-full-prefix-warm10-canary-score.json",
+      "sha256": "4d280f4dcf3e8a295e64cd49104aa947794a1767bfff35d68c1266991bc1d794"
+    },
+    {
+      "bytes": 12123,
+      "path": "Research/translation/results/dqrd-preferred-v2-mlx-4bit-full-prefix-warm10-canary.json",
+      "sha256": "4aa1e5609a2a8264d5ca9338993d1dd266fb98caa162a37f716598c3ff05dade"
+    },
+    {
+      "bytes": 3755,
+      "path": "Research/translation/results/dqrd-preferred-v2-mlx-4bit-kv-cache-canary-score.json",
+      "sha256": "5e346d3c228782eb7c7b4b99d96352ae76ae9ed7e3a55239395ca3c612d24c00"
+    },
+    {
+      "bytes": 15376,
+      "path": "Research/translation/results/dqrd-preferred-v2-mlx-4bit-kv-cache-canary.json",
+      "sha256": "6f968099345b268a3dffc873f86810ac6cab1280502dfc0eb99caf50340cc02e"
+    },
+    {
+      "bytes": 495435,
+      "path": "Research/translation/results/dqrd-preferred-v2-public-stress-v1.json",
+      "sha256": "cf78118f604be07cee02ff52d2e8f7fca3c3ad01f4bfd51fd4c32cd258de3ada"
+    },
+    {
+      "bytes": 6720,
+      "path": "Research/translation/results/dqrd-preferred-v2-vs-apple-canary-score.json",
+      "sha256": "740d02b68b8f40addaf5fcdf856cc8af117b5d498f35d85dd252deeb3c950ae7"
+    },
+    {
+      "bytes": 4528,
+      "path": "Research/translation/results/dqrd-preferred-v2-vs-apple-public-stress-v1-score.json",
+      "sha256": "a38cb950453c11ce2c992e0cecbf6ea40dd215c0e4e6263b82b7b33bd94905d2"
+    },
+    {
+      "bytes": 2172134,
+      "path": "Research/translation/results/dqrd-preferred-v3-current-kernel-kv-cache-warm1-public-stress-v2.json",
+      "sha256": "8ebbb560d6358cb6f4de0f2876c6a92c707038dc22546dcbe09d8cdd00c0cf89"
+    },
+    {
+      "bytes": 2573616,
+      "path": "Research/translation/results/dqrd-preferred-v3-current-runtime-kv-cache-warm1-public-stress-v3.json",
+      "sha256": "bd270b2827f5b538d21ee940bceac0622c932c26cfcca1e19f48ca5e496c31f0"
+    },
+    {
+      "bytes": 23134,
+      "path": "Research/translation/results/dqrd-preferred-v3-current-runtime-kv-cache-warm30-canary.json",
+      "sha256": "adbdcc186d295e0ffc75765d45b863143d97b01ef15ead98feed40b2de375a25"
+    },
+    {
+      "bytes": 4520,
+      "path": "Research/translation/results/dqrd-preferred-v3-current-runtime-public-stress-v3-score.json",
+      "sha256": "f58b8b8d94e8776e9f92a6dddce302e2b786623a43e54a711cc8f7cf0269b6be"
+    },
+    {
+      "bytes": 1209,
+      "path": "Research/translation/results/dqrd-preferred-v3-distribution.json",
+      "sha256": "b8d457c62967fd2d6729c86dba53bf9deb860b2db3f93a7ab8b8d1b2d14c29b8"
+    },
+    {
+      "bytes": 2105,
+      "path": "Research/translation/results/dqrd-preferred-v3-en-ja-mlx-4bit-conversion.json",
+      "sha256": "061d95ee699e79e32c708a39de5151255d375afe26b719b363c08fe1a2e4d70d"
+    },
+    {
+      "bytes": 12180,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-canary.json",
+      "sha256": "49709c1611243af7a417bce4cb2575efda64d18af4eeb2d735b56f715994920a"
+    },
+    {
+      "bytes": 22898,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-pos-table192-warm30-canary.json",
+      "sha256": "a7c81ed78bfce9c2b19b966ea947c757775f3b958eec9fe70d399d74ef1de6a3"
+    },
+    {
+      "bytes": 22782,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-preallocated-b16-warm30-canary.json",
+      "sha256": "5dbdd4b9503582a1a3d30cfafb7aef3aff8bb0a38eb4e670731d17c0635c25ed"
+    },
+    {
+      "bytes": 22778,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-preallocated-b192-warm30-canary.json",
+      "sha256": "9f520d644cbdd8923c2d3e8db0d44e13b83f8f10f70eac2387b59055a1282a99"
+    },
+    {
+      "bytes": 22773,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-preallocated-b64-warm30-canary.json",
+      "sha256": "05a0fb45c14352ef193d5d7c447f20481d5fa2973e1eb8b8b9afeb1084e01110"
+    },
+    {
+      "bytes": 669480,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-public-stress-v2-comet22.json",
+      "sha256": "e978e53e225d7b20d5dfda42dad4abb1f98484813f9085e552015134b9c107f1"
+    },
+    {
+      "bytes": 2171881,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-public-stress-v2.json",
+      "sha256": "5aff351dc021beb1b92bead8d71953d294443c7119ddc158511fdc8e7e154804"
+    },
+    {
+      "bytes": 3547824,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-swift-public-stress-v2-token-parity.json",
+      "sha256": "642891f0defbb0f3b854070b43fdfaf3901b2b238182eeef407493091e032b52"
+    },
+    {
+      "bytes": 22786,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-warm30-baseline-after-canary.json",
+      "sha256": "f45b9711cfc267de0b59d596d40ad93ded7c448a6982616695402ef1ededcadf"
+    },
+    {
+      "bytes": 22790,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-warm30-baseline-before-canary.json",
+      "sha256": "c96fff7d68a9cad5dd4f0b12508c974d4f93c1d5a07f91e4c704f302c052a556"
+    },
+    {
+      "bytes": 22776,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-warm30-pos-baseline-after-canary.json",
+      "sha256": "c503a26c6aac87cef226289c950d8e11b78634e83d379c66aba693ac8887d06e"
+    },
+    {
+      "bytes": 22775,
+      "path": "Research/translation/results/dqrd-preferred-v3-kv-cache-warm30-pos-baseline-before-canary.json",
+      "sha256": "a157e11c3c00f47e9530809953319793144425b1ca40c6b1587aa5d081eb2226"
+    },
+    {
+      "bytes": 23044,
+      "path": "Research/translation/results/dqrd-preferred-v3-mlx-4bit-g128-current-runtime-kv-cache-warm30-canary.json",
+      "sha256": "60529d7c8841772988bfeda40dad81049d6c1a1a2a0eab10c85d8cd7b05a4761"
+    },
+    {
+      "bytes": 10083,
+      "path": "Research/translation/results/dqrd-preferred-v3-mlx-4bit-g128-vs-g64-canary-score.json",
+      "sha256": "51189cfd07bc758c87643f8842871e343177e4e728e2bbc9b87377b88ec5ac60"
+    },
+    {
+      "bytes": 22960,
+      "path": "Research/translation/results/dqrd-preferred-v3-mlx-4bit-g32-current-runtime-kv-cache-warm30-canary.json",
+      "sha256": "e2e8c4c92e958f30136fa89ff8677abd11f830fb71c19fb54e496bbb522fd649"
+    },
+    {
+      "bytes": 10010,
+      "path": "Research/translation/results/dqrd-preferred-v3-mlx-4bit-g32-vs-g64-canary-score.json",
+      "sha256": "5ed7e74bb837cbb95f0f5a3b7d99f3da88c0c04ef8e1149828d000ae449f283d"
+    },
+    {
+      "bytes": 22995,
+      "path": "Research/translation/results/dqrd-preferred-v3-mlx-6bit-current-runtime-kv-cache-warm30-canary.json",
+      "sha256": "d252e9ee058438b2eace6a4960e99ad854cb809b61885f0254fc868dde081bb6"
+    },
+    {
+      "bytes": 10012,
+      "path": "Research/translation/results/dqrd-preferred-v3-mlx-6bit-vs-4bit-canary-score.json",
+      "sha256": "fd06040464794d31af9527f7e8aedd68ed53cbd19def711a084c70962337a76c"
+    },
+    {
+      "bytes": 22952,
+      "path": "Research/translation/results/dqrd-preferred-v3-mlx-8bit-current-runtime-kv-cache-warm30-canary.json",
+      "sha256": "faf29344f39de82e355d7124de23d2f4a839e8312832b28650fbbe6de05d0dfe"
+    },
+    {
+      "bytes": 9982,
+      "path": "Research/translation/results/dqrd-preferred-v3-mlx-8bit-vs-4bit-canary-score.json",
+      "sha256": "ff3406351101a4b54e2ac2a0e0647d72e1b56c7d1ef809a2f4c37b10b02d891d"
+    },
+    {
+      "bytes": 4782,
+      "path": "Research/translation/results/dqrd-preferred-v3-native-full-precision-canary-score.json",
+      "sha256": "ce67f13fef421e173c91e5d4a3a0d2f1e9782b145e3696671acf2dbf036e22ab"
+    },
+    {
+      "bytes": 8919,
+      "path": "Research/translation/results/dqrd-preferred-v3-native-full-precision-canary.json",
+      "sha256": "e88086e2d68d83501dfe3c9a8cd9da777577c6e0a651f792f6c80d6c54c51d27"
+    },
+    {
+      "bytes": 1214,
+      "path": "Research/translation/results/dqrd-preferred-v3-partial-retranslation-fine-v1.json",
+      "sha256": "f054a4d05530394fdefed552bcea25daa771a2a1fbc1e850071d62779bfa423f"
+    },
+    {
+      "bytes": 107595,
+      "path": "Research/translation/results/dqrd-preferred-v3-partial-retranslation-v1.json",
+      "sha256": "df4e6e4ed6eeff356ef93dde44e4036527f65e76a3d50c04671d1cb957e5b22f"
+    },
+    {
+      "bytes": 12453,
+      "path": "Research/translation/results/dqrd-preferred-v3-pinned-runtime-authenticated-kv-cache-canary.json",
+      "sha256": "0aacbdde1f2308023dd67b4a64cf525f3aa945ca8d245d486c87de6522107e4d"
+    },
+    {
+      "bytes": 2172644,
+      "path": "Research/translation/results/dqrd-preferred-v3-pinned-runtime-authenticated-kv-cache-warm1-public-stress-v2.json",
+      "sha256": "c3f75083a8f86cc9c3196768ae080994dc5d9fbdd179bb823effc51d912b7e36"
+    },
+    {
+      "bytes": 5102,
+      "path": "Research/translation/results/dqrd-preferred-v3-pinned-runtime-authenticated-kv-cache-warm30-canary-score.json",
+      "sha256": "10adf8ae327c7f68b7dc97f369ee5fe86b326c24bb30cd778c363094b1088a86"
+    },
+    {
+      "bytes": 23144,
+      "path": "Research/translation/results/dqrd-preferred-v3-pinned-runtime-authenticated-kv-cache-warm30-canary.json",
+      "sha256": "b2ffa4555e0defc80e007c3c63e4f2881cf0c14a97299e805a7bf248d52a27f0"
+    },
+    {
+      "bytes": 12452,
+      "path": "Research/translation/results/dqrd-preferred-v3-post-prefill-method-runtime-authenticated-kv-cache-canary.json",
+      "sha256": "3b502be0e4d741e618f423e94d6cddc57c07d7ae27317d5f388243a26f1207bb"
+    },
+    {
+      "bytes": 2172313,
+      "path": "Research/translation/results/dqrd-preferred-v3-runtime-authenticated-kv-cache-warm1-public-stress-v2.json",
+      "sha256": "e1748c1d8dec703b00fdca243a8e192081a52667159b65f1d720a4f80559f0f0"
+    },
+    {
+      "bytes": 119336,
+      "path": "Research/translation/results/dqrd-preferred-v3-shallow-model-draft-exact-speed-v1.json",
+      "sha256": "8987644f94da2187166ed41bf933b5db052521e2fff3a11d9cf945174ef37282"
+    },
+    {
+      "bytes": 13344,
+      "path": "Research/translation/results/dqrd-preferred-v3-unbiased-prior-output-reuse-canary.json",
+      "sha256": "3512723b578c6be8b80bbf59f0b9af567a8a1894e864c9e28ce3bc9a9c39d0bd"
+    },
+    {
+      "bytes": 23191,
+      "path": "Research/translation/results/dqrd-preferred-v3-unbiased-prior-output-reuse-divergence-canary.json",
+      "sha256": "b0f49fe43ec52e75e70f2e5d85260642722f4323f922cd81eb44eb3cbdb3101c"
+    },
+    {
+      "bytes": 5104,
+      "path": "Research/translation/results/dqrd-preferred-v3-variable-ffn-runtime-authenticated-kv-cache-warm30-canary-score.json",
+      "sha256": "b522757b65b3b9197fdfb1300c6a9998e5d652ed966a91f842f8c5de1a8776c3"
+    },
+    {
+      "bytes": 23163,
+      "path": "Research/translation/results/dqrd-preferred-v3-variable-ffn-runtime-authenticated-kv-cache-warm30-canary.json",
+      "sha256": "6d6418cb6d9bbd9be3b13a01a58f5725171707ab8f3818e40a4fe67b30407df0"
+    },
+    {
+      "bytes": 3348,
+      "path": "Research/translation/results/dqrd-preferred-v3-vs-apple-public-stress-v2-comet22-comparison.json",
+      "sha256": "d03f204bf9198443919fa4340845522d3cde17a35c72198ca82830cdabd51425"
+    },
+    {
+      "bytes": 6457,
+      "path": "Research/translation/results/dqrd-preferred-v3-vs-apple-public-stress-v2-score.json",
+      "sha256": "f5342cf17a18cb49c0bb1f24d7cc28d26c3f72b0a0a6a1b50af402744acd95c9"
+    },
+    {
+      "bytes": 8712,
+      "path": "Research/translation/results/dqrd-preferred-v3-vs-release-clean-human-generalist-v1-public-stress-v3-score.json",
+      "sha256": "f6a7afc2c7544f4ef4d4889f8322bb81498a3d0f969caa8de33509f859926ead"
+    },
+    {
+      "bytes": 6179,
+      "path": "Research/translation/results/dqrd-preferred-v3-vs-v2-canary-score.json",
+      "sha256": "249160610e17379847ee8937a11871f161a29f1cb9f4a669fc93bf4bcaa47bf1"
+    },
+    {
+      "bytes": 4455,
+      "path": "Research/translation/results/dqrd-preferred-v3-vs-v2-public-stress-v2-score.json",
+      "sha256": "c843aac3c8a00f80d1c8878478720be58de092a2db712d56cf2ee9e0939d587f"
+    },
+    {
+      "bytes": 4534,
+      "path": "Research/translation/results/dqrd-preferred-vs-apple-public-stress-v1-score.json",
+      "sha256": "6b7c391645ceedc7cb23913dedc8cd2dd7b2efe3a8f9431b25220068f6e74ff9"
+    },
+    {
+      "bytes": 9643,
+      "path": "Research/translation/results/dqrd-qat-shipping-best-v1-fused-canary.json",
+      "sha256": "9a6208ce3d954a9e661af6b0dfa3bae8b4ee9db40e5f11d11f8c248d5e83fb14"
+    },
+    {
+      "bytes": 9648,
+      "path": "Research/translation/results/dqrd-qat-v1-fused-canary.json",
+      "sha256": "4ea23a4b2717ce916a6b1458df15dc5732c44cdbc712c00ba17475b135ea9df4"
+    },
+    {
+      "bytes": 9650,
+      "path": "Research/translation/results/dqrd-regularized-avg3-fused-canary.json",
+      "sha256": "8c0559c3da1616de5660e7e985a991dd7dbb659d46827fddae3b38a8f3e4ce51"
+    },
+    {
+      "bytes": 9646,
+      "path": "Research/translation/results/dqrd-regularized-single-fused-canary.json",
+      "sha256": "8f37b1157d8213a12588d2d466a87de5d10da14738da11c11cc8a25ce574edce"
+    },
+    {
+      "bytes": 12081,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha05-mlx-4bit-kv-cache-canary.json",
+      "sha256": "6a6c54b9f1117bbf45b6ced09bf0ad0120509a4c543b0b1bafa35254b448eeed"
+    },
+    {
+      "bytes": 8676,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha05-mlx-4bit-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "50bbb733a04dc2040f6cee069629ec17a6c35e9ec40ac2ecf83c3c92711ad627"
+    },
+    {
+      "bytes": 12086,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha10-mlx-4bit-kv-cache-canary.json",
+      "sha256": "b2e5bc608d9ab71a878f551ea937073d68ab4aab28796c17abf940f4635d845f"
+    },
+    {
+      "bytes": 8683,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha10-mlx-4bit-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "2287775ea6134c2834ef7abbcbb519abca6ec3a29a3922b74f81ba49ab4930fd"
+    },
+    {
+      "bytes": 12084,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha15-mlx-4bit-kv-cache-canary.json",
+      "sha256": "ed305712266642cae5037fd4e2f2039272688fb05a3154a7cac1fbe4c2c3dfe3"
+    },
+    {
+      "bytes": 8682,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha15-mlx-4bit-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "0372e639b5362017f1d5e4538ad706740cb597d0895c26bc76ccff53cb3da115"
+    },
+    {
+      "bytes": 12084,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha25-mlx-4bit-kv-cache-canary.json",
+      "sha256": "afcacdcc8465c6c30e08a5a5b0cc0795e03581811cb6f27a534bf81f9353b403"
+    },
+    {
+      "bytes": 8679,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha25-mlx-4bit-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "f1743c69ee9d0668350adb342648069838d2b9b3c87587e34fb6dba55a28d795"
+    },
+    {
+      "bytes": 12054,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha50-mlx-4bit-kv-cache-canary.json",
+      "sha256": "c1bf11187e148ad9121dd8028baf81a99622cf03c8b914f34a5080c7a2ec7be9"
+    },
+    {
+      "bytes": 8794,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-alpha50-mlx-4bit-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "afc7767261997e795959be785f515b262df25c1140d649fdc70cd732bd179926"
+    },
+    {
+      "bytes": 12112,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-component-decoder-kv-cache-canary.json",
+      "sha256": "7063d887de5a36d8702e2d2d6b5da4220538122e8cf0cd08de2eb698cde37b6a"
+    },
+    {
+      "bytes": 8749,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-component-decoder-vs-preferred-v3-canary-score.json",
+      "sha256": "cbd82db90284119b1066c3dd4904fde3aefe1e20261206c1502206a6d42c6689"
+    },
+    {
+      "bytes": 12109,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-component-encoder-kv-cache-canary.json",
+      "sha256": "b9d1a52aa0889a877575fdf1f7adb6fcf17685de503c50dc6e7412ed46a8f8b4"
+    },
+    {
+      "bytes": 8742,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-component-encoder-vs-preferred-v3-canary-score.json",
+      "sha256": "cc0c3fd2589ec418101bda6f10e72f970545447880caa5c2230ba29e791dbf2a"
+    },
+    {
+      "bytes": 12109,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-component-shared-kv-cache-canary.json",
+      "sha256": "0424f7a64ee738bcee6e46ce4401d3570cc14d6b15211d353468719c5767c591"
+    },
+    {
+      "bytes": 8744,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-component-shared-vs-preferred-v3-canary-score.json",
+      "sha256": "d4276c6a661a66b8315def657277beef051c6ff201af38ec0bc17c969a050551"
+    },
+    {
+      "bytes": 12105,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-component-transformer-kv-cache-canary.json",
+      "sha256": "043768463c5a8c32b6a82fc100f051ad1c3b5fba52f15d665d1ebc96f8778f42"
+    },
+    {
+      "bytes": 8736,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-component-transformer-vs-preferred-v3-canary-score.json",
+      "sha256": "56a63849b64969135692367b9c77ba036b0933a96d1db6676d77d80f53741fee"
+    },
+    {
+      "bytes": 12089,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder0-kv-cache-canary.json",
+      "sha256": "0a099096ab226d5102efe4ad1e4ef785574e1eec633aaf62a86482ab8e9121c4"
+    },
+    {
+      "bytes": 8687,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder0-vs-preferred-v3-canary-score.json",
+      "sha256": "3bc9b4ce37b151d7f5da3489a9fa2fac5410eebd21b891307cdce38a4a324215"
+    },
+    {
+      "bytes": 12110,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder1-kv-cache-canary.json",
+      "sha256": "e0fe17f0a1c8bc6c87a409b79a7d84d31ad72b7a38e2e0d6f8885a6a9817e210"
+    },
+    {
+      "bytes": 8739,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder1-vs-preferred-v3-canary-score.json",
+      "sha256": "540641e533d592c89b29dc9a25dbdc2e556673e32a567ff3054dad98f45fe470"
+    },
+    {
+      "bytes": 12108,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder2-kv-cache-canary.json",
+      "sha256": "15b94bf35735a0fe573193348466a84c7d29390c7e90ba7a15fa8493586219f7"
+    },
+    {
+      "bytes": 8738,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder2-vs-preferred-v3-canary-score.json",
+      "sha256": "2030d17d1b260a922f1de2452866da9d1a4ab3f990eae3a657bcfccf11e57276"
+    },
+    {
+      "bytes": 12109,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder3-kv-cache-canary.json",
+      "sha256": "854bb6ff4ac256b981076afebe835d4920fcdb5e8211cadd1f7263e3606f36f6"
+    },
+    {
+      "bytes": 8742,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder3-vs-preferred-v3-canary-score.json",
+      "sha256": "da3ab99ee982a5a4bd280b579bc62addd7312b01bed41895865fda190b80a941"
+    },
+    {
+      "bytes": 12108,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder4-kv-cache-canary.json",
+      "sha256": "3f6f40fb6e82b80eb1dcbf482c6a5497137093830b4b0ec036da5fcc93b45a68"
+    },
+    {
+      "bytes": 8740,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder4-vs-preferred-v3-canary-score.json",
+      "sha256": "b8bfa772a76255b9be38f6755fce65cdd7eee8f473623f4680e1bbd788ed9f10"
+    },
+    {
+      "bytes": 12114,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder5-kv-cache-canary.json",
+      "sha256": "c50f0a09dc8aac2d60b5b2af5f717ac5abbe2a5b0de399f2f9de8a41a06f86d5"
+    },
+    {
+      "bytes": 8698,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-decoder5-vs-preferred-v3-canary-score.json",
+      "sha256": "e839fd1b986df79ae07e58b165686ced60f0da83af1d109c245853eee24bfbf2"
+    },
+    {
+      "bytes": 12092,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder0-kv-cache-canary.json",
+      "sha256": "f07c2cdd6d932d73bae08e5e4b4af37ce77b34601e161d89354c2544bf54ab74"
+    },
+    {
+      "bytes": 8693,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder0-vs-preferred-v3-canary-score.json",
+      "sha256": "b6313d1c069f1a278db132f635a7d163888e46b4e62834621ad1b35f8bbc5394"
+    },
+    {
+      "bytes": 12089,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder1-kv-cache-canary.json",
+      "sha256": "683b9f1a8a5435c10de3406b131eb0747a4d64c4f9c319ed4065de1744d82ab7"
+    },
+    {
+      "bytes": 8685,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder1-vs-preferred-v3-canary-score.json",
+      "sha256": "ae61e724aef4eb4199eae9521a4dedf04364d586c94d8fd5b6e9ea6f801a94c3"
+    },
+    {
+      "bytes": 12090,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder2-kv-cache-canary.json",
+      "sha256": "ab2cd8a427c1c9bbbb35aba088452a5afd76ba49a1042672e434fcf7558a82b0"
+    },
+    {
+      "bytes": 8686,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder2-vs-preferred-v3-canary-score.json",
+      "sha256": "50e986889372fed1b0879cf543eb97a4f28b4043096ad49775a7ba959a128993"
+    },
+    {
+      "bytes": 12106,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder3-kv-cache-canary.json",
+      "sha256": "f04e379febeb286609dd65b9dd44bc0fcf25d914762f0043c6c5a1989ff76009"
+    },
+    {
+      "bytes": 8734,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder3-vs-preferred-v3-canary-score.json",
+      "sha256": "68bb89ed02a606d01c858d5ba4b40c173a991248489854b3513212c8cfb31a08"
+    },
+    {
+      "bytes": 12107,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder4-kv-cache-canary.json",
+      "sha256": "8e5739c6e2a2da9c715b3c9ac513087f69dcfdc6f051410bc36a57fb0f8d3166"
+    },
+    {
+      "bytes": 8737,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder4-vs-preferred-v3-canary-score.json",
+      "sha256": "9c35b91e273fe9e5d0ebc743055f53681dcae76a1c30d7dfa9b38fb3ff1722e7"
+    },
+    {
+      "bytes": 12089,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder5-kv-cache-canary.json",
+      "sha256": "07044634df1e2f8cad908c44500bca38cf80ec20e6492885726df3f0b10f4e2f"
+    },
+    {
+      "bytes": 8687,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-en-ja-v1-layer-encoder5-vs-preferred-v3-canary-score.json",
+      "sha256": "33d8d5a08a9dd08b6615e3f5a133daa099caa3fedf2993edb73972b750a2bc6f"
+    },
+    {
+      "bytes": 2088880,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-v1-mlx-4bit-kv-cache-public-stress-v2.json",
+      "sha256": "b80fc543a3be2ca4491bafc74e7e93c9c65b1e5c8a8e11a0befa58d5b45349ce"
+    },
+    {
+      "bytes": 6521,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-v1-mlx-4bit-kv-cache-vs-preferred-v3-public-stress-v2-score.json",
+      "sha256": "d23c79c7663cecb4c22713f11cff31f5a05167b9bc14dd227b4daa5812e8e921"
+    },
+    {
+      "bytes": 8717,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-v1-mlx-4bit-kv-cache-vs-preferred-v3-warm30-canary-score.json",
+      "sha256": "e3ee6e6bf1186bc4795b44206195a922ea45f3e75b744f2178bd9008cf764d06"
+    },
+    {
+      "bytes": 22793,
+      "path": "Research/translation/results/elanmt-balanced-human-reference-v1-mlx-4bit-kv-cache-warm30-canary.json",
+      "sha256": "34071cd0ddb1d2e290ffa08453feb0664c40d04ac7cef4d77ae523ba530c269d"
+    },
+    {
+      "bytes": 6529,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-kv-cache-current-kernel-vs-preferred-v3-public-stress-v2-score.json",
+      "sha256": "99f4d34abd0158c0858d5b4ac86fec7673e89877f2b05c24221efa4131b355b6"
+    },
+    {
+      "bytes": 8597,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "d3240cd15065c3f5b3c319afd40d09beb9190d095ce34b9ce90fdc6e010f4346"
+    },
+    {
+      "bytes": 6681,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-kv-cache-vs-preferred-v3-public-stress-v2-score.json",
+      "sha256": "875062e23dd1def583f99ffb278b8b6095d765bd70b4187a89d332167e930143"
+    },
+    {
+      "bytes": 6687,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-kv-cache-warm1-vs-preferred-v3-public-stress-v2-score.json",
+      "sha256": "c94702f63d2ea8dbd678e2346cbcabbe5f7d99873252b9f0191f93e98764e317"
+    },
+    {
+      "bytes": 12088,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-mlx-4bit-canary.json",
+      "sha256": "0f0ebeefc85150c91b6ff14a34ad60e9d4aa8ad28a4a014df836f6ea1e0ada3e"
+    },
+    {
+      "bytes": 12096,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-mlx-4bit-kv-cache-canary.json",
+      "sha256": "6bbbc47d9af1af00c1bda5ae3061162167051dcac13fbb1bbf910c5e4054eff7"
+    },
+    {
+      "bytes": 2087234,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-mlx-4bit-kv-cache-public-stress-v2.json",
+      "sha256": "b0b81062dc847ac72a2f2a036041409294504eea2574b7ec831e37272e12426c"
+    },
+    {
+      "bytes": 2172440,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-mlx-4bit-kv-cache-warm1-public-stress-v2.json",
+      "sha256": "23309b445fe37a5a5c647feb520dbff186a6aca736dc4bc13034bcdc060f4a06"
+    },
+    {
+      "bytes": 2086119,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-mlx-4bit-public-stress-v2.json",
+      "sha256": "e4efd7141f5a0cc6867368b331b4746cabd6ae57b16eb978a0f37791464bfb64"
+    },
+    {
+      "bytes": 12464,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-pinned-runtime-authenticated-kv-cache-canary.json",
+      "sha256": "02acbfdeac21fe7870483267e4100bdae3a00777c16db84889c5a797e62fc85a"
+    },
+    {
+      "bytes": 9628,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-pinned-runtime-authenticated-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "ba7ea2df0a2b31eaafbe1bf8acd27b437fe38ab82c7a5aab784eb18059168ee1"
+    },
+    {
+      "bytes": 2172496,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-pinned-runtime-authenticated-kv-cache-warm1-public-stress-v2.json",
+      "sha256": "5debd54053ad07970a88449c8ca2ce2d020929d020fef61eafd0cb14a6326fa3"
+    },
+    {
+      "bytes": 7517,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-pinned-runtime-authenticated-vs-preferred-v3-public-stress-v2-score.json",
+      "sha256": "34b8f4b9eb9daddad4e266e18cd9f16845111f5d11ef62285c29ae45f128f409"
+    },
+    {
+      "bytes": 2172747,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-runtime-authenticated-kv-cache-warm1-public-stress-v2.json",
+      "sha256": "5ac9790400259c9730ae0e56b87d4e262a3d0e872266c47726454b190eb51404"
+    },
+    {
+      "bytes": 7526,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-runtime-authenticated-vs-preferred-v3-public-stress-v2-score.json",
+      "sha256": "673d76cc781699a337dd04e55b814ac048951b61d56e9e9ac317c05d7aec94e2"
+    },
+    {
+      "bytes": 8586,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-vs-preferred-v3-canary-score.json",
+      "sha256": "a3bc414f26970d76215f74c893d785e9bf4258eb4b035b062a00a1d2731c7209"
+    },
+    {
+      "bytes": 6629,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha01-vs-preferred-v3-public-stress-v2-score.json",
+      "sha256": "e5abd1a8689275d0aed984c162fa54324c5454f2fa1085a43e4bcccbdbe6b3a9"
+    },
+    {
+      "bytes": 8680,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha02-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "6534f8d12b72be46b24891684e0ab875b972ebb567c4bcbf4bcc8fb0e4fdf6c3"
+    },
+    {
+      "bytes": 12082,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha02-mlx-4bit-canary.json",
+      "sha256": "42e383bd4ab4c05b366a540654b09283dda14996cf1d80cedf3c7f4c173ba680"
+    },
+    {
+      "bytes": 12092,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha02-mlx-4bit-kv-cache-canary.json",
+      "sha256": "37c92ae88bc37ac66620f5034cac4a3f9a946f5a3dd3aab0f143647b7db8199d"
+    },
+    {
+      "bytes": 12452,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha02-pinned-runtime-authenticated-kv-cache-canary.json",
+      "sha256": "debe3b0d605a5e78332f82109beaedaa6140e4c1c39b34eb0b988fee2691ffd3"
+    },
+    {
+      "bytes": 9688,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha02-pinned-runtime-authenticated-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "a6a4c574ba3acebda501f502303ffc9bf97123d74ddbe2b1fb272aae176772e4"
+    },
+    {
+      "bytes": 8662,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha02-vs-preferred-v3-canary-score.json",
+      "sha256": "3afcf79bff3005cf985cc01f78c2a089aaa819502b1ce9f32cd1487845a42132"
+    },
+    {
+      "bytes": 8679,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha05-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "13cd2b900431b367aa301362cec5aac9f596ddb8360bfb5245e9504a058ad53a"
+    },
+    {
+      "bytes": 12106,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha05-mlx-4bit-canary.json",
+      "sha256": "c2600920eb64cdc40e3a5ea8671ba6541020f5b5493ae9910a66f00d7266441c"
+    },
+    {
+      "bytes": 12112,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha05-mlx-4bit-kv-cache-canary.json",
+      "sha256": "5b82d6b5696b3e960cba0ce5fc7d49b2d2f70407d93383ee2187dc24f34011b4"
+    },
+    {
+      "bytes": 12479,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha05-pinned-runtime-authenticated-kv-cache-canary.json",
+      "sha256": "0cb0cdc0bae88bdfecd79c278f253827df076ecd1ec9a73ca5297bb2280e3232"
+    },
+    {
+      "bytes": 9708,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha05-pinned-runtime-authenticated-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "4272377659d0b3029100754fb22786e6f0a81150f7f874a91abbd3346180ac18"
+    },
+    {
+      "bytes": 8669,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha05-vs-preferred-v3-canary-score.json",
+      "sha256": "ca4d0c968d28e4588c8b2ce0ecfd647c107057d876c69eebda8d005f89e1606c"
+    },
+    {
+      "bytes": 8685,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha10-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "555492eeeeac92be7d8da8447731e02e3561b8d30783744a1e826f63c2b1d2ea"
+    },
+    {
+      "bytes": 12108,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha10-mlx-4bit-canary.json",
+      "sha256": "e936f90f2e3b2cee7b758687e98256b9622d76b9b96a55118d2a20ba3217c315"
+    },
+    {
+      "bytes": 12113,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha10-mlx-4bit-kv-cache-canary.json",
+      "sha256": "7cfc7048e504f64c7939fd66c9eaa06ad85dddfc3ae0c57f7d6d54a191a6b52c"
+    },
+    {
+      "bytes": 12478,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha10-pinned-runtime-authenticated-kv-cache-canary.json",
+      "sha256": "f99a9bcd55aee098f47d8b90c07a73606b6bc4d26d668528ce229ca6ecb5fc40"
+    },
+    {
+      "bytes": 9703,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha10-pinned-runtime-authenticated-kv-cache-vs-preferred-v3-canary-score.json",
+      "sha256": "22d96c2f0c9a9b782c1af2689361d4d3113bb1510e5d0eefc0afd006cdc0f192"
+    },
+    {
+      "bytes": 8673,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-alpha10-vs-preferred-v3-canary-score.json",
+      "sha256": "e73443c8120eb53e8a97941ed7ec17e2d4c348405f3f46f8c329f0aa73ca4069"
+    },
+    {
+      "bytes": 22707,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-mlx-4bit-kv-cache-warm30-canary.json",
+      "sha256": "d1913e8f7e4776089454111e6e261706b3be1ea0f36034e8676623fc032e1852"
+    },
+    {
+      "bytes": 8681,
+      "path": "Research/translation/results/elanmt-balanced-local-qwen-reference-en-ja-v1-vs-preferred-v3-canary-score.json",
+      "sha256": "321e27cf0fb92b498ae09d7e14606657a0bc44e1a0f8904fdb02b67b2ad85ad2"
+    },
+    {
+      "bytes": 9652,
+      "path": "Research/translation/results/elanmt-bidirectional-distilled-pilot-v1-mlx-4bit-canary.json",
+      "sha256": "bbf26c8ce81641bc8762fbc3563a837a8ede6ea040f4521b5610fa92f248747b"
+    },
+    {
+      "bytes": 8597,
+      "path": "Research/translation/results/elanmt-bidirectional-mean-init-v1-mlx-4bit-canary.json",
+      "sha256": "8924e9ea83a8004f40ee14e42f47415ea6542b9c070caf9e99450a803319d825"
+    },
+    {
+      "bytes": 8429,
+      "path": "Research/translation/results/elanmt-bt-pair-canary.json",
+      "sha256": "a17582b711751cd395d19dbdfc0a305cf4cff2c3fdb2c886dbfaa4ac7bf8c878"
+    },
+    {
+      "bytes": 10128,
+      "path": "Research/translation/results/elanmt-bt-pair-ct2-int8-canary.json",
+      "sha256": "6cb37b6d3dd378ddb22e64a21dfbd08eb28b925d85567605234f54829ba7ece0"
+    },
+    {
+      "bytes": 9533,
+      "path": "Research/translation/results/elanmt-bt-pair-mlx-4bit-canary.json",
+      "sha256": "51dd299dbff2bdbddf4da47c0fc08e8d70f04ca341635d664bc2c71df1ad4482"
+    },
+    {
+      "bytes": 9534,
+      "path": "Research/translation/results/elanmt-bt-pair-mlx-4bit-minimal-canary.json",
+      "sha256": "75076be5e891b718a4788565450623261f4e317bfe76b205cf72c26846d682d0"
+    },
+    {
+      "bytes": 9541,
+      "path": "Research/translation/results/elanmt-bt-pair-mlx-4bit-minimal-v2-canary.json",
+      "sha256": "aa07b53443821ffc5aba8969387c53ad62a636a7506b5b1ead68bd07681aae3a"
+    },
+    {
+      "bytes": 9610,
+      "path": "Research/translation/results/elanmt-control-d4-initial-full-precision-canary.json",
+      "sha256": "a2e49f7650fd656c3f7ad3bea764c42e185d6ae11132870385bc9a7c4bf3edaf"
+    },
+    {
+      "bytes": 9517,
+      "path": "Research/translation/results/elanmt-hard-reference-en-ja-canary.json",
+      "sha256": "b90c8c87e1c834cd02bf6a3c92250aa63774558b5dd99f0e02e32158961d1434"
+    },
+    {
+      "bytes": 9542,
+      "path": "Research/translation/results/elanmt-hard-reference-ja-en-canary.json",
+      "sha256": "c97ebeffcda0e8579e3fdd285d1eadf78d99a6bcce4805c42d7b2aa5fec7ad88"
+    },
+    {
+      "bytes": 6259,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha05-canary-score-stdout.json",
+      "sha256": "11b2d8dd455def1fe35b6603dadc38feea3b59a22aa3604e15d369b36e212485"
+    },
+    {
+      "bytes": 12185,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha05-canary.json",
+      "sha256": "499c31339afa11b7e34bb326ccf1545ff74f766d35c90d4406f1df24f36257f5"
+    },
+    {
+      "bytes": 1727,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha05-interpolation.json",
+      "sha256": "705b13ed46d75d2717ea97f00032b25aa4f1b57e723dfd61d5c674eded70c885"
+    },
+    {
+      "bytes": 2061,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha05-mlx-4bit-conversion.json",
+      "sha256": "d1b530a709ad6c3159a38e43268c0aa4e1fb7cc8d2b5cbd9c0ef46da09e4872c"
+    },
+    {
+      "bytes": 6259,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha05-vs-preferred-canary-score.json",
+      "sha256": "11b2d8dd455def1fe35b6603dadc38feea3b59a22aa3604e15d369b36e212485"
+    },
+    {
+      "bytes": 6301,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha10-canary-score-stdout.json",
+      "sha256": "fac03d747f685d1f5ca5299ad3b7702ee55ca92433eda9bd571c549cfbc7da12"
+    },
+    {
+      "bytes": 12202,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha10-canary.json",
+      "sha256": "c0f582b23e30b8836d68657a4985364d1b66efe274fcf2fac1cb7233c1a51d27"
+    },
+    {
+      "bytes": 1726,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha10-interpolation.json",
+      "sha256": "64833e1c41b247ce0e1bc2277671b7f70c3f03a58dfa4aace3a3d0b53be5b9da"
+    },
+    {
+      "bytes": 2061,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha10-mlx-4bit-conversion.json",
+      "sha256": "bcd9f37633ec000c2db82f503765f0294869dc79e2c853ffe1bf4316ed90a326"
+    },
+    {
+      "bytes": 6301,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha10-vs-preferred-canary-score.json",
+      "sha256": "fac03d747f685d1f5ca5299ad3b7702ee55ca92433eda9bd571c549cfbc7da12"
+    },
+    {
+      "bytes": 6176,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha15-canary-score-stdout.json",
+      "sha256": "cc5f21e522d559bb53bc4e5435a38558d1791e578bb830de90644aa50057d9ad"
+    },
+    {
+      "bytes": 12187,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha15-canary.json",
+      "sha256": "546086d0a6f7dcd44d94348a9cc1294b580c4360940549b2e6891e23fee002d1"
+    },
+    {
+      "bytes": 1727,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha15-interpolation.json",
+      "sha256": "a39d1164c7d160781966dd0328f5874049e99026027d2a60c03f8c095b881e65"
+    },
+    {
+      "bytes": 2061,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha15-mlx-4bit-conversion.json",
+      "sha256": "6d250d986f9e3d5bcf35ba56a8cd12ee2b3d34158906c25668038c5cfdabdbe8"
+    },
+    {
+      "bytes": 2171698,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha15-public-stress-v2.json",
+      "sha256": "b295adc14c9c3727a9bd972bf033746cd69836932a0ff09890cefd45084ca2d2"
+    },
+    {
+      "bytes": 6176,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha15-vs-preferred-canary-score.json",
+      "sha256": "cc5f21e522d559bb53bc4e5435a38558d1791e578bb830de90644aa50057d9ad"
+    },
+    {
+      "bytes": 4451,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha15-vs-preferred-public-stress-v2-score.json",
+      "sha256": "8ca6425d9aac4558bdb6400586f6c9736f862c7f7d88118bf0a9ccb32433a10b"
+    },
+    {
+      "bytes": 6304,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha20-canary-score-stdout.json",
+      "sha256": "cea48c7091008954b8e5ba1c2bf310a719276bccc596870ffffcec32da107de4"
+    },
+    {
+      "bytes": 12204,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha20-canary.json",
+      "sha256": "f29135aa58db583e506ff1675304541b586b26497ffc6cc6b3f233e69dfb7cb0"
+    },
+    {
+      "bytes": 1726,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha20-interpolation.json",
+      "sha256": "9c1dd645ec8af078d80e7e5efe7696d323559f4500e088d976a89dd12947d293"
+    },
+    {
+      "bytes": 2061,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha20-mlx-4bit-conversion.json",
+      "sha256": "6dc840424ac648ccf548a481cadecf5fa5ac16b89be72dafdcb4db18917dcd3c"
+    },
+    {
+      "bytes": 6304,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha20-vs-preferred-canary-score.json",
+      "sha256": "cea48c7091008954b8e5ba1c2bf310a719276bccc596870ffffcec32da107de4"
+    },
+    {
+      "bytes": 6303,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha25-canary-score-stdout.json",
+      "sha256": "65154fab123eeb8ff3890484b3128e115b77b42a97e992d6e2ff61ca2115a666"
+    },
+    {
+      "bytes": 12203,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha25-canary.json",
+      "sha256": "c67748b9226fe9bcefb5ee0512de054af88f04a203b66ca128ea101347dd1179"
+    },
+    {
+      "bytes": 1727,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha25-interpolation.json",
+      "sha256": "8436f0d944376c63c056208a608e1ac63fa03f0124a155eb4b119b2a841eae07"
+    },
+    {
+      "bytes": 2061,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha25-mlx-4bit-conversion.json",
+      "sha256": "747837a18ca60184bc96940ce0e5cff64e84462c505828445476ceaf1ffd27ac"
+    },
+    {
+      "bytes": 6303,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha25-vs-preferred-canary-score.json",
+      "sha256": "65154fab123eeb8ff3890484b3128e115b77b42a97e992d6e2ff61ca2115a666"
+    },
+    {
+      "bytes": 6264,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha50-canary-score-stdout.json",
+      "sha256": "a954c935cc53447474d121d6e018d864748609194aa9719e1af1956d8ce76193"
+    },
+    {
+      "bytes": 12191,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha50-canary.json",
+      "sha256": "207377204edf91ec6d994fd9b542185ab84bc5f83b32036690e619fbc09ff9db"
+    },
+    {
+      "bytes": 1726,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha50-interpolation.json",
+      "sha256": "a4f2ed0e92b9f8858d720a03ac4bf280d98d29df82398534a0885571cb6f8e6d"
+    },
+    {
+      "bytes": 2061,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha50-mlx-4bit-conversion.json",
+      "sha256": "4dc161e2a1a74d5e7de287afb1719f1f7cb2347dbe852485153c3bec99335202"
+    },
+    {
+      "bytes": 6264,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha50-vs-preferred-canary-score.json",
+      "sha256": "a954c935cc53447474d121d6e018d864748609194aa9719e1af1956d8ce76193"
+    },
+    {
+      "bytes": 6309,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha75-canary-score-stdout.json",
+      "sha256": "beba984dabcc3d1ad3509557beb71befd6267ad9600192959522a07a61dc0b55"
+    },
+    {
+      "bytes": 12204,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha75-canary.json",
+      "sha256": "a6c070685898de8bfac276cda42a9cad669d51ae4d2426864f35bd8fcaa18880"
+    },
+    {
+      "bytes": 1727,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha75-interpolation.json",
+      "sha256": "1b450d314a86e71d71f76295afe277807e5c639cd0d785454c823d75a97d1e27"
+    },
+    {
+      "bytes": 2061,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha75-mlx-4bit-conversion.json",
+      "sha256": "3740d9c460d6d7e54765eac068dd91a615b3336da97a0c2848463c29c0ea8e40"
+    },
+    {
+      "bytes": 6309,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-alpha75-vs-preferred-canary-score.json",
+      "sha256": "beba984dabcc3d1ad3509557beb71befd6267ad9600192959522a07a61dc0b55"
+    },
+    {
+      "bytes": 3759,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-canary-score.json",
+      "sha256": "76ea37df086b4fdbe2b791a1e2c71e1a527af62d147b1ef971246a5d767a4577"
+    },
+    {
+      "bytes": 12914,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-canary.json",
+      "sha256": "30ce289125c041f90aef952a55488aa1319f3afd81057daf35f5770c0d0081d9"
+    },
+    {
+      "bytes": 2172266,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-public-stress-v2.json",
+      "sha256": "98e17d71431030562814849d1872ee270d2ea24fddad5a44ce6625e5489dbfbc"
+    },
+    {
+      "bytes": 4444,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v1-vs-preferred-public-stress-v2-score.json",
+      "sha256": "7fbdc7d974134f4c5ade84e1ec8980fdc1e667fcac762a40d6fb0911d2679c98"
+    },
+    {
+      "bytes": 12189,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-alpha15-canary.json",
+      "sha256": "8bbd1dd60b238faed054538b212ee59f1d13b7f8586da5cf593fd93edce6d662"
+    },
+    {
+      "bytes": 1727,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-alpha15-interpolation.json",
+      "sha256": "2b4940eb7b3dc17eab64aba499c2dff35a46bcd9994aa68884483cc1c0553fe6"
+    },
+    {
+      "bytes": 2061,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-alpha15-mlx-4bit-conversion.json",
+      "sha256": "5798f90bd07ca047e2dca45f4fbb1c40c9809edfa425b7ca9aab82ef9471fb51"
+    },
+    {
+      "bytes": 2171901,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-alpha15-public-stress-v2.json",
+      "sha256": "eaad41880d802a12343d7c562965f8eecc6a97c6ffd1be590bbb3e22a3d1bf3f"
+    },
+    {
+      "bytes": 6175,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-alpha15-vs-preferred-canary-score.json",
+      "sha256": "37a97301d80178414e59528da4d4394f2795a88e27a411a9afcbac1e2d625dec"
+    },
+    {
+      "bytes": 4453,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-alpha15-vs-preferred-public-stress-v2-score.json",
+      "sha256": "ba4a75dda1e000c1e1fd13e78187f969f39c9a1ab446d9deda1a8cf2b3ff82ec"
+    },
+    {
+      "bytes": 12206,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-canary.json",
+      "sha256": "52afcffa836e36b6f15a76de2413f1d1820a1adbb31231dd078b0cc9c32603ef"
+    },
+    {
+      "bytes": 2053,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-mlx-4bit-conversion.json",
+      "sha256": "cfa91a1416ed4bbdb76714f0ef998a3a3392359d73de202dbebbd0ee4f5ecec6"
+    },
+    {
+      "bytes": 2172342,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-public-stress-v2.json",
+      "sha256": "275d54f8e36f8eabf2502bb149f165f2fb314b6fdc82e743857b6091c89bf0bc"
+    },
+    {
+      "bytes": 6304,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-vs-preferred-canary-score.json",
+      "sha256": "098a9ca10cb224ada260130e6400f366638d458d59a5523d934b2f53afbcbbd9"
+    },
+    {
+      "bytes": 4447,
+      "path": "Research/translation/results/elanmt-local-teacher-btec-v2-vs-preferred-public-stress-v2-score.json",
+      "sha256": "f253840b89630ed334e621be3ab19212a5248e0a8cea3463a39c91e5cc27343b"
+    },
+    {
+      "bytes": 9535,
+      "path": "Research/translation/results/elanmt-mixed-hard-reference-canary.json",
+      "sha256": "3c8dc0f3082eb8e9222d1050de22cbafbfa076c935b7bd555c9c8e4c369fbaca"
+    },
+    {
+      "bytes": 8834,
+      "path": "Research/translation/results/elanmt-preferred-v3-shallow-d2-spread-en-ja-recovery300-kv-cache-vs-preferred-v3-warm30-canary-score.json",
+      "sha256": "d7a86dbe1688bb94bf55a62f8ae68ddcf2a7d1d8500ca0ebe4991fa9e02448db"
+    },
+    {
+      "bytes": 31664,
+      "path": "Research/translation/results/elanmt-preferred-v3-shallow-d2-spread-en-ja-recovery300-kv-cache-warm30-canary.json",
+      "sha256": "84936b510a30a3670eecea49a914abc0fe021a2632a61e5bd43e4bbae1772854"
+    },
+    {
+      "bytes": 8858,
+      "path": "Research/translation/results/elanmt-preferred-v3-shallow-d2-spread-kv-cache-vs-preferred-v3-warm30-canary-score.json",
+      "sha256": "5e9611c3644729d1205a14802d9f6648677695641d8a770d8e21a4fdcf6951f4"
+    },
+    {
+      "bytes": 70489,
+      "path": "Research/translation/results/elanmt-preferred-v3-shallow-d2-spread-kv-cache-warm30-canary.json",
+      "sha256": "aedc1b03c2d8adf48c9265e4c8989d8c7bbd97cec539571205246d70af2d594b"
+    },
+    {
+      "bytes": 1207,
+      "path": "Research/translation/results/elanmt-release-clean-routed-moe-v1-residency-router.json",
+      "sha256": "d723f926a8f87400a4b02756cddd9bd54c94330294f1421ab0df077271d3a105"
+    },
+    {
+      "bytes": 1206,
+      "path": "Research/translation/results/elanmt-release-clean-routed-moe-v2-residency-router.json",
+      "sha256": "f5ed40795c3f006b734ffab6b873678813aab1d9676883352d3588700aab60a2"
+    },
+    {
+      "bytes": 1205,
+      "path": "Research/translation/results/elanmt-release-clean-routed-moe-v3-residency-router.json",
+      "sha256": "a7d9aaf556e42ec39fb5e5b1d56ad46dfc03e36d4146f15def5d0647d9d8b4ad"
+    },
+    {
+      "bytes": 23043,
+      "path": "Research/translation/results/elanmt-shallow-d4-sequence-kd-en-ja-v1-avg3-pinned-runtime-kv-cache-warm30-canary.json",
+      "sha256": "1aee571886ece3d4b0fd869cee2a7ae4b86e3d5503fcc81d67aad6e3a0d2c592"
+    },
+    {
+      "bytes": 9891,
+      "path": "Research/translation/results/elanmt-shallow-d4-sequence-kd-en-ja-v1-avg3-pinned-runtime-kv-cache-warm30-vs-preferred-v3-canary-score.json",
+      "sha256": "7b1d9402491ef6156b89481a0251f928ae72f183034d5fe5eaad8e3f5af7a55d"
+    },
+    {
+      "bytes": 23108,
+      "path": "Research/translation/results/elanmt-shallow-d4-sequence-kd-en-ja-v1-step500-pinned-runtime-kv-cache-warm30-canary.json",
+      "sha256": "07614ebe58daf11c7014066bdf0ef2ecf2ee42acfddfd5ee2be59c93a3996a34"
+    },
+    {
+      "bytes": 9907,
+      "path": "Research/translation/results/elanmt-shallow-d4-sequence-kd-en-ja-v1-step500-pinned-runtime-kv-cache-warm30-vs-preferred-v3-canary-score.json",
+      "sha256": "0b34f50cc00c2f91862f0cbd967c5db9c5bb810131dc5693207c5762bb0cfd03"
+    },
+    {
+      "bytes": 9494,
+      "path": "Research/translation/results/elanmt-ui-kftt-en-ja-ablation-canary.json",
+      "sha256": "8df97184f4816c110bdbe1a4fc477c100c04ea7bb1deb008f4d23b6e1ecfec31"
+    },
+    {
+      "bytes": 9509,
+      "path": "Research/translation/results/elanmt-ui-kftt-en-ja-ablation-fp16-canary.json",
+      "sha256": "65134a064cca4ff9c3f620fb181a2ddaaf111f38acc90e3edbdda0661ee6e8e2"
+    },
+    {
+      "bytes": 4748,
+      "path": "Research/translation/results/elanmt-wide-d4-initial-full-precision-canary-score.json",
+      "sha256": "37a09fbb2a0f049442a88a7b5de9dd447f8d0d965a6503f67940382c55fca0ac"
+    },
+    {
+      "bytes": 9618,
+      "path": "Research/translation/results/elanmt-wide-d4-initial-full-precision-canary.json",
+      "sha256": "40b7c074a13e9d74a23037bf9f95c72dff4256a542e650085b17189b2bd8a308"
+    },
+    {
+      "bytes": 23041,
+      "path": "Research/translation/results/elanmt-wide-e6x4096-shallow-d4-sequence-kd-en-ja-v1-pinned-runtime-kv-cache-warm30-canary.json",
+      "sha256": "e0886f5d1081482da63aa122ec22d002be7978a4b3fb9da1c705264ebe41f107"
+    },
+    {
+      "bytes": 9908,
+      "path": "Research/translation/results/elanmt-wide-e6x4096-shallow-d4-sequence-kd-en-ja-v1-pinned-runtime-kv-cache-warm30-vs-preferred-v3-canary-score.json",
+      "sha256": "3cf6d1955f91590be2c6ebbf3c7bd9e640051f729c72e05deae826dbf1da7423"
+    },
+    {
+      "bytes": 9631,
+      "path": "Research/translation/results/hplt-v2-en-ja-fp16-canary.json",
+      "sha256": "724cce9d72a6684a4a00a012dbbe2ad1697b55d1b66c16e09e3e47d1dfd9f4ed"
+    },
+    {
+      "bytes": 502604,
+      "path": "Research/translation/results/hplt-v2-en-ja-fp16-public-stress-v1.json",
+      "sha256": "e5663faefd74d9541b27ddbc04bed659962c4d8a0c31f913083b26d66f76c10f"
+    },
+    {
+      "bytes": 6809,
+      "path": "Research/translation/results/hplt-v2-en-ja-fp16-vs-apple-canary-score.json",
+      "sha256": "7f0b13542077db5112d425e787124ec1c2631dd99181aab22a7039d8acc5e5f0"
+    },
+    {
+      "bytes": 4627,
+      "path": "Research/translation/results/hplt-v2-en-ja-fp16-vs-apple-public-stress-v1-score.json",
+      "sha256": "215e92976081fd262074f33f6cac7a255093a67bcb074dd7eeba996093af4499"
+    },
+    {
+      "bytes": 245011,
+      "path": "Research/translation/results/hplt-v2-ja-en-fp16-public-stress-v1.json",
+      "sha256": "3563b2352b65aa3b10084fb1858aa342c86e5ec6974bc9398cbbff9c65eb6f51"
+    },
+    {
+      "bytes": 2455,
+      "path": "Research/translation/results/hplt-v2-ja-en-fp16-vs-apple-public-stress-v1-score.json",
+      "sha256": "336ab2c898bd61b3443743622ddc64a579a6b1516ad8882f524f130c1962558f"
+    },
+    {
+      "bytes": 9557,
+      "path": "Research/translation/results/hplt-v2-pair-fp16-canary.json",
+      "sha256": "0eb76074f8fa0c5727bde0377713295fc5e39ed8096db878a5954ec21e8fb3a1"
+    },
+    {
+      "bytes": 6739,
+      "path": "Research/translation/results/hplt-v2-pair-fp16-vs-apple-canary-score.json",
+      "sha256": "31bd7542206ca4f750fdb3102626812d10fd95014efcd669ac5d36fed6c83cb7"
+    },
+    {
+      "bytes": 9518,
+      "path": "Research/translation/results/licensed-parallel-control-canary.json",
+      "sha256": "c77157cdd6ba05639a7298ff814de62e388006acbb3d95d4a0022faefdbff2c2"
+    },
+    {
+      "bytes": 495718,
+      "path": "Research/translation/results/licensed-parallel-control-public-stress-v1.json",
+      "sha256": "804b38befd8c63a7c4aac2a4fb6ff3cf8418f9ec43e4c1e861c46fdfeee9ceaa"
+    },
+    {
+      "bytes": 4519,
+      "path": "Research/translation/results/licensed-parallel-control-vs-apple-public-stress-v1-score.json",
+      "sha256": "8500ea6a859bb1bf2729d411561ffca50916e1b780ca4b5f3b1d20a5c43ca95f"
+    },
+    {
+      "bytes": 9660,
+      "path": "Research/translation/results/licensed-unified-regularized-v1-avg3-mlx-4bit-canary.json",
+      "sha256": "03b853dfad9e5eb22d389cee4d99bb47d696625ff8756912c365c6c8baf19e0c"
+    },
+    {
+      "bytes": 6715,
+      "path": "Research/translation/results/licensed-unified-regularized-v1-avg3-mlx-4bit-vs-apple-canary-score.json",
+      "sha256": "4def5656e355e90a55c9aae456249bf072badc5062879d30fdcbf61eb0ddc598"
+    },
+    {
+      "bytes": 496015,
+      "path": "Research/translation/results/licensed-unified-regularized-v1-avg3-public-stress-v1.json",
+      "sha256": "b5e8bcb8d424e8fcd2b45d5493f788ec1611f4d9e5705c8d1a244ea39e44208a"
+    },
+    {
+      "bytes": 4529,
+      "path": "Research/translation/results/licensed-unified-regularized-v1-avg3-vs-apple-public-stress-v1-score.json",
+      "sha256": "f5a2b29cc49752be963ce33758d1259522005c10b75a3360b74a893a646cde89"
+    },
+    {
+      "bytes": 15635,
+      "path": "Research/translation/results/local-human-reference-control-en-ja-v1-mlx-4bit-canary.json",
+      "sha256": "161135aa06c9b5ce851770e0b0155180ef836becbf5a171b51a72ffaa2cfeec1"
+    },
+    {
+      "bytes": 8747,
+      "path": "Research/translation/results/local-human-reference-control-en-ja-v1-vs-preferred-v3-canary-score.json",
+      "sha256": "516431bcaa3c4fbfd1646496ce5c055f413afbfb498bd5e721e73d623bddb0b9"
+    },
+    {
+      "bytes": 682259,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-full-comet22.json",
+      "sha256": "65ffeabdde0f48149ddcbf1a65c3e26df3b5fb1829d430bd8c9079e9b4a2c47e"
+    },
+    {
+      "bytes": 1541831,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-full.json",
+      "sha256": "bef6fc7616b688fa0dbd05e038bb525bae52ad92371f702507d12e174ea221b0"
+    },
+    {
+      "bytes": 1542457,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-number-preserving-retry-kftt-108500.json",
+      "sha256": "d5a8ba181eeb34154305ae5d972e08611a2e36f33044b807abd1b1b72bc185dc"
+    },
+    {
+      "bytes": 1542450,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-proper-noun-retry-kftt-022557.json",
+      "sha256": "8125cc942b08c868d976b7cb8c5b963473a146580a89c3934ef72fb213d7c0af"
+    },
+    {
+      "bytes": 683929,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-selected-v2-comet22.json",
+      "sha256": "c126ba7aeb3a1e51fb0b7b4959d8f1c54e1dcd87449f687972a1d24502f89f40"
+    },
+    {
+      "bytes": 1543624,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-selected-v2.json",
+      "sha256": "9ad6b9d879d0aa2f0178df33cb6116f4c0b1c1a549047f1d1582e4c733afcbb6"
+    },
+    {
+      "bytes": 683965,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-selected-v3-comet22.json",
+      "sha256": "f75b77abc507974e6a0a47fb2d5221f71f31febd6779823c51d4d1aca76e1738"
+    },
+    {
+      "bytes": 1543655,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-selected-v3.json",
+      "sha256": "4818425ad88c032bde280343b064854226f1be4160772d5b93217548ebec4089"
+    },
+    {
+      "bytes": 682271,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-wikipedia-en-ja-literal-retry-seed20260719-comet22.json",
+      "sha256": "e3190caa48c9d89f0f0628e8e3b0dc92f9ec4ceac61b009f791dec31f0f33a34"
+    },
+    {
+      "bytes": 1543122,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-wikipedia-en-ja-literal-retry-seed20260719.json",
+      "sha256": "f68b22bb1b12cc87a0d59056efe167ca7164b8c160dd246d5c153b4757bf6b17"
+    },
+    {
+      "bytes": 682251,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-wikipedia-retry-t020-seed20260718-comet22.json",
+      "sha256": "15a4bd1e27169fca8609ce601b40f281833de3d49e5935d79b9eb8dcdfe2c9a6"
+    },
+    {
+      "bytes": 1541140,
+      "path": "Research/translation/results/local-qwen-balanced-reference-teacher-v3-wikipedia-retry-t020-seed20260718.json",
+      "sha256": "c16eb5724eb9edd8d15b50582c6290817cac5e53acc7e4b003491ed127efdaff"
+    },
+    {
+      "bytes": 15627,
+      "path": "Research/translation/results/local-qwen-reference-en-ja-v1-mlx-4bit-canary.json",
+      "sha256": "ddb15c584328bbd85153265d92e748e712a2f917d709ac9deda6d7117a88f78b"
+    },
+    {
+      "bytes": 8740,
+      "path": "Research/translation/results/local-qwen-reference-en-ja-v1-vs-preferred-v3-canary-score.json",
+      "sha256": "7f01cf43047d3bdf590fd20c14ddcd6bd5b0628bbb201aa5544a027fea83a6a4"
+    },
+    {
+      "bytes": 498907,
+      "path": "Research/translation/results/local-qwen-reference-teacher-v1-full-comet22.json",
+      "sha256": "efd6a045a41645eb222d4a210da60e55c3ae65c0f2378a9c5b2ccf4518f66fa2"
+    },
+    {
+      "bytes": 1222126,
+      "path": "Research/translation/results/local-qwen-reference-teacher-v1-full.json",
+      "sha256": "c81d3f71dcc9eb354d77a29ece5b57945aeeca6cef55e1940d152e00a71bbdd9"
+    },
+    {
+      "bytes": 12189,
+      "path": "Research/translation/results/local-qwen-reference-teacher-v1-smoke16-cached-repeat.json",
+      "sha256": "aa3b4d6096ced09d89168e0c5228b36e9a01bbc90761afe79d2e997c6ada4ac4"
+    },
+    {
+      "bytes": 12190,
+      "path": "Research/translation/results/local-qwen-reference-teacher-v1-smoke16-cached.json",
+      "sha256": "92f2c662153069292d1f2d3088befaf247e1b7b7d894fad7430105c4a35a5a69"
+    },
+    {
+      "bytes": 12216,
+      "path": "Research/translation/results/local-qwen-reference-teacher-v1-smoke16-uncached.json",
+      "sha256": "4e1b142dda170c6850eb7d6b79d2fc2c51635fecb7b02717ec63dabb23f77336"
+    },
+    {
+      "bytes": 8574,
+      "path": "Research/translation/results/local-qwen-vs-human-reference-control-en-ja-v1-canary-score.json",
+      "sha256": "a265dd1bf44e854a98aa143ffaf5d5a49053a9ffc0d8027620bb816bba84cac7"
+    },
+    {
+      "bytes": 498817,
+      "path": "Research/translation/results/local-reference-teacher-v1-student-comet22.json",
+      "sha256": "007b32354c8ff149b1f2730b44f19d2d32735ce9af2a0f4a7fc65a4001c0f7cc"
+    },
+    {
+      "bytes": 9504,
+      "path": "Research/translation/results/m2m100-418m-fp16-canary.json",
+      "sha256": "1e7ec6cfb924ffa5cfe25a9f54564f5e6527cd82beffcc135d0ddcffe10695a2"
+    },
+    {
+      "bytes": 6718,
+      "path": "Research/translation/results/m2m100-418m-fp16-vs-apple-canary-score.json",
+      "sha256": "4f97a7b167a64abdfd44f41bdfd4d3f3859cb5d8a304a2a611dc128dd6c63eed"
+    },
+    {
+      "bytes": 10084,
+      "path": "Research/translation/results/marian-pair-canary.json",
+      "sha256": "e1b8ff3ef1b9a2e8dba254b79aaf2d17f3b5af81a539473cad96a30c64106404"
+    },
+    {
+      "bytes": 7771,
+      "path": "Research/translation/results/qwen3-0.6b-base-canary.json",
+      "sha256": "5cab154758607a01e4bbc3fae7a545d99cafca53cd615d97cf14b50565d172f3"
+    },
+    {
+      "bytes": 7695,
+      "path": "Research/translation/results/qwen3-0.6b-tatoeba-lora-0000500-canary.json",
+      "sha256": "a565c8a5b2993dd29ec6fb31a7c9ab44eb82ceea574f2ed73699664b873d852e"
+    },
+    {
+      "bytes": 7815,
+      "path": "Research/translation/results/qwen3-0.6b-tatoeba-lora-0001000-canary.json",
+      "sha256": "c40a7262d96e4666cd5fb5d925c605a4aafd55b2af7bf36d18adaf61df283c2a"
+    },
+    {
+      "bytes": 7823,
+      "path": "Research/translation/results/qwen3-0.6b-tatoeba-lora-0001500-canary.json",
+      "sha256": "87b95d011adedf1b45207c3c3c75ff62f9aa33313dd73e1b7dcf5895fed11978"
+    },
+    {
+      "bytes": 7790,
+      "path": "Research/translation/results/qwen3-0.6b-tatoeba-lora-0002000-canary.json",
+      "sha256": "6ddc15dd68e43fde854928e9e529be3aa4170fcf52dc8f1834555488cc8eeb88"
+    },
+    {
+      "bytes": 7771,
+      "path": "Research/translation/results/qwen3-0.6b-tatoeba-lora-pilot-canary.json",
+      "sha256": "ee160297bb3694243b7cb74edb90802ebccff39d66007e5804323593feec66b3"
+    },
+    {
+      "bytes": 23228,
+      "path": "Research/translation/results/release-clean-full-depth-avg3-mixed-v1-kv-cache-warm30-canary.json",
+      "sha256": "81fb14e1e148717ca3cf2d4533cbe201f3f61f5998066abf0244f7f7abc58ab3"
+    },
+    {
+      "bytes": 9748,
+      "path": "Research/translation/results/release-clean-full-depth-avg3-mixed-v1-vs-preferred-v3-current-canary-score.json",
+      "sha256": "e3ea303cd60bed612a693debc7760d1f7fb4e7235511bd1829a4d14f0b58590b"
+    },
+    {
+      "bytes": 30315,
+      "path": "Research/translation/results/release-clean-full-depth-en-ja-expert-router-v1.json",
+      "sha256": "018670954597d8672b25e86a5bef5606d98b6fa123222f9ba849576e43b3d4af"
+    },
+    {
+      "bytes": 17100,
+      "path": "Research/translation/results/release-clean-full-depth-ja-en-expert-router-v1.json",
+      "sha256": "ff4ecef2484b1c508f48bcafe7ea25a1702c726ac4beaa621910caccc76e4314"
+    },
+    {
+      "bytes": 9792,
+      "path": "Research/translation/results/release-clean-full-depth-ja-en-legal-router-v1.json",
+      "sha256": "fa8a78bf4c108f69543207dee1eb2557dc4e0f02c3ef4947317290462271b9ef"
+    },
+    {
+      "bytes": 2576918,
+      "path": "Research/translation/results/release-clean-full-depth-ja-en-mixed-v1-current-runtime-kv-cache-warm1-public-stress-v3.json",
+      "sha256": "acd93377e1eeabf893185f06fb4502dfad65939a970c670dfa8387470a003abc"
+    },
+    {
+      "bytes": 23089,
+      "path": "Research/translation/results/release-clean-full-depth-ja-en-mixed-v1-kv-cache-warm30-canary.json",
+      "sha256": "5b82e462d3b454ce726402d8f0323327603dcd65711a36e3e97540853db627cd"
+    },
+    {
+      "bytes": 9738,
+      "path": "Research/translation/results/release-clean-full-depth-ja-en-mixed-v1-vs-preferred-v3-canary-score.json",
+      "sha256": "30ca4e3808d719f11906e3ee14ecdacbbed8ee17f98f613a16800fbb8665651f"
+    },
+    {
+      "bytes": 8708,
+      "path": "Research/translation/results/release-clean-full-depth-ja-en-mixed-v1-vs-preferred-v3-public-stress-v3-score.json",
+      "sha256": "c2df24d9bc790669bfa779e183eef46194aecaf775a0f93bbecddd89e832e3cf"
+    },
+    {
+      "bytes": 2581221,
+      "path": "Research/translation/results/release-clean-full-depth-mixed-v1-current-runtime-kv-cache-warm1-public-stress-v3.json",
+      "sha256": "1e2a2336437f3bbca8d163c56f6b8db766786af5e8e3642a4a31ae568b61d0a9"
+    },
+    {
+      "bytes": 8972,
+      "path": "Research/translation/results/release-clean-full-depth-mixed-v1-full-precision-canary.json",
+      "sha256": "bdca440565e8c2a0c9e9318d3685e881de350cc1ddb546a68c6f962ceb5e6e14"
+    },
+    {
+      "bytes": 9072,
+      "path": "Research/translation/results/release-clean-full-depth-mixed-v1-full-precision-vs-parent-canary-score.json",
+      "sha256": "5569b8d54d7ba42add084ad3434a841d10724a0712dc13b762fc7a1e2493b386"
+    },
+    {
+      "bytes": 23101,
+      "path": "Research/translation/results/release-clean-full-depth-mixed-v1-kv-cache-warm30-canary.json",
+      "sha256": "3d1435ef15a53a586209f8d162bcc906525112ea1068e5bfa3dfb4d3118ef94a"
+    },
+    {
+      "bytes": 9744,
+      "path": "Research/translation/results/release-clean-full-depth-mixed-v1-vs-preferred-v3-current-canary-score.json",
+      "sha256": "c7cd6cb5632acf393987de2237553c95ea882b56297838152e524b1dcc7699fb"
+    },
+    {
+      "bytes": 8686,
+      "path": "Research/translation/results/release-clean-full-depth-mixed-v1-vs-preferred-v3-public-stress-v3-score.json",
+      "sha256": "9ef946026fcc09aaf4213f295575f54c146b0c054fb98c40986d8091fc52509b"
+    },
+    {
+      "bytes": 2022281,
+      "path": "Research/translation/results/release-clean-human-experts-v2-protected-tokens-public-stress-v3.json",
+      "sha256": "818dfa5cde4f8835e2a56f2e33347163e15279711ed1a3f47d7494db4dc8f700"
+    },
+    {
+      "bytes": 2576518,
+      "path": "Research/translation/results/release-clean-human-experts-v2-protected-tokens-public-stress-v3.raw.json",
+      "sha256": "b89c0b64c072de35ffa6535dcc9034c65c1e3654016a90d6fdb8ad11967c5390"
+    },
+    {
+      "bytes": 31294,
+      "path": "Research/translation/results/release-clean-human-full-depth-en-ja-expert-router-v1.json",
+      "sha256": "3477b1b99b04a5e6068cf563983a7d41d82ec5715c6901822129ed1898a1afbd"
+    },
+    {
+      "bytes": 2573768,
+      "path": "Research/translation/results/release-clean-human-generalist-v1-current-runtime-kv-cache-warm1-public-stress-v3.json",
+      "sha256": "825ae40f5297abaac5086712af696f861546f9fd1b19365351b6d47236fde980"
+    },
+    {
+      "bytes": 23093,
+      "path": "Research/translation/results/release-clean-human-generalist-v1-current-runtime-kv-cache-warm30-canary.json",
+      "sha256": "7f69f4beeffddbe6181a792891347e5bb3a30de51bad760fe43ade94d61ebedc"
+    },
+    {
+      "bytes": 4540,
+      "path": "Research/translation/results/release-clean-human-generalist-v1-current-runtime-public-stress-v3-score.json",
+      "sha256": "d3ae4d1988b25a5668bd8b6a77a9f17e96c3d192cc22f69fd98605d3699681a7"
+    },
+    {
+      "bytes": 2014253,
+      "path": "Research/translation/results/release-clean-human-generalist-v1-protected-tokens-public-stress-v3.json",
+      "sha256": "27bd84ae448a3ebd066815d2c908ca25da79457748c52fcf58a51c736b053854"
+    },
+    {
+      "bytes": 2537602,
+      "path": "Research/translation/results/release-clean-human-generalist-v1-protected-tokens-public-stress-v3.raw.json",
+      "sha256": "378735bd2df2ab9fb728bd8244d724293f5e87506cfa04b0c8a540453bcb6068"
+    },
+    {
+      "bytes": 8969,
+      "path": "Research/translation/results/release-clean-human-generalist-v1-protected-tokens-vs-original-public-stress-v3-score.json",
+      "sha256": "5d6ecd643cfacaa7205c95f3fd47896a4ad4394c7883770c2afb70670f6ba67d"
+    },
+    {
+      "bytes": 555483,
+      "path": "Research/translation/results/release-clean-human-generalist-v1-structure-audit-public-stress-v3.json",
+      "sha256": "cc35229539c3394ca685b2eefa517c749d75a78eefd513ff43f093c452438875"
+    },
+    {
+      "bytes": 12446,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-experts-python-kv-cache-canary.json",
+      "sha256": "a03ab2401aea4d057fe2e82210ee2f4ea7652ad6d1e54f1352033ce9f6b50d28"
+    },
+    {
+      "bytes": 19765,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-experts-swift-kv-cache-parity-canary.json",
+      "sha256": "8e62ecd0a192df95fa05f7463fc710192fff6391e9bf25ba081ac37d7de44d1c"
+    },
+    {
+      "bytes": 199,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-critical-token-failure-en-ja.json",
+      "sha256": "e743faacd7cd9288413eb8069058bc51aff72b937b6e6a5f944d504d2198cec8"
+    },
+    {
+      "bytes": 199,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-critical-token-failure-ja-en.json",
+      "sha256": "87e6e9fd55caeb25b2c8645882935f5b2e517a960c92599815d76f6625ecba2a"
+    },
+    {
+      "bytes": 432950,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-critical-token-taxonomy-public-stress-v3.json",
+      "sha256": "c308d6f8e66f9022f70fc834eaa9df757fe34d4771a4f48ff41d942de526bb57"
+    },
+    {
+      "bytes": 239,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-ja-en-memory-smoke.json",
+      "sha256": "fbcc04a73cf90d13cda4bf26f8c61ca83abb9a7ceeb41a78dd61a333d59b340c"
+    },
+    {
+      "bytes": 2825856,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-public-stress-v3.json",
+      "sha256": "7fde7d78b907d10d22c0527bd31a911309cafbfa9956d3d3749e9252b13f9d2d"
+    },
+    {
+      "bytes": 688743,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-structure-audit-public-stress-v3.json",
+      "sha256": "15d67e4bff5cb50bec13d322a87d3e19622e8e18e3fc4dd1fde92eadf364f39b"
+    },
+    {
+      "bytes": 977452,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-swift-memory-parity-public-stress-v3.json",
+      "sha256": "d934dd333eb74591de0930fd7883c2553799df90a08841495e4202e1b980a877"
+    },
+    {
+      "bytes": 341,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-swift-smoke-en-ja-expert.json",
+      "sha256": "b92289b4ece40f8f933095090a2adecca54113c2dd438850da8824c7f52b629b"
+    },
+    {
+      "bytes": 306,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-swift-smoke-en-ja-generalist.json",
+      "sha256": "30b10ab3f636a55880317db7acf0926bda915a543ba7f5d5e2865769a71c7b36"
+    },
+    {
+      "bytes": 197,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-swift-smoke-ja-en-expert.json",
+      "sha256": "6748d13a50220fe9e7ac364c799205093a6e30aee97c6968b1ff2dcc9cdf1449"
+    },
+    {
+      "bytes": 254,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-swift-smoke-ja-en-generalist.json",
+      "sha256": "a77af00fb3c636a175075431a62756b18f185ce54273085a3033eaf6526aefd0"
+    },
+    {
+      "bytes": 129126,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-typed-critical-policy-public-stress-v3.json",
+      "sha256": "9acaf703f87d2ca084440158ef91a1e0d9456b918f22ec3ab8235608a52a3dd8"
+    },
+    {
+      "bytes": 8815,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v1-vs-routed-public-stress-v3-score.json",
+      "sha256": "971df9470518418cad3c70c87caab6f2feed52e21954eb32608b59939d56b9f0"
+    },
+    {
+      "bytes": 199,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-critical-token-failure-en-ja.json",
+      "sha256": "e743faacd7cd9288413eb8069058bc51aff72b937b6e6a5f944d504d2198cec8"
+    },
+    {
+      "bytes": 199,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-critical-token-failure-ja-en.json",
+      "sha256": "87e6e9fd55caeb25b2c8645882935f5b2e517a960c92599815d76f6625ecba2a"
+    },
+    {
+      "bytes": 432950,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-critical-token-taxonomy-public-stress-v3.json",
+      "sha256": "6ff471814c0adfd0b586a24f469b2b8ece4ee3cf0f9f8b8ffe529b933b399b9d"
+    },
+    {
+      "bytes": 239,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-ja-en-memory-smoke.json",
+      "sha256": "fbcc04a73cf90d13cda4bf26f8c61ca83abb9a7ceeb41a78dd61a333d59b340c"
+    },
+    {
+      "bytes": 372,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-non-apple-failure-path.json",
+      "sha256": "99f706b4ac932a8cd7d243e61b9f25b7a20913022cd831f219b421ba768765b3"
+    },
+    {
+      "bytes": 2825848,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-public-stress-v3.json",
+      "sha256": "d8d3be6a1916db38a5c8e0518a6cd5eedfa1c0aa78df12ae1d0e605b0adc5f14"
+    },
+    {
+      "bytes": 376,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-runtime-cache.json",
+      "sha256": "c2f8fcae330f73b9dc61b69ca6e7db5960c983bda70142fa984ca877c2028870"
+    },
+    {
+      "bytes": 666378,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-structure-audit-public-stress-v3.json",
+      "sha256": "b60f6c79a021d70d1f2bfb8167cfcc475d10edd1f30e986313125dae99f02326"
+    },
+    {
+      "bytes": 977452,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-swift-memory-parity.json",
+      "sha256": "31c6cd579d8c85b0d1052c163d878dc7916a8a962d94022495bdb805b7ec5ace"
+    },
+    {
+      "bytes": 341,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-swift-smoke-en-ja-expert.json",
+      "sha256": "b92289b4ece40f8f933095090a2adecca54113c2dd438850da8824c7f52b629b"
+    },
+    {
+      "bytes": 306,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-swift-smoke-en-ja-generalist.json",
+      "sha256": "30b10ab3f636a55880317db7acf0926bda915a543ba7f5d5e2865769a71c7b36"
+    },
+    {
+      "bytes": 197,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-swift-smoke-ja-en-expert.json",
+      "sha256": "6748d13a50220fe9e7ac364c799205093a6e30aee97c6968b1ff2dcc9cdf1449"
+    },
+    {
+      "bytes": 254,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-swift-smoke-ja-en-generalist.json",
+      "sha256": "a77af00fb3c636a175075431a62756b18f185ce54273085a3033eaf6526aefd0"
+    },
+    {
+      "bytes": 129472,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-typed-critical-policy-public-stress-v3.json",
+      "sha256": "b28193bb5658ad219c07e0ac45c81e655f6e9c575d1d424958cb434031536a43"
+    },
+    {
+      "bytes": 8815,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-memory-v2-vs-routed-public-stress-v3-score.json",
+      "sha256": "988cf8a1b8808deaac1971c2ebd15f507347cba0662d9ff8b450b7a6c52bcddd"
+    },
+    {
+      "bytes": 2825986,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-public-stress-v3.json",
+      "sha256": "0a59b1fdd4e588df8a3a7c66371104cc48bc2ffd222961379934358e82dbc0ea"
+    },
+    {
+      "bytes": 370501,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-public-v2-v3-overlap-comet22.json",
+      "sha256": "0a569266e88a12141662d0247516bebba679070ef057d29ce4a5821a709e830d"
+    },
+    {
+      "bytes": 1370095,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-public-v2-v3-overlap.json",
+      "sha256": "e41c884901119967c48e76b8c96d4c38ed384103c8b3c3796fdaf9cc9f1a1324"
+    },
+    {
+      "bytes": 765606,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-python-router-public-stress-v3.json",
+      "sha256": "77849018faabb83de5386e17efbae24f11241353f20b426c266e43fcca15500c"
+    },
+    {
+      "bytes": 1202,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-residency-canary.json",
+      "sha256": "7a19bb37e9d6d46212820826b21ba1982b56c897508fc672731601f1f07905af"
+    },
+    {
+      "bytes": 688720,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-structure-audit-public-stress-v3.json",
+      "sha256": "2bc78c3cbb87518cc5911c04e03bd1f0dccf2cadbcf22e56708627ae424695ea"
+    },
+    {
+      "bytes": 260,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-swift-router-parity-public-stress-v3.json",
+      "sha256": "1944078b708f2f6ce59b737604c3508fdcc45dcd34ba4d4d429bcc9726fef4a2"
+    },
+    {
+      "bytes": 452,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-swift-smoke-en-ja-expert.json",
+      "sha256": "eaffb3d28829a99086b303075ab9a938055a39bec4917b9e488cac85de7f107b"
+    },
+    {
+      "bytes": 306,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-swift-smoke-en-ja-generalist.json",
+      "sha256": "30b10ab3f636a55880317db7acf0926bda915a543ba7f5d5e2865769a71c7b36"
+    },
+    {
+      "bytes": 211,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-swift-smoke-ja-en-expert.json",
+      "sha256": "ae3490edc8a5944585d276bf8b4521d84c430073abd763bb6c93c2f01f744da8"
+    },
+    {
+      "bytes": 254,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-swift-smoke-ja-en-generalist.json",
+      "sha256": "a77af00fb3c636a175075431a62756b18f185ce54273085a3033eaf6526aefd0"
+    },
+    {
+      "bytes": 3353,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-vs-apple-public-v2-v3-overlap-comet22-comparison.json",
+      "sha256": "3c732a108e16421a0461bc0ba9f2a630a323b8cafa762422aa813a582fed32b6"
+    },
+    {
+      "bytes": 7037,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-vs-apple-public-v2-v3-overlap-score.json",
+      "sha256": "62e2e83ed57c73178dad25b87a7c12ca898ad2172ff03e1eb07fcd63f7e213dd"
+    },
+    {
+      "bytes": 8763,
+      "path": "Research/translation/results/release-clean-human-routed-moe-v2-vs-generalist-public-stress-v3-score.json",
+      "sha256": "741fe9b7e38907e1472fd96feb6617b570ef22eb602c081489c146343777bbfc"
+    },
+    {
+      "bytes": 10484,
+      "path": "Research/translation/results/release-clean-legal-specialist-ja-en-legal-router-v1.json",
+      "sha256": "ee0c7b9c7d6bb173b15160825bd2321f25c0f1debae796751c397493b4cbd650"
+    },
+    {
+      "bytes": 2587155,
+      "path": "Research/translation/results/release-clean-legal-specialist-ja-en-mixed-v1-current-runtime-kv-cache-warm1-public-stress-v3.json",
+      "sha256": "f6132179c02a12bf8e17f4fe2864022ce19d078cacc020890a6db5b5065053c2"
+    },
+    {
+      "bytes": 23147,
+      "path": "Research/translation/results/release-clean-legal-specialist-ja-en-mixed-v1-current-runtime-kv-cache-warm30-canary.json",
+      "sha256": "e2bebc625da8e224b660f30036f2cf02b1f1cde8d8e648cd0a19cef31791dc7d"
+    },
+    {
+      "bytes": 9759,
+      "path": "Research/translation/results/release-clean-legal-specialist-ja-en-mixed-v1-vs-preferred-v3-canary-score.json",
+      "sha256": "01f3da829f8cbd63a9da539be201fc2d982ad5a0bf0c5dd16ed6841cdcf38749"
+    },
+    {
+      "bytes": 8701,
+      "path": "Research/translation/results/release-clean-legal-specialist-ja-en-mixed-v1-vs-preferred-v3-public-stress-v3-score.json",
+      "sha256": "fbad9e3d3995f3aae3df82c522ec116da89941524a86c1e36d8ba4d456cd934e"
+    },
+    {
+      "bytes": 290,
+      "path": "Research/translation/results/runtime-cache-verification-final.json",
+      "sha256": "2bd6f35973f39f0455a4d277efb5cca8cb70ddc10dd4c468650815317605fe7d"
+    },
+    {
+      "bytes": 327,
+      "path": "Research/translation/results/runtime-cache-verification-release-final.json",
+      "sha256": "7dd01e7f2d49f8b2839bbad99d59a34fd15a946be176cef6a6fb82d585f50b46"
+    },
+    {
+      "bytes": 11965,
+      "path": "Research/translation/results/smollm2-135m-4bit-base-canary.json",
+      "sha256": "51a928d0eee079552683174cf5806499453c5e0eda79c828d1a1ace90912d7d1"
+    },
+    {
+      "bytes": 8370,
+      "path": "Research/translation/results/smollm2-135m-kftt-lora-0001000-canary.json",
+      "sha256": "2765416f291fefd974035c67b52135befb26ea45a2f4dd4a732483bfb0fee2a4"
+    },
+    {
+      "bytes": 7553,
+      "path": "Research/translation/results/smollm2-135m-tatoeba-lora-canary.json",
+      "sha256": "3ac8499002c2632ecd657cc0757affd5fa58fed6c196da94eef1fb3420c28fcd"
+    },
+    {
+      "bytes": 8599,
+      "path": "Research/translation/results/smollm2-kftt-0002000-canary.json",
+      "sha256": "564a40288b1ae74ad41e271bbd73765e816d7f5ec90bb9805ad8ffa41546c204"
+    },
+    {
+      "bytes": 258,
+      "path": "Research/translation/results/translation-fallback-verification-final.json",
+      "sha256": "4f6bcffe91d8a96a7690aa9e72f92d17f2d255a3031d25d0a482fe478aea6b5f"
+    },
+    {
+      "bytes": 258,
+      "path": "Research/translation/results/translation-fallback-verification-release-final.json",
+      "sha256": "4f6bcffe91d8a96a7690aa9e72f92d17f2d255a3031d25d0a482fe478aea6b5f"
+    },
+    {
+      "bytes": 376,
+      "path": "Research/translation/results/translation-runtime-cache-memory-v1.json",
+      "sha256": "c2f8fcae330f73b9dc61b69ca6e7db5960c983bda70142fa984ca877c2028870"
+    }
+  ],
+  "purpose": "pre-freeze project model-selection text inventory",
+  "schemaVersion": 1
+}

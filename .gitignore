@@ -4,3 +4,9 @@
 DerivedData/
 *.xcuserstate
 *.xcworkspace/xcuserdata/
+.venv/
+__pycache__/
+*.pyc
+Research/translation/work/
+Research/translation/models/
+Research/translation/results/

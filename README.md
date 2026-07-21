@@ -28,12 +28,16 @@ and translation on your Mac.
 
 Mimi uses Apple Speech for live transcription. Automatic language detection
 uses a small local helper that is downloaded only when you choose Auto.
+English↔Japanese translation uses the bundled 73.4 MB ElanMT Marian model
+through MLX; translation text never leaves the Mac and does not use Apple
+Translation.
 
 ## Requirements
 
 - macOS 15 or later.
 - macOS 26 or later for Apple’s fastest live transcription.
-- Apple Silicon is recommended for automatic language detection.
+- Apple Silicon is required for the bundled local translator and recommended
+  for automatic language detection.
 
 ## Run it locally
 
@@ -66,5 +70,6 @@ For implementation details, benchmarks, and physical-Mac checks, see:
 
 ## Release status
 
-Mimi is under active development. CI builds a locally testable app, but the
-release is not yet Developer ID signed or notarized.
+Mimi is under active development. Official tagged GitHub releases are built by
+CI, signed with Developer ID, notarized by Apple, stapled, and verified with
+Gatekeeper before the archive is published.

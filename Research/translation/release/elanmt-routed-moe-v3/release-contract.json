@@ -1,0 +1,195 @@
+{
+  "attributionSummary": {
+    "datasetRows": 269987,
+    "licenses": {
+      "CC-BY-2.0-FR": 41913,
+      "CC-BY-4.0": 35856,
+      "CC-BY-SA-3.0": 75785,
+      "PDL-1.0-compatible-CC-BY-4.0": 110000,
+      "project-owned": 6433
+    },
+    "origins": {
+      "finalized-japanese-law-translation": 110000,
+      "human-alt-parallel": 35600,
+      "human-kftt-replay": 74785,
+      "human-kftt-validation": 400,
+      "human-tatoeba-bidirectional-agreement-filtered": 41913,
+      "licensed-human-hard-reference": 665,
+      "mimi-shipped-ui-pair": 6368,
+      "strict-local-teacher-consensus-provisional": 256
+    },
+    "promotionExcludedOrigins": {
+      "strict-local-teacher-consensus-provisional": 256
+    },
+    "promotionExcludedRows": 256,
+    "promotionExclusionReasons": {
+      "promotion_eligible=false": 256,
+      "training_only=true": 256
+    },
+    "uniqueTatoebaAttributions": 9305
+  },
+  "datasetFiles": {
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/conversational-control-en-ja/train.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-conversational-control-en-ja/mimi_training_manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/conversational-control-en-ja/train.jsonl",
+      "rows": 4346,
+      "sha256": "985e66ba98f02dca5c6a796129d83c16c6b5b125644715207211ba293092ea4e",
+      "split": "train"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/conversational-control-en-ja/valid.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-conversational-control-en-ja/mimi_training_manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/conversational-control-en-ja/valid.jsonl",
+      "rows": 1085,
+      "sha256": "28d23f456964992ee961308f74b7a20bcaef12cad03d901da43e51a261586bb9",
+      "split": "valid"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/hard-reference-ja-en/train.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-hard-reference-ja-en/mimi_training_manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/hard-reference-ja-en/train.jsonl",
+      "rows": 2465,
+      "sha256": "fc08853383f92edbf7c67a888ce918da70027d5c2bf16561913979ef16801b3b",
+      "split": "train"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/hard-reference-ja-en/valid.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-hard-reference-ja-en/mimi_training_manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/hard-reference-ja-en/valid.jsonl",
+      "rows": 414,
+      "sha256": "d0defd68034d8a77afb9d55b2f6d4d9126dd0c8bd111c7f7a0be702bfe34ad4a",
+      "split": "valid"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/licensed-unified-ja-en-v1/train.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/mimi_training_manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/licensed-unified-ja-en-v1/train.jsonl",
+      "rows": 6035,
+      "sha256": "81615ff015931411b4563e1364e1f44ff9c5ae07de435eaf4e9c2bc942d7dafb",
+      "split": "train"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/licensed-unified-ja-en-v1/valid.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/mimi_training_manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/licensed-unified-ja-en-v1/valid.jsonl",
+      "rows": 1285,
+      "sha256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096",
+      "split": "valid"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/local-teacher-btec-en-ja-v1/train.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-local-teacher-btec-en-ja-v2/mimi_training_manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/local-teacher-btec-en-ja-v1/train.jsonl",
+      "rows": 4602,
+      "sha256": "445ff8b0f708e9313a54babc19f85194be761cfb25ce6e11e144a1386577687e",
+      "split": "train"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/local-teacher-btec-en-ja-v1/valid.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-local-teacher-btec-en-ja-v2/mimi_training_manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/local-teacher-btec-en-ja-v1/valid.jsonl",
+      "rows": 1085,
+      "sha256": "28d23f456964992ee961308f74b7a20bcaef12cad03d901da43e51a261586bb9",
+      "split": "valid"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-full-depth-en-ja-v1/train.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-full-depth-en-ja-v1/manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-full-depth-en-ja-v1/train.jsonl",
+      "rows": 123050,
+      "sha256": "30043b643175ea033343643985735e157f9833f1435ad1dcbb4008790e9691da",
+      "split": "train"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-full-depth-en-ja-v1/valid.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-full-depth-en-ja-v1/manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-full-depth-en-ja-v1/valid.jsonl",
+      "rows": 1285,
+      "sha256": "ab2b957f9b000f182bd8c459d34da34db02105e42e97e1efb6979097acdacc71",
+      "split": "valid"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-legal-specialist-ja-en-v1/train.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-legal-specialist-ja-en-v1/manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-legal-specialist-ja-en-v1/train.jsonl",
+      "rows": 123050,
+      "sha256": "39d9d91238f53c0113e8c95e25e073a2e5c1838e05afc4f0dabc9104d19804cb",
+      "split": "train"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-legal-specialist-ja-en-v1/valid.jsonl": {
+      "declaredBy": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-legal-specialist-ja-en-v1/manifest.json",
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/release-clean-legal-specialist-ja-en-v1/valid.jsonl",
+      "rows": 1285,
+      "sha256": "00752124ad81c1f670362ec632420016e7e2aaf75251cd2ecc13b25d78b91096",
+      "split": "valid"
+    }
+  },
+  "distributionStatus": "blocked-promotion-ineligible-training-data",
+  "doesNotAuthorizeDistribution": true,
+  "jltAccessDate": "2026-07-18",
+  "lineageManifests": {
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-avg3/mimi_checkpoint_averaging_manifest.json": {
+      "sha256": "bee6dd96814b80b471c88d452b62afba3f0e2baee81425a2833bc829c646e6fa"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-local-teacher-btec-en-ja-v2-alpha15/mimi_checkpoint_interpolation_manifest.json": {
+      "sha256": "2b4940eb7b3dc17eab64aba499c2dff35a46bcd9994aa68884483cc1c0553fe6"
+    }
+  },
+  "modelPromotionEligible": false,
+  "pack": {
+    "bytes": 148074484,
+    "manifestSha256": "41c9ebf2455ac640367f6b86925577317855d86f89fadd9208eeb64267fd0e4c",
+    "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-release-clean-routed-moe-v3-mlx-4bit-pack"
+  },
+  "provenanceComplete": true,
+  "purpose": "hash-bound release provenance and attribution contract",
+  "releaseFiles": {
+    "ATTRIBUTIONS.md": {
+      "bytes": 2775,
+      "sha256": "77772c48e07e14cf8ddee25cbb65a52e48898a6af352528b64bd8f83fce12aa2"
+    },
+    "tatoeba-attributions.jsonl.gz": {
+      "bytes": 233555,
+      "sha256": "a82507020792da4cc6fdcdfec1ef2a37fbf44ba0527fc44ca8b3ca80ed6b0b0f",
+      "uncompressedBytes": 3135021,
+      "uncompressedSha256": "d7b5d6e2988d2cea2f19da341e54f40c481ee320ce3b3958e40e92e703a19d63"
+    }
+  },
+  "schemaVersion": 1,
+  "trainingManifests": {
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-conversational-control-en-ja/mimi_training_manifest.json": {
+      "modelPath": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-conversational-control-en-ja/model.safetensors",
+      "modelSha256": "ce0ad1efebd0f69e52528c1df2e072304616242d8963edb98d61f60e57e0739e",
+      "sha256": "2f69ec06eaf729c4ee62b599677553fd4dce091256f33f880636dc6ec923544c"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-hard-reference-ja-en/mimi_training_manifest.json": {
+      "modelPath": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-hard-reference-ja-en/model.safetensors",
+      "modelSha256": "5db9827d673f9445862407cb807a3320e80fdf1a3a57507fca6792d8c7a4b412",
+      "sha256": "61708ba80370a88cadf6929f516890e970728eb20629fa2ed8cc8c0ffbccd0a4"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000150/mimi_training_manifest.json": {
+      "modelPath": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000150/model.safetensors",
+      "modelSha256": "9737458a662e175fe9784f4fc947380a6ee313cc12ab356ee32c70a489437866",
+      "sha256": "9c77e74dde3575b5c5baa84b93da5cb98e2d570a893fa4b4d24cf60d6285747f"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000225/mimi_training_manifest.json": {
+      "modelPath": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000225/model.safetensors",
+      "modelSha256": "6ddb12f6f00b663aa81874d372a55825c46165c97bfa09d4e59846911b07543d",
+      "sha256": "ee4b6cc110732ed051672e7dab3756543f97e6af4231fcdc1bc694a067875a41"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/mimi_training_manifest.json": {
+      "modelPath": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-licensed-unified-regularized-ja-en-v1-checkpoints/step-0000300/model.safetensors",
+      "modelSha256": "61c912350bac7f4d9f43d346535870c1c63008830b5acb85ad7cedb3a4406d62",
+      "sha256": "33561d38d29d955b0a46f088893092f282e4aab0372ffe75ef44365cf63e2b49"
+    },
+    "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-local-teacher-btec-en-ja-v2/mimi_training_manifest.json": {
+      "modelPath": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/models/elanmt-local-teacher-btec-en-ja-v2/model.safetensors",
+      "modelSha256": "00f75ede31001aabfa18bcb52ddd0ca159635fd6792069111105cc0d9e7e7e19",
+      "sha256": "5b542ef075e9ae115921cb9f3ff19381863e1d1b7b521389b1a978ef77b77f6f"
+    }
+  },
+  "upstreamModels": {
+    "Mitsua/elan-mt-bt-en-ja@02c48e7031386cd2d41974b0ff1aaf52f010c5fa": {
+      "license": "CC-BY-SA-4.0",
+      "repository": "Mitsua/elan-mt-bt-en-ja",
+      "revision": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
+      "url": "https://huggingface.co/Mitsua/elan-mt-bt-en-ja/tree/02c48e7031386cd2d41974b0ff1aaf52f010c5fa"
+    },
+    "Mitsua/elan-mt-bt-ja-en@539f80eb05306e27a166b45e4264c7fa2eb4de97": {
+      "license": "CC-BY-SA-4.0",
+      "repository": "Mitsua/elan-mt-bt-ja-en",
+      "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+      "url": "https://huggingface.co/Mitsua/elan-mt-bt-ja-en/tree/539f80eb05306e27a166b45e4264c7fa2eb4de97"
+    }
+  }
+}

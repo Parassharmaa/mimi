@@ -1,0 +1,57 @@
+{
+  "generator": {
+    "family": "gpt-5.6",
+    "minimumCandidatesPerCase": 3,
+    "model": "gpt-5.6-sol",
+    "reasoningEffort": "none",
+    "reasoningSummaryRequested": false,
+    "revision": "gpt-5.6-sol",
+    "role": "final-translation-candidate-generator",
+    "store": false
+  },
+  "independence": {
+    "distinctModelFamilies": true,
+    "generatorDiffersFromTrainingTeachers": true,
+    "judgeFamiliesDifferFromGenerator": true,
+    "judgeFamiliesDifferFromEachOther": true,
+    "providerIndependent": false,
+    "trainingTeacherModels": []
+  },
+  "judges": [
+    {
+      "family": "gpt-4o",
+      "model": "gpt-4o-2024-08-06",
+      "reasoningEffort": null,
+      "reasoningSummaryRequested": false,
+      "revision": "gpt-4o-2024-08-06",
+      "role": "reference-judge-a",
+      "store": false
+    },
+    {
+      "family": "gpt-4.1",
+      "model": "gpt-4.1-2025-04-14",
+      "reasoningEffort": null,
+      "reasoningSummaryRequested": false,
+      "revision": "gpt-4.1-2025-04-14",
+      "role": "reference-judge-b",
+      "store": false
+    }
+  ],
+  "officialDocumentation": [
+    "https://developers.openai.com/api/docs/guides/latest-model.md",
+    "https://developers.openai.com/api/docs/guides/batch",
+    "https://developers.openai.com/api/docs/guides/structured-outputs",
+    "https://developers.openai.com/api/docs/guides/reasoning#reasoning-summaries"
+  ],
+  "pipeline": {
+    "endpoint": "/v1/responses",
+    "rawReasoningTokensExposedByAPI": false,
+    "responseFormat": "strict-json-schema",
+    "retainOnlyFinalTranslationAndStructuredScores": true,
+    "submissionMode": "batch-24h",
+    "useStableCustomIDs": true
+  },
+  "schemaVersion": 1,
+  "status": "final-output-only-v2-active",
+  "suiteSHA256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+}

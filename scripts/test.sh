@@ -6,6 +6,11 @@ cd "$ROOT"
 
 swift build --product MimiSelfTest
 swift build --product Mimi
+python3 scripts/translation/verify_shipped_translation_pack.py \
+  --model-root App/Resources/TranslationModels \
+  --license-root App/Resources/TranslationLicenses
+"$ROOT/.build/debug/Mimi" \
+  --validate-translation-mlx "$ROOT/App/Resources/TranslationModels"
 "$ROOT/.build/debug/MimiSelfTest"
 swift run MimiE2E
 swift run MimiSessionE2E

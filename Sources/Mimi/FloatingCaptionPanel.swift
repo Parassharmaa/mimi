@@ -113,6 +113,16 @@ final class FloatingCaptionController: NSObject, NSWindowDelegate {
 }
 
 struct FloatingCaptionView: View {
+    static func usesAppleTranslationForLivePartials(
+        environment: [String: String] = ProcessInfo.processInfo.environment,
+        bundle: Bundle = .main
+    ) -> Bool {
+        ExperimentalMLXTranslationConfiguration.resolved(
+            environment: environment,
+            bundle: bundle
+        ) == nil
+    }
+
     @Bindable var store: AppStore
     @Bindable var preferences: UserPreferences
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
@@ -121,6 +131,7 @@ struct FloatingCaptionView: View {
     @State private var configuredLanguage: SpeechLanguage?
     @State private var latestTranslationInput: CaptionTranslationInput?
     @State private var retryAfter: Date?
+    @State private var localTranslation = ""
 
     private var sourceLanguage: SpeechLanguage {
         if store.isRecording {
@@ -131,11 +142,29 @@ struct FloatingCaptionView: View {
     private var sourceText: String {
         store.document.latestCaptionText
     }
+    private var usesAppleTranslationForLivePartials: Bool {
+        Self.usesAppleTranslationForLivePartials()
+    }
+    private var localTranslationConfiguration: ExperimentalMLXTranslationConfiguration? {
+        ExperimentalMLXTranslationConfiguration.resolved()
+    }
+    private var localTranslationInput: CaptionTranslationInput {
+        CaptionTranslationInput(
+            text: sourceText,
+            language: sourceLanguage,
+            isEnabled: preferences.floatingCaptionContent != .original
+                && localTranslationConfiguration != nil
+        )
+    }
+    private var displayedTranslation: String {
+        localTranslation.isEmpty ? pipeline.displayedTranslation : localTranslation
+    }
     private var translationInput: CaptionTranslationInput {
         CaptionTranslationInput(
             text: sourceText,
             language: sourceLanguage,
             isEnabled: preferences.floatingCaptionContent != .original
+                && usesAppleTranslationForLivePartials
         )
     }
 
@@ -146,15 +175,18 @@ struct FloatingCaptionView: View {
                     caption(sourceText, secondary: preferences.floatingCaptionContent == .both)
                 }
                 if preferences.floatingCaptionContent != .original {
-                    if !pipeline.displayedTranslation.isEmpty {
-                        caption(pipeline.displayedTranslation, secondary: false)
-                    } else if !sourceText.isEmpty {
+                    if !displayedTranslation.isEmpty {
+                        caption(displayedTranslation, secondary: false)
+                    } else if !sourceText.isEmpty && usesAppleTranslationForLivePartials {
                         Text("…")
                             .font(.title2.weight(.semibold))
                             .foregroundStyle(.secondary)
+                    } else if !sourceText.isEmpty,
+                              preferences.floatingCaptionContent == .translation {
+                        caption(sourceText, secondary: true)
                     }
                 }
-                if sourceText.isEmpty && pipeline.displayedTranslation.isEmpty {
+                if sourceText.isEmpty && displayedTranslation.isEmpty {
                     Text(preferences.text("Captions will appear here", "字幕がここに表示されます"))
                         .foregroundStyle(.secondary)
                 }
@@ -216,6 +248,37 @@ struct FloatingCaptionView: View {
             configuration = nil
             configuredLanguage = nil
             retryAfter = nil
+        }
+        .task(id: localTranslationInput) {
+            let input = localTranslationInput
+            guard input.isEnabled,
+                  !input.text.isEmpty,
+                  let localTranslationConfiguration else {
+                if input.text.isEmpty {
+                    localTranslation = ""
+                }
+                return
+            }
+            // Coalesce rapidly changing speech partials, then use the same
+            // integrity-checked local engine as finalized transcript rows.
+            try? await Task.sleep(for: .milliseconds(140))
+            guard !Task.isCancelled else { return }
+            do {
+                let output = try await ExperimentalMLXTranslationEngine.shared.translate(
+                    input.text,
+                    sourceLanguage: input.language,
+                    configuration: localTranslationConfiguration
+                )
+                guard !Task.isCancelled,
+                      sourceText == input.text,
+                      sourceLanguage == input.language else { return }
+                localTranslation = output
+            } catch is CancellationError {
+                return
+            } catch {
+                guard sourceText == input.text else { return }
+                localTranslation = ""
+            }
         }
         .task {
             while !Task.isCancelled {

@@ -1,0 +1,42 @@
+{
+  "distributionStatus": "blocked-promotion-ineligible-training-data",
+  "doesNotAuthorizeAppIntegration": true,
+  "doesNotAuthorizeDistribution": true,
+  "experimentalLocalOnly": true,
+  "files": {
+    "ATTRIBUTIONS.md": {
+      "bytes": 2776,
+      "sha256": "304add47324d0315278b5945e2e20aae56292dfd6688eba73b9c3f84872a18b4"
+    },
+    "portable-release-inventory.json": {
+      "bytes": 4284,
+      "sha256": "fb62b633e56c5c2fc5aa983e71f8475db6da2588c99479fae6031dcd5b8f01e7"
+    },
+    "release-contract.json": {
+      "bytes": 19798,
+      "sha256": "3d8ccfdfb95d2365de21a0912bd2c370c8ebf6061c903d758798720a8dc0a8f6"
+    },
+    "tatoeba-attributions.jsonl.gz": {
+      "bytes": 233555,
+      "sha256": "a82507020792da4cc6fdcdfec1ef2a37fbf44ba0527fc44ca8b3ca80ed6b0b0f"
+    }
+  },
+  "modelBytes": 140875791,
+  "modelManifestSha256": "71f330302559a0948c1b35f6def2d6107b4b57728cf53e1e99e0279141d84e79",
+  "modelPromotionEligible": false,
+  "provenanceComplete": true,
+  "purpose": "hash-bound translation licenses and provenance staged inside Mimi",
+  "releaseAuthorization": "blocked-development-only",
+  "releaseBlockers": [
+    "release contract: dataset-policy-manifest-does-not-authorize-promotion",
+    "release contract: sealed-automated-400x2-quality-evaluation-pending",
+    "release contract: license-compatibility-and-distribution-review-pending",
+    "release contract: app-distribution-terms-review-pending",
+    "model manifest does not authorize app integration",
+    "release contract does not authorize distribution",
+    "release contract is not promotion eligible",
+    "distribution status is not explicitly authorized-for-distribution"
+  ],
+  "releaseContractSha256": "3d8ccfdfb95d2365de21a0912bd2c370c8ebf6061c903d758798720a8dc0a8f6",
+  "schemaVersion": 1
+}

@@ -1,3 +1,4 @@
+import AppKit
 import MimiCore
 import SwiftUI
 
@@ -43,7 +44,7 @@ struct SettingsView: View {
             }
 
             Tab(preferences.text("Languages", "言語"), systemImage: "character.book.closed", value: .models) {
-                ModelsSettingsPane(store: store)
+                ModelsSettingsPane(store: store, preferences: preferences)
             }
 
             Tab(preferences.text("Audio", "音声"), systemImage: "waveform", value: .capture) {
@@ -51,7 +52,7 @@ struct SettingsView: View {
             }
 
             Tab(preferences.text("Privacy", "プライバシー"), systemImage: "hand.raised", value: .privacy) {
-                PrivacySettingsPane()
+                PrivacySettingsPane(preferences: preferences)
             }
         }
         .scenePadding()
@@ -195,6 +196,7 @@ private struct GeneralSettingsPane: View {
 
 private struct ModelsSettingsPane: View {
     @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
 
     var body: some View {
         Form {
@@ -234,6 +236,39 @@ private struct ModelsSettingsPane: View {
                 }
 
                 modelActions
+            }
+
+            Section(preferences.text("Translation", "翻訳")) {
+                LabeledContent(preferences.text("Model", "モデル")) {
+                    Label(
+                        translationModelAvailable
+                            ? preferences.text("ElanMT ready", "ElanMT 準備完了")
+                            : preferences.text("Model missing", "モデルが見つかりません"),
+                        systemImage: translationModelAvailable
+                            ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
+                    )
+                    .foregroundStyle(translationModelAvailable ? .green : .orange)
+                }
+                LabeledContent(preferences.text("Languages", "言語")) {
+                    Text(preferences.text("English ↔ Japanese", "英語 ↔ 日本語"))
+                        .foregroundStyle(.secondary)
+                }
+                LabeledContent(preferences.text("Storage", "ストレージ")) {
+                    Text(preferences.text("73.4 MB, included with Mimi", "73.4 MB、Mimiに同梱"))
+                        .foregroundStyle(.secondary)
+                }
+                Text(preferences.text(
+                    "Translations run entirely on this Mac with Mimi's 4-bit Marian/MLX model. No text is sent to Apple or a cloud translation service.",
+                    "翻訳はMimiの4ビットMarian/MLXモデルを使い、このMac上だけで実行されます。テキストはAppleやクラウド翻訳サービスには送信されません。"
+                ))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+                Button(preferences.text("Open Model License…", "モデルのライセンスを開く…")) {
+                    guard let translationLicenseDirectory else { return }
+                    NSWorkspace.shared.open(translationLicenseDirectory)
+                }
+                .disabled(translationLicenseDirectory == nil)
             }
 
             if store.engineID.isExperimental {
@@ -287,6 +322,19 @@ private struct ModelsSettingsPane: View {
             return "About \(size) MB, managed by Mimi"
         }
         return "Language asset managed by macOS"
+    }
+
+    private var translationModelAvailable: Bool {
+        ExperimentalMLXTranslationConfiguration.resolved() != nil
+    }
+
+    private var translationLicenseDirectory: URL? {
+        guard let resources = Bundle.main.resourceURL else { return nil }
+        let directory = resources.appending(
+            path: "TranslationLicenses",
+            directoryHint: .isDirectory
+        )
+        return FileManager.default.fileExists(atPath: directory.path) ? directory : nil
     }
 
     private var modelActionTitle: String {
@@ -396,33 +444,50 @@ private struct CaptureSettingsPane: View {
 }
 
 private struct PrivacySettingsPane: View {
+    @Bindable var preferences: UserPreferences
+
     var body: some View {
         Form {
-            Section("Local by design") {
+            Section(preferences.text("Local by design", "ローカル設計")) {
                 privacyRow(
-                    "Transcript",
-                    detail: "Finalized text is stored only on this Mac.",
+                    preferences.text("Transcript", "文字起こし"),
+                    detail: preferences.text(
+                        "Finalized text is stored only on this Mac.",
+                        "確定したテキストはこのMacにだけ保存されます。"
+                    ),
                     symbol: "text.alignleft"
                 )
                 privacyRow(
-                    "Transcription",
-                    detail: "Apple Speech turns audio into text on this Mac.",
+                    preferences.text("Transcription", "音声認識"),
+                    detail: preferences.text(
+                        "Apple Speech turns audio into text on this Mac.",
+                        "Apple SpeechがこのMac上で音声をテキストに変換します。"
+                    ),
                     symbol: "waveform"
                 )
                 privacyRow(
-                    "Translation",
-                    detail: "Apple Translation processes English and Japanese on-device.",
+                    preferences.text("Translation", "翻訳"),
+                    detail: preferences.text(
+                        "Mimi's bundled Marian/MLX model translates English and Japanese on this Mac.",
+                        "Mimiに同梱されたMarian/MLXモデルが、このMac上で英語と日本語を翻訳します。"
+                    ),
                     symbol: "translate"
                 )
             }
 
-            Section("Temporary audio") {
-                Text("Mimi processes working audio in memory and does not keep a source-audio recording after the session.")
+            Section(preferences.text("Temporary audio", "一時的な音声")) {
+                Text(preferences.text(
+                    "Mimi processes working audio in memory and does not keep a source-audio recording after the session.",
+                    "Mimiは処理中の音声をメモリ上で扱い、セッション終了後に元の音声録音を保存しません。"
+                ))
                     .foregroundStyle(.secondary)
             }
 
-            Section("System services") {
-                Text("macOS owns permission prompts and Apple language assets. Apple frameworks may collect non-content performance metadata, but Mimi does not send transcript or source-audio content to a cloud service.")
+            Section(preferences.text("System services", "システムサービス")) {
+                Text(preferences.text(
+                    "macOS owns permission prompts and speech assets. Apple frameworks may collect non-content performance metadata, but Mimi does not send transcript, translation, or source-audio content to a cloud service.",
+                    "権限の確認と音声認識アセットはmacOSが管理します。Appleのフレームワークが内容を含まない性能情報を収集する場合がありますが、Mimiは文字起こし、翻訳、元音声の内容をクラウドサービスへ送信しません。"
+                ))
                     .foregroundStyle(.secondary)
             }
         }

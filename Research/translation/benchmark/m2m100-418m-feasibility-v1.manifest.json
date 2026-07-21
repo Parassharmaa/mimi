@@ -1,0 +1,174 @@
+{
+  "advanceGate": {
+    "maximumChrFPlusPlusRegressionPerDirection": 0.25,
+    "maximumDomainChrFPlusPlusRegression": 1.0,
+    "maximumEstimatedFourBitPackBytes": 500000000,
+    "requiresFewerStrictCriticalFailuresPerDirection": true,
+    "requiresPinnedMITModelAndTokenizerEvidence": true
+  },
+  "claimEligible": false,
+  "directions": {
+    "en-US>ja-JP": 40,
+    "ja-JP>en-US": 40
+  },
+  "limitations": [
+    "small development screen with only ten cases per direction/domain",
+    "public source corpora may overlap M2M-100 pretraining",
+    "not a substitute for the sealed 400+400 promotion benchmark",
+    "PyTorch latency is not native Swift/MLX latency"
+  ],
+  "model": {
+    "architecture": "single-bidirectional-dense-encoder-decoder",
+    "license": "MIT",
+    "pytorchCheckpointBytes": 1935796948,
+    "repository": "facebook/m2m100_418M",
+    "revision": "55c2e61bbf05dfb8d7abccdc3fae6fc8512fd636"
+  },
+  "output": {
+    "cases": 80,
+    "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+    "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+  },
+  "perDomainPerDirection": 10,
+  "role": "diagnostic-development-screen-not-promotion-evidence",
+  "schemaVersion": 1,
+  "seed": "mimi-m2m100-418m-feasibility-v1",
+  "selectedWithoutCandidateOutputs": true,
+  "selection": {
+    "en-US>ja-JP/everyday-conversation": {
+      "available": 400,
+      "ids": [
+        "public-stress-v3:tatoeba:52048:en-ja",
+        "public-stress-v3:tatoeba:9171838:en-ja",
+        "public-stress-v3:tatoeba:3504286:en-ja",
+        "public-stress-v3:tatoeba:1026788:en-ja",
+        "public-stress-v3:tatoeba:268846:en-ja",
+        "public-stress-v3:tatoeba:282729:en-ja",
+        "public-stress-v3:tatoeba:12074564:en-ja",
+        "public-stress-v3:tatoeba:313000:en-ja",
+        "public-stress-v3:tatoeba:307896:en-ja",
+        "public-stress-v3:tatoeba:262301:en-ja"
+      ],
+      "selected": 10
+    },
+    "en-US>ja-JP/human-translated-news": {
+      "available": 400,
+      "ids": [
+        "public-stress-v3:alt:SNT.441735.5178:en-ja",
+        "public-stress-v3:alt:SNT.79163.12446:en-ja",
+        "public-stress-v3:alt:SNT.108970.2059:en-ja",
+        "public-stress-v3:alt:SNT.3307.6460:en-ja",
+        "public-stress-v3:alt:SNT.247020.14291:en-ja",
+        "public-stress-v3:alt:SNT.126425.17593:en-ja",
+        "public-stress-v3:alt:SNT.113686.14236:en-ja",
+        "public-stress-v3:alt:SNT.42740.13615:en-ja",
+        "public-stress-v3:alt:SNT.41134.2073:en-ja",
+        "public-stress-v3:alt:SNT.88032.12804:en-ja"
+      ],
+      "selected": 10
+    },
+    "en-US>ja-JP/ministry-published-legal": {
+      "available": 200,
+      "ids": [
+        "public-stress-v3:jlt:law-4952:tu-275:en-ja",
+        "public-stress-v3:jlt:law-4746:tu-82:en-ja",
+        "public-stress-v3:jlt:law-3518:tu-1052:en-ja",
+        "public-stress-v3:jlt:law-4281:tu-1378:en-ja",
+        "public-stress-v3:jlt:law-3518:tu-59:en-ja",
+        "public-stress-v3:jlt:law-4946:tu-437:en-ja",
+        "public-stress-v3:jlt:law-3100:tu-1080:en-ja",
+        "public-stress-v3:jlt:law-3518:tu-983:en-ja",
+        "public-stress-v3:jlt:law-4281:tu-131:en-ja",
+        "public-stress-v3:jlt:law-4128:tu-71:en-ja"
+      ],
+      "selected": 10
+    },
+    "en-US>ja-JP/professional-wikipedia": {
+      "available": 400,
+      "ids": [
+        "public-stress-v3:kftt:kftt-test-000006:en-ja",
+        "public-stress-v3:kftt:kftt-test-000563:en-ja",
+        "public-stress-v3:kftt:kftt-test-001131:en-ja",
+        "public-stress-v3:kftt:kftt-test-000476:en-ja",
+        "public-stress-v3:kftt:kftt-test-001013:en-ja",
+        "public-stress-v3:kftt:kftt-test-000957:en-ja",
+        "public-stress-v3:kftt:kftt-test-000806:en-ja",
+        "public-stress-v3:kftt:kftt-test-000341:en-ja",
+        "public-stress-v3:kftt:kftt-test-000371:en-ja",
+        "public-stress-v3:kftt:kftt-test-000391:en-ja"
+      ],
+      "selected": 10
+    },
+    "ja-JP>en-US/everyday-conversation": {
+      "available": 400,
+      "ids": [
+        "public-stress-v3:tatoeba:326493:ja-en",
+        "public-stress-v3:tatoeba:2245271:ja-en",
+        "public-stress-v3:tatoeba:9361813:ja-en",
+        "public-stress-v3:tatoeba:260746:ja-en",
+        "public-stress-v3:tatoeba:303859:ja-en",
+        "public-stress-v3:tatoeba:535023:ja-en",
+        "public-stress-v3:tatoeba:8186042:ja-en",
+        "public-stress-v3:tatoeba:258600:ja-en",
+        "public-stress-v3:tatoeba:7493957:ja-en",
+        "public-stress-v3:tatoeba:662322:ja-en"
+      ],
+      "selected": 10
+    },
+    "ja-JP>en-US/human-translated-news": {
+      "available": 400,
+      "ids": [
+        "public-stress-v3:alt:SNT.258475.4470:ja-en",
+        "public-stress-v3:alt:SNT.106636.13385:ja-en",
+        "public-stress-v3:alt:SNT.121477.11737:ja-en",
+        "public-stress-v3:alt:SNT.89154.12536:ja-en",
+        "public-stress-v3:alt:SNT.109620.887:ja-en",
+        "public-stress-v3:alt:SNT.127516.15258:ja-en",
+        "public-stress-v3:alt:SNT.30061.18639:ja-en",
+        "public-stress-v3:alt:SNT.37293.11265:ja-en",
+        "public-stress-v3:alt:SNT.465303.12381:ja-en",
+        "public-stress-v3:alt:SNT.3593.5527:ja-en"
+      ],
+      "selected": 10
+    },
+    "ja-JP>en-US/ministry-published-legal": {
+      "available": 200,
+      "ids": [
+        "public-stress-v3:jlt:law-3215:tu-1396:ja-en",
+        "public-stress-v3:jlt:law-4946:tu-943:ja-en",
+        "public-stress-v3:jlt:law-4946:tu-647:ja-en",
+        "public-stress-v3:jlt:law-3215:tu-3022:ja-en",
+        "public-stress-v3:jlt:law-5168:tu-120:ja-en",
+        "public-stress-v3:jlt:law-3518:tu-915:ja-en",
+        "public-stress-v3:jlt:law-4743:tu-137:ja-en",
+        "public-stress-v3:jlt:law-4952:tu-275:ja-en",
+        "public-stress-v3:jlt:law-4948:tu-3988:ja-en",
+        "public-stress-v3:jlt:law-4128:tu-107:ja-en"
+      ],
+      "selected": 10
+    },
+    "ja-JP>en-US/professional-wikipedia": {
+      "available": 400,
+      "ids": [
+        "public-stress-v3:kftt:kftt-test-000175:ja-en",
+        "public-stress-v3:kftt:kftt-test-000418:ja-en",
+        "public-stress-v3:kftt:kftt-test-000631:ja-en",
+        "public-stress-v3:kftt:kftt-test-000866:ja-en",
+        "public-stress-v3:kftt:kftt-test-000355:ja-en",
+        "public-stress-v3:kftt:kftt-test-000698:ja-en",
+        "public-stress-v3:kftt:kftt-test-000353:ja-en",
+        "public-stress-v3:kftt:kftt-test-000004:ja-en",
+        "public-stress-v3:kftt:kftt-test-000658:ja-en",
+        "public-stress-v3:kftt:kftt-test-001014:ja-en"
+      ],
+      "selected": 10
+    }
+  },
+  "source": {
+    "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+    "publicBenchmarkMayOverlapPretraining": true,
+    "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+  },
+  "status": "frozen-before-m2m100-inference",
+  "suiteID": "mimi-m2m100-418m-feasibility-v1"
+}

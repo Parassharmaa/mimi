@@ -1,0 +1,41 @@
+{
+  "cases": 800,
+  "cases_per_direction": 400,
+  "claim_eligible": false,
+  "inputs": {
+    "alt": {
+      "available_pairs": 742,
+      "domain": "human-translated-news",
+      "path": "Research/translation/work/alt/test.jsonl",
+      "selected_pairs": 100,
+      "sha256": "b2193457623fb4b9322d6f6e966c7d1d5a383329c2fc31b37157688141b6471f"
+    },
+    "kftt": {
+      "available_pairs": 919,
+      "domain": "professional-wikipedia",
+      "path": "Research/translation/work/kftt/test.jsonl",
+      "selected_pairs": 200,
+      "sha256": "909068212ffa8ec33e3f059d429f2c083409b53c902012c7369ebb6f5057c5a1"
+    },
+    "tatoeba": {
+      "available_pairs": 611,
+      "domain": "everyday-conversation",
+      "path": "Research/translation/work/tatoeba/test.jsonl",
+      "selected_pairs": 100,
+      "sha256": "4e7a138b5beb876e564365940b295d02081a584f34427e3aa9738a8c20f19b73"
+    }
+  },
+  "limitations": [
+    "one human reference per case rather than two independently reviewed references",
+    "public corpora may overlap ElanMT pretraining or model selection",
+    "corpus domains do not satisfy Mimi's product-domain promotion quotas",
+    "this stress suite cannot replace the sealed 800-case human-authored benchmark"
+  ],
+  "output": {
+    "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+    "sha256": "4e57447f0a14223993f9fc5f543df6450b7cde2568c3211cdda64eeaab85ea94"
+  },
+  "schema_version": 1,
+  "seed": "mimi-public-stress-v1",
+  "suite": "public-stress-v1"
+}

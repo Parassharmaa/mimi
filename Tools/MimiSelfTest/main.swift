@@ -12,6 +12,7 @@ struct MimiSelfTest {
         testLongHorizonCaptionTranslationCoalescing()
         testLongHorizonFinalizedTranslationQueue()
         testRecommendedPacksCoverBothV1Languages()
+        testTranslationBenchmarkClaimGate()
         testTerminalLiveTextDiffDoesNotReplayOldText()
         print("Mimi self-test passed: transcript coalescing, long-horizon translation, Japanese finalization, model routing, and Terminal live insertion.")
     }
@@ -150,6 +151,54 @@ struct MimiSelfTest {
 
         let newActivation = LiveTextEdit(previous: "", next: "new phrase")
         expect(newActivation.removalCount == 0 && newActivation.insertion == "new phrase", "A new dictation starts with no prior text")
+    }
+
+    private static func testTranslationBenchmarkClaimGate() {
+        let bootstrap = TranslationBenchmarkCase(
+            id: "bootstrap-1",
+            sourceLanguage: .english,
+            targetLanguage: .japanese,
+            domain: "meeting",
+            source: "Let's start.",
+            references: ["始めましょう。"],
+            split: "canary",
+            license: "CC0-1.0",
+            provenance: "Mimi bootstrap fixture",
+            reviewStatus: .bootstrapUnreviewed,
+            claimEligible: false
+        )
+        expect(bootstrap.isStructurallyValid, "An unreviewed canary is valid only as a non-claim smoke case")
+
+        let invalidClaim = TranslationBenchmarkCase(
+            id: "invalid-claim",
+            sourceLanguage: .japanese,
+            targetLanguage: .english,
+            domain: "meeting",
+            source: "始めましょう。",
+            references: ["Let's start."],
+            split: "heldout",
+            license: "CC0-1.0",
+            provenance: "Mimi fixture",
+            reviewStatus: .independentlyReviewed,
+            claimEligible: true
+        )
+        expect(!invalidClaim.isStructurallyValid, "Only adjudicated held-out cases may support an improvement claim")
+
+        let result = TranslationBenchmarkResult(
+            benchmarkCase: bootstrap,
+            hypothesis: "始めましょう。",
+            latencySeconds: 0.4,
+            warmLatencySeconds: [0.10, 0.12, 0.11]
+        )
+        let report = TranslationBenchmarkReport(
+            engine: "fixture",
+            operatingSystem: "test",
+            hardware: "test",
+            preparationSeconds: 0,
+            results: [result]
+        )
+        expect(report.claimEligibleResultCount == 0, "Canary output never counts toward the Apple promotion gate")
+        expect(report.latencyPercentile(0.95) == 0.12, "Benchmark latency percentiles use warm repetitions")
     }
 
     private static func expect(_ condition: @autoclosure () -> Bool, _ message: String) {

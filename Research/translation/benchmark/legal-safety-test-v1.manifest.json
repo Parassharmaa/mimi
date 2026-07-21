@@ -1,0 +1,99 @@
+{
+  "cases": 800,
+  "cases_per_direction": 400,
+  "claim_eligible": false,
+  "contamination_controls": {
+    "exact_normalized_text_disjoint_from_jlt_train_and_valid": true,
+    "law_ids_disjoint_across_jlt_train_valid_test": true,
+    "maximum_protected_five_gram_jaccard": 0.8,
+    "protected_suites": [
+      {
+        "path": "Research/translation/benchmark/canary.jsonl",
+        "rows": 12,
+        "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+      },
+      {
+        "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+        "rows": 2800,
+        "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+      },
+      {
+        "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+        "rows": 800,
+        "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+      },
+      {
+        "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+        "rows": 800,
+        "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+      }
+    ]
+  },
+  "does_not_authorize_app_integration": true,
+  "does_not_authorize_model_promotion": true,
+  "output": {
+    "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+    "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+  },
+  "pairs": 400,
+  "private_reasoning_traces_used": false,
+  "purpose": "independent post-selection structural validation; not a promotion claim suite",
+  "schema_version": 1,
+  "seed": "mimi-legal-safety-test-v1",
+  "selection": {
+    "available_by_bucket": {
+      "critical-structure": 7725,
+      "general": 2955,
+      "legal-enumeration": 8469,
+      "long-form": 1742,
+      "negation": 3117
+    },
+    "bucket_weights": {
+      "critical-structure": 4,
+      "general": 1,
+      "legal-enumeration": 2,
+      "long-form": 1,
+      "negation": 2
+    },
+    "policy": "multi-label source structure; restrictive quota order; unique deterministic SHA-256 rank",
+    "quota_order": [
+      "long-form",
+      "general",
+      "negation",
+      "legal-enumeration",
+      "critical-structure"
+    ],
+    "rejected": {
+      "exact-protected-overlap": 186,
+      "exact-text-in-train-or-valid": 2931,
+      "near-protected-overlap": 28
+    },
+    "selected_by_bucket": {
+      "critical-structure": 160,
+      "general": 40,
+      "legal-enumeration": 80,
+      "long-form": 40,
+      "negation": 80
+    }
+  },
+  "selection_uses_model_outputs": false,
+  "source": {
+    "document_grouped_split": true,
+    "manifest": {
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/japanese-law-translation-finalized-v1/manifest.json",
+      "sha256": "0c8ee33203c4efd3af7711dfd716d3a889a37515b74a57a02a8b53806a2234ce"
+    },
+    "split_seed": "mimi-jlt-finalized-v1",
+    "test": {
+      "available_complete_pairs": 17700,
+      "law_groups": 61,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/work/japanese-law-translation-finalized-v1/test.jsonl",
+      "sha256": "bb7f38b3ff96faf092267ed6a3e1a4db2b5ae7230ae9e5934d7e3bef6185ccce"
+    },
+    "train_law_groups": 847,
+    "train_rows_scanned": 408814,
+    "valid_law_groups": 42,
+    "valid_rows_scanned": 14064
+  },
+  "suite": "legal-safety-test-v1"
+}

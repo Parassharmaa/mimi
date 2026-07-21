@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-07-20T23:59:34Z",
+  "purpose": "first independent test-law evaluation of a validation-developed clean two-checkpoint structure fallback",
+  "direction": "en-ja",
+  "policy": {
+    "selection": "minimum (critical+negation, critical, negation); primary on tie",
+    "criticalDefinition": "exact NFKC multiset of ASCII URLs, placeholders, markup, percent, and digits",
+    "negationDefinition": "source and output must agree on the frozen conservative English/Japanese negation-marker boolean",
+    "selectionUsesReferences": false,
+    "selectionUsesPublicStressV3Outputs": false
+  },
+  "policyDevelopmentSuite": {
+    "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+    "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91",
+    "primaryReportSha256": "b7e9c1653207ffc3758a970bdd239972799321eaa1d3f4ebb7ee9b8acc093948",
+    "alternateReportSha256": "0bd8f79a82ef79c48cef9cc3186e068a959e8f791d00e8b33ee2e9ea00c035b2",
+    "baselineReportSha256": "d76b04f42f007f232bac633eac1618a865ad402442fd77bfeb76564ee979c7ea",
+    "postHocResult": {
+      "fallbackCases": 18,
+      "pairedSentenceChrFPlusPlusMean": 0.5395717153636784,
+      "pairedSentenceChrFPlusPlusLower95": 0.056963156003192406,
+      "pairedSentenceChrFPlusPlusUpper95": 1.058190076215897,
+      "exactCriticalTokenMismatches": 194,
+      "negationMarkerMismatches": 99
+    },
+    "claimEligible": false
+  },
+  "suite": {
+    "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+    "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca",
+    "manifestPath": "Research/translation/benchmark/legal-safety-test-v1.manifest.json",
+    "manifestSha256": "4015fa87366eeb953cdcf666d3931fb99a556ef6c249a355f65905abb3b83676",
+    "casesPerDirection": 400,
+    "lawGroups": 61,
+    "relationship": "test laws are disjoint from JLT train and validation laws; exact and near overlap with protected suites was rejected"
+  },
+  "models": {
+    "primary": {
+      "path": "/tmp/mimi-clean-continuation-v1.271828/q4/step-0000250",
+      "manifestSha256": "efda18f57f3ec6f8ef75426bff18fe03bc3449a9172c86b4196a9b1bb360a238",
+      "sourceWeightsSha256": "ee4de9149392dff92bcec820414e8f6feb0ce68be41c899eb8a50a682761b983",
+      "quantizedWeightsSha256": "7c5c7fee9ee9f009721edba7311d8dfa3bbede2ebeeb3bef09d870a2b74c03b1"
+    },
+    "alternate": {
+      "path": "Research/translation/models/elanmt-release-clean-human-only-routed-moe-v4-mlx-4bit-shared-tokenizer-pack/engines/formal-en-ja",
+      "manifestSha256": "fbd1eb33194d4f85135ad0fcb20b823bc2e62759d8d040b91699fcd1c2c1c302",
+      "sourceWeightsSha256": "eb9aa8db0e99d371036b0c55635cfdb3a5ee4d5715e32ab58bebe6173aa17ee5",
+      "quantizedWeightsSha256": "f1d9abc7104fe71262f62ec834ca451d740a2f99df72e67559068598abb8e7ff"
+    },
+    "baseline": {
+      "path": "Research/translation/models/elanmt-release-clean-routed-moe-v3-mlx-4bit-pack/engines/formal-en-ja",
+      "manifestSha256": "592127b80cb9aca3e3bedecc4b71c7ce5708e6271fbf649a9a1167a3b494fd0f",
+      "sourceWeightsSha256": "12ed1e2673fb9f53de2552e6ad65ed8972a17b9da8b442f75bc524624cd8a252",
+      "quantizedWeightsSha256": "804ccd15dc40465a49002931ded762a1ed6c2b757cc6bfc17aa897dfc3002bc2"
+    }
+  },
+  "implementation": {
+    "evaluatorScriptSha256": "807ced3eacbe725a99077997429392258ee5b4babc1e7224f45ea526cb6bc392",
+    "benchmarkScriptSha256": "682f41160bd628414a48775bb7bdcbc470e44c6171a438120968d77315e29f75",
+    "marianRuntimeSha256": "661a1eb2a745c40ecbe6d7e042d60eaccee5527897032a3fbe6880b0d68693b3",
+    "structureAuditScriptSha256": "bb4edf46dc0a9932aaf6ebe29e84a65c2713919aa710e4ced969c61106070075",
+    "mlxVersion": "0.30.6"
+  },
+  "gates": {
+    "pairedSentenceChrFPlusPlus": {
+      "samples": 10000,
+      "seed": 20260717,
+      "confidence": 0.95,
+      "minimumLowerBound": 0.0
+    },
+    "criticalTokenRule": "candidate count must not exceed baseline count",
+    "negationRule": "candidate count must not exceed baseline count",
+    "maximumFallbackRate": 0.1,
+    "maximumWarmP95Seconds": 0.1
+  },
+  "distribution": {
+    "currentPackPath": "Research/translation/models/elanmt-release-clean-human-only-routed-moe-v4-mlx-4bit-shared-tokenizer-pack",
+    "currentPackManifestSha256": "8fd2dd3ecf39ab86ff535e8a2f77576390898fb92a7600a923efd90dbed8704e",
+    "accounting": "conservative current pack plus complete standalone primary q4 directory before tokenizer deduplication",
+    "expectedConservativeBytes": 180019246,
+    "maximumBytes": 500000000
+  },
+  "selectionUsesReferences": false,
+  "claimEligible": false,
+  "doesNotAuthorizeModelPromotion": true,
+  "doesNotAuthorizeAppIntegration": true
+}

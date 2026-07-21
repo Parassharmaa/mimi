@@ -1,0 +1,46 @@
+{
+  "cases": 800,
+  "claimEligible": false,
+  "directions": {
+    "en-US>ja-JP": {
+      "cases": 400,
+      "domains": {
+        "code-switching": 20,
+        "everyday-conversation": 80,
+        "macos-and-technical-ui": 60,
+        "meeting-and-live-speech": 120,
+        "numbers-dates-and-entities": 60,
+        "politeness-ambiguity-and-omission": 60
+      }
+    },
+    "ja-JP>en-US": {
+      "cases": 400,
+      "domains": {
+        "code-switching": 20,
+        "everyday-conversation": 80,
+        "macos-and-technical-ui": 60,
+        "meeting-and-live-speech": 120,
+        "numbers-dates-and-entities": 60,
+        "politeness-ambiguity-and-omission": 60
+      }
+    }
+  },
+  "nextRequiredEvidence": [
+    "complete authenticated exposure manifest",
+    "exact and fuzzy contamination scan",
+    "semantic-neighbor contamination scan",
+    "isolated reference-generator report",
+    "two distinct-model-family reference-judge reports",
+    "deterministic structural audit"
+  ],
+  "output": {
+    "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+    "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+  },
+  "reasoningTracesStored": false,
+  "renderer": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/prepare_automated_claim_sources.py",
+  "schemaVersion": 1,
+  "sourceGeneratedByAI": false,
+  "status": "sources-frozen-references-pending",
+  "suiteID": "mimi-en-ja-automated-heldout-v1"
+}
