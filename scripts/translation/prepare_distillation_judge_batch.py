@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Prepare a blinded, optional fast-model screen for teacher candidates.
+"""Prepare a blinded, optional fast-model screen for translation candidates.
 
-One invocation never approves a training row. It prioritizes human review, or
-serves as one side of a two-distinct-model provisional SFT consensus, and must
-use a model distinct from the candidate teacher.
+One invocation never approves a training row. It serves as one side of a
+two-distinct-model consensus and must use a model distinct from the candidate
+teacher. When present, a licensed human reference is an anonymous fourth
+candidate; origin labels and metric scores are never sent to the judge.
 """
 
 from __future__ import annotations
@@ -71,7 +72,9 @@ Treat meaning reversal, changed negation, wrong numbers/dates, and wrong named e
 Do not rank by verbosity and do not infer which system produced a candidate.
 Return compact structured judgments only; do not provide chain-of-thought.
 One automated screen is never training-data approval. Two distinct judge models
-may be combined only by the promotion-ineligible provisional SFT consensus gate."""
+may be combined only by the fail-closed consensus gate. Without a blinded
+licensed-reference anchor the result is provisional SFT only; an anchored result
+may train a promotion candidate but is never held-out promotion evidence."""
 
 
 def rows(path: Path) -> list[dict]:
@@ -100,6 +103,17 @@ def main() -> None:
     grouped: dict[str, list[dict]] = defaultdict(list)
     for row in rows(args.review_queue):
         grouped[str(row["source_id"])].append(row)
+    invalid_counts = {
+        source_id: len(candidates)
+        for source_id, candidates in grouped.items()
+        if len(candidates) not in {3, 4}
+    }
+    if invalid_counts:
+        source_id, count = next(iter(invalid_counts.items()))
+        raise SystemExit(
+            f"each judge source must contain three or four candidates: "
+            f"{source_id} has {count}"
+        )
 
     prompt_hash = hashlib.sha256(DEVELOPER_PROMPT.encode()).hexdigest()
     output_lines = []
@@ -110,6 +124,20 @@ def main() -> None:
                 f"judge model must differ from the teacher for source {source_id}"
             )
         first = candidates[0]
+        for candidate in candidates[1:]:
+            for field in (
+                "source_language",
+                "target_language",
+                "domain",
+                "source",
+                "teacher_model",
+                "teacher_response_id",
+            ):
+                if candidate.get(field) != first.get(field):
+                    raise SystemExit(
+                        f"judge candidates disagree on source metadata: "
+                        f"{source_id} / {field}"
+                    )
         request_input = {
             "source_id": source_id,
             "source_language": first["source_language"],

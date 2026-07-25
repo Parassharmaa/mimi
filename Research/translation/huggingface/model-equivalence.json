@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-07-25T02:54:00Z",
+  "statement": "The public, lineage-rich Hugging Face runtime payload is byte-for-byte identical to the MLX payload used for the reported runtime and translation evaluation. Only non-runtime manifest and open-release metadata changed.",
+  "payloadByteIdentical": true,
+  "method": "diff -rq --exclude=manifest.json",
+  "directions": {
+    "en-ja": {
+      "benchmarkedManifestSHA256": "d86f6c764a69b3db9359180ae2a7032e55b9418d32328ba940228becfd077507",
+      "publishedManifestSHA256": "b4c36bbcc00a6afedb6dd2ed567ee695e879398fc574fa43471f36257d53491c",
+      "runtimePayloadSHA256": {
+        "config.json": "93d1fefca902bf0209d015fb45435899fe428f3554bda21e92fc8c967123fd88",
+        "generation_config.json": "d66a78c639f71be4ada80c06324eb090bbbaf51fd9fa78a69619d628df46cb7e",
+        "model.safetensors": "1df8531bcb9cbededd929dbb4c1e4fe4e9d46f3172e824d87718f111a1d9bed9",
+        "source.spm": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff",
+        "special_tokens_map.json": "80f4c6c5cf3867d7669ff8aa8f6aebb8a7499322e62d7faae06262d6014edd61",
+        "target.spm": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff",
+        "tokenizer.json": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f",
+        "tokenizer_config.json": "71423f6f597fa69018035b8a4f21432b0693f5eeca83cc8a34d268002add5cce",
+        "vocab.json": "98f1903df87693f20efcdbe0151158b0b6a22d34993247df7d7bca0d6a350d30"
+      }
+    },
+    "ja-en": {
+      "benchmarkedManifestSHA256": "48cbaea921d6f6fb6108c40ba94d8399bb610a260ddd38b028fcb0046691f95a",
+      "publishedManifestSHA256": "098aed58f238bbf327b87cfb92dfd80e84e6edfefd29347c51fa94056c5fc3af",
+      "runtimePayloadSHA256": {
+        "config.json": "93d1fefca902bf0209d015fb45435899fe428f3554bda21e92fc8c967123fd88",
+        "generation_config.json": "d66a78c639f71be4ada80c06324eb090bbbaf51fd9fa78a69619d628df46cb7e",
+        "model.safetensors": "a01fa5b06b877322f1bad83e5b7bd871f13c7ab094d549cbaf6f63b46469d862",
+        "source.spm": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff",
+        "special_tokens_map.json": "80f4c6c5cf3867d7669ff8aa8f6aebb8a7499322e62d7faae06262d6014edd61",
+        "target.spm": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff",
+        "tokenizer.json": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f",
+        "tokenizer_config.json": "bead3a53ffe20e0a85fe3df6ed183565ec36db885deeec21fb7849daf23b7d05",
+        "vocab.json": "98f1903df87693f20efcdbe0151158b0b6a22d34993247df7d7bca0d6a350d30"
+      }
+    }
+  }
+}

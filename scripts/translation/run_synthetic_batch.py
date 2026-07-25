@@ -177,8 +177,16 @@ def request_contract(path: Path) -> dict[str, Any]:
             raise SystemExit(f"line {line_number}: source must be non-empty text")
         if pipeline in {JUDGE_PIPELINE, REFERENCE_JUDGE_PIPELINE}:
             candidates = source.get("candidates")
-            if not isinstance(candidates, list) or len(candidates) != 3:
-                raise SystemExit(f"line {line_number}: judge input must contain three candidates")
+            allowed_candidate_counts = (
+                {3, 4} if pipeline == JUDGE_PIPELINE else {3}
+            )
+            if (
+                not isinstance(candidates, list)
+                or len(candidates) not in allowed_candidate_counts
+            ):
+                raise SystemExit(
+                    f"line {line_number}: judge input has an invalid candidate count"
+                )
             candidate_ids: set[str] = set()
             for candidate in candidates:
                 candidate = json_object(candidate)

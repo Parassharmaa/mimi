@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-07-25",
+  "decision": "stop-before-scaling-or-training",
+  "claimEligible": false,
+  "appChangeAuthorized": false,
+  "publicDatasetAuthorized": false,
+  "teacher": {
+    "model": "gpt-5.6-sol-via-codex-cli",
+    "transport": "cached ChatGPT authentication",
+    "apiKeyUsed": false,
+    "reasoningTraceStored": false,
+    "completedSources": 87,
+    "reportedTokens": 53219
+  },
+  "deterministicFilter": {
+    "policy": "reference-validated-critical-equivalence-v1",
+    "sourceOnlyRemainsStrict": true,
+    "protectedUrlsPlaceholdersPrintfAndMarkupRemainExact": true,
+    "admittedSources": 67,
+    "rejectedSources": 20,
+    "admittedDirections": {
+      "en-US->ja-JP": 44,
+      "ja-JP->en-US": 23
+    },
+    "candidateRows": 265,
+    "candidateOrigins": {
+      "teacher": 198,
+      "licensed-reference": 64,
+      "teacher-reference-equivalent": 3
+    },
+    "criticalAdmissionModes": {
+      "source-strict": 147,
+      "reference-target-strict": 53,
+      "reference-typed": 1,
+      "licensed-reference": 64
+    },
+    "queueSha256": "607994bd8feea41e622ce623bd13c9d55a28ebcaa0ecafe36e903b37f9d5bd06"
+  },
+  "judges": [
+    {
+      "model": "claude-fable-5-via-claude-cli",
+      "candidateOriginExposed": false,
+      "reasoningTraceStored": false,
+      "sources": 67,
+      "uniqueSelections": 10,
+      "tieAbstentions": 57,
+      "reportedCostUsd": 2.722298,
+      "outputSha256": "3013b4d4b672a80b0c4c8a4c6e9dfa3acb28ffea453e6888134c1eca612c9e92",
+      "consensusJudgmentsSha256": "677b086a583cbc9843ab2060a37572e9f8f22895e57c412852f7b13072e7d5e2"
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-4bit",
+      "revision": "545dc4251c05440727734bcd94334791f6ab0192",
+      "judgeIdentity": "mlx-community/Qwen3-8B-4bit@545dc4251c05440727734bcd94334791f6ab0192:multi-candidate-v1",
+      "license": "Apache-2.0",
+      "candidateOriginExposed": false,
+      "reasoningTraceStored": false,
+      "sources": 67,
+      "uniqueSelections": 12,
+      "tieAbstentions": 53,
+      "thresholdAbstentions": 2,
+      "modelBytes": 4623784971,
+      "peakResidentBytes": 4963336192,
+      "correctedResponses": 0,
+      "outputSha256": "d5609e755221c646f6834ef610976f9cce2b6a75c9359f5e1ad920d13e26c5b8",
+      "consensusJudgmentsSha256": "fa637551167eb9e963f0e68f285b2e8a16de67861daedbb3cd24e5c4eb85a651",
+      "reportSha256": "71b0e1cb76f35e4a08f4d9cca859cf8a0638c1e2a0b9886f286f588955a58a10"
+    }
+  ],
+  "consensus": {
+    "policy": {
+      "minimumAdequacy": 4,
+      "minimumFluency": 3,
+      "minimumTerminology": 3,
+      "requireNoErrorTags": true,
+      "requireNoCriticalError": true,
+      "requireProtectedTokensPreserved": true,
+      "requireUniqueBestPerJudge": true,
+      "requireMatchingSelection": true,
+      "selectedCandidateMustBeTeacher": true
+    },
+    "bothJudgesSelectedUniqueBest": 5,
+    "matchingUniqueSelections": 0,
+    "differentUniqueSelections": 5,
+    "approvedSources": 0,
+    "rejectedSources": 67,
+    "approvedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rejectedSha256": "495847af662b75cfd62acd4e60ed334fd98b43ee7eb57e04b16469786ab7de7d"
+  },
+  "interpretation": [
+    "The keyless teacher transport works, but this candidate design does not produce consensus-approved training targets.",
+    "Coarse-score ties and disagreement among three semantically similar teacher styles prevent a unique shared winner.",
+    "The result is a pilot stop, not evidence that every individual candidate is poor and not a held-out model-quality result."
+  ],
+  "nextExperiment": {
+    "hypothesis": "Reduce vote splitting with one preregistered canonical teacher translation per source, compared blindly with the licensed reference and the current Mimi baseline.",
+    "requirements": [
+      "Keep the same deterministic safety and two-family consensus thresholds.",
+      "Do not use judge results to choose which existing teacher style becomes canonical.",
+      "Run a small balanced bidirectional pilot before any large teacher generation.",
+      "Train no student unless the new pilot yields a sufficiently sized, direction-balanced approved set."
+    ]
+  }
+}
