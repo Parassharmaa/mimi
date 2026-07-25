@@ -76,6 +76,10 @@ uv run --python 3.12 --with numpy \
 uv run --python 3.12 --with torch --with transformers==4.57.6 \
   --with sentencepiece --with sacremoses --with sacrebleu==2.6.0 --with numpy \
   scripts/translation/test_dqrd_training_objective.py
+PYTHONPATH=scripts/translation uv run --python 3.12 --with torch \
+  --with transformers==4.57.6 --with sentencepiece --with sacremoses \
+  --with sacrebleu==2.6.0 --with numpy \
+  scripts/translation/test_canonical_rollout_repair_v14.py
 uv run --python 3.12 --with torch --with transformers==4.57.6 \
   --with sentencepiece --with sacremoses --with sacrebleu==2.6.0 --with numpy \
   --with huggingface-hub scripts/translation/test_marian_negative_space_objective.py
@@ -190,6 +194,11 @@ python3 -m py_compile \
   scripts/translation/diagnose_canonical_safety_repair_v12_failures.py \
   scripts/translation/prepare_canonical_safety_taxonomy_v13_judge.py \
   scripts/translation/collect_canonical_safety_taxonomy_v13_judge.py \
+  scripts/translation/build_canonical_rollout_repair_v14_dataset.py \
+  scripts/translation/mine_canonical_rollout_repair_v14.py \
+  scripts/translation/prepare_canonical_rollout_repair_v14_contract.py \
+  scripts/translation/train_canonical_rollout_repair_v14.py \
+  scripts/translation/evaluate_canonical_rollout_repair_v14.py \
   scripts/translation/build_canonical_pairwise_v4_result.py \
   scripts/translation/build_canonical_pairwise_v5_result.py \
   scripts/translation/build_canonical_pairwise_v6_result.py \

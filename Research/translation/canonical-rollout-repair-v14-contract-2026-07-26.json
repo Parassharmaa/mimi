@@ -1,0 +1,325 @@
+{
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "capacity_change": false,
+  "comet_authorized": false,
+  "dataset": {
+    "attribution": {
+      "bytes": 1408842,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en/attribution.jsonl",
+      "sha256": "268417666050d6d304534bf33e1c27ecc9532e8c079a2d7f746197c47814866b"
+    },
+    "counts": {
+      "rejected": {
+        "legal:critical:protected-overlap": 11,
+        "legal:critical:source-overlap": 19,
+        "legal:general:protected-overlap": 18,
+        "legal:general:source-overlap": 6,
+        "legal:long:protected-overlap": 7,
+        "legal:long:source-overlap": 25,
+        "legal:negation:protected-overlap": 12,
+        "legal:negation:source-overlap": 18,
+        "legal:omission-risk:protected-overlap": 1,
+        "legal:omission-risk:source-overlap": 52,
+        "legal:repetition-risk:source-overlap": 2,
+        "legal:terminology-risk:protected-overlap": 13,
+        "legal:terminology-risk:source-overlap": 91
+      },
+      "train": 7104,
+      "train_origins": {
+        "finalized-japanese-law-translation": 5000,
+        "human-alt-parallel": 650,
+        "human-kftt-replay": 650,
+        "human-tatoeba-bidirectional-agreement-filtered": 621,
+        "licensed-human-reference-anchor": 136,
+        "mimi-shipped-ui-pair": 47
+      },
+      "train_strata": {
+        "general:human-alt-parallel": 650,
+        "general:human-kftt-replay": 650,
+        "general:human-tatoeba-bidirectional-agreement-filtered": 621,
+        "general:mimi-shipped-ui-pair": 47,
+        "legal:critical": 900,
+        "legal:general": 950,
+        "legal:long": 1000,
+        "legal:negation": 900,
+        "legal:omission-risk": 450,
+        "legal:repetition-risk": 100,
+        "legal:terminology-risk": 700,
+        "same-source-licensed-human-anchor": 136
+      },
+      "unique_train_sources": 7104,
+      "unique_valid_sources": 768,
+      "valid": 768,
+      "valid_origins": {
+        "finalized-japanese-law-translation": 768
+      },
+      "valid_strata": {
+        "legal:critical": 128,
+        "legal:general": 239,
+        "legal:long": 192,
+        "legal:negation": 96,
+        "legal:omission-risk": 16,
+        "legal:repetition-risk": 1,
+        "legal:terminology-risk": 96
+      }
+    },
+    "directory": "Research/translation/work/canonical-rollout-repair-v14-ja-en",
+    "distribution_provenance": {
+      "all_rows_have_source_license": true,
+      "all_rows_have_source_provenance": true,
+      "attribution_sidecar": {
+        "bytes": 1408842,
+        "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en/attribution.jsonl",
+        "sha256": "268417666050d6d304534bf33e1c27ecc9532e8c079a2d7f746197c47814866b"
+      },
+      "licenses_are_open_or_project_owned": [
+        "CC-BY-2.0-FR",
+        "CC-BY-4.0",
+        "CC-BY-SA-3.0",
+        "PDL-1.0-compatible-CC-BY-4.0",
+        "project-owned"
+      ]
+    },
+    "effective_licenses": {
+      "train": {
+        "CC-BY-2.0-FR": 636,
+        "CC-BY-4.0": 707,
+        "CC-BY-SA-3.0": 685,
+        "PDL-1.0-compatible-CC-BY-4.0": 5016,
+        "project-owned": 60
+      },
+      "valid": {
+        "PDL-1.0-compatible-CC-BY-4.0": 768
+      }
+    },
+    "free_form_synthetic_translations_used_as_targets": false,
+    "hard_train": {
+      "bytes": 3991371,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en-rollouts/hard.jsonl",
+      "sha256": "ab4d598062d88ee7114cff1e53847cc5c3ddd21c0ea393167a670503af6bbeb1"
+    },
+    "manifest": {
+      "bytes": 8429,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en/manifest.json",
+      "sha256": "1cd2e3629513f4662c6c9ffd6854d463bd638f08c8001bdb73027db0dc03d245"
+    },
+    "private_reasoning_traces_used": false,
+    "train": {
+      "bytes": 10047132,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en/train.jsonl",
+      "sha256": "12aad09c7eef27926766eff1e4a6db3935f7c4b43b5341d584046e515876483f"
+    },
+    "valid": {
+      "bytes": 1049166,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en/valid.jsonl",
+      "sha256": "3228c256ab1b4b8f878edb52f67d977c2f454bc67a6c3e04e07926a5aba4d040"
+    }
+  },
+  "decoder_or_bundle_size_change_during_training": false,
+  "direction": "ja-en",
+  "exact_q4_conversion_authorized": false,
+  "experiment": "canonical-rollout-repair-v14-ja-en",
+  "human_reviewer_required": false,
+  "hypothesis": "starting from rejected v12 step 50, mild scheduled sampling on free-running hard rows plus explicit EOS recovery under 74 actual repeated prefixes can retain the fresh legal quality gain while removing exposure-driven loops",
+  "implementation": {
+    "audit_translation_structures.py": {
+      "bytes": 5491,
+      "path": "scripts/translation/audit_translation_structures.py",
+      "sha256": "bb4edf46dc0a9932aaf6ebe29e84a65c2713919aa710e4ced969c61106070075"
+    },
+    "build_canonical_rollout_repair_v14_dataset.py": {
+      "bytes": 16678,
+      "path": "scripts/translation/build_canonical_rollout_repair_v14_dataset.py",
+      "sha256": "dec98be17620376735b4a4cb2bba37fa6f89f47a1ab38e07e7c9220efa2eb242"
+    },
+    "evaluate_canonical_rollout_repair_v14.py": {
+      "bytes": 18760,
+      "path": "scripts/translation/evaluate_canonical_rollout_repair_v14.py",
+      "sha256": "8ea4ed03522ce0601f8b7ecef7d757f4b9f29d985692e03301e06ba5fadf15c6"
+    },
+    "evaluate_canonical_sequence_v10_internal.py": {
+      "bytes": 24688,
+      "path": "scripts/translation/evaluate_canonical_sequence_v10_internal.py",
+      "sha256": "d6e0db607df7c2022c002cfc0be9441cb5c5a872fa553bc55d21b78969f92dd3"
+    },
+    "mine_canonical_rollout_repair_v14.py": {
+      "bytes": 14763,
+      "path": "scripts/translation/mine_canonical_rollout_repair_v14.py",
+      "sha256": "a7ffb41e0c54a8101fdf981e0082efe219a1a85c8ad16da9364fa41e9dba418e"
+    },
+    "prepare_canonical_rollout_repair_v14_contract.py": {
+      "bytes": 15813,
+      "path": "scripts/translation/prepare_canonical_rollout_repair_v14_contract.py",
+      "sha256": "4abb0bee9438d931807a9ed7c613f772889c40d759055a48642f5c9dfdf969eb"
+    },
+    "train_canonical_rollout_repair_v14.py": {
+      "bytes": 25618,
+      "path": "scripts/translation/train_canonical_rollout_repair_v14.py",
+      "sha256": "78c9cb8d9cc0b46acf8a2427b8652a58c008cf106d549a75d6a1fee12dafe98b"
+    },
+    "train_marian_distillation.py": {
+      "bytes": 37097,
+      "path": "scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    },
+    "typed_critical_token_policy.py": {
+      "bytes": 20489,
+      "path": "scripts/translation/typed_critical_token_policy.py",
+      "sha256": "ba6e947c24190df46e0346087c077f57f91f018e9df88e096441bc8942c3b82e"
+    }
+  },
+  "initial_checkpoint": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-safety-repair-v12-ja-en-checkpoints/step-0000050/model.safetensors",
+      "sha256": "cf67fb44a4e9a0991c95b5e87578a4427610cc8e4110fbd3bb03909356600f2b"
+    },
+    "path": "Research/translation/models/elanmt-canonical-safety-repair-v12-ja-en-checkpoints/step-0000050",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "source_experiment": "rejected v12 step 50; research initialization only",
+    "training_manifest": {
+      "bytes": 10456,
+      "path": "Research/translation/models/elanmt-canonical-safety-repair-v12-ja-en-checkpoints/step-0000050/mimi_training_manifest.json",
+      "sha256": "68de542ff5476800aab88b075cac05b5e3dd3da21330d15d1d7910a587a9c533"
+    }
+  },
+  "internal_selection": {
+    "baseline": "frozen safe parent",
+    "candidate_steps": [
+      25,
+      50
+    ],
+    "detector_policy": "new exact, typed, or negation-detector cases form a semantic-audit queue and do not by themselves prove a semantic failure",
+    "dual_semantic_audit_required_before_internal_pass": true,
+    "no_q4_or_protected_evaluation_before_semantic_audit": true,
+    "ordering": "pre-semantic eligible checkpoints only; highest mean sentence chrF++, then long-legal chrF++, then recovery preference accuracy",
+    "required_exact_semantic_judges": [
+      "claude-sonnet-5",
+      "claude-opus-5"
+    ],
+    "requirements": {
+      "corpus_chrf_pp_delta_minimum": 0.25,
+      "long_legal_chrf_pp_delta_minimum": 0.2,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "new_repetition_or_generation_limit_failures_maximum": 0,
+      "paired_chrf_pp_90pct_lower_minimum": -0.25,
+      "recovery_preference_accuracy_minimum": 0.9,
+      "recovery_rejected_probability_delta_maximum": 0.0,
+      "worst_stratum_chrf_pp_delta_minimum": -0.5
+    },
+    "selection_uses_protected_outputs": false,
+    "semantic_audit_policy": "compare selected candidate with the safe parent and licensed reference on every new detector-disagreement case; fail closed on any critical-error disagreement; zero new fail-closed semantic failures required",
+    "step_zero_is_diagnostic_only": true,
+    "stop_if_no_checkpoint_is_pre_semantic_eligible": true,
+    "suite": "fresh 768-row Japanese-law test-split suite, excluding every v10/v12 train and validation source and screening both source and target against ten protected suites"
+  },
+  "moe_added": false,
+  "preservation_checkpoint": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "protected_evaluation_authorized": false,
+  "public_upload_authorized": false,
+  "rollout_dataset": {
+    "counts": {
+      "failure_flags": {
+        "exact": 2925,
+        "generation": 74,
+        "negation-detector": 1088,
+        "typed": 2969
+      },
+      "hard": 2048,
+      "hard_strata": {
+        "general:human-alt-parallel": 113,
+        "general:human-kftt-replay": 101,
+        "general:human-tatoeba-bidirectional-agreement-filtered": 36,
+        "general:mimi-shipped-ui-pair": 2,
+        "legal:critical": 219,
+        "legal:general": 296,
+        "legal:long": 411,
+        "legal:negation": 342,
+        "legal:omission-risk": 208,
+        "legal:repetition-risk": 29,
+        "legal:terminology-risk": 268,
+        "same-source-licensed-human-anchor": 23
+      },
+      "recovery": 74,
+      "recovery_reasons": {
+        "third-contiguous-phrase-repetition": 74
+      },
+      "rollouts": 7104
+    },
+    "directory": "Research/translation/work/canonical-rollout-repair-v14-ja-en-rollouts",
+    "hard": {
+      "bytes": 3991371,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en-rollouts/hard.jsonl",
+      "sha256": "ab4d598062d88ee7114cff1e53847cc5c3ddd21c0ea393167a670503af6bbeb1"
+    },
+    "manifest": {
+      "bytes": 3895,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en-rollouts/manifest.json",
+      "sha256": "f93ecd7d724e37f468321cca8fbf3e9ac472ee290bb2f979daa380cb5dddd4e4"
+    },
+    "recovery": {
+      "bytes": 108674,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en-rollouts/recovery.jsonl",
+      "sha256": "687c87e0743ff629cc19e333819c67c853913a527a20a8f07fd1d63495b7156c"
+    },
+    "recovery_target_is_only_eos": true,
+    "rollout_strings_are_positive_targets": false,
+    "rollouts": {
+      "bytes": 4971931,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en-rollouts/rollouts.jsonl",
+      "sha256": "70595a28ea6f2e4c4e7cc6d5be6dc5e242b6f0c4301ae4df19850e120111a793"
+    }
+  },
+  "schema_version": 1,
+  "status": "preregistered-ready-for-one-arm-training",
+  "training": {
+    "batch_size": 4,
+    "checkpoint_steps": [
+      25,
+      50
+    ],
+    "effective_batch_size": 32,
+    "evaluation_batch_size": 16,
+    "evaluation_steps": 25,
+    "frozen_parent_kl_weight": 0.1,
+    "gradient_accumulation": 8,
+    "gradient_checkpointing": false,
+    "l2_to_parent_weight": 1e-05,
+    "learning_rate": 2e-07,
+    "max_source_tokens": 192,
+    "max_steps": 50,
+    "max_target_tokens": 192,
+    "one_arm_only": true,
+    "post_result_hyperparameter_changes_forbidden": true,
+    "recovery_batch_size": 4,
+    "recovery_ranking_target_margin": 1.0,
+    "recovery_ranking_weight": 0.5,
+    "recovery_unlikelihood_weight": 0.25,
+    "scheduled_sampling_probability": 0.2,
+    "scheduled_sampling_weight": 0.25,
+    "seed": 20260808,
+    "warmup_steps": 5,
+    "weight_decay": 0.01
+  },
+  "v12_rejection_final": true,
+  "v13_is_future_evaluator_calibration_only": true
+}

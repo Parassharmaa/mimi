@@ -2428,3 +2428,39 @@ The next arm should train on self-generated bad prefixes with explicit
 EOS/repetition recovery and legal-number/citation counterfactuals. Another
 teacher-forced first-divergence arm or additional model capacity is not
 justified yet.
+
+## V14 rollout-conditioned repair is frozen before training
+
+V14 directly tests the exposure-bias hypothesis from V12. Its 7,104 positive
+training rows are authenticated licensed-human references, while its 768
+fresh legal validation rows exclude every V10/V12 source and both-side screen
+cleanly against all ten protected suites. V12 validation remains evaluation
+history and is never converted into V14 training data.
+
+A deterministic greedy pass over all 7,104 training sources finds 74 genuine
+contiguous repetition loops. V14 preserves each actual decoder prefix and
+repeated next token as negative evidence, then fills a 2,048-row hard budget
+with stable-ranked structural disagreements. The rollout strings never become
+positive targets.
+
+The one frozen arm runs 50 low-rate updates from rejected V12 step 50:
+licensed-reference cross-entropy, 20% one-step scheduled replacement, explicit
+EOS recovery under real repeated prefixes, repeated-token unlikelihood,
+EOS-over-repeat ranking, and frozen-safe-parent KL/L2. This is a decoder-policy
+repair with no additional parameters, experts, inference passes, or bundle
+bytes.
+
+The fresh pre-semantic gate requires +0.25 corpus and mean sentence chrF++,
++0.20 long-legal, a -0.50 worst-stratum floor, non-increasing repeated-token
+probability, at least 0.90 recovery preference, and zero new generation
+failures. V13's calibration is applied prospectively: new exact, typed, or
+negation-detector cases must be judged on identical blinded payloads by exact
+Sonnet 5 and Opus 5. Any disagreement fails closed, and zero new semantic
+critical errors relative to the safe parent are required.
+
+Dataset, rollout, and contract hashes are
+`1cd2e3629513f4662c6c9ffd6854d463bd638f08c8001bdb73027db0dc03d245`,
+`f93ecd7d724e37f468321cca8fbf3e9ac472ee290bb2f979daa380cb5dddd4e4`,
+and `63ae84a0661b3b84aba62232b2c0115fe2ee61b23a07578c6e18717e4f9b4618`.
+No training had started when the contract was written, and no later stage is
+authorized.

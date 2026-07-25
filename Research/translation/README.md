@@ -2146,3 +2146,43 @@ V12 remains rejected. V13 does not authorize training, protected evaluation,
 COMET, q4 conversion, bundling, app changes, release, or upload. The next arm
 must be preregistered around rollout-conditioned bad prefixes and explicit
 EOS/repetition recovery.
+
+## V14 rollout-conditioned repair preregistration
+
+V14 freezes that next arm without changing model capacity. It reuses 7,104
+licensed-human training positives, never trains on V12 validation, and creates
+a new 768-row legal suite whose sources are absent from every V10/V12 split.
+Both source and target are screened against all ten protected suites.
+
+V12 step 50 greedily generated all 7,104 training sources before training was
+authorized. The result contains 74 genuine contiguous repetition loops. The
+stable 2,048-row hard set keeps all 74 and then samples other exact, typed, and
+negation-detector disagreements. Rollouts remain negative/context evidence;
+licensed references are the only positive translation targets.
+
+The single 50-update arm combines:
+
+- 20% one-step scheduled replacement under licensed-reference
+  cross-entropy;
+- EOS recovery under actual free-running repeated prefixes;
+- repeated-token unlikelihood and EOS-over-repeat ranking;
+- frozen-safe-parent KL and L2 retention;
+- no MoE, capacity, decoder, quantization, or bundle change.
+
+Checkpoints 25 and 50 must preserve at least +0.25 mean and corpus chrF++ over
+the safe parent on the fresh suite, maintain long-legal and worst-stratum
+floors, improve the rollout recovery objective, and introduce zero new
+generation failures. Any new lexical detector cases require a second frozen
+stage with identical blinded exact Sonnet 5 and Opus 5 assessment. No
+checkpoint passes internally until dual semantic consensus finds zero new
+fail-closed critical errors.
+
+The dataset, rollout, and training-contract hashes are
+`1cd2e3629513f4662c6c9ffd6854d463bd638f08c8001bdb73027db0dc03d245`,
+`f93ecd7d724e37f468321cca8fbf3e9ac472ee290bb2f979daa380cb5dddd4e4`,
+and `63ae84a0661b3b84aba62232b2c0115fe2ee61b23a07578c6e18717e4f9b4618`.
+See `canonical-rollout-repair-v14-plan-2026-07-26.md`.
+
+No gradient update had run when the contract was written. Q4, COMET,
+protected evaluation, bundling, app changes, release, and public upload remain
+unauthorized.
