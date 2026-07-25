@@ -2569,3 +2569,24 @@ retention. Choose and freeze one optimizer before translation training.
 
 No V16 training is authorized yet. See
 `strategy-active-sequence-risk-v16-2026-07-26.md`.
+
+## V16 has enough hard sequences and measurable safety-objective conflict
+
+The fixed safe-parent diagnostic finds 677 active full-sequence comparisons
+from 2,028 candidates. This includes 228 omissions and 449 repetitions; 169
+corruptions receive a higher length-normalized score than the complete
+licensed reference. Positive targets are licensed human translations, and
+neither validation nor protected rows enter the diagnostic.
+
+MLE aligns positively with both safety objectives on every one of four
+disjoint gradient batches. Omission and repetition gradients conflict on all
+four, with cosine range `-0.161` to `-0.095`. The V16 training contract should
+therefore preserve ordinary MLE and use deterministic symmetric PCGrad only
+between the two sequence-ranking gradients.
+
+This evidence chooses the prospective gradient rule but does not authorize an
+optimizer step. A separate preregistration must bind data, weights, update
+count, validation suites, and gates before training. Full evidence is in
+`active-sequence-risk-v16-diagnostic-report-2026-07-26.md`; the sealed result
+SHA-256 is
+`0272e49d4a6ebd9d87df8b51099beb354510c26f277b4b29b29d9ab98d98978d`.

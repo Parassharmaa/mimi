@@ -2269,3 +2269,23 @@ This is a diagnostic recommendation only. No V16 training contract exists.
 V12, V14, and V15 validation remain regression-only, generated text remains
 negative evidence, and the app/model bundle remains unchanged. See
 `strategy-active-sequence-risk-v16-2026-07-26.md`.
+
+## V16 diagnostic result
+
+The safe-parent diagnostic scores 2,028 full-sequence comparisons and retains
+677 below the frozen `0.25` margin: 228 omission and 449 repetition examples.
+In 169 cases the structurally wrong negative is preferred to the complete
+licensed reference. All positives are licensed human references from
+training-only rows; validation and protected sources are excluded.
+
+Across four disjoint gradient batches, MLE is positively aligned with both
+safety losses. Omission and repetition gradients conflict in all four batches,
+with mean cosine `-0.119` and range `-0.161` to `-0.095`. This selects
+deterministic symmetric PCGrad between only those two safety objectives for
+preregistration; MLE remains unprojected.
+
+The tracked result SHA-256 is
+`0272e49d4a6ebd9d87df8b51099beb354510c26f277b4b29b29d9ab98d98978d`.
+No optimizer step or checkpoint exists, and no V16 training is authorized
+until a separate contract is frozen. The app/model bundle remains unchanged.
+See `active-sequence-risk-v16-diagnostic-report-2026-07-26.md`.
