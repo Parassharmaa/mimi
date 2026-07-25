@@ -1,0 +1,271 @@
+{
+  "app_change_authorized": false,
+  "bundle_creation_authorized": false,
+  "dataset": {
+    "manifest": {
+      "bytes": 13281,
+      "path": "Research/translation/work/canonical-sequence-v10-ja-en/manifest.json",
+      "sha256": "d0eebc93eb4c9237b931293af91d6a1e999bf626420b37d8def15b8290709d38"
+    },
+    "rows": 1024,
+    "suite": "v10 frozen 1,024-row source-disjoint development split; protected-independent but reused for successor selection",
+    "uses_protected_outputs": false,
+    "valid": {
+      "bytes": 1287824,
+      "path": "Research/translation/work/canonical-sequence-v10-ja-en/valid.jsonl",
+      "sha256": "a418a6c49cc24176c763bfa2de0ad63e16602c968888c58cb7374dbcd4e5385f"
+    }
+  },
+  "direction": "ja-en",
+  "exact_q4_conversion_authorized": false,
+  "experiment": "canonical-sequence-v11-ja-en-parent-interpolation",
+  "generation": {
+    "decoding": "greedy",
+    "maximum_source_tokens": 192,
+    "maximum_target_tokens": 192
+  },
+  "hypothesis": "Fine-grained weight interpolation can retain part of v10's generation-quality and long-legal gains while discrete unsafe outputs snap back to the frozen parent.",
+  "implementation": {
+    "evaluate_canonical_sequence_v10_internal.py": {
+      "bytes": 24688,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/evaluate_canonical_sequence_v10_internal.py",
+      "sha256": "d6e0db607df7c2022c002cfc0be9441cb5c5a872fa553bc55d21b78969f92dd3"
+    },
+    "evaluate_canonical_sequence_v11_interpolation.py": {
+      "bytes": 12707,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/evaluate_canonical_sequence_v11_interpolation.py",
+      "sha256": "193015a6c11ef76d1284a1bce6c8c2e8f020d04d43fd9fca6578c652416f011f"
+    },
+    "interpolate_marian_checkpoints.py": {
+      "bytes": 5578,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/interpolate_marian_checkpoints.py",
+      "sha256": "4013056737551b8da93cb5a28be5eea7fa5379261efc3c208f8fdea8cadcee0d"
+    },
+    "marian_mlx.py": {
+      "bytes": 41937,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/marian_mlx.py",
+      "sha256": "661a1eb2a745c40ecbe6d7e042d60eaccee5527897032a3fbe6880b0d68693b3"
+    },
+    "prepare_elanmt_mlx.py": {
+      "bytes": 14941,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/prepare_elanmt_mlx.py",
+      "sha256": "c9ef062db342eea88fa94fde3745a5ce131cd58f66116729b9dcaff06d0e839d"
+    },
+    "run_mlx_marian_benchmark.py": {
+      "bytes": 19518,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/run_mlx_marian_benchmark.py",
+      "sha256": "682f41160bd628414a48775bb7bdcbc470e44c6171a438120968d77315e29f75"
+    }
+  },
+  "interpolation": {
+    "adapted_weights": [
+      0.0625,
+      0.125,
+      0.1875,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75
+    ],
+    "formula": "output = (1 - adapted_weight) * parent + adapted_weight * specialist",
+    "include_prefixes": [
+      "*"
+    ],
+    "no_additional_training": true,
+    "one_grid_only": true,
+    "operation": "linear-checkpoint-interpolation",
+    "post_result_grid_changes_forbidden": true
+  },
+  "interpretation_scope": {
+    "exploratory_model_selection_only": true,
+    "final_quality_claims_forbidden": true,
+    "internal_split_reused_after_v10": true,
+    "protected_evaluation_required_for_any_promotion_claim": true
+  },
+  "next_step_if_internal_gate_passes": {
+    "bits": 4,
+    "comet22_and_two_family_judge_required_if_decision_relevant": true,
+    "exact_q4_conversion_required": true,
+    "group_size": 64,
+    "protected_evaluation_required": true,
+    "protected_suites": [
+      {
+        "bytes": 6629,
+        "path": "Research/translation/benchmark/canary.jsonl",
+        "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+      },
+      {
+        "bytes": 635946,
+        "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+        "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+      },
+      {
+        "bytes": 1919046,
+        "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+        "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+      },
+      {
+        "bytes": 2340716,
+        "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+        "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+      },
+      {
+        "bytes": 953146,
+        "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+        "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+      },
+      {
+        "bytes": 942342,
+        "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+        "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+      },
+      {
+        "bytes": 83633,
+        "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+        "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+      },
+      {
+        "bytes": 357062,
+        "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+        "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+      },
+      {
+        "bytes": 363568,
+        "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+        "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+      },
+      {
+        "bytes": 988395,
+        "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+        "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+      }
+    ]
+  },
+  "parent": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "promotion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "protected_promotion_gates": {
+    "packaging": {
+      "complete_distribution_provenance_required": true,
+      "hard_two_direction_bundle_maximum_bytes": 500000000,
+      "preferred_two_direction_bundle_maximum_bytes": 150000000,
+      "public_hugging_face_only_after_all_gates": true
+    },
+    "quality_each_direction": {
+      "chrf_pp_paired_90pct_lower_minimum": -0.25,
+      "comet22_mean_delta_minimum_for_signal": 0.002,
+      "comet22_paired_90pct_lower_minimum": -0.005,
+      "independent_judge_mean_delta_minimum_for_signal": 0.1,
+      "independent_judge_paired_90pct_lower_minimum": -0.25,
+      "maximum_direct_chrf_pp_regression": 0.5,
+      "maximum_domain_chrf_pp_regression": 0.5,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "minimum_improvement_signals": 2,
+      "sacrebleu_corpus_regression_maximum": 0.1
+    },
+    "runtime": {
+      "peak_resident_bytes_maximum": 250000000,
+      "warm_segment_p95_seconds_maximum_each_direction": 0.175
+    },
+    "safety": {
+      "new_judge_critical_errors_maximum": 0,
+      "new_negation_errors_maximum": 0,
+      "new_number_date_unit_placeholder_errors_maximum": 0,
+      "new_repetition_or_nontermination_failures_maximum": 0,
+      "new_union_critical_errors_maximum": 0
+    }
+  },
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "selection": {
+    "ordering": "eligible checkpoints only; highest mean sentence chrF++, then long-legal chrF++, teacher-slice chrF++, and smaller alpha",
+    "requirements": {
+      "corpus_chrf_pp_delta_minimum": 0.25,
+      "long_legal_chrf_pp_delta_minimum": 0.25,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "new_exact_critical_failures_maximum": 0,
+      "new_negation_failures_maximum": 0,
+      "new_repetition_or_generation_limit_failures_maximum": 0,
+      "new_typed_critical_failures_maximum": 0,
+      "teacher_slice_chrf_pp_delta_minimum": 0.0,
+      "worst_stratum_chrf_pp_delta_minimum": -0.5
+    },
+    "stop_if_no_checkpoint_is_eligible": true,
+    "teacher_gate_change_from_v10": "V10 tested whether supervised updates improved the approved teacher slice by at least 0.50. V11 instead tests retention under interpolation, so teacher non-regression is required. All protected promotion gates remain unchanged.",
+    "uses_protected_outputs": false
+  },
+  "specialist": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-sequence-v10-ja-en-checkpoints/step-0000250/model.safetensors",
+      "sha256": "302d8b808615aff3864ec16e97b9db4e84c1eb5c69d6305f0cb19f9460a6ffa4"
+    },
+    "path": "Research/translation/models/elanmt-canonical-sequence-v10-ja-en-checkpoints/step-0000250",
+    "step": 250,
+    "training_manifest": {
+      "bytes": 17887,
+      "path": "Research/translation/models/elanmt-canonical-sequence-v10-ja-en-checkpoints/step-0000250/mimi_training_manifest.json",
+      "sha256": "409cdc56dc3d49e08c80873dcacd3f86d6d75f68c09a43834d1adf2101347ea9"
+    }
+  },
+  "status": "preregistered-ready-for-interpolation",
+  "stop_rule": "Stop before q4 conversion and protected evaluation unless one frozen interpolation checkpoint passes every internal generation, slice, and safety gate. Stop before app integration, fallback changes, bundle replacement, release, or public upload on any protected quality, safety, runtime, size, or provenance failure.",
+  "v10_evidence": {
+    "contract": {
+      "bytes": 16074,
+      "path": "Research/translation/canonical-sequence-v10-contract-2026-07-25.json",
+      "sha256": "c396811189916db38414d51a2d545137551bedbcbb171fc0ec3ed11cf6a03579"
+    },
+    "rationale": "V10 produced a real aggregate and long-document quality signal but failed strict safety gates. V11 is a frozen, training-free retention study and does not reinterpret v10 as eligible.",
+    "result": {
+      "bytes": 265040,
+      "path": "Research/translation/canonical-sequence-v10-result-2026-07-25.json",
+      "sha256": "f6ae7dc7c68f74cf931e7e4bd06e9a9c5af4a4e1b1f54fecaadb17189106e386"
+    },
+    "specialist_deltas": {
+      "by_stratum": {
+        "general:human-alt-parallel": 0.2546538990610472,
+        "general:human-kftt-replay": 0.8639083827282406,
+        "general:human-tatoeba-bidirectional-agreement-filtered": -0.25602633348482584,
+        "general:mimi-shipped-ui-pair": -0.05156491633278293,
+        "legal:critical": 0.9926102771991125,
+        "legal:general": 1.3430792939677332,
+        "legal:long": 1.272867737551067,
+        "legal:negation": 1.7367567531171915,
+        "legal:omission-risk": 0.048902295131441065,
+        "legal:repetition-risk": -1.1864970176214271,
+        "legal:terminology-risk": 0.9923166281723468,
+        "teacher": 0.19662795827288448
+      },
+      "corpus_chrf_pp": 0.8119401296571951,
+      "long_legal_chrf_pp": 1.272867737551067,
+      "mean_sentence_chrf_pp": 0.858239286280984,
+      "teacher_slice_chrf_pp": 0.19662795827288448,
+      "worst_stratum_chrf_pp": -1.1864970176214271
+    },
+    "specialist_new_failure_counts": {
+      "exact": 16,
+      "generation": 3,
+      "negation": 2,
+      "typed": 13
+    },
+    "specialist_step": 250
+  }
+}

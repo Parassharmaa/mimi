@@ -2030,3 +2030,41 @@ stronger generation policy from a larger, error-stratified, independently
 screened sequence-distillation corpus. Weight interpolation is retained as a
 promising zero-byte retention technique only after that specialist clears a
 generation-level gate.
+
+## V10/V11 larger-data follow-up
+
+V10 freezes 8,192 JA→EN training rows and 1,024 source-disjoint validation
+rows. The train mix is 13.28125% GPT-5.6 canonical sequences unanimously
+approved by exact Sonnet 5 and Opus 5, with the remainder licensed human
+anchors and error-stratified replay. It covers long legal text, negation,
+critical tokens, terminology, omission, repetition risk, ALT, KFTT, Tatoeba,
+and Mimi UI. Every row has provenance and a distributable license. Builder
+screening plus an independent second pass over all 9,216 rows found zero
+source/target overlap with the ten protected suites.
+
+The single 250-step KL/L2 full-parameter arm improves internal JA→EN mean
+sentence chrF++ by +0.8582 and long-legal chrF++ by +1.2729, but introduces 16
+new exact-critical, 13 typed-critical, two negation, and three
+repetition/generation-limit failures. It is rejected before q4 conversion or
+protected testing.
+
+V11 preregisters eight training-free parent/V10 interpolation weights. It is
+explicitly exploratory because it reuses V10's internal split. The 0.375 blend
+is the best safety/quality boundary: +0.2707 mean sentence chrF++, +0.7199
+long-legal chrF++, and -0.2560 worst-stratum change, but four exact-critical,
+three typed-critical, and one generation failure remain. Every alpha introduces
+at least one new safety failure, so V11 is also rejected before q4 or protected
+evaluation.
+
+Machine-readable evidence is in
+`canonical-sequence-v10-contract-2026-07-25.json`,
+`canonical-sequence-v10-result-2026-07-25.json`,
+`canonical-sequence-v11-contract-2026-07-25.json`, and
+`canonical-sequence-v11-result-2026-07-25.json`. The V11 result hashes to
+`835106b8edfa52cd86442474d10b4524c28e5cb240fd710e88281870d25f7089`.
+Bundle creation, app integration, promotion, and public upload remain false;
+the shipped 78 MB-class EN↔JA resources are unchanged.
+
+The next specialist must use a fresh validation split and learn explicit
+critical-token and termination constraints. Increasing capacity or adding MoE
+experts is not warranted until that internal generation-safety gate passes.

@@ -2264,3 +2264,80 @@ error-stratified sequence-distillation set with explicit long-document legal,
 negation, terminology, omission, and repetition coverage. It must produce
 generation-level gains before another interpolation, adapter, or router is
 evaluated.
+
+## V10 error-stratified distillation and V11 interpolation
+
+V10 implemented that larger directional arm without changing the app. Its
+frozen JA→EN corpus contains 8,192 training rows and 1,024 source-disjoint
+validation rows. Training combines 1,088 repeats of 136 GPT-5.6 canonical
+sequences unanimously approved by exact `claude-sonnet-5` and
+`claude-opus-5`, 136 same-source licensed anchors, and 6,968 licensed human
+rows. The synthetic fraction is 13.28125%. Human coverage includes Japanese
+law negation, critical-token, long, terminology, omission, repetition-risk,
+and general strata plus ALT, KFTT, Tatoeba, and Mimi UI. No private reasoning
+trace was requested or retained.
+
+Every row carries source provenance and an effective distributable license:
+CC-BY-2.0-FR, CC-BY-4.0, CC-BY-SA-3.0,
+PDL-1.0-compatible-CC-BY-4.0, or project-owned. The builder screened sources
+and targets against all ten protected suites. A second independent replay over
+all 9,216 train/validation rows found zero protected hits and excluded zero
+additional rows. The authenticated dataset manifest hashes to
+`d0eebc93eb4c9237b931293af91d6a1e999bf626420b37d8def15b8290709d38`.
+
+The one preregistered training arm starts from the shipped-lineage JA→EN
+specialist and runs 250 full-parameter steps at 2e-6, effective batch 32,
+frozen-parent KL 0.10, parent L2 1e-5, and a teacher-sequence weight annealed
+from 4 to 2. The internal result has a real generation-quality signal, but both
+checkpoints fail mandatory safety and slice gates:
+
+| V10 checkpoint | corpus chrF++ delta | mean sentence delta | teacher delta | long legal delta | worst stratum | new exact / typed / negation / generation |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| step 125 | +0.6238 | +0.5628 | -0.0202 | +0.8347 | -0.5755 | 18 / 9 / 1 / 2 |
+| step 250 | +0.8119 | +0.8582 | +0.1966 | +1.2729 | -1.1865 | 16 / 13 / 2 / 3 |
+
+V11 was frozen before creating any blended checkpoint. It is a training-free
+linear interpolation between the safe parent and V10 step 250 at specialist
+weights 0.0625, 0.125, 0.1875, 0.25, 0.375, 0.50, 0.625, and 0.75. Because it
+reuses the V10 internal split after observing V10, it is explicitly exploratory
+model selection, not final evaluation. Its teacher gate is non-regression
+rather than V10's +0.50 improvement requirement; all protected promotion gates
+remain unchanged.
+
+| V11 specialist weight | mean sentence delta | long legal delta | worst stratum | new exact / typed / negation / generation | decision |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 0.0625 | +0.0355 | +0.1877 | -0.2790 | 2 / 1 / 0 / 1 | reject |
+| 0.1250 | +0.0546 | +0.2426 | -0.2070 | 2 / 1 / 0 / 1 | reject |
+| 0.1875 | +0.1448 | +0.4163 | -0.2100 | 2 / 1 / 0 / 2 | reject |
+| 0.2500 | +0.1457 | +0.4919 | -0.3366 | 2 / 2 / 0 / 2 | reject |
+| 0.3750 | +0.2707 | +0.7199 | -0.2560 | 4 / 3 / 0 / 1 | reject |
+| 0.5000 | +0.2874 | +0.7286 | -0.3132 | 5 / 5 / 0 / 3 | reject |
+| 0.6250 | +0.3846 | +0.6713 | -0.8389 | 6 / 8 / 1 / 4 | reject |
+| 0.7500 | +0.6307 | +0.8837 | -0.8389 | 9 / 9 / 1 / 4 | reject |
+
+The 0.375 blend is the clearest boundary: it passes the registered aggregate,
+long-legal, teacher-retention, and worst-stratum quality gates, but still
+introduces four exact-critical, three typed-critical, and one generation
+failure. Even the weakest blend introduces new failures, so no interpolation
+is eligible.
+
+The V10 contract/result hashes are
+`c396811189916db38414d51a2d545137551bedbcbb171fc0ec3ed11cf6a03579`
+and
+`f6ae7dc7c68f74cf931e7e4bd06e9a9c5af4a4e1b1f54fecaadb17189106e386`.
+The V11 contract/result hashes are
+`1041a42a7b912acbce25d5df9734189612956189ad2a2a7ab00ad0915b0ad855`
+and
+`835106b8edfa52cd86442474d10b4524c28e5cb240fd710e88281870d25f7089`.
+Both results keep q4 conversion, protected evaluation, bundle creation, app
+integration, promotion, and public upload unauthorized. No protected output was
+used for V10/V11 selection, no new model was placed in
+`App/Resources/TranslationModels`, and the shipping translator is unchanged.
+
+This closes weight interpolation for this specialist and retires the V10
+validation split from further tuning. A successor should use a newly generated,
+protected-independent corpus with explicit counterfactual critical-token and
+termination examples, plus a constraint-aware objective that penalizes
+structural and generation failures during training. More interpolation or a
+larger/MoE package is not justified until a new specialist clears that
+generation-level safety gate.

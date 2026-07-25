@@ -177,6 +177,11 @@ python3 -m py_compile \
   scripts/translation/build_canonical_pairwise_v8_replay_dataset.py \
   scripts/translation/prepare_canonical_pairwise_v8_contract.py \
   scripts/translation/prepare_canonical_pairwise_v9_contract.py \
+  scripts/translation/build_canonical_sequence_v10_dataset.py \
+  scripts/translation/prepare_canonical_sequence_v10_contract.py \
+  scripts/translation/evaluate_canonical_sequence_v10_internal.py \
+  scripts/translation/prepare_canonical_sequence_v11_contract.py \
+  scripts/translation/evaluate_canonical_sequence_v11_interpolation.py \
   scripts/translation/build_canonical_pairwise_v4_result.py \
   scripts/translation/build_canonical_pairwise_v5_result.py \
   scripts/translation/build_canonical_pairwise_v6_result.py \
