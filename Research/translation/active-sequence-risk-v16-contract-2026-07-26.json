@@ -1,0 +1,282 @@
+{
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "capacity_change": false,
+  "comet_authorized": false,
+  "dataset": {
+    "active": {
+      "bytes": 1122075,
+      "path": "Research/translation/work/active-sequence-risk-v16-ja-en/active.jsonl",
+      "sha256": "ce93785835a7a0c37b6b3661479aef4cc7059c0b1e60f2245c7dfe89a5598e50"
+    },
+    "attribution": {
+      "bytes": 1408854,
+      "path": "Research/translation/work/active-sequence-risk-v16-ja-en/attribution.jsonl",
+      "sha256": "1cad18358c2c1f01e112f67da96d919b3ac1c7943b0e40f6c3a746dff764f62f"
+    },
+    "counts": {
+      "active": 677,
+      "active_omission": 228,
+      "active_repetition": 449,
+      "fresh_valid": 768,
+      "train": 7104,
+      "v12_regression": 1536,
+      "v14_regression": 768,
+      "v15_regression": 768
+    },
+    "directory": "Research/translation/work/active-sequence-risk-v16-ja-en",
+    "distribution_provenance": {
+      "all_positive_targets_are_licensed_human_references": true,
+      "all_rows_have_source_license": true,
+      "all_rows_have_source_provenance": true,
+      "generated_strings_are_positive_targets": false,
+      "negative_strings_are_positive_targets": false,
+      "private_reasoning_traces_used": false
+    },
+    "effective_licenses": [
+      "CC-BY-2.0-FR",
+      "CC-BY-4.0",
+      "CC-BY-SA-3.0",
+      "PDL-1.0-compatible-CC-BY-4.0",
+      "project-owned"
+    ],
+    "exhausted_fresh_strata": [
+      "omission-risk",
+      "repetition-risk"
+    ],
+    "free_form_synthetic_translations_used_as_targets": false,
+    "fresh_valid": {
+      "bytes": 1026852,
+      "path": "Research/translation/work/active-sequence-risk-v16-ja-en/valid.jsonl",
+      "sha256": "511b9d4c52d28307f9ba0be33007e89d62224e8efc61c9626abaff20b3f3639b"
+    },
+    "fresh_valid_strata": {
+      "legal:critical": 128,
+      "legal:general": 345,
+      "legal:long": 192,
+      "legal:negation": 96,
+      "legal:terminology-risk": 7
+    },
+    "manifest": {
+      "bytes": 9397,
+      "path": "Research/translation/work/active-sequence-risk-v16-ja-en/manifest.json",
+      "sha256": "21a3c7e23c190b28bb6d2ded323f3bd1bbde93e8fda44216d44c5be466b25902"
+    },
+    "private_reasoning_traces_used": false,
+    "train": {
+      "bytes": 10484484,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en/train.jsonl",
+      "sha256": "b6a93a017f8dd7dba7c50ba84e09d3525c13dddd7e7a2b5d744f72b074af7fea"
+    },
+    "v12_regression": {
+      "bytes": 1860973,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en/valid.jsonl",
+      "sha256": "8594d49aad5ab4696d5c20a9ffe142729d6381a00c9532268e42e9b70aca4ba6"
+    },
+    "v14_regression": {
+      "bytes": 1049166,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en/valid.jsonl",
+      "sha256": "3228c256ab1b4b8f878edb52f67d977c2f454bc67a6c3e04e07926a5aba4d040"
+    },
+    "v15_regression": {
+      "bytes": 1042202,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en/valid.jsonl",
+      "sha256": "b074c6ca26697e94c42f75ba783b86690b7d6facc81cad94ae35de5561ad798b"
+    }
+  },
+  "decoder_or_bundle_size_change_during_training": false,
+  "diagnostic": {
+    "active_pairs": 677,
+    "mle_is_projected": false,
+    "negative_preferred_pairs": 169,
+    "omission_repetition_gradient_conflict_fraction": 1.0,
+    "optimizer_step_executed_during_diagnostic": false,
+    "result": {
+      "bytes": 9589,
+      "path": "Research/translation/active-sequence-risk-v16-diagnostic-result-2026-07-26.json",
+      "sha256": "0272e49d4a6ebd9d87df8b51099beb354510c26f277b4b29b29d9ab98d98978d"
+    }
+  },
+  "direction": "ja-en",
+  "exact_q4_conversion_authorized": false,
+  "experiment": "active-sequence-risk-v16-ja-en",
+  "human_reviewer_required": false,
+  "hypothesis": "starting from the distributable safe parent, licensed-reference MLE plus active full-sequence omission and repetition ranking can improve held-out legal translation while symmetric PCGrad removes the measured conflict between the two safety objectives",
+  "implementation": {
+    "audit_translation_structures.py": {
+      "bytes": 5491,
+      "path": "scripts/translation/audit_translation_structures.py",
+      "sha256": "bb4edf46dc0a9932aaf6ebe29e84a65c2713919aa710e4ced969c61106070075"
+    },
+    "build_active_sequence_risk_v16_dataset.py": {
+      "bytes": 16201,
+      "path": "scripts/translation/build_active_sequence_risk_v16_dataset.py",
+      "sha256": "7dca22adab2b8f58b88a565230d7d837d2f63fccbb8d2ccee3a65bc522d4d6c8"
+    },
+    "diagnose_active_sequence_risk_v16.py": {
+      "bytes": 23962,
+      "path": "scripts/translation/diagnose_active_sequence_risk_v16.py",
+      "sha256": "9dc0ef32b6f80ea58a82542c4f288cb33c5f82be19c464812cd9930a9602ba67"
+    },
+    "evaluate_active_sequence_risk_v16.py": {
+      "bytes": 19042,
+      "path": "scripts/translation/evaluate_active_sequence_risk_v16.py",
+      "sha256": "0a6f48b9e8d6a272bac742deba1a3d4a197d537c62ed5c5a74206f61f06cd5fb"
+    },
+    "evaluate_canonical_constrained_recovery_v15.py": {
+      "bytes": 21453,
+      "path": "scripts/translation/evaluate_canonical_constrained_recovery_v15.py",
+      "sha256": "59c3cba2bb1446ab4dfd13ba5aae41b2c53ca7e46a89a8e1773297f32e158a3c"
+    },
+    "evaluate_canonical_sequence_v10_internal.py": {
+      "bytes": 24688,
+      "path": "scripts/translation/evaluate_canonical_sequence_v10_internal.py",
+      "sha256": "d6e0db607df7c2022c002cfc0be9441cb5c5a872fa553bc55d21b78969f92dd3"
+    },
+    "prepare_active_sequence_risk_v16_contract.py": {
+      "bytes": 14912,
+      "path": "scripts/translation/prepare_active_sequence_risk_v16_contract.py",
+      "sha256": "1c95108ff02ef3fc5550b961fb4ab56760b831b4584bf5279637f81401b4dc0b"
+    },
+    "train_active_sequence_risk_v16.py": {
+      "bytes": 25368,
+      "path": "scripts/translation/train_active_sequence_risk_v16.py",
+      "sha256": "cbb63c27306d6719ae5b6a6717a6e143d50ffccdd4b307a3a91df330c7b344c9"
+    },
+    "train_marian_distillation.py": {
+      "bytes": 37097,
+      "path": "scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    },
+    "typed_critical_token_policy.py": {
+      "bytes": 20489,
+      "path": "scripts/translation/typed_critical_token_policy.py",
+      "sha256": "ba6e947c24190df46e0346087c077f57f91f018e9df88e096441bc8942c3b82e"
+    }
+  },
+  "initial_checkpoint": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "source_experiment": "distributable safe parent",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "internal_selection": {
+    "baseline": "frozen safe parent",
+    "candidate_steps": [
+      25,
+      50
+    ],
+    "detector_policy": "new exact, typed, or negation-detector cases from any suite form a semantic-audit queue; detectors do not adjudicate semantic correctness",
+    "dual_semantic_audit_required_before_internal_pass": true,
+    "no_q4_comet_or_protected_evaluation_before_semantic_audit": true,
+    "ordering": "pre-semantic eligible checkpoints only; highest fresh mean sentence chrF++, then V14 omission-risk chrF++, then active preference improvement",
+    "required_exact_semantic_judges": [
+      "claude-sonnet-5",
+      "claude-opus-5"
+    ],
+    "requirements": {
+      "active_all_preference_accuracy_delta_minimum": 0.025,
+      "active_fraction_delta_maximum": -0.02,
+      "active_omission_mean_margin_delta_minimum": 0.02,
+      "active_omission_preference_accuracy_delta_minimum": 0.0,
+      "active_repetition_mean_margin_delta_minimum": 0.02,
+      "active_repetition_preference_accuracy_delta_minimum": 0.0,
+      "fresh_corpus_chrf_pp_delta_minimum": 0.2,
+      "fresh_long_legal_chrf_pp_delta_minimum": 0.15,
+      "fresh_mean_sentence_chrf_pp_delta_minimum": 0.2,
+      "fresh_paired_chrf_pp_90pct_lower_minimum": -0.2,
+      "fresh_worst_stratum_chrf_pp_delta_minimum": -0.5,
+      "new_repetition_or_generation_limit_failures_maximum_per_suite": 0,
+      "v12_mean_sentence_chrf_pp_delta_minimum": 0.15,
+      "v12_worst_stratum_chrf_pp_delta_minimum": -0.5,
+      "v14_mean_sentence_chrf_pp_delta_minimum": 0.15,
+      "v14_omission_risk_chrf_pp_delta_minimum": 0.0,
+      "v14_worst_stratum_chrf_pp_delta_minimum": -0.5,
+      "v15_mean_sentence_chrf_pp_delta_minimum": 0.15,
+      "v15_omission_risk_chrf_pp_delta_minimum": 0.0,
+      "v15_worst_stratum_chrf_pp_delta_minimum": -0.5
+    },
+    "selection_uses_protected_outputs": false,
+    "step_zero_is_diagnostic_only": true,
+    "stop_if_no_checkpoint_is_pre_semantic_eligible": true,
+    "suites": {
+      "fresh_v16": "768 source-unique legal examples disjoint from all V10/V12/V14/V15 development sources and protected suites",
+      "v12_regression": "frozen 1,536-row V12 validation suite",
+      "v14_regression": "frozen 768-row V14 validation suite",
+      "v15_regression": "frozen 768-row V15 validation suite"
+    }
+  },
+  "moe_added": false,
+  "pcgrad_formula": {
+    "combined": "g_mle + 0.35*g_o_projected + 0.35*g_r_projected",
+    "condition": "project if original dot product is negative",
+    "deterministic": true,
+    "mle_projection_forbidden": true,
+    "omission": "g_o - dot(g_o,g_r)/norm2(g_r) * g_r",
+    "projection_inputs": "the two original unprojected safety gradients",
+    "repetition": "g_r - dot(g_r,g_o)/norm2(g_o) * g_o",
+    "scope": "omission and repetition gradients only"
+  },
+  "preservation_checkpoint": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "protected_evaluation_authorized": false,
+  "public_upload_authorized": false,
+  "scheduled_sampling_used": false,
+  "schema_version": 1,
+  "status": "preregistered-ready-for-one-arm-training",
+  "training": {
+    "batch_size": 4,
+    "checkpoint_steps": [
+      25,
+      50
+    ],
+    "evaluation_batch_size": 16,
+    "evaluation_steps": 25,
+    "frozen_parent_kl_weight": 0.1,
+    "gradient_accumulation": 1,
+    "gradient_rule": "unprojected-mle-plus-symmetric-pcgrad-between-omission-and-repetition",
+    "l2_to_parent_weight": 1e-05,
+    "learning_rate": 3e-07,
+    "max_source_tokens": 192,
+    "max_steps": 50,
+    "max_target_tokens": 192,
+    "maximum_gradient_norm": 1.0,
+    "omission_weight": 0.35,
+    "one_arm_only": true,
+    "pcgrad_epsilon": 1e-12,
+    "post_result_hyperparameter_changes_forbidden": true,
+    "repetition_weight": 0.35,
+    "risk_batch_size": 4,
+    "seed": 20260823,
+    "sequence_target_margin": 0.25,
+    "warmup_steps": 5,
+    "weight_decay": 0.01
+  },
+  "v12_v14_v15_rejections_final": true
+}

@@ -2590,3 +2590,24 @@ count, validation suites, and gates before training. Full evidence is in
 `active-sequence-risk-v16-diagnostic-report-2026-07-26.md`; the sealed result
 SHA-256 is
 `0272e49d4a6ebd9d87df8b51099beb354510c26f277b4b29b29d9ab98d98978d`.
+
+## V16 freezes one safe-parent PCGrad arm
+
+The preregistered arm keeps MLE unprojected and applies symmetric PCGrad only
+between omission and repetition gradients. It starts from the distributable
+safe parent, uses all 677 active full-sequence comparisons, and adds no
+parameters or inference-time work.
+
+Fresh selection has exhausted the omission/repetition legal reservoir, so
+V16 does not manufacture replacements or reuse held-out rows. Its new
+768-case suite uses the remaining critical, long, negation, terminology, and
+general rows, while the complete V12/V14/V15 suites retain the historical
+omission and repetition gates.
+
+The dataset manifest SHA-256 is
+`21a3c7e23c190b28bb6d2ded323f3bd1bbde93e8fda44216d44c5be466b25902`;
+the frozen contract SHA-256 is
+`4a3c8ee0fa08a97bf9707501cb6c1b4d36d11b70bec58dfe2c16a64b720ff6c9`.
+Training is limited to 50 updates and two checkpoints. Downstream semantic
+judging, q4, COMET, protected evaluation, bundling, app work, release, and
+upload remain unauthorized.

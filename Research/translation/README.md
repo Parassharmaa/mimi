@@ -2289,3 +2289,25 @@ The tracked result SHA-256 is
 No optimizer step or checkpoint exists, and no V16 training is authorized
 until a separate contract is frozen. The app/model bundle remains unchanged.
 See `active-sequence-risk-v16-diagnostic-report-2026-07-26.md`.
+
+## V16 preregistration
+
+One same-size V16 arm is now frozen before training. It starts from the
+distributable safe parent, keeps ordinary licensed-reference MLE unprojected,
+and applies deterministic symmetric PCGrad only between the measured
+conflicting omission and repetition full-sequence gradients. The active set
+contains 228 omission and 449 repetition comparisons; corrupted strings remain
+negative-only.
+
+A new 768-row validation suite excludes all V10/V12/V14/V15 development
+sources and protected material. The exhausted fresh omission/repetition
+reservoir is disclosed rather than reused, so the complete historical V12,
+V14, and V15 suites are mandatory regression barriers.
+
+The dataset manifest SHA-256 is
+`21a3c7e23c190b28bb6d2ded323f3bd1bbde93e8fda44216d44c5be466b25902`;
+the contract SHA-256 is
+`4a3c8ee0fa08a97bf9707501cb6c1b4d36d11b70bec58dfe2c16a64b720ff6c9`.
+Only checkpoints 25 and 50 may be considered. No later semantic, q4, COMET,
+protected, app, release, or upload stage is authorized until every
+pre-semantic gate passes. See `active-sequence-risk-v16-plan-2026-07-26.md`.
