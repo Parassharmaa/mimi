@@ -2341,3 +2341,39 @@ termination examples, plus a constraint-aware objective that penalizes
 structural and generation failures during training. More interpolation or a
 larger/MoE package is not justified until a new specialist clears that
 generation-level safety gate.
+
+## V12 constraint-aware repair: quality passes, safety rejects
+
+V12 uses 7,104 licensed-human JA→EN training rows and a fresh 1,536-row
+validation suite. Every validation source is disjoint from V10, and both sides
+of every row were screened against all ten protected suites. The suite contains
+1,088 stratified legal cases and 448 independent ALT/KFTT/Tatoeba cases. No
+free-form synthetic translation or reasoning trace is used.
+
+Starting from the V11 0.375 boundary checkpoint, the single preregistered arm
+adds token-local unlikelihood, chosen-over-rejected ranking, and frozen-parent
+KL/L2 retention. Both checkpoints pass every aggregate, uncertainty,
+negative-space, long-legal, general, and worst-stratum gate:
+
+| V12 checkpoint | corpus chrF++ | BLEU | mean sentence chrF++ | paired 90% interval | long legal | new exact / typed / negation / generation |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| step 50 | +0.3735 | +0.6327 | +0.3236 | +0.1951 to +0.4443 | +0.3371 | 13 / 7 / 5 / 1 |
+| step 100 | +0.3695 | +0.5840 | +0.3275 | +0.1953 to +0.4645 | +0.2503 | 15 / 8 / 5 / 1 |
+
+Absolute failure counts improve in every category—step 50 resolves 23 exact,
+43 typed, seven negation-policy, and five generation cases—but the frozen rule
+does not allow exchanging old critical failures for new ones. One new
+generation case is a genuine “Article (25)” autoregressive loop. The negation
+audit also reveals detector artifacts around legal `No.` and semantically
+correct “not more than” phrases; those do not rescue the genuine loop and
+number/article errors.
+
+The result hashes to
+`0db46aee124cb3d9e61898630349e61cfa2a1fcecc5d04f591d3f5c5a2a9dcd1`
+and rejects both checkpoints before q4, protected evaluation, COMET, LLM
+judging, bundling, app changes, or upload. The shipped translator remains
+unchanged. The next bounded arm should first calibrate the safety taxonomy,
+then train on model-generated bad prefixes and explicit EOS/repetition
+recovery; teacher-forced first-divergence negatives already have 97.7% chosen
+preference and do not solve exposure-driven loops. See
+`canonical-safety-repair-v12-report-2026-07-26.md`.

@@ -2068,3 +2068,38 @@ the shipped 78 MB-class EN↔JA resources are unchanged.
 The next specialist must use a fresh validation split and learn explicit
 critical-token and termination constraints. Increasing capacity or adding MoE
 experts is not warranted until that internal generation-safety gate passes.
+
+## V12 fresh constraint-aware repair
+
+V12 completed the planned protected-independent repair experiment. Its
+licensed-human corpus has 7,104 training rows and 1,536 fresh validation rows;
+the latter excludes every V10 source and has zero source/target overlap with
+the ten protected suites. Deterministic corruptions provide 23,924 training
+negative pairs and 2,019 negative-validation pairs without making any
+synthetic string a positive target.
+
+The one frozen 100-step arm starts from V11 α=0.375 and combines human-reference
+cross-entropy, token-local unlikelihood, chosen-token ranking, frozen-safe-parent
+KL, and parent L2. Both checkpoints show a positive quality signal:
+
+| checkpoint | corpus chrF++ delta | BLEU delta | mean sentence delta | paired 90% interval | new exact / typed / negation / generation |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| step 50 | +0.3735 | +0.6327 | +0.3236 | +0.1951 to +0.4443 | 13 / 7 / 5 / 1 |
+| step 100 | +0.3695 | +0.5840 | +0.3275 | +0.1953 to +0.4645 | 15 / 8 / 5 / 1 |
+
+Absolute failure counts decrease, but both candidates violate all four
+zero-new-safety-failure gates. The post-result diagnostic confirms one genuine
+nonterminating legal-article loop and several article/number corruptions. It
+also identifies representational and negation-detector false positives that
+must be separated from semantic failures in the next evaluator; they do not
+change V12's rejection.
+
+The contract, result, diagnostic, and detailed literature update are
+`canonical-safety-repair-v12-contract-2026-07-26.json`,
+`canonical-safety-repair-v12-result-2026-07-26.json`,
+`canonical-safety-repair-v12-diagnostic-2026-07-26.json`, and
+`canonical-safety-repair-v12-report-2026-07-26.md`. The result hashes to
+`0db46aee124cb3d9e61898630349e61cfa2a1fcecc5d04f591d3f5c5a2a9dcd1`.
+No q4 conversion, protected evaluation, COMET, LLM judge, bundle replacement,
+app integration, release, or public upload is authorized. The shipped
+translator and fallback are unchanged.

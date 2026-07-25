@@ -182,6 +182,11 @@ python3 -m py_compile \
   scripts/translation/evaluate_canonical_sequence_v10_internal.py \
   scripts/translation/prepare_canonical_sequence_v11_contract.py \
   scripts/translation/evaluate_canonical_sequence_v11_interpolation.py \
+  scripts/translation/build_canonical_safety_repair_v12_dataset.py \
+  scripts/translation/prepare_canonical_safety_repair_v12_contract.py \
+  scripts/translation/train_canonical_safety_repair_v12.py \
+  scripts/translation/evaluate_canonical_safety_repair_v12.py \
+  scripts/translation/diagnose_canonical_safety_repair_v12_failures.py \
   scripts/translation/build_canonical_pairwise_v4_result.py \
   scripts/translation/build_canonical_pairwise_v5_result.py \
   scripts/translation/build_canonical_pairwise_v6_result.py \
