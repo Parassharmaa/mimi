@@ -2553,3 +2553,19 @@ historical hard slices, not merely increase V15's loss weights. V15 stops
 before every semantic, q4, COMET, protected, runtime, bundle, app, release, and
 upload stage. Full evidence is in
 `canonical-constrained-recovery-v15-report-2026-07-26.md`.
+
+## V16 should mine active full-sequence risks from the safe parent
+
+The V15 contrast sets are mostly too easy to supply a useful update. The next
+diagnostic should score a complete licensed reference against a complete
+deletion or structurally bad rollout, retain only low-margin comparisons, and
+start from the safe parent so it does not inherit V12's known failures.
+
+Sequence-level omission contrast and minimum-risk NMT support this direction,
+while hard-negative theory supports mining near the model distribution.
+Conflict-aware gradient methods are only conditional tools: first measure the
+fixed-batch gradient norms and cosines for MLE, omission, rollout, and
+retention. Choose and freeze one optimizer before translation training.
+
+No V16 training is authorized yet. See
+`strategy-active-sequence-risk-v16-2026-07-26.md`.

@@ -2255,3 +2255,17 @@ The sealed result SHA-256 is
 No Sonnet/Opus judging, q4, COMET, protected evaluation, app change, release,
 or upload is authorized. The shipped translator remains unchanged. See
 `canonical-constrained-recovery-v15-report-2026-07-26.md`.
+
+## V16 literature decision
+
+V15's near-zero contrast movement changes the next experiment. The next
+diagnostic starts from the safe parent and scores complete licensed references
+against complete deletion/repetition negatives, keeping only active or
+near-active comparisons. It must also measure MLE, sequence-risk, and retention
+gradient norms/cosines before choosing ordinary weighting or a conflict-aware
+optimizer.
+
+This is a diagnostic recommendation only. No V16 training contract exists.
+V12, V14, and V15 validation remain regression-only, generated text remains
+negative evidence, and the app/model bundle remains unchanged. See
+`strategy-active-sequence-risk-v16-2026-07-26.md`.
