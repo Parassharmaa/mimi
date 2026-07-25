@@ -2464,3 +2464,29 @@ Dataset, rollout, and contract hashes are
 and `63ae84a0661b3b84aba62232b2c0115fe2ee61b23a07578c6e18717e4f9b4618`.
 No training had started when the contract was written, and no later stage is
 authorized.
+
+## V14 improves aggregate quality but fails recovery and omission gates
+
+The registered run completed without a recipe amendment. Against the frozen
+safe parent on 768 fresh legal rows, step 25 gains +0.432 corpus chrF++,
++0.470 mean sentence chrF++, and +0.395 long-legal chrF++. It reduces total
+generation failures from nine to seven and introduces no new generation
+failure. Step 50 keeps +0.301 corpus chrF++ but creates two new loops.
+
+Neither checkpoint is eligible. Both lose 1.142 mean sentence chrF++ on the
+16-row omission-risk stratum, beyond the -0.50 floor. Repeated-token
+probability moves from 0.596 to 0.573 and 0.564, and the EOS-minus-repeat
+margin moves from -7.949 to -7.572 and -7.421, but all 74 recovery cases still
+prefer the repeated token over EOS. Step 50 demonstrates that merely extending
+this recipe worsens translation quality and creates new generation failures.
+
+The result supports using actual free-running prefixes but rejects EOS-only
+recovery as the next production path. A new arm should first test a
+zero-bundle-byte bounded decoder that backtracks to a safe alternate token on
+detected contiguous repetition. If training is attempted, recovery targets
+should be licensed-reference continuations rather than unconditional EOS.
+Omission-risk retention must remain a hard gate.
+
+V14 stops before Sonnet/Opus judging, q4, protected evaluation, COMET, runtime
+comparison, bundling, release, or upload. The result hashes to
+`79ba77a4e540cedd91f1ae30b42b6b29ff0c1b85bb20136b26fdc9042e33bfb9`.

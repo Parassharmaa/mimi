@@ -2186,3 +2186,21 @@ See `canonical-rollout-repair-v14-plan-2026-07-26.md`.
 No gradient update had run when the contract was written. Q4, COMET,
 protected evaluation, bundling, app changes, release, and public upload remain
 unauthorized.
+
+## V14 result: rollout repair rejected
+
+The frozen 50-update run completed and evaluated only checkpoints 25 and 50.
+Step 25 improved the safe parent by +0.432 corpus chrF++, +0.470 mean sentence
+chrF++, and +0.395 long-legal chrF++, while reducing fresh-suite generation
+failures from nine to seven with zero newly introduced loops. It nevertheless
+fails the registered omission-risk floor (-1.142 versus -0.50) and achieves
+0% rather than 90% EOS-over-repeat preference.
+
+Step 50 retains smaller aggregate gains, still has 0% recovery preference, and
+introduces two new generation failures. Neither checkpoint advances to
+semantic judging. Q4, COMET, protected evaluation, runtime comparison,
+bundling, release, and upload were not run.
+
+The result JSON hashes to
+`79ba77a4e540cedd91f1ae30b42b6b29ff0c1b85bb20136b26fdc9042e33bfb9`.
+See `canonical-rollout-repair-v14-report-2026-07-26.md`.
