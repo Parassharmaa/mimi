@@ -55,6 +55,8 @@ def report_rows(path: Path) -> dict[str, dict]:
 
 
 def group_id(identifier: str) -> str:
+    if identifier.startswith("development-accuracy-v1:document:") and ":segment-" in identifier:
+        return identifier.rsplit(":segment-", 1)[0]
     if ":jlt:" in identifier:
         return identifier.split(":tu-", 1)[0]
     if ":alt:SNT." in identifier:
@@ -78,6 +80,10 @@ def split_name(identifier: str, direction: str) -> str:
 def feature_text(source: str) -> str:
     length_bin = min(len(source) // 20, 20)
     return f"{source}\n__MIMI_LENGTH_BIN_{length_bin}__"
+
+
+def is_legal_domain(domain: str) -> bool:
+    return domain in {"ministry-published-legal", "long-document-legal"}
 
 
 def sentence_chrf(hypothesis: str, references: list[str]) -> float:
@@ -179,9 +185,19 @@ def bootstrap_interval(
         [len(row["source"]) >= minimum_source_characters for row in rows]
     )
     deltas = np.where(route, [row["expertDelta"] for row in rows], 0.0)
+    grouped_indices: dict[str, list[int]] = {}
+    for index, row in enumerate(rows):
+        grouped_indices.setdefault(group_id(row["id"]), []).append(index)
+    groups = list(grouped_indices.values())
     generator = np.random.default_rng(seed)
-    indices = generator.integers(0, len(rows), size=(samples, len(rows)))
-    means = deltas[indices].mean(axis=1)
+    means = []
+    for _ in range(samples):
+        indices = [
+            index
+            for _ in groups
+            for index in groups[int(generator.integers(0, len(groups)))]
+        ]
+        means.append(float(deltas[indices].mean()))
     return [float(value) for value in np.quantile(means, [0.025, 0.975])]
 
 
@@ -194,16 +210,29 @@ def main() -> None:
     parser.add_argument("--direction", choices=("en-ja", "ja-en"), required=True)
     parser.add_argument(
         "--training-target",
-        choices=("expert-delta", "legal-domain"),
+        choices=("expert-delta", "legal-domain", "target-domain"),
         default="expert-delta",
+    )
+    parser.add_argument(
+        "--target-domain",
+        help="exact domain label to predict when --training-target=target-domain",
     )
     parser.add_argument("--minimum-domain-precision", type=float, default=0.0)
     parser.add_argument("--canary", type=Path)
     parser.add_argument("--canary-baseline-report", type=Path)
     parser.add_argument("--canary-expert-report", type=Path)
+    parser.add_argument("--external-evaluation-suite", type=Path)
+    parser.add_argument("--external-evaluation-baseline-report", type=Path)
+    parser.add_argument("--external-evaluation-expert-report", type=Path)
     parser.add_argument("--model-output", type=Path)
     parser.add_argument("--bootstrap-samples", type=int, default=10_000)
     parser.add_argument("--seed", type=int, default=20260719)
+    parser.add_argument(
+        "--minimum-split-cases",
+        type=int,
+        default=50,
+        help="minimum directional rows required in each grouped router split",
+    )
     args = parser.parse_args()
     canary_values = (
         args.canary,
@@ -212,12 +241,25 @@ def main() -> None:
     )
     if any(canary_values) and not all(canary_values):
         raise SystemExit("canary suite and both canary reports must be supplied together")
-    if args.bootstrap_samples < 1:
-        raise SystemExit("bootstrap sample count must be positive")
+    external_evaluation_values = (
+        args.external_evaluation_suite,
+        args.external_evaluation_baseline_report,
+        args.external_evaluation_expert_report,
+    )
+    if any(external_evaluation_values) and not all(external_evaluation_values):
+        raise SystemExit(
+            "external evaluation suite and both reports must be supplied together"
+        )
+    if args.bootstrap_samples < 1 or args.minimum_split_cases < 1:
+        raise SystemExit("bootstrap sample count and minimum split cases must be positive")
     if not 0.0 <= args.minimum_domain_precision <= 1.0:
         raise SystemExit("minimum domain precision must be between zero and one")
-    if args.minimum_domain_precision and args.training_target != "legal-domain":
-        raise SystemExit("minimum domain precision requires legal-domain training")
+    if args.training_target == "target-domain" and not args.target_domain:
+        raise SystemExit("target-domain training requires --target-domain")
+    if args.training_target != "target-domain" and args.target_domain:
+        raise SystemExit("--target-domain requires target-domain training")
+    if args.minimum_domain_precision and args.training_target == "expert-delta":
+        raise SystemExit("minimum domain precision requires domain training")
 
     language_direction = {
         "en-ja": ("en-US", "ja-JP"),
@@ -233,7 +275,7 @@ def main() -> None:
         name: [row for row in rows if row["split"] == name]
         for name in ("train", "tune", "test")
     }
-    if any(len(split) < 50 for split in splits.values()):
+    if any(len(split) < args.minimum_split_cases for split in splits.values()):
         raise SystemExit("router split is unexpectedly small")
 
     vectorizer = TfidfVectorizer(
@@ -249,10 +291,12 @@ def main() -> None:
     )
     train_targets = np.array(
         [
-            (
-                row["expertDelta"]
-                if args.training_target == "expert-delta"
-                else float(row["domain"] == "ministry-published-legal")
+            row["expertDelta"]
+            if args.training_target == "expert-delta"
+            else float(
+                is_legal_domain(row["domain"])
+                if args.training_target == "legal-domain"
+                else row["domain"] == args.target_domain
             )
             for row in splits["train"]
         ]
@@ -271,6 +315,14 @@ def main() -> None:
         )
         canary_matrix = vectorizer.transform(
             [feature_text(row["source"]) for row in canary_rows]
+        )
+    external_evaluation_rows = None
+    if all(external_evaluation_values):
+        external_evaluation_rows = align(
+            load_suite(args.external_evaluation_suite, language_direction),
+            report_rows(args.external_evaluation_baseline_report),
+            report_rows(args.external_evaluation_expert_report),
+            f"{args.direction}-external-evaluation",
         )
 
     best: tuple[float, float, float, float, float, Ridge, np.ndarray] | None = None
@@ -326,7 +378,11 @@ def main() -> None:
                     legal_precision = float(
                         np.mean(
                             [
-                                row["domain"] == "ministry-published-legal"
+                                (
+                                    is_legal_domain(row["domain"])
+                                    if args.training_target == "legal-domain"
+                                    else row["domain"] == args.target_domain
+                                )
                                 for row, selected in zip(
                                     splits["tune"], routed, strict=True
                                 )
@@ -417,12 +473,35 @@ def main() -> None:
             threshold,
             minimum_source_characters,
         )
+    external_evaluation_summary = None
+    external_evaluation_predictions = None
+    if external_evaluation_rows is not None:
+        external_evaluation_predictions = regressor.predict(
+            vectorizer.transform(
+                [feature_text(row["source"]) for row in external_evaluation_rows]
+            )
+        )
+        external_evaluation_summary = routed_summary(
+            external_evaluation_rows,
+            external_evaluation_predictions,
+            threshold,
+            minimum_source_characters,
+        )
+        external_evaluation_summary["pairedBootstrap95"] = bootstrap_interval(
+            external_evaluation_rows,
+            external_evaluation_predictions,
+            threshold,
+            minimum_source_characters,
+            samples=args.bootstrap_samples,
+            seed=args.seed,
+        )
 
     router_model = {
         "schemaVersion": 1,
         "format": "mimi-source-expert-router-v1",
         "direction": args.direction,
         "trainingTarget": args.training_target,
+        "targetDomain": args.target_domain,
         "minimumDomainPrecision": args.minimum_domain_precision,
         "features": {
             "analyzer": "unicode-codepoint-character",
@@ -488,6 +567,34 @@ def main() -> None:
         )
         if not np.array_equal(portable_canary_routes, sklearn_canary_routes):
             raise SystemExit("portable router changes a canary route")
+    if external_evaluation_rows is not None:
+        portable_external_predictions = np.array(
+            [
+                portable_router.score(row["source"])
+                for row in external_evaluation_rows
+            ]
+        )
+        portable_score_deltas.extend(
+            np.abs(
+                portable_external_predictions - external_evaluation_predictions
+            ).tolist()
+        )
+        portable_external_routes = np.array(
+            [
+                portable_router.routes_to_expert(row["source"])
+                for row in external_evaluation_rows
+            ]
+        )
+        sklearn_external_routes = (
+            external_evaluation_predictions >= threshold
+        ) & np.array(
+            [
+                len(row["source"]) >= minimum_source_characters
+                for row in external_evaluation_rows
+            ]
+        )
+        if not np.array_equal(portable_external_routes, sklearn_external_routes):
+            raise SystemExit("portable router changes an external evaluation route")
     maximum_portable_score_delta = max(portable_score_deltas, default=0.0)
     if maximum_portable_score_delta > 1e-5:
         raise SystemExit(
@@ -522,9 +629,34 @@ def main() -> None:
                 "path": str(args.expert_report.resolve()),
                 "sha256": sha256(args.expert_report),
             },
+            "externalEvaluation": (
+                {
+                    "suite": {
+                        "path": str(args.external_evaluation_suite.resolve()),
+                        "sha256": sha256(args.external_evaluation_suite),
+                    },
+                    "baselineReport": {
+                        "path": str(
+                            args.external_evaluation_baseline_report.resolve()
+                        ),
+                        "sha256": sha256(
+                            args.external_evaluation_baseline_report
+                        ),
+                    },
+                    "expertReport": {
+                        "path": str(
+                            args.external_evaluation_expert_report.resolve()
+                        ),
+                        "sha256": sha256(args.external_evaluation_expert_report),
+                    },
+                }
+                if external_evaluation_rows is not None
+                else None
+            ),
         },
         "splitContract": {
             "grouped": ["JLT law", "ALT document"],
+            "minimumSplitCases": args.minimum_split_cases,
             "buckets": {"train": "0-49", "tune": "50-74", "test": "75-99"},
             "counts": {name: len(split) for name, split in splits.items()},
             "domains": {
@@ -535,6 +667,7 @@ def main() -> None:
         "router": {
             "features": "source-only TF-IDF character 2-5 grams plus source-length bin",
             "trainingTarget": args.training_target,
+            "targetDomain": args.target_domain,
             "minimumDomainPrecision": args.minimum_domain_precision,
             "maximumFeatures": 16_384,
             "ridgeAlpha": alpha,
@@ -557,6 +690,8 @@ def main() -> None:
         "tuningConstraint": "non-negative mean sentence chrF++ delta on product canary",
         "test": test_summary,
         "canary": canary_summary,
+        "externalEvaluation": external_evaluation_summary,
+        "bootstrapGrouping": "source/document group_id with replacement",
         "decision": {
             "passesHeldoutRouterAblation": (
                 test_summary["pairedBootstrap95"][0] > 0
@@ -564,6 +699,10 @@ def main() -> None:
                     canary_summary is None
                     or canary_summary["meanSentenceChrFPlusPlusDelta"] >= 0
                 )
+            ),
+            "passesExternalEvaluation": (
+                external_evaluation_summary is not None
+                and external_evaluation_summary["pairedBootstrap95"][0] > 0
             ),
             "doesNotAuthorizeAppIntegration": True,
         },
@@ -575,7 +714,12 @@ def main() -> None:
     )
     print(
         json.dumps(
-            {"tuning": tune_summary, "test": test_summary, "canary": canary_summary},
+            {
+                "tuning": tune_summary,
+                "test": test_summary,
+                "canary": canary_summary,
+                "externalEvaluation": external_evaluation_summary,
+            },
             ensure_ascii=False,
             indent=2,
             sort_keys=True,
