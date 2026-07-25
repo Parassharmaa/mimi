@@ -2311,3 +2311,22 @@ the contract SHA-256 is
 Only checkpoints 25 and 50 may be considered. No later semantic, q4, COMET,
 protected, app, release, or upload stage is authorized until every
 pre-semantic gate passes. See `active-sequence-risk-v16-plan-2026-07-26.md`.
+
+## V16 result: active sequence-risk arm rejected
+
+Both registered V16 checkpoints stop before semantic judging. Step 50 improves
+fresh corpus chrF++ by `+0.085`, mean sentence chrF++ by `+0.049`, long-legal
+chrF++ by `+0.200`, and V14/V15 mean sentence chrF++ by `+0.110`/`+0.078`.
+It creates no new repetition or generation-limit failure.
+
+The gains are too small and incomplete. Fresh terminology loses `0.767`,
+V12 mean sentence chrF++ loses `0.007`, active-pair preference improves only
+`0.0059`, and omission/repetition mean margins move only
+`+0.0010`/`+0.0067`. PCGrad detected conflicts in 46 of 50 updates and
+resolved their sign, so the failure is insufficient behavioral movement, not
+an inactive implementation.
+
+The sealed result SHA-256 is
+`fd986b7099b72affd7a9dc3d51c1413911b087c0d7a21a044c95f24f74f646c1`.
+No Sonnet/Opus judging, q4, COMET, protected evaluation, app change, release,
+or upload is authorized. See `active-sequence-risk-v16-report-2026-07-26.md`.

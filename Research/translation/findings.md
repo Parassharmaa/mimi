@@ -2611,3 +2611,21 @@ the frozen contract SHA-256 is
 Training is limited to 50 updates and two checkpoints. Downstream semantic
 judging, q4, COMET, protected evaluation, bundling, app work, release, and
 upload remain unauthorized.
+
+## V16 PCGrad works mechanically but the bounded update is insufficient
+
+The optimizer sees an omission/repetition conflict in 46 of 50 updates and
+makes every post-rule cosine positive. Step 50 nevertheless moves active-pair
+preference by only `+0.0059`, omission margin by `+0.0010`, and repetition
+margin by `+0.0067`, all below the frozen gates.
+
+Translation movement is also too small: fresh corpus/mean sentence chrF++
+rise `+0.085`/`+0.049`, V14/V15 means rise `+0.110`/`+0.078`, and V12 mean
+falls `0.007`. The fresh seven-row terminology slice loses `0.767`. No new
+generation-limit failure appears, but exact/typed detector disagreements would
+still require semantic review if the numeric gates had passed.
+
+V16 is rejected at result SHA-256
+`fd986b7099b72affd7a9dc3d51c1413911b087c0d7a21a044c95f24f74f646c1`.
+Increasing weights, learning rate, or update count now would be a new
+experiment, not a continuation of the preregistered arm.
