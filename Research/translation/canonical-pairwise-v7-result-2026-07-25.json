@@ -1,0 +1,138 @@
+{
+  "app_change_authorized": false,
+  "candidate": {
+    "directory": "Research/translation/models/elanmt-canonical-pairwise-v7-ja-en",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v7-ja-en/model.safetensors",
+      "sha256": "acd7e6379809b26552fb2aa880cae4a0c7f1eb7778fa0594e030e3e67284e903"
+    },
+    "training_manifest": {
+      "bytes": 5727,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v7-ja-en/mimi_automated_preference_manifest.json",
+      "sha256": "aa72a3bbfe1be4a9e2257a3950e3358a91e09da8f2803b97f0eb141599a927b1"
+    }
+  },
+  "contract": {
+    "bytes": 12386,
+    "path": "Research/translation/canonical-pairwise-v7-contract-v2-2026-07-25.json",
+    "sha256": "d2e0a670dc126069ff50431ec4dfb3650ea555fc7def9785064e1bdc3a89a73b"
+  },
+  "created_at": "2026-07-25T16:46:22.630184Z",
+  "decision": "Convert only this validation-selected checkpoint to exact MLX q4/group-64; protected evaluation remains separately gated.",
+  "experiment": "canonical-pairwise-preference-claude5-v7-ja-en",
+  "internal_gate": {
+    "checks": [
+      {
+        "actual": 40,
+        "name": "trained-checkpoint",
+        "passed": true,
+        "required": "step > 0"
+      },
+      {
+        "actual": 0.8787878787878788,
+        "name": "relative-pair-accuracy",
+        "passed": true,
+        "required": 0.8
+      },
+      {
+        "actual": 0.004048709616516576,
+        "name": "relative-margin",
+        "passed": true,
+        "required": "> 0.0"
+      }
+    ],
+    "passed": true
+  },
+  "promotion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "protected_evaluation_run": null,
+  "public_upload_authorized": false,
+  "quantization_authorized": true,
+  "quantization_run": null,
+  "schema_version": 1,
+  "status": "internal-preference-gate-passed",
+  "training": {
+    "best": {
+      "last_train_objective": {
+        "chosen_sft_loss": 1.0816231966018677,
+        "l2_to_parent": 0.00037109432741999626,
+        "preference_loss": 0.6851868629455566,
+        "relative_margin": 0.16050684452056885
+      },
+      "loss": 0.6929447542537343,
+      "pairs": 33,
+      "policy_pair_accuracy": 0.030303030303030304,
+      "relative_margin": 0.004048709616516576,
+      "relative_pair_accuracy": 0.8787878787878788,
+      "step": 40
+    },
+    "history": [
+      {
+        "loss": 0.6931471824645996,
+        "pairs": 33,
+        "policy_pair_accuracy": 0.030303030303030304,
+        "relative_margin": 0.0,
+        "relative_pair_accuracy": 0.0,
+        "step": 0
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 0.8856928944587708,
+          "l2_to_parent": 6.280279922066256e-05,
+          "preference_loss": 0.6911653876304626,
+          "relative_margin": 0.04001248627901077
+        },
+        "loss": 0.6930745262088198,
+        "pairs": 33,
+        "policy_pair_accuracy": 0.030303030303030304,
+        "relative_margin": 0.001452648729989023,
+        "relative_pair_accuracy": 0.8787878787878788,
+        "step": 10
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.2153868675231934,
+          "l2_to_parent": 0.00020555948140099645,
+          "preference_loss": 0.6808875799179077,
+          "relative_margin": 0.2479882538318634
+        },
+        "loss": 0.693005180720127,
+        "pairs": 33,
+        "policy_pair_accuracy": 0.030303030303030304,
+        "relative_margin": 0.0028400326317006893,
+        "relative_pair_accuracy": 0.8787878787878788,
+        "step": 20
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.0496211051940918,
+          "l2_to_parent": 0.0003221783845219761,
+          "preference_loss": 0.6908847689628601,
+          "relative_margin": 0.04571524262428284
+        },
+        "loss": 0.6929603977636858,
+        "pairs": 33,
+        "policy_pair_accuracy": 0.030303030303030304,
+        "relative_margin": 0.003735963593829762,
+        "relative_pair_accuracy": 0.8787878787878788,
+        "step": 30
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.0816231966018677,
+          "l2_to_parent": 0.00037109432741999626,
+          "preference_loss": 0.6851868629455566,
+          "relative_margin": 0.16050684452056885
+        },
+        "loss": 0.6929447542537343,
+        "pairs": 33,
+        "policy_pair_accuracy": 0.030303030303030304,
+        "relative_margin": 0.004048709616516576,
+        "relative_pair_accuracy": 0.8787878787878788,
+        "step": 40
+      }
+    ],
+    "trainable_parameters": 61047296
+  }
+}

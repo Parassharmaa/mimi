@@ -1,0 +1,168 @@
+{
+  "app_change_authorized": false,
+  "continue_this_recipe": false,
+  "contract": {
+    "bytes": 10610,
+    "path": "Research/translation/canonical-pairwise-v5-contract-2026-07-25.json",
+    "sha256": "db97c807d64949b91c095e74919aba2ff863f4bf9c3cabe7be04d7d418154766"
+  },
+  "decision": "Stop v5 before MLX conversion or protected held-out evaluation. Do not integrate, publish, or claim improvement.",
+  "experiment": "canonical-pairwise-preference-full-v5-ja-en",
+  "human_reviewers_used": false,
+  "internal_gate": {
+    "checks": [
+      {
+        "actual": 0.6,
+        "name": "relative-pair-accuracy",
+        "passed": false,
+        "required": 0.8
+      },
+      {
+        "actual": 0.004509344696998596,
+        "name": "relative-margin",
+        "passed": true,
+        "required": "> 0.0"
+      }
+    ],
+    "passed": false
+  },
+  "mlx_conversion_performed": false,
+  "next_hypothesis": "Use deterministic inverse-frequency domain sampling because all legal/Wikipedia/document pairs improved while scarce conversation/UI and two news pairs account for all four failures.",
+  "per_pair_diagnostic": {
+    "artifact": {
+      "bytes": 8970,
+      "path": "Research/translation/results/canonical-pairwise-v5-ja-en-valid-margins.json",
+      "sha256": "757aff0412d6a3a76b00e4a8d081367d1dafd3e2615a57df5eae6fc40279e9ef"
+    },
+    "non_improved": [
+      {
+        "domain": "human-translated-news",
+        "relative_margin": -0.0013256669044494629,
+        "source_id": "gpt56-pilot:ja-en:alt:4bbb3e0403c644f0a283"
+      },
+      {
+        "domain": "mimi-product-ui",
+        "relative_margin": -0.0020909905433654785,
+        "source_id": "gpt56-pilot:ja-en:ui:bb19536c08e63d2a5b95"
+      },
+      {
+        "domain": "conversational",
+        "relative_margin": -0.0046482086181640625,
+        "source_id": "gpt56-pilot:ja-en:tatoeba:8e52c82d77b0a1ca9889"
+      },
+      {
+        "domain": "human-translated-news",
+        "relative_margin": -0.001865983009338379,
+        "source_id": "gpt56-pilot:ja-en:alt:35492ff5d0e5db595ea1"
+      }
+    ],
+    "summary": {
+      "improved": 6,
+      "maximum_relative_margin": 0.027895689010620117,
+      "mean_relative_margin": 0.004509717226028442,
+      "minimum_relative_margin": -0.0046482086181640625,
+      "pairs": 10,
+      "relative_pair_accuracy": 0.6
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "protected_held_out_evaluation_performed": false,
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "status": "internal-preference-gate-rejected",
+  "teacher_authentication": "Codex cached ChatGPT authentication; no OpenAI API key used",
+  "training": {
+    "best": {
+      "last_train_objective": {
+        "chosen_sft_loss": 1.1416523456573486,
+        "l2_to_parent": 0.0007141688838601112,
+        "preference_loss": 0.6931212544441223,
+        "relative_margin": 0.0008106976747512817
+      },
+      "loss": 0.692921781539917,
+      "pairs": 10,
+      "policy_pair_accuracy": 0.1,
+      "relative_margin": 0.004509344696998596,
+      "relative_pair_accuracy": 0.6,
+      "step": 40
+    },
+    "history": [
+      {
+        "loss": 0.6931471824645996,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0,
+        "relative_pair_accuracy": 0.0,
+        "step": 0
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.4593515396118164,
+          "l2_to_parent": 9.465269977226853e-05,
+          "preference_loss": 0.6916407346725464,
+          "relative_margin": 0.030343562364578247
+        },
+        "loss": 0.6930653333663941,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0016375899314880372,
+        "relative_pair_accuracy": 0.6,
+        "step": 10
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.7542816400527954,
+          "l2_to_parent": 0.0003675572806969285,
+          "preference_loss": 0.6909798979759216,
+          "relative_margin": 0.04446546733379364
+        },
+        "loss": 0.6929847478866578,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.00324934720993042,
+        "relative_pair_accuracy": 0.6,
+        "step": 20
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.65628981590271,
+          "l2_to_parent": 0.0006083891494199634,
+          "preference_loss": 0.6889762878417969,
+          "relative_margin": 0.08389443904161453
+        },
+        "loss": 0.6929382801055908,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.004178917407989502,
+        "relative_pair_accuracy": 0.6,
+        "step": 30
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.1416523456573486,
+          "l2_to_parent": 0.0007141688838601112,
+          "preference_loss": 0.6931212544441223,
+          "relative_margin": 0.0008106976747512817
+        },
+        "loss": 0.692921781539917,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.004509344696998596,
+        "relative_pair_accuracy": 0.6,
+        "step": 40
+      }
+    ],
+    "manifest": {
+      "bytes": 6009,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v5-ja-en/mimi_automated_preference_manifest.json",
+      "sha256": "f97e64615cabd019acbb9bf26d1fec6c66e9062c254475c89583b6daf98706c1"
+    },
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v5-ja-en/model.safetensors",
+      "sha256": "44d2fad49090bbf0638559cbb1c07522368e3b6d6590d29c025392a19a328467"
+    },
+    "trainable_parameters": 61047296
+  }
+}

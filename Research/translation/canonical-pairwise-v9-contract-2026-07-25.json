@@ -1,0 +1,407 @@
+{
+  "app_change_authorized": false,
+  "bundle_creation_authorized": false,
+  "conversion": {
+    "bits": 4,
+    "exact_shipping_quantization_required_before_claim": true,
+    "format": "MLX affine q4",
+    "group_size": 64,
+    "hard_two_direction_bundle_maximum_bytes": 500000000,
+    "preferred_two_direction_bundle_maximum_bytes": 150000000,
+    "unchanged_en_ja_current_model_plus_candidate_ja_en": true
+  },
+  "datasets": {
+    "preferences": {
+      "decontamination": {
+        "character_ngram_size": 5,
+        "maximum_jaccard_exclusive": 0.8,
+        "protected_suites": [
+          {
+            "path": "Research/translation/benchmark/canary.jsonl",
+            "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+          },
+          {
+            "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+            "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+          },
+          {
+            "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+            "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+          },
+          {
+            "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+            "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+          },
+          {
+            "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+            "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+          },
+          {
+            "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+            "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+          },
+          {
+            "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+            "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+          },
+          {
+            "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+            "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+          },
+          {
+            "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+            "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+          },
+          {
+            "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+            "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+          }
+        ],
+        "screened_fields": [
+          "source",
+          "chosen",
+          "rejected"
+        ],
+        "train_validation_source_overlap": false
+      },
+      "directory": "Research/translation/work/canonical-pairwise-v7-ja-en-claude5",
+      "effective_licenses": {
+        "train": {
+          "CC-BY-2.0-FR": 15,
+          "CC-BY-4.0": 57,
+          "CC-BY-SA-3.0": 35,
+          "PDL-1.0-compatible-CC-BY-4.0": 16,
+          "project-owned": 13
+        },
+        "valid": {
+          "CC-BY-2.0-FR": 4,
+          "CC-BY-4.0": 14,
+          "CC-BY-SA-3.0": 8,
+          "PDL-1.0-compatible-CC-BY-4.0": 4,
+          "project-owned": 3
+        }
+      },
+      "files": {
+        "manifest.json": {
+          "bytes": 5371,
+          "path": "Research/translation/work/canonical-pairwise-v7-ja-en-claude5/manifest.json",
+          "sha256": "ae72f0b4c8fa42cb21c4c6e0c1f1e75fd998cc5b2415c4977fcb2990613631fb"
+        },
+        "train.jsonl": {
+          "bytes": 333668,
+          "path": "Research/translation/work/canonical-pairwise-v7-ja-en-claude5/train.jsonl",
+          "sha256": "5cf7fee23d1a94dc81be4df05a1309a5f28069af0ca45c7020eca06d8af97cb0"
+        },
+        "valid.jsonl": {
+          "bytes": 81800,
+          "path": "Research/translation/work/canonical-pairwise-v7-ja-en-claude5/valid.jsonl",
+          "sha256": "724aa74a5a52558505739b8a9002f095c28de043f3c689664814f2f58fc9fce3"
+        }
+      },
+      "valid_pairs": 33
+    },
+    "replay": {
+      "decontamination": {
+        "character_ngram_size": 5,
+        "maximum_jaccard_exclusive": 0.8,
+        "normalization": "Unicode NFKC, casefold, remove whitespace",
+        "preference_replay_source_overlap": false,
+        "protected_suites": [
+          {
+            "bytes": 6629,
+            "path": "Research/translation/benchmark/canary.jsonl",
+            "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+          },
+          {
+            "bytes": 635946,
+            "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+            "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+          },
+          {
+            "bytes": 1919046,
+            "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+            "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+          },
+          {
+            "bytes": 2340716,
+            "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+            "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+          },
+          {
+            "bytes": 953146,
+            "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+            "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+          },
+          {
+            "bytes": 942342,
+            "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+            "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+          },
+          {
+            "bytes": 83633,
+            "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+            "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+          },
+          {
+            "bytes": 357062,
+            "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+            "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+          },
+          {
+            "bytes": 363568,
+            "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+            "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+          },
+          {
+            "bytes": 988395,
+            "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+            "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+          }
+        ],
+        "screened_fields": [
+          "source",
+          "target"
+        ],
+        "train_valid_source_overlap": false
+      },
+      "directory": "Research/translation/work/canonical-pairwise-v8-ja-en-replay",
+      "effective_licenses": {
+        "train": {
+          "CC-BY-2.0-FR": 17,
+          "CC-BY-4.0": 17,
+          "CC-BY-SA-3.0": 17,
+          "PDL-1.0-compatible-CC-BY-4.0": 68,
+          "project-owned": 17
+        },
+        "valid": {
+          "CC-BY-2.0-FR": 16,
+          "CC-BY-4.0": 16,
+          "CC-BY-SA-3.0": 16,
+          "PDL-1.0-compatible-CC-BY-4.0": 64,
+          "project-owned": 16
+        }
+      },
+      "files": {
+        "manifest.json": {
+          "bytes": 8229,
+          "path": "Research/translation/work/canonical-pairwise-v8-ja-en-replay/manifest.json",
+          "sha256": "a1bae7e24c6fff49d92118b1ed4948cdc5e431d479bb28c863a59dca8380d391"
+        },
+        "replay-train.jsonl": {
+          "bytes": 139715,
+          "path": "Research/translation/work/canonical-pairwise-v8-ja-en-replay/replay-train.jsonl",
+          "sha256": "b2cdf9a75831cdbe04ba7c79ce3785dca6cadf1620643a606bc3d400f8fccb74"
+        },
+        "replay-valid.jsonl": {
+          "bytes": 130182,
+          "path": "Research/translation/work/canonical-pairwise-v8-ja-en-replay/replay-valid.jsonl",
+          "sha256": "19398e9a75860b16f63cd088ff7ebebb84d934cb0d7c15f64cc0d3aef8f3b784"
+        }
+      },
+      "valid_rows": 128
+    }
+  },
+  "direction": "ja-en",
+  "experiment": "parent-specialist-interpolation-v9-ja-en",
+  "held_out_evaluation": {
+    "baseline": "current Mimi exact q4 pair",
+    "benchmarks": {
+      "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl": {
+        "bytes": 347454,
+        "path": "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl",
+        "sha256": "d5cef0834f897a2ee2179844e8eec9e0e5de4db0aaaf0d0265cee041b699dbba"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.jsonl": {
+        "bytes": 357062,
+        "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+        "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.results-summary.json": {
+        "bytes": 4332,
+        "path": "Research/translation/benchmark/development-accuracy-v1.results-summary.json",
+        "sha256": "e78322ade88f82bbcf4a2767cb3e2839de17abe9a5979b5f06bdb95b777f83a8"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.segments.jsonl": {
+        "bytes": 363568,
+        "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+        "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+      }
+    },
+    "candidate": "current Mimi EN-to-JA exact q4 plus selected v4 JA-to-EN exact q4",
+    "documents": {
+      "long_document_slices_required": true,
+      "segment_then_join_and_direct_evaluation_required": true
+    },
+    "licensing": {
+      "complete_distribution_provenance_required": true,
+      "per_row_attribution_sidecar_required": true,
+      "public_hugging_face_only_after_all_gates": true
+    },
+    "quality_each_direction": {
+      "chrf_pp_paired_90pct_lower_minimum": -0.25,
+      "comet22_mean_delta_minimum_for_signal": 0.002,
+      "comet22_paired_90pct_lower_minimum": -0.005,
+      "independent_judge_mean_delta_minimum_for_signal": 0.1,
+      "independent_judge_paired_90pct_lower_minimum": -0.25,
+      "maximum_direct_chrf_pp_regression": 0.5,
+      "maximum_domain_chrf_pp_regression": 0.5,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "minimum_improvement_signals": 2,
+      "sacrebleu_corpus_regression_maximum": 0.1
+    },
+    "runtime": {
+      "peak_resident_bytes_maximum": 250000000,
+      "warm_segment_p95_seconds_maximum_each_direction": 0.175
+    },
+    "safety": {
+      "new_judge_critical_errors_maximum": 0,
+      "new_negation_errors_maximum": 0,
+      "new_number_date_unit_placeholder_errors_maximum": 0,
+      "new_repetition_or_nontermination_failures_maximum": 0,
+      "new_union_critical_errors_maximum": 0
+    }
+  },
+  "hypothesis": "The v7 specialist has adequate preference accuracy but failed protected retention, while v8 replay training preserved lexical metrics but lost preference accuracy. Linear interpolation may remain in the shared low-loss basin and recover a validation-qualified retention/adaptation tradeoff without increasing parameters, runtime, or bundle size.",
+  "implementation": {
+    "audit_translation_structures": {
+      "bytes": 5491,
+      "path": "scripts/translation/audit_translation_structures.py",
+      "sha256": "bb4edf46dc0a9932aaf6ebe29e84a65c2713919aa710e4ced969c61106070075"
+    },
+    "build_canonical_pairwise_v9_result": {
+      "bytes": 4695,
+      "path": "scripts/translation/build_canonical_pairwise_v9_result.py",
+      "sha256": "4597ca808e03eee7bd4e27ed469fa5547e181665308e5f23cd40d90f2ce0e77c"
+    },
+    "evaluate_gpt56_student_continuation": {
+      "bytes": 49659,
+      "path": "scripts/translation/evaluate_gpt56_student_continuation.py",
+      "sha256": "520362345ec199784e2af74d9dae8d94ddfc7d79bc7523413b0b1772f7b5087c"
+    },
+    "prepare_canonical_pairwise_v9_contract": {
+      "bytes": 9971,
+      "path": "scripts/translation/prepare_canonical_pairwise_v9_contract.py",
+      "sha256": "ddf725155d93af016ad4c4c426900216deea94ba35eee03735396760efb78205"
+    },
+    "runner": {
+      "bytes": 16908,
+      "path": "scripts/translation/run_marian_parent_specialist_interpolation.py",
+      "sha256": "8a96bb9069a9f9e9d1c58b35f32ad82ad28d9f5db53cd6ab89734c6ef17aabb7"
+    },
+    "train_marian_claude5_preference": {
+      "bytes": 16857,
+      "path": "scripts/translation/train_marian_claude5_preference.py",
+      "sha256": "970cfc2e693e316a72c44a36253d2b72175e44c0a0a72e046a7730a83afe7926"
+    },
+    "train_marian_claude5_preference_replay": {
+      "bytes": 29581,
+      "path": "scripts/translation/train_marian_claude5_preference_replay.py",
+      "sha256": "514122acdb1452773a558b4adb636a8163b717c0145f702da4cb8bfef97a1d20"
+    },
+    "train_marian_dqo": {
+      "bytes": 20448,
+      "path": "scripts/translation/train_marian_dqo.py",
+      "sha256": "6b2078436d2314180a5a0da77ec732f22bcc8b4f7951fe410d86ffd23d5b39c9"
+    },
+    "typed_critical_token_policy": {
+      "bytes": 20489,
+      "path": "scripts/translation/typed_critical_token_policy.py",
+      "sha256": "ba6e947c24190df46e0346087c077f57f91f018e9df88e096441bc8942c3b82e"
+    }
+  },
+  "internal_selection_gate": {
+    "legal_replay_chrf_pp_delta_minimum": -0.1,
+    "new_exact_critical_maximum": 0,
+    "new_negation_maximum": 0,
+    "new_repetition_or_nontermination_maximum": 0,
+    "new_typed_critical_maximum": 0,
+    "padding_after_eos_ignored": true,
+    "relative_margin_minimum_exclusive": 0.0,
+    "relative_pair_accuracy_minimum": 0.8,
+    "replay_chrf_pp_delta_minimum": -0.1,
+    "replay_token_nll_delta_maximum": 0.01
+  },
+  "interpolation": {
+    "additional_inference_parameters": 0,
+    "diagnostic_anchor_alphas": [
+      0.0,
+      1.0
+    ],
+    "formula": "theta(alpha) = theta(parent) + alpha * (theta(v7) - theta(parent))",
+    "selectable_alphas": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "selection": "among eligible selectable alphas: highest relative-pair accuracy, then relative margin, legal replay chrF++, then lower alpha",
+    "training_steps": 0
+  },
+  "interpolation_authorized": true,
+  "literature_basis": [
+    {
+      "title": "Revisiting Checkpoint Averaging for Neural Machine Translation",
+      "url": "https://aclanthology.org/2022.findings-aacl.18/",
+      "use": "NMT checkpoint and weighted parameter averaging"
+    },
+    {
+      "title": "Model soups",
+      "url": "https://proceedings.mlr.press/v162/wortsman22a.html",
+      "use": "single-model weight averaging without inference overhead"
+    },
+    {
+      "title": "Robust fine-tuning of zero-shot models",
+      "url": "https://arxiv.org/abs/2109.01903",
+      "use": "parent/fine-tuned interpolation for robustness retention"
+    }
+  ],
+  "parent": {
+    "license": "CC-BY-SA-4.0",
+    "model_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "promotion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "public_upload_authorized": false,
+  "quantization_authorized": false,
+  "schema_version": 1,
+  "specialist": {
+    "known_protected_status": "protected-promotion-gate-rejected",
+    "model_sha256": "acd7e6379809b26552fb2aa880cae4a0c7f1eb7778fa0594e030e3e67284e903",
+    "path": "Research/translation/models/elanmt-canonical-pairwise-v7-ja-en",
+    "selectable_at_alpha_one": false,
+    "source_internal_result": {
+      "bytes": 4594,
+      "path": "Research/translation/canonical-pairwise-v7-result-2026-07-25.json",
+      "sha256": "a7be21991c82d9a446e7acab9350ad9e57d1d1cf5f850c0f32d252b2fa705ec7"
+    },
+    "training_manifest": {
+      "bytes": 5727,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v7-ja-en/mimi_automated_preference_manifest.json",
+      "sha256": "aa72a3bbfe1be4a9e2257a3950e3358a91e09da8f2803b97f0eb141599a927b1"
+    }
+  },
+  "status": "preregistered-ready-for-interpolation",
+  "stop_rule": "Stop before exact-q4 conversion unless a selectable interpolation passes every frozen internal gate. Stop before bundle creation, app integration, or upload on any protected quality, safety, runtime, size, or provenance failure.",
+  "v7_contract": {
+    "bytes": 12386,
+    "path": "Research/translation/canonical-pairwise-v7-contract-v2-2026-07-25.json",
+    "sha256": "d2e0a670dc126069ff50431ec4dfb3650ea555fc7def9785064e1bdc3a89a73b"
+  },
+  "v7_protected_result": {
+    "bytes": 9799,
+    "path": "Research/translation/canonical-pairwise-v7-protected-result-2026-07-25.json",
+    "sha256": "4a2f2ef75d6e60ae23fd4765fe50ad35e9c496cd7ec7e5c35cdb90e8c3120022"
+  },
+  "v8_result": {
+    "bytes": 19922,
+    "path": "Research/translation/canonical-pairwise-v8-result-2026-07-25.json",
+    "sha256": "4c7172e0c303356261f4e6ec08d8f2590193d0fcf99bcf1458daaa35306bdb73"
+  }
+}

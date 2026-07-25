@@ -1,0 +1,190 @@
+{
+  "app_change_authorized": false,
+  "continue_this_recipe": false,
+  "contract": {
+    "bytes": 10960,
+    "path": "Research/translation/canonical-pairwise-v6-contract-2026-07-25.json",
+    "sha256": "069586c259fa916a9717b91b250ad85f5b9076bfef5f6990011bc4c53aa390b2"
+  },
+  "decision": "Stop v6 before MLX conversion or protected held-out evaluation. Do not tune further against the same ten validation pairs.",
+  "experiment": "canonical-pairwise-preference-balanced-v6-ja-en",
+  "human_reviewers_used": false,
+  "internal_gate": {
+    "checks": [
+      {
+        "actual": 0.6,
+        "name": "relative-pair-accuracy",
+        "passed": false,
+        "required": 0.8
+      },
+      {
+        "actual": 0.003963208198547364,
+        "name": "relative-margin",
+        "passed": true,
+        "required": "> 0.0"
+      }
+    ],
+    "passed": false
+  },
+  "mlx_conversion_performed": false,
+  "next_hypothesis": "Collect a substantially larger, fresh, balanced JA-to-EN teacher corpus and reserve a new internal split instead of tuning against these ten pairs.",
+  "per_pair_diagnostic": {
+    "artifact": {
+      "bytes": 8969,
+      "path": "Research/translation/results/canonical-pairwise-v6-ja-en-valid-margins.json",
+      "sha256": "267621c8cb1a06002e208b0eb59dc8510c4cc6744f5bc74990759ea7cd20d228"
+    },
+    "non_improved": [
+      {
+        "domain": "human-translated-news",
+        "relative_margin": -0.0009041428565979004,
+        "source_id": "gpt56-pilot:ja-en:alt:4bbb3e0403c644f0a283"
+      },
+      {
+        "domain": "mimi-product-ui",
+        "relative_margin": -0.0015265941619873047,
+        "source_id": "gpt56-pilot:ja-en:ui:bb19536c08e63d2a5b95"
+      },
+      {
+        "domain": "conversational",
+        "relative_margin": -0.003950059413909912,
+        "source_id": "gpt56-pilot:ja-en:tatoeba:8e52c82d77b0a1ca9889"
+      },
+      {
+        "domain": "human-translated-news",
+        "relative_margin": -0.000985652208328247,
+        "source_id": "gpt56-pilot:ja-en:alt:35492ff5d0e5db595ea1"
+      }
+    ],
+    "summary": {
+      "improved": 6,
+      "maximum_relative_margin": 0.027373671531677246,
+      "mean_relative_margin": 0.003963443636894226,
+      "minimum_relative_margin": -0.003950059413909912,
+      "pairs": 10,
+      "relative_pair_accuracy": 0.6
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "protected_held_out_evaluation_performed": false,
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "status": "internal-preference-gate-rejected",
+  "teacher_authentication": "Codex cached ChatGPT authentication; no OpenAI API key used",
+  "training": {
+    "best": {
+      "last_train_objective": {
+        "chosen_sft_loss": 1.0591762065887451,
+        "l2_to_parent": 0.0008556877728551626,
+        "preference_loss": 0.6907205581665039,
+        "relative_margin": 0.0486842542886734
+      },
+      "loss": 0.6929491043090821,
+      "pairs": 10,
+      "policy_pair_accuracy": 0.1,
+      "relative_margin": 0.003963208198547364,
+      "relative_pair_accuracy": 0.6,
+      "step": 40
+    },
+    "domain_balance": {
+      "balanced_counts": {
+        "conversational": 12,
+        "human-translated-news": 12,
+        "long-document-news": 12,
+        "mimi-product-ui": 12,
+        "ministry-published-legal": 12,
+        "professional-wikipedia-hard": 12,
+        "wikipedia": 12
+      },
+      "balanced_rows_per_epoch": 84,
+      "method": "deterministic SHA-256 order within domain, cyclic repetition to the largest-domain count, then seeded DataLoader shuffle",
+      "original_counts": {
+        "conversational": 3,
+        "human-translated-news": 12,
+        "long-document-news": 12,
+        "mimi-product-ui": 3,
+        "ministry-published-legal": 7,
+        "professional-wikipedia-hard": 6,
+        "wikipedia": 8
+      }
+    },
+    "history": [
+      {
+        "loss": 0.6931471824645996,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0,
+        "relative_pair_accuracy": 0.0,
+        "step": 0
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.12285315990448,
+          "l2_to_parent": 0.00011146174074383453,
+          "preference_loss": 0.6920284032821655,
+          "relative_margin": 0.02253776788711548
+        },
+        "loss": 0.6930739641189575,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0014640718698501586,
+        "relative_pair_accuracy": 0.6,
+        "step": 10
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 0.8907648324966431,
+          "l2_to_parent": 0.0004315687983762473,
+          "preference_loss": 0.6955487728118896,
+          "relative_margin": -0.047843363136053085
+        },
+        "loss": 0.693003511428833,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0028747469186782837,
+        "relative_pair_accuracy": 0.6,
+        "step": 20
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.4348210096359253,
+          "l2_to_parent": 0.0007227609748952091,
+          "preference_loss": 0.6926664113998413,
+          "relative_margin": 0.009681664407253265
+        },
+        "loss": 0.6929625630378723,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0036933392286300657,
+        "relative_pair_accuracy": 0.6,
+        "step": 30
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.0591762065887451,
+          "l2_to_parent": 0.0008556877728551626,
+          "preference_loss": 0.6907205581665039,
+          "relative_margin": 0.0486842542886734
+        },
+        "loss": 0.6929491043090821,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.003963208198547364,
+        "relative_pair_accuracy": 0.6,
+        "step": 40
+      }
+    ],
+    "manifest": {
+      "bytes": 6595,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v6-ja-en/mimi_automated_preference_manifest.json",
+      "sha256": "b2211a8a3dc221076551ce52b5e09ea0d7382879005a9ace571e5bed28bf15a0"
+    },
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v6-ja-en/model.safetensors",
+      "sha256": "c562a899c021d774dbcba62c7cef837c94b08b8ce8b3c082722ec11081b38b41"
+    },
+    "trainable_parameters": 61047296
+  }
+}

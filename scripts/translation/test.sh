@@ -26,6 +26,11 @@ uv run --python 3.12 --with sacrebleu==2.6.0 \
   scripts/translation/test_licensed_data_pipeline.py
 python3 scripts/translation/test_japanese_law_translation.py
 python3 scripts/translation/test_public_stress_suite.py
+python3 scripts/translation/test_prepare_development_accuracy_suite.py
+python3 scripts/translation/test_compose_segmented_document_benchmark.py
+python3 scripts/translation/test_filter_training_dataset_against_protected.py
+python3 scripts/translation/test_build_alt_document_window_dataset.py
+python3 scripts/translation/test_blinded_translation_comparison.py
 python3 scripts/translation/test_legal_safety_validation.py
 uv run --python 3.12 --with sacrebleu==2.6.0 \
   scripts/translation/test_marian_legal_safety_checkpoint_selection.py
@@ -47,6 +52,24 @@ uv run --python 3.12 --with sacrebleu==2.6.0 \
   scripts/translation/test_exact_translation_memory.py
 uv run --python 3.12 --with sacrebleu==2.6.0 \
   scripts/translation/test_synthetic_pipeline.py
+python3 scripts/translation/test_codex_teacher_pipeline.py
+python3 scripts/translation/test_local_consensus_judge.py
+PYTHONPATH=scripts/translation python3 \
+  scripts/translation/test_claude_consensus_judge.py
+python3 scripts/translation/test_claude_judgment_evidence.py
+python3 scripts/translation/test_canonical_quality_consensus.py
+python3 scripts/translation/test_build_canonical_pairwise_preference_dataset.py
+python3 scripts/translation/test_apply_canonical_safety_router.py
+python3 scripts/translation/test_build_gpt56_distillation_pilot.py
+python3 scripts/translation/test_reference_anchored_synthetic_filter.py
+python3 scripts/translation/test_reference_validated_critical_filter.py
+python3 scripts/translation/test_reference_anchored_distillation_dataset.py
+PYTHONPATH=scripts/translation python3 \
+  scripts/translation/test_gpt56_phase1_judge_pipeline.py
+uv run --python 3.12 --with tokenizers \
+  scripts/translation/test_prepare_direct_within_limit_suite.py
+PYTHONPATH=scripts/translation uv run --python 3.12 --with sacrebleu==2.6.0 \
+  scripts/translation/test_gpt56_student_continuation.py
 uv run --python 3.12 --with numpy \
   scripts/translation/test_dqrd_selection.py
 uv run --python 3.12 --with torch --with transformers==4.57.6 \
@@ -113,6 +136,12 @@ python3 scripts/translation/test_balanced_human_reference_ablation.py
 python3 scripts/translation/test_shallow_student_dataset.py
 uv run --python 3.12 --with scikit-learn --with sacrebleu==2.6.0 --with numpy \
   scripts/translation/test_expert_router.py
+uv run --python 3.12 --with sacrebleu==2.6.0 \
+  scripts/translation/test_analyze_expert_oracle.py
+uv run --python 3.12 --with torch --with safetensors --with numpy \
+  scripts/translation/test_compress_marian_expert_delta.py
+uv run --python 3.12 --with torch --with safetensors --with numpy \
+  scripts/translation/test_marian_low_rank_adapter.py
 PYTHONPATH=scripts/translation uv run --python 3.12 --with sacrebleu==2.6.0 \
   scripts/translation/test_roundtrip_expert_reranker.py
 PYTHONPATH=scripts/translation uv run --python 3.12 --with sacrebleu==2.6.0 \
@@ -133,6 +162,74 @@ python3 -m py_compile \
   scripts/translation/distill_marian_sequence_targets.py \
   scripts/translation/merge_directional_marian.py \
   scripts/translation/prepare_public_stress_suite.py \
+  scripts/translation/build_gpt56_distillation_pilot.py \
+  scripts/translation/build_canonical_target_pilot.py \
+  scripts/translation/build_directional_canonical_target_pilot.py \
+  scripts/translation/build_canonical_target_review_queue.py \
+  scripts/translation/build_canonical_teacher_engine_report.py \
+  scripts/translation/approve_canonical_quality_consensus.py \
+  scripts/translation/build_canonical_pairwise_preference_dataset.py \
+  scripts/translation/prepare_canonical_pairwise_v4_contract.py \
+  scripts/translation/prepare_canonical_pairwise_v5_contract.py \
+  scripts/translation/prepare_canonical_pairwise_v6_contract.py \
+  scripts/translation/prepare_canonical_pairwise_v7_contract.py \
+  scripts/translation/prepare_canonical_pairwise_v7_plan.py \
+  scripts/translation/build_canonical_pairwise_v8_replay_dataset.py \
+  scripts/translation/prepare_canonical_pairwise_v8_contract.py \
+  scripts/translation/prepare_canonical_pairwise_v9_contract.py \
+  scripts/translation/build_canonical_pairwise_v4_result.py \
+  scripts/translation/build_canonical_pairwise_v5_result.py \
+  scripts/translation/build_canonical_pairwise_v6_result.py \
+  scripts/translation/build_canonical_pairwise_v7_result.py \
+  scripts/translation/build_canonical_pairwise_v8_result.py \
+  scripts/translation/build_canonical_pairwise_v9_result.py \
+  scripts/translation/finalize_canonical_pairwise_v7_result.py \
+  scripts/translation/finalize_canonical_pairwise_v9_result.py \
+  scripts/translation/analyze_marian_preference_margins.py \
+  scripts/translation/train_marian_automated_preference_adapter.py \
+  scripts/translation/train_marian_automated_preference_full.py \
+  scripts/translation/train_marian_automated_preference_balanced.py \
+  scripts/translation/train_marian_claude5_preference.py \
+  scripts/translation/train_marian_claude5_preference_replay.py \
+  scripts/translation/run_marian_parent_specialist_interpolation.py \
+  scripts/translation/build_canonical_pilot_human_replay.py \
+  scripts/translation/prepare_canonical_student_experiment_contract.py \
+  scripts/translation/build_canonical_student_v3_result.py \
+  scripts/translation/apply_canonical_safety_router.py \
+  scripts/translation/test_apply_canonical_safety_router.py \
+  scripts/translation/run_codex_teacher.py \
+  scripts/translation/evaluate_codex_teacher_outputs.py \
+  scripts/translation/test_codex_teacher_pipeline.py \
+  scripts/translation/test_canonical_quality_consensus.py \
+  scripts/translation/prepare_local_consensus_judge_candidates.py \
+  scripts/translation/convert_local_bilingual_judge_to_consensus.py \
+  scripts/translation/prepare_claude5_dual_judge_contract.py \
+  scripts/translation/collect_claude5_canonical_consensus.py \
+  scripts/translation/run_claude_consensus_judge.py \
+  scripts/translation/test_claude_consensus_judge.py \
+  scripts/translation/test_claude_judgment_evidence.py \
+  scripts/translation/run_local_consensus_judge.py \
+  scripts/translation/test_local_consensus_judge.py \
+  scripts/translation/estimate_openai_batch_cost.py \
+  scripts/translation/prepare_gpt56_phase1_judge_batch.py \
+  scripts/translation/collect_gpt56_phase1_judge.py \
+  scripts/translation/prepare_direct_within_limit_suite.py \
+  scripts/translation/evaluate_gpt56_student_continuation.py \
+  scripts/translation/prepare_gpt56_student_experiment_contract.py \
+  scripts/translation/build_reference_anchored_distillation_dataset.py \
+  scripts/translation/test_reference_anchored_synthetic_filter.py \
+  scripts/translation/test_reference_validated_critical_filter.py \
+  scripts/translation/test_reference_anchored_distillation_dataset.py \
+  scripts/translation/test_gpt56_phase1_judge_pipeline.py \
+  scripts/translation/test_prepare_direct_within_limit_suite.py \
+  scripts/translation/test_gpt56_student_continuation.py \
+  scripts/translation/prepare_development_accuracy_suite.py \
+  scripts/translation/compose_segmented_document_benchmark.py \
+  scripts/translation/filter_training_dataset_against_protected.py \
+  scripts/translation/build_alt_document_window_dataset.py \
+  scripts/translation/audit_marian_development_context.py \
+  scripts/translation/prepare_blinded_translation_comparison.py \
+  scripts/translation/analyze_blinded_translation_comparison.py \
   scripts/translation/prepare_legal_safety_validation.py \
   scripts/translation/select_marian_legal_safety_checkpoint.py \
   scripts/translation/evaluate_structure_fallback.py \
@@ -172,6 +269,14 @@ python3 -m py_compile \
   scripts/translation/benchmark_marian_packed_projections.py \
   scripts/translation/benchmark_marian_ssru_proxy.py \
   scripts/translation/evaluate_expert_router.py \
+  scripts/translation/analyze_expert_oracle.py \
+  scripts/translation/test_analyze_expert_oracle.py \
+  scripts/translation/evaluate_saved_expert_router.py \
+  scripts/translation/compress_marian_expert_delta.py \
+  scripts/translation/test_compress_marian_expert_delta.py \
+  scripts/translation/marian_low_rank_adapter.py \
+  scripts/translation/test_marian_low_rank_adapter.py \
+  scripts/translation/train_marian_low_rank_adapter.py \
   scripts/translation/apply_expert_routing.py \
   scripts/translation/prepare_roundtrip_expert_reranking_suites.py \
   scripts/translation/evaluate_roundtrip_expert_reranker.py \
@@ -239,7 +344,9 @@ python3 -m py_compile \
   scripts/translation/test_prepare_m2m100_feasibility_suite.py \
   scripts/translation/compare_marian_portable_pack_reports.py \
   scripts/translation/test_compare_marian_portable_pack_reports.py \
-  scripts/translation/compare_learned_metric.py
+  scripts/translation/compare_learned_metric.py \
+  scripts/translation/score_comet.py \
+  scripts/translation/prepare_elanmt_mlx.py
 
 if [[ "${MIMI_TRANSLATION_TRAINING_SMOKE:-0}" == "1" ]]; then
   uv run --python 3.12 --with torch --with transformers==4.57.6 \

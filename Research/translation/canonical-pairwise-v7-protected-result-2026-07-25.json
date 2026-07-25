@@ -1,0 +1,305 @@
+{
+  "app_change_authorized": false,
+  "bundle_creation_authorized": false,
+  "candidate_q4": {
+    "bytes": 39138970,
+    "directory": "Research/translation/models/elanmt-canonical-pairwise-v7-ja-en-mlx-4bit",
+    "manifest": {
+      "bytes": 2692,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v7-ja-en-mlx-4bit/manifest.json",
+      "sha256": "06fe006cad2547d3850cdc97f4de9658c7f16bba243f15e1b137f7658517202f"
+    },
+    "weights": {
+      "bytes": 34297451,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v7-ja-en-mlx-4bit/model.safetensors",
+      "sha256": "67a6b7023c188cb08da271a5d287ddddb6f416f50087a11662967d488c03d4c4"
+    }
+  },
+  "contract": {
+    "bytes": 12386,
+    "path": "Research/translation/canonical-pairwise-v7-contract-v2-2026-07-25.json",
+    "sha256": "d2e0a670dc126069ff50431ec4dfb3650ea555fc7def9785064e1bdc3a89a73b"
+  },
+  "created_at": "2026-07-25T16:53:58.665336Z",
+  "current_app_bundle_changed": false,
+  "decision": "Do not bundle or integrate v7. It passes internal preference, exact-q4, latency, memory, and size gates but fails mandatory protected quality, safety, and distribution-provenance gates.",
+  "evaluation": {
+    "direct": {
+      "baseline": {
+        "cases": 99,
+        "chrFPlusPlus": 49.90616145815898,
+        "sacreBLEUIntl": 25.054227800626787
+      },
+      "candidate": {
+        "cases": 99,
+        "chrFPlusPlus": 49.528880123850556,
+        "sacreBLEUIntl": 24.771179876271074
+      },
+      "domains": {
+        "everyday-conversation": {
+          "cases": 20,
+          "meanSentenceChrFPlusPlusDelta": 0.0
+        },
+        "human-translated-news": {
+          "cases": 20,
+          "meanSentenceChrFPlusPlusDelta": 0.16720484138429512
+        },
+        "long-document-legal": {
+          "cases": 6,
+          "meanSentenceChrFPlusPlusDelta": -1.7566754793892727
+        },
+        "long-document-news": {
+          "cases": 7,
+          "meanSentenceChrFPlusPlusDelta": -0.14453292568871795
+        },
+        "long-document-wikipedia": {
+          "cases": 6,
+          "meanSentenceChrFPlusPlusDelta": 0.35840549798244226
+        },
+        "ministry-published-legal": {
+          "cases": 20,
+          "meanSentenceChrFPlusPlusDelta": -0.09461764068008698
+        },
+        "professional-wikipedia": {
+          "cases": 20,
+          "meanSentenceChrFPlusPlusDelta": 0.49948383462362145
+        }
+      },
+      "pairedSentenceChrFPlusPlus": {
+        "confidence": 0.9,
+        "lower": -0.17739738337254818,
+        "mean": 0.02060677109388468,
+        "samples": 10000,
+        "seed": 20260725,
+        "upper": 0.24217234218733175
+      },
+      "sacreBLEUIntlDelta": -0.2830479243557136
+    },
+    "documents": {
+      "baseline": {
+        "cases": 100,
+        "chrFPlusPlus": 55.19028118139918,
+        "sacreBLEUIntl": 30.620668547248126
+      },
+      "candidate": {
+        "cases": 100,
+        "chrFPlusPlus": 55.09550280390761,
+        "sacreBLEUIntl": 30.62301081012359
+      },
+      "domains": {
+        "everyday-conversation": {
+          "cases": 20,
+          "meanSentenceChrFPlusPlusDelta": 0.0
+        },
+        "human-translated-news": {
+          "cases": 20,
+          "meanSentenceChrFPlusPlusDelta": 0.16720484138429512
+        },
+        "long-document-legal": {
+          "cases": 6,
+          "meanSentenceChrFPlusPlusDelta": -0.8822304343749359
+        },
+        "long-document-news": {
+          "cases": 8,
+          "meanSentenceChrFPlusPlusDelta": 0.07611709527405974
+        },
+        "long-document-wikipedia": {
+          "cases": 6,
+          "meanSentenceChrFPlusPlusDelta": 0.013051442673752689
+        },
+        "ministry-published-legal": {
+          "cases": 20,
+          "meanSentenceChrFPlusPlusDelta": -0.09461764068008698
+        },
+        "professional-wikipedia": {
+          "cases": 20,
+          "meanSentenceChrFPlusPlusDelta": 0.49948383462362145
+        }
+      },
+      "pairedSentenceChrFPlusPlus": {
+        "confidence": 0.9,
+        "lower": -0.10844332390837849,
+        "mean": 0.06835283518541971,
+        "samples": 10000,
+        "seed": 20260725,
+        "upper": 0.27965448209790794
+      },
+      "sacreBLEUIntlDelta": 0.002342262875462353
+    },
+    "peakResidentBytes": 210550784,
+    "safety": {
+      "newExactCritical": [],
+      "newNegation": [
+        "documents:development-accuracy-v1:document:kftt:kftt-block-0055:ja-en"
+      ],
+      "newRepetitionOrGenerationLimit": [
+        "segment-then-join:development-accuracy-v1:document:jlt:law-4754:ja-en",
+        "segments:development-accuracy-v1:document:jlt:law-4754:ja-en:segment-03"
+      ],
+      "newTypedCritical": [],
+      "newUnionCritical": []
+    },
+    "skippedAfterFixedRejection": [
+      "COMET-22",
+      "independent blinded quality judge"
+    ],
+    "warmSegmentP95Seconds": 0.13447404094040394
+  },
+  "experiment": "canonical-pairwise-preference-claude5-v7-ja-en",
+  "gates": {
+    "operationalAndDistribution": [
+      {
+        "actual": 0.13447404094040394,
+        "name": "warm-segment-p95-seconds",
+        "passed": true,
+        "required": 0.175
+      },
+      {
+        "actual": 210550784,
+        "name": "peak-resident-bytes",
+        "passed": true,
+        "required": 250000000
+      },
+      {
+        "actual": 78277210,
+        "name": "preferred-two-direction-bundle-bytes",
+        "passed": true,
+        "required": 150000000
+      },
+      {
+        "actual": 78277210,
+        "name": "hard-two-direction-bundle-bytes",
+        "passed": true,
+        "required": 500000000
+      },
+      {
+        "actual": null,
+        "name": "complete-distribution-provenance",
+        "passed": false,
+        "required": "complete per-row provenance and attribution sidecar"
+      }
+    ],
+    "quality": [
+      {
+        "actual": {
+          "COMET-22": "not-run-after-fixed-rejection",
+          "chrF++": false,
+          "independentJudge": "not-run-after-fixed-rejection",
+          "passedSignals": 0
+        },
+        "name": "minimum-two-improvement-signals",
+        "passed": false,
+        "required": 2
+      },
+      {
+        "actual": 0.06835283518541971,
+        "name": "mean-sentence-chrf++-signal",
+        "passed": false,
+        "required": 0.25
+      },
+      {
+        "actual": -0.10844332390837849,
+        "name": "chrf++-paired-90pct-lower",
+        "passed": true,
+        "required": -0.25
+      },
+      {
+        "actual": 0.002342262875462353,
+        "name": "sacrebleu-corpus-regression",
+        "passed": true,
+        "required": ">= -0.10"
+      },
+      {
+        "actual": -0.8822304343749359,
+        "name": "maximum-domain-chrf++-regression",
+        "passed": false,
+        "required": ">= -0.50"
+      },
+      {
+        "actual": 0.02060677109388468,
+        "name": "maximum-direct-chrf++-regression",
+        "passed": true,
+        "required": ">= -0.50"
+      },
+      {
+        "actual": -1.7566754793892727,
+        "name": "maximum-direct-domain-chrf++-regression",
+        "passed": false,
+        "required": ">= -0.50"
+      }
+    ],
+    "safety": [
+      {
+        "actual": [],
+        "name": "new-union-critical-errors",
+        "passed": true,
+        "required": 0
+      },
+      {
+        "actual": [
+          "documents:development-accuracy-v1:document:kftt:kftt-block-0055:ja-en"
+        ],
+        "name": "new-negation-errors",
+        "passed": false,
+        "required": 0
+      },
+      {
+        "actual": [],
+        "name": "new-typed-critical-errors",
+        "passed": true,
+        "required": 0
+      },
+      {
+        "actual": [
+          "segment-then-join:development-accuracy-v1:document:jlt:law-4754:ja-en",
+          "segments:development-accuracy-v1:document:jlt:law-4754:ja-en:segment-03"
+        ],
+        "name": "new-repetition-or-generation-limit-errors",
+        "passed": false,
+        "required": 0
+      }
+    ]
+  },
+  "internal_result": {
+    "bytes": 4594,
+    "path": "Research/translation/canonical-pairwise-v7-result-2026-07-25.json",
+    "sha256": "a7be21991c82d9a446e7acab9350ad9e57d1d1cf5f850c0f32d252b2fa705ec7"
+  },
+  "promotion_authorized": false,
+  "public_upload_authorized": false,
+  "reports": {
+    "baseline_direct": {
+      "bytes": 284490,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-direct-under-192.json",
+      "sha256": "88024b008acf9ca3fc95470a725aa8452b80dbdfbbd19cc10abf8b5c3ab892d4"
+    },
+    "baseline_documents": {
+      "bytes": 495550,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair.json",
+      "sha256": "fa1287745281accecbba44bf0d14f3a0dfeede55ddf0a7e502bf41a5e1efc760"
+    },
+    "baseline_segments": {
+      "bytes": 403110,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-segments.json",
+      "sha256": "107a7838ce667aed3ad9e9c52c9c472a5abd30aa1a3994e6c21194ff25696a4e"
+    },
+    "candidate_direct": {
+      "bytes": 146670,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v7-ja-en-direct-under-192.json",
+      "sha256": "621740867426f4a7bd4b0ca97a40690d3b4e106f092525b2ec5fb7f1a736f191"
+    },
+    "candidate_documents": {
+      "bytes": 252962,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v7-ja-en.json",
+      "sha256": "826a8f14bc3676a792609beb219aa7dad580bf722dc8ec580164c5fb766062b5"
+    },
+    "candidate_segments": {
+      "bytes": 206026,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v7-ja-en-segments.json",
+      "sha256": "dd82d1b2c9e0d227c3d811c86e42165072007245e1f402c579595be4add578e4"
+    }
+  },
+  "schema_version": 1,
+  "status": "protected-promotion-gate-rejected",
+  "would_be_two_direction_bundle_bytes": 78277210
+}

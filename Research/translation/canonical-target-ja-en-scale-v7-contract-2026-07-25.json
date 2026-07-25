@@ -1,0 +1,149 @@
+{
+  "admission": {
+    "absolute_teacher_thresholds_required": true,
+    "candidate_design": [
+      "one fresh canonical Codex teacher translation",
+      "one licensed human reference",
+      "one authenticated current Mimi translation"
+    ],
+    "human_reviewers_required": false,
+    "independent_judges_required": 2,
+    "minimum_approved": 120,
+    "training_authorized_by_teacher_output_alone": false,
+    "unanimous_pareto_preference_over_current_required_for_preference_training": true
+  },
+  "app_change_authorized": false,
+  "counts": {
+    "domains": {
+      "conversational": 80,
+      "human-translated-news": 60,
+      "long-document-news": 40,
+      "mimi-product-ui": 40,
+      "ministry-published-legal": 60,
+      "professional-wikipedia-hard": 60,
+      "wikipedia": 60
+    },
+    "licenses": {
+      "CC-BY-2.0-FR": 80,
+      "CC-BY-4.0": 100,
+      "CC-BY-SA-3.0": 120,
+      "PDL-1.0-compatible-CC-BY-4.0": 60,
+      "project-owned": 40
+    },
+    "total": 400
+  },
+  "created_at": "2026-07-25T15:00:09.393491Z",
+  "decontamination": {
+    "character_ngram_size": 5,
+    "fields_checked": [
+      "source",
+      "local human reference when present"
+    ],
+    "maximum_jaccard_exclusive": 0.8,
+    "normalization": "Unicode NFKC, casefold, collapse whitespace",
+    "protected_suites": [
+      {
+        "path": "Research/translation/benchmark/canary.jsonl",
+        "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+      },
+      {
+        "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+        "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+      },
+      {
+        "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+        "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+      },
+      {
+        "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+        "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+      },
+      {
+        "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+        "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+      },
+      {
+        "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+        "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+      },
+      {
+        "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+        "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+      },
+      {
+        "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+        "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+      },
+      {
+        "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+        "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+      },
+      {
+        "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+        "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+      }
+    ]
+  },
+  "direction": "ja-en",
+  "excluded_prior_source_ids": 400,
+  "exclusion_seeds": [
+    {
+      "path": "Research/translation/work/canonical-target-scale-v3.seeds.jsonl",
+      "sha256": "107ae2ff81404721ffd0be0142d696dd2a435421daf3b48471e7be8605f84b3a",
+      "source_ids": 400
+    }
+  ],
+  "experiment": "canonical-target-ja-en-scale-v7",
+  "inputs": {
+    "incumbent_model": {
+      "manifest_sha256": "48cbaea921d6f6fb6108c40ba94d8399bb610a260ddd38b028fcb0046691f95a",
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1-mlx-4bit",
+      "tokenizer_sha256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+    },
+    "source_manifest": {
+      "path": "Research/translation/work/gpt56-final-translation-pilot-v1.seeds.manifest.json",
+      "sha256": "01d26d4376f63964e20cc908f122a03a80b1f6f4f845abbf8b2bfab5af01df3f"
+    },
+    "source_seeds": {
+      "path": "Research/translation/work/gpt56-final-translation-pilot-v1.seeds.jsonl",
+      "sha256": "d555e88770d8ec88c5cc4de7991dcd4532a27176309a7c1a1a4444d31472dcde"
+    }
+  },
+  "maximum_source_tokens": 192,
+  "outputs": {
+    "incumbent_suite": {
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.incumbent-suite.jsonl",
+      "sha256": "bea8c361042a308278a4ea7ec6a13c787486f9e4021871328ffa805fbc4e7443"
+    },
+    "pilot_seeds": {
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.seeds.jsonl",
+      "sha256": "24dce470e572392b747436dbb556835fe1716d2af01d43bdea65eb1f9351f073"
+    },
+    "teacher_requests": {
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.requests.jsonl",
+      "sha256": "4273ea3a221c7c5579ea83c2967d15cdf5502cd88400d488e668ef34ac7e65d9"
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "public_upload_authorized": false,
+  "quota_multiplier": 20,
+  "quotas": {
+    "conversational": 80,
+    "human-translated-news": 60,
+    "long-document-news": 40,
+    "mimi-product-ui": 40,
+    "ministry-published-legal": 60,
+    "professional-wikipedia-hard": 60,
+    "wikipedia": 60
+  },
+  "schema_version": 1,
+  "selection_seed": "mimi-canonical-target-ja-en-scale-v7",
+  "selection_uses_previous_teacher_or_judge_outputs": false,
+  "source_only_teacher": true,
+  "status": "source-only-teacher-requests-frozen",
+  "teacher_authentication": "Codex cached ChatGPT authentication; no OpenAI API key",
+  "teacher_model": "gpt-5.6-sol",
+  "teacher_prompt_sha256": "6cd2e5c2d970724b1b067149a25351a4723a21ae007009c3d4420f0e23d0613b",
+  "teacher_reasoning_effort": "none"
+}

@@ -1,6 +1,6 @@
 # Literature review: the next Mimi translation strategy
 
-Last updated 2026-07-21. This review asks a narrow question: what is the most
+Last updated 2026-07-25. This review asks a narrow question: what is the most
 credible way to improve Mimi's 73.4 MB English↔Japanese student beyond the
 current 31.31/56.52 non-claimable canary result without weakening licensing,
 contamination controls, MLX deployment, or the Apple fallback?
@@ -34,6 +34,262 @@ improved its own development mix but severely regressed EN→JA on the canary,
 whereas screened conversational data retained EN→JA and improved JA→EN. The
 failure is domain adaptation and forgetting, not simply insufficient corpus
 size.
+
+## 2026-07-25 focused review: MoE for local EN↔JA
+
+### Revised decision
+
+Mimi should pursue **hierarchical task-level routing now, followed by a shared
+backbone with routed adapters**. It should not make a conventional token-level
+sparse FFN MoE the next shipping architecture.
+
+In practical terms, "MoE" first means choosing one compact EN→JA or JA→EN
+domain specialist for a complete segment or document. Only one dense Marian
+engine executes. A deterministic output audit may retry one fallback engine
+for repetition, abnormal length, script failure, or exact entity/number loss.
+The router is trained on source-side features, calibrated on grouped held-out
+documents, and then frozen.
+
+The eventual compact architecture should remove the redundancy of storing
+whole expert models: retain a shared encoder/decoder backbone and represent
+conversation, formal/news, legal, and document-repair capacity as small
+direction-specific adapters or low-rank deltas. A single package can therefore
+serve both directions without forcing all knowledge through identical decoder
+parameters.
+
+### Why the intuition changed
+
+| Evidence | Finding | Mimi decision |
+| --- | --- | --- |
+| [Task-level MoE for multilingual NMT](https://aclanthology.org/2021.findings-emnlp.304/) | Task routing produced ready-to-deploy subnetworks; its 32-expert WMT system averaged +1.0 BLEU and 1.9× peak throughput over token routing across 30 language pairs. | Route a segment/document to one specialist rather than dispatching every token. |
+| [Mixture-of-Adapters for NMT](https://aclanthology.org/2024.findings-naacl.154/) | Lightweight adapters addressed full-model MoE parameter inefficiency and used a stage-wise, frozen-gate training recipe. | Share the expensive trunk; specialize small deltas. |
+| [StableMoE](https://arxiv.org/abs/2204.08396) | Routing fluctuation reduced sample efficiency; learning/distilling and then freezing a lightweight router improved stability. | Freeze the source router before expert training and final evaluation. |
+| [AutoMoE](https://aclanthology.org/2023.findings-acl.580/) | Heterogeneous experts were selected under explicit FLOP/latency constraints. | Do not allocate every domain equal capacity; spend parameters on measured hard slices. |
+| [THOR-MoE](https://aclanthology.org/2025.acl-long.1040/) | Hierarchical task/domain prediction narrowed the expert set before context-responsive routing. | Make direction and document domain the first routing level; add finer routing only if it earns a held-out gain. |
+| [Consumer/edge MoE profiling](https://arxiv.org/abs/2606.21428) | On Apple M2 Pro, a sparse OLMoE model was about 10% slower than a same-active dense model; total weights, dispatch, and cache pressure dominated. | Active FLOPs are not a speed claim on Apple Silicon. Measure total resident bytes and end-to-end latency. |
+| [MobileMoE](https://arxiv.org/abs/2605.27358) | At much larger LLM scale, the on-device sweet spot used moderate sparsity plus fine-grained and shared experts, with custom mobile kernels. | Treat shared experts and moderate sparsity as a later custom-kernel research arm, not evidence that ordinary Marian token-MoE will be fast. |
+| [Standing Committee audit](https://aclanthology.org/2026.acl-long.665/) | MoE routing retained a domain-invariant core coalition while peripheral experts handled specialization. | Encode the common coalition explicitly as Mimi's shared base. |
+| [Memory-Aware Routing](https://aclanthology.org/2026.findings-acl.857/) | Uniform load balancing could produce redundant pseudo-specialists; consistent semantically aligned routing improved specialization. | Optimize correctness and stable domain assignment, not equal expert traffic. |
+| [NeuronMoE](https://aclanthology.org/2026.eacl-long.117/) | Expert allocation mattered more than raw expert count, and language-specific capacity concentrated in early and late layers. | If layer adapters are built, profile unequal placement instead of attaching identical adapters everywhere. |
+
+These papers do not prove that a tiny adapter-MoE will improve Mimi. Several
+study billion-parameter LLMs or different hardware. They do, however, reject
+the naive argument that low active parameter count automatically produces a
+fast edge translator and jointly favor stable routing around a common trunk.
+
+### First local task-MoE result
+
+The initial screening pack combines four physical 4-bit Marian specialists:
+general EN→JA, formal EN→JA, general JA→EN, and legal JA→EN. The source router
+selects one engine for each of the 400 development segments. Sharing duplicate
+tokenizer files reduces the package from 148,076,448 to **140,873,503 bytes**,
+within the original preferred 150 MB budget.
+
+On this Apple Silicon machine, warm latency is encouraging:
+
+- EN→JA p50 33.1 ms and p95 95.5 ms;
+- JA→EN p50 35.2 ms and p95 87.2 ms; and
+- selected traffic is non-uniform by design: 73 formal EN→JA, 127 general
+  EN→JA, 32 legal JA→EN, and 168 general JA→EN segments.
+
+It is not promotion-safe. The strict runtime audit accepts 315/400 outputs and
+rejects 84 exact critical-token mismatches plus one implausible output. That
+21.25% rejected rate is the immediate problem to solve; adding experts cannot
+hide it.
+
+The completed quality screen also rejects this router configuration against
+the 78.3 MB fine-tuned pair:
+
+| Direction | Candidate pair | Four-engine router | Paired result |
+| --- | ---: | ---: | --- |
+| EN→JA chrF++ / BLEU | 28.41 / 9.63 | 28.38 / 9.29 | mean sentence chrF++ -0.23, 95% interval -1.31 to +0.74 |
+| EN→JA COMET-22 | 0.8669 | 0.8687 | +0.0018, 95% interval -0.0060 to +0.0095 |
+| JA→EN chrF++ / BLEU | 55.19 / 30.62 | 53.34 / 28.14 | mean sentence chrF++ -0.68, 95% interval -2.22 to +1.07 |
+| JA→EN COMET-22 | 0.8192 | 0.8089 | -0.0103, 95% interval -0.0201 to -0.0018 |
+
+EN→JA is statistically inconclusive. JA→EN has a significant COMET regression,
+especially because the old router sends too many legal and long-document
+segments back to the weaker generalist. This is useful negative evidence:
+expert quality alone is insufficient, and a router trained for an older model
+pair must not be reused after the expert frontier changes.
+
+### Follow-up local MoE evidence
+
+Two follow-ups make the failure mode clearer.
+
+First, a source-only expert-delta router trained on the 1,400-row JA→EN public
+stress set appeared successful on its grouped held-out split: routing from the
+critical-preservation default to the legal expert gained **+2.672 mean sentence
+chrF++**, with a 95% interval of **+1.564 to +3.913**. That gain did not transfer
+to the independent document-heavy development suite. The resulting 140,893,401
+byte pack routed 130/200 JA→EN segments to the legal expert and regressed the
+current candidate by **-0.938 mean sentence chrF++** (95% interval -2.485 to
++0.864). It improved conversation by +5.318, but significantly hurt news,
+long-form legal/news, and sentence-level legal text. Public-stress router
+success is therefore not promotion evidence.
+
+Second, a licensed human-reference continuation tried to create a genuinely
+complementary conversation expert from the strong legal parent. It used 4,345
+training rows and 1,085 validation rows, frozen-parent KL, L2-to-parent
+regularization, and increasing conversation weights for 200 steps. The
+unmodified parent remained best:
+
+| Step | Overall validation chrF++ | Conversation chrF++ | KFTT replay chrF++ |
+| ---: | ---: | ---: | ---: |
+| 0 | **51.776** | **82.751** | **50.096** |
+| 50 | 51.597 | 82.698 | 49.908 |
+| 100 | 51.535 | 82.315 | 49.866 |
+| 150 | 51.510 | 82.440 | 49.833 |
+| 200 | 51.507 | 82.507 | 49.827 |
+
+No trained checkpoint was quantized or promoted. This negative result says the
+available conversation data is already easy for the full-precision parent and
+does not teach the document-heavy failures seen in the independent suite.
+
+Third, post-hoc low-rank expert deltas establish that a shared Marian trunk is
+technically compact, but do not yet clear the quality gate. Truncated-SVD
+compression of the critical-preservation JA→EN expert around the legal parent
+produced:
+
+| Rank | FP16 delta bytes | Captured squared delta energy |
+| ---: | ---: | ---: |
+| 16 | 5,668,098 | 76.4% |
+| 32 | 11,033,978 | 82.5% |
+
+After exact 4-bit/group-64 conversion, the rank-16 merged screen retained a
++4.418 mean sentence chrF++ conversation gain but regressed the complete
+JA→EN development side by -1.824 (-3.218 to -0.422). A frozen source router
+trained only on the independent public-stress corpus at 100% tuning precision
+routed 16/200 development segments, all from the conversation slice, and
+changed no document, news, legal, or Wikipedia output. This safer composition
+gained +0.442 overall, but its grouped 95% interval was -0.007 to +1.189. Rank
+32 produced the same 16 routed outputs after quantization. Both are rejected.
+
+The result supports the storage premise of mixture-of-adapters—one compact
+directional trunk plus roughly 6–11 MB per expert—but not this expert. Future
+deltas should be trained directly under a frozen/shared-backbone objective on
+cross-corpus hard slices; post-hoc compression of a globally regressive full
+expert cannot create missing transferable knowledge.
+
+An oracle-only diagnostic still finds useful complementarity, so routing is not
+fundamentally exhausted. On development segments, choosing the best existing
+output with access to the reference would gain +0.949 mean sentence chrF++ for
+EN→JA (grouped 95% interval +0.622 to +1.323) and +2.286 for JA→EN (+1.485 to
++3.277). Requiring one sticky expert for every segment in a document retains
++0.743 (+0.425 to +1.130) and +1.578 (+0.821 to +2.606), respectively. These
+are upper bounds, not deployable results. The gap between those ceilings and
+every source-only router means Mimi needs either richer transferable source
+features or more cleanly separated experts; adding another classifier to the
+same weak expert/data geometry is unlikely to help.
+
+### Concrete architecture sequence
+
+1. **Completed screening baseline:** retain the four-engine result and the
+   public-stress transfer failure as negative controls. Do not reuse either
+   router.
+2. **Safe routed cascade:** keep any future source-only route sticky across a
+   document, and permit one deterministic fallback only when an output fails a
+   pre-registered audit. Do not run every expert and select after decoding.
+3. **Expert gate before router training:** require a new expert to improve its
+   intended grouped slice on data from a different corpus family while
+   preserving the common trunk. Reject experts that only fit their training
+   distribution.
+4. **Shared-backbone prototype:** train small direction/domain adapters or
+   low-rank deltas around the pinned Marian base with frozen-base KL and
+   licensed replay. Compare adapter bytes and resident memory against the
+   whole-model router.
+5. **Frozen router calibration:** only after expert complementarity passes,
+   train a source-only classifier on grouped documents, freeze it, and evaluate
+   once on a separately held-out suite. Report oracle routing solely as an
+   upper bound.
+6. **Unequal capacity sweep:** allocate more adapter rank only to slices where
+   the router has enough support and the specialist produces a statistically
+   reliable gain.
+7. **Optional 250–500 MB arm:** spend additional bytes only on a hard-segment
+   expert that is lazy-loaded and demonstrably improves held-out absolute
+   quality. Measure cold load, alternating direction, peak unified memory, and
+   energy—not just warm active FLOPs.
+
+The promotion gate is unchanged: no app replacement until the candidate
+improves strong held-out absolute quality, introduces no new union-critical
+errors, remains real-time on the target Macs, and has fully distributable
+model/data lineage. Reasoning traces are neither needed nor stored; teachers
+provide final translations, quality labels, and compact error tags only.
+
+## 2026-07-25 preservation replay and parent-specialist interpolation
+
+Two preregistered follow-ups tested whether the exact Claude-5 preference
+signal could be retained without the v7 long/legal regressions.
+
+V8 mixed every preference batch with an equally sized licensed-human replay
+batch. Its 136 training rows and 128 validation rows were balanced across
+legal negation, legal critical tokens, long legal, general legal, ALT, KFTT,
+Tatoeba, and Mimi UI text. Preference, replay, and protected sources were
+hash-screened before training. The objective combined parent-relative DPO,
+chosen-target SFT, replay SFT, frozen-parent KL, and L2 distance to the parent.
+This is consistent with NMT evidence that domain-data mixing is a strong
+first-line retention method and can outperform a regularizer alone:
+[Multi-Domain Adaptation in Neural Machine
+Translation](https://aclanthology.org/2021.emnlp-main.666/) and
+[Overcoming Catastrophic Forgetting During Domain Adaptation of
+NMT](https://aclanthology.org/N19-1209/).
+
+The frozen 40-step arm did not qualify. Its best checkpoint reached 0.7273
+relative preference accuracy against the 0.80 gate. Replay token NLL improved
+by 0.00075, replay chrF++ changed by only -0.0133, legal replay chrF++ by
+-0.0264, and no new exact, typed, or negation error appeared. A reported
+generation failure was subsequently diagnosed as an internal evaluator bug:
+batched generation right-padded an already terminated 41-token hypothesis,
+and the repetition detector counted three padding trigrams. The actual
+hypothesis ended with EOS and contained no loop. Correcting that measurement
+does not change the v8 rejection because preference accuracy independently
+failed.
+
+V9 then tested training-free linear interpolation between the authenticated
+parent and v7 specialist. This follows direct NMT checkpoint-averaging evidence
+([Gao et al.,
+2022](https://aclanthology.org/2022.findings-aacl.18/)) and the broader
+single-model weight-averaging result that can retain robustness without
+inference overhead ([Model
+Soups](https://proceedings.mlr.press/v162/wortsman22a.html);
+[WiSE-FT](https://arxiv.org/abs/2109.01903)). The contract froze 0.25, 0.50,
+and 0.75 specialist coefficients as selectable; 0 and 1 were diagnostic
+anchors. All three selectable points passed the corrected internal preservation
+gate. The registered ordering selected 0.75:
+
+| V9 internal metric | Selected result | Gate |
+| --- | ---: | ---: |
+| relative preference accuracy | 0.8788 | at least 0.80 |
+| relative preference margin | +0.003036 | greater than 0 |
+| replay token NLL delta | -0.000367 | at most +0.01 |
+| replay chrF++ delta | +0.0103 | at least -0.10 |
+| legal replay chrF++ delta | +0.0109 | at least -0.10 |
+| new replay critical/negation/generation failures | 0 | 0 |
+
+The exact MLX affine q4/group-64 direction pack is 39,138,970 bytes. Together
+with the unchanged EN→JA direction it would be 78,277,210 bytes. Apple M3 Pro
+warm segment p95 is 149.9 ms and peak RSS is 223.3 MB, so size, latency, and
+memory pass.
+
+Protected quality still rejects it. Over 100 composed JA→EN documents, paired
+mean sentence chrF++ changes by only +0.0106 (90% interval -0.1385 to +0.2076)
+against the +0.25 signal gate. Direct long-document legal regresses -2.2546.
+The same one new negation case and legal repetition case seen in v7 remain.
+Distribution provenance is also not yet projected into the converted model
+manifest. COMET-22 and an additional blinded judge were correctly skipped
+after these mandatory failures fixed the decision.
+
+The conclusion is not that interpolation is ineffective. It preserved the
+preference signal at zero runtime/size cost and reduced the composed
+long-document legal regression from -0.8822 in v7 to -0.2879 in v9. The
+underlying specialist is simply too weak: its learned probability shift rarely
+changes greedy translations beneficially, while a few decision boundaries
+still flip unsafely. A successor should first create a materially stronger
+generation-level specialist from a larger, error-stratified, independently
+screened teacher corpus. Only then should interpolation or routed adapters be
+used as retention mechanisms. Repeating another whole-model MoE or tiny
+preference-only update against the same experts is not justified by the local
+evidence.
 
 ## What the literature says
 
@@ -1027,7 +1283,7 @@ than an authorization dependency.
 | Frozen-base KL/L2 regularization + mixed curriculum | High | Low; training-only extra model | **Do next** |
 | Uncertainty + diversity source selection | High | Moderate implementation | **Do next** |
 | Strict automated teacher consensus + calibrated judge | Medium-high | High rejection rate; provisional only | **Scale both directions** |
-| GPT-5.6 diverse final translations | High if filtering holds | API credential/cost | **Next teacher source** |
+| GPT-5.6 diverse final translations | High if filtering holds | Batch API credential/cost or Codex CLI throughput/quota | **Pilot through authenticated Codex CLI** |
 | Checkpoint averaging | Medium | Very low | **Do next** |
 | Human-preference DQO | Medium-high | Requires human evidence | **Optional; not a blocker** |
 | Encoder alignment to frozen base | Medium | May over-constrain adaptation | **Secondary ablation** |
@@ -1383,3 +1639,252 @@ is completing the independently filtered 400+400 product-domain reference set,
 then distilling into the already fast specialists. Reconsider 12e/1d only with
 a distributable pretrained initialization or a training plan large enough to
 learn the architecture from its beginning—not by grafting it onto this model.
+
+## Claude Fable 5 consultation: corrected and tested
+
+The requested external consultation was executed through Claude CLI with the
+explicit `claude-fable-5` model alias, high effort, safe mode, no tools, no
+session persistence, and a bounded budget. The consultant independently agreed
+with the literature-derived rejection of token-level MoE at this operating
+point and made a stronger claim: the document-sticky oracle ceiling is too
+small to justify learned routing around the current expert pool. It recommended
+direct low-rank adaptation as a cheap falsification control and a
+deep-encoder/shallow-decoder distilled student as the higher-upside architecture.
+
+The advice required two factual corrections. It called the oracle deltas COMET,
+although the experiment measures mean sentence chrF++, and treated the 73.4 MB
+artifact as one directional model, although it is the complete two-direction
+pack. These corrections increase available size headroom but do not improve the
+router's quality ceiling.
+
+Mimi implemented the narrow adapter configuration from the longer consultation:
+rank 16, alpha 32, decoder cross-attention q/v/output and decoder FFNs in all six
+layers, plus encoder self-attention q/v in the top three layers. The code
+enforces exact zero-init parent behavior, exports factors, and merges back into
+ordinary Marian Linear weights. The real parent has 36 adapted modules and
+884,736 trainable parameters; its adapter file is 3.55 MB. Zero-init logits and
+greedy output are exact, and the nonzero merged-logit maximum discrepancy is
+1.72e-5.
+
+The sentence-level arm regresses licensed validation chrF++ from 31.110 at step
+0 to 30.292/29.975 at steps 50/100. A second arm adds 2,000 coherent licensed
+ALT document windows, lowers LR from 1e-4 to 5e-5, and adds frozen-parent KL
+0.05; it still reaches only 30.910/30.909. Both select the untouched parent.
+Because EN→JA is the weak direction and no trained checkpoint survives even
+the independent validation gate, the registered stop rule fires before q4,
+JA→EN replication, development-suite model selection, or Swift work.
+
+This result does not show that low-rank parameterization is incapable of
+translation adaptation. It shows that attaching low-rank capacity to the
+current six-encoder/six-decoder parent does not repair the shared adequacy
+errors under these licensed sentence/window objectives. Together with the
+failed routing, post-hoc decoder pruning, same-depth SSRU, and runtime selectors,
+the next architecture hypothesis is now narrower: train an encoder-heavy,
+shallow-decoder student from initialization with final-translation sequence
+distillation and explicit document/critical preservation. Do not use or store
+teacher reasoning traces; transfer final translations, calibrated scores, and
+auditable error labels only.
+
+## Second Fable 5 consultation and the corrected next experiment
+
+The first consultation's proposed full-depth human-data curriculum and QAT were
+also compared with the completed repository evidence. Mimi has already run that
+experiment at substantially greater scale: 123,050 authenticated rows per
+direction, a six-encoder/six-decoder full fine-tune, frozen-parent KL/L2,
+checkpoint averaging, exact MLX q4 conversion, and QAT. EN→JA improved its
+public sentence aggregate, but the q4 canary/conversation slices regressed; the
+lower-rate legal continuation then improved legal chrF++ while increasing
+critical or negation failures. Repeating that recipe is not a new strategy.
+
+A second no-tools Fable 5 consultation was therefore given the complete
+negative-results matrix. Its revised recommendation matches the open evidence:
+use GPT-5.6 for **final-translation sequence distillation into the intact
+six-encoder/six-decoder student first**, with broad source selection, strict
+meaning/negation/critical-token filtering, and early exact-q4 gates. Do not
+distill private reasoning traces. Do not spend another run on a post-hoc
+shallow decoder, adapter, or router until final-sequence teacher signal has
+been tested.
+
+This does not establish that a deep-encoder/shallow-decoder model is
+fundamentally inferior. It changes the experiment order. The 6e/2d, 6e/4d, and
+6e/5d recovery arms already lost too much quality, while a purpose-pretrained
+12e/1d model would require a much larger training program. The intact student
+is the cheapest architecture on which to test whether teacher target quality
+is the missing variable.
+
+The experiment contract now starts each direction from the actual best-local
+intact 6e/6d checkpoint. This matters for a distillation ablation: initializing
+JA→EN from the broad parent while comparing against its later legal-specialist
+descendant would confound teacher-signal value with checkpoint quality.
+
+The early-stop protocol also covers both operational document modes. An exact
+tokenizer-derived slice retains all 197/200 development documents that fit the
+192-token direct-input bound, with no manual case choice; segment-then-join
+still covers all 200 documents and 400 segments. A machine evaluator binds raw
+hypotheses, COMET, deterministic critical audits, an independent blinded
+critical judge, checkpoint/dataset lineage, q4/group-64 conversion, runtime,
+memory, and bundle inventory. Segment-level paired bootstrap resamples parent
+documents to avoid treating correlated segments as independent observations.
+This does not make the development set promotion evidence; it is an economical
+phase-1 futility gate before the sealed 400-per-direction evaluation.
+
+A third no-tools Fable 5 methodology audit challenged the initial version of
+that futility gate. Its decision-reversing findings were accepted where they
+matched the implementation: the evaluator now re-authenticates train/dev
+decontamination, requires two evaluation judge families disjoint from the
+admission judges, uses the same parent-balanced estimand for the point estimate
+and bootstrap, caps development-gate reuse at four, and replaces an
+underpowered strict-superiority interval with a 90% non-inferiority bound.
+The point gate now requires two of three chrF++/COMET/two-judge improvements.
+Zero tolerance remains for reproducible deterministic or two-judge-confirmed
+new critical failures because safety risk is intentionally asymmetric. Relative
+latency versus the cached incumbent is diagnostic; the absolute 175 ms segment
+gate remains mandatory.
+
+### Registered 16,000-source pilot
+
+The first cost-bounded pilot now freezes 8,000 sources per direction. It
+contains fixed quotas for KFTT Wikipedia, ALT news, finalized Japanese law,
+Tatoeba conversation, Mimi UI, and 539 coherent ALT document windows in each
+direction; EN→JA also includes 299 CC BY 4.0 BTEC utterances. It preserves 900
+previously mined exact-q4 hard KFTT rows per direction. Of 16,000 rows, 15,701
+retain a licensed human reference locally and 299 BTEC rows are source-only.
+
+Selection is deterministic and screens both source and local reference against
+canary, three public-stress versions, legal validation/test, the M2M
+architecture screen, the 400-segment development suite, and the frozen
+800-source automated-claim draft. Exact matches and character-five-gram
+Jaccard similarity greater than 0.8 are rejected. Every row retains its own
+license and attribution; the multi-license collection must not be relabeled as
+a uniformly permissive dataset.
+
+The sealed teacher file contains only source ID, direction, domain, and source
+text. It has 16,000 `/v1/responses` requests, uses `gpt-5.6-sol`,
+`reasoning.effort: none`, strict Structured Outputs, and `store: false`.
+References and student hypotheses were independently re-parsed out of all
+requests. The request file is 41,149,810 bytes and hashes to
+`17eede0183f2863190533867282a75de6d11179e79e066a31b260d60a787e3b7`.
+It has not been submitted.
+
+Using the 2026-07-25 Batch prices of $2.50/M input and $15/M output tokens, an
+`o200k_base` complete-body planning estimate is $23.60 input plus $52.80 output
+at 220 output tokens/request, or about **$76.40**. The deliberately conservative
+input-plus-maximum-output ceiling is **$191.60** if every request consumes all
+700 output tokens. Pricing and the estimate must be refreshed before
+submission.
+
+`store: false` is not a zero-retention claim. OpenAI's current data guide says
+Batch API application state persists until deleted and Batch is not Zero Data
+Retention eligible. Public licensed source text may therefore be submitted
+only through an approved account after the operator accepts that retention
+contract. The credential pasted into chat is exposed and must not be used.
+
+The reviewer-free acceptance policy remains layered rather than permissive:
+deterministic language/number/date/unit/placeholder/negation/length checks;
+reference-based chrF++, COMET, and critical-token comparisons for the 15,701
+human-reference rows; and a blinded independent judge distinct from candidate
+generation. Source-only BTEC candidates require independent judge agreement
+plus round-trip/structure checks or are discarded. No candidate becomes a
+training target merely because GPT-5.6 generated it.
+
+The reference anchor is now implemented, not merely planned. For the 15,701
+referenced sources, the licensed human target is inserted as an anonymous
+fourth candidate. Judge requests expose only randomized candidate IDs and
+translations, never origin labels, reference provenance, teacher style tags, or
+metric scores. An exact teacher/reference duplicate remains one candidate but
+is marked reference-equivalent locally. If two distinct non-teacher judges
+select the licensed reference or an exact equivalent, the consensus gate emits
+no synthetic row. It admits only an error-free teacher candidate that both
+judges uniquely prefer over the blinded anchor. Three-candidate operation is
+retained for source-only rows and remains promotion-ineligible provisional SFT.
+A reference-anchored row may train a promotion candidate, but it is never
+promotion evidence: the resulting exact-q4 model must independently pass every
+frozen held-out quality, critical-safety, runtime, size, and licensing gate.
+
+The first student run remains the intact full-depth Marian model, with an early
+250-step full-precision screen and exact q4 conversion. Stop immediately for
+any new critical/negation failure or domain regression. Only if teacher
+sequences produce a real held-out q4 gain should Mimi revisit
+deep-encoder/shallow-decoder pretraining or shared routed adapters.
+
+That first student cell is now preregistered and hash-bound. It starts from the
+current full-depth EN→JA averaged and JA→EN selected checkpoints, retains the
+intact 6e/6d architecture, and runs only 250 steps at 2e-6 with frozen-parent KL
+0.10 and L2 0.01. Reference-anchored synthetic targets are capped at 25% of
+training; each requires at least three balanced licensed human-reference replay
+rows. Exact MLX q4/group-64 conversion is mandatory before any continuation
+decision.
+
+The continuation gate is deliberately stronger than validation loss but is not
+misrepresented as a promotion test. Per direction it requires at least two of
+three point-improvement signals: +0.25 parent-balanced sentence chrF++, +0.002
+COMET-22, and +0.10 mean score from two disjoint judge families. Each metric
+also has a registered 90% non-inferiority lower bound. This makes chrF++ one
+signal rather than the sole definition of a better paraphrase. BLEU/domain/
+direct retention, zero new critical/negation/structured
+token or repetition/nontermination failures, warm segment p95 at most 175 ms,
+peak RSS at most 250 MB, and the preferred bundle target below 150 MB remain
+mandatory. The hard ceiling is 500 MB. The machine-readable contract hashes to
+`553453afc7dd5eb0643bd1c37e21d594993ca91ba5512b44dbbbc48a957ef211`;
+promotion and app changes remain explicitly unauthorized.
+
+The data-ratio invariant is executable. A dedicated assembler admits only
+four-candidate reference-anchored teacher wins, revalidates the two complete
+judge records, pairs each selected teacher translation with the same-source
+licensed human reference, and adds two more deterministic corpus-balanced
+human rows. It emits human-only validation and fails closed unless the final
+training mixture is exactly 25% synthetic with complete license/provenance and
+no protected or train/validation overlap.
+
+## Pilot update: preference identifiability before distillation
+
+The first 87-source keyless GPT-5.6 sequence pilot tested a missing assumption
+in multi-candidate distillation: independent judges must be able to identify
+one stable target, not merely declare several paraphrases acceptable. After an
+adversarial critical-token audit, 67 sources entered blinded review with three
+teacher styles and, where available, an anonymous licensed reference.
+
+Claude Fable 5 and local Apache-2.0 Qwen3-8B 4-bit both evaluated every source.
+The coarse 0–4 quality scale produced many legitimate abstentions: 57 for
+Claude and 53 for Qwen. On the five sources where both had a unique eligible
+best, their selections disagreed. The registered exact-consensus policy
+therefore approved zero targets.
+
+This result changes the data strategy without weakening the gate. Generating
+several near-equivalent teacher styles creates vote splitting and makes target
+identity poorly determined. The next pilot should use one preregistered
+canonical teacher sequence, one licensed reference, and the incumbent Mimi
+output as anonymous alternatives. That design asks the decision-relevant
+question directly: is the canonical teacher target independently preferred to
+the human anchor and current model output? It also prevents post-hoc style
+selection. Only a small direction-balanced pilot is justified; no large
+teacher run or student optimization should begin until stable two-family
+agreement exists.
+
+## Experimental update: canonical sequence KD works asymmetrically
+
+The canonical-target experiment validates the sequence-level KD intuition but
+rejects a symmetric bidirectional recipe. Absolute two-family review approved
+180/223 deterministically admitted canonical targets at scale. A 250-step
+intact-Marian student with 25% reviewed synthetic data produced a statistically
+positive exact-q4 EN→JA document gain in both paired chrF++ (+0.7510) and
+COMET-22 (+0.00837), concentrated in legal and news text.
+
+The same design failed JA→EN: paired document chrF++ moved −0.3689, BLEU
+−0.4075, and COMET +0.00079. New case-level critical and generation failures
+also appeared despite lower aggregate failure counts. This supports three
+updated intuitions:
+
+1. canonical final-sequence KD is more identifiable than preference ranking
+   among near-equivalent paraphrases;
+2. data selection and preservation must be direction-specific even when
+   architecture and tokenizer are shared;
+3. adding routed experts or more parameters is not the next bottleneck—the
+   current pair already meets 78.3 MB bundle, sub-100 ms segment p95, and
+   222.9 MB peak RSS targets.
+
+The next literature-guided cell should treat critical preservation as explicit
+counterfactual training data or constrained verification, reduce the JA→EN
+synthetic ratio, and retain the successful EN→JA legal/news slice under a fresh
+contract. MoE should be reconsidered only after a single-expert recipe passes
+directional safety and quality gates.

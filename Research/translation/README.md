@@ -66,6 +66,15 @@ quality-aware sequence distillation, uncertainty-plus-diversity source
 selection, frozen-base regularization, a mixed-domain curriculum, and
 checkpoint averaging, with preference optimization only after a supervised win.
 
+The reproducible 200-case sentence/document evaluation is documented in
+[`development-accuracy-v1-report.md`](development-accuracy-v1-report.md). It
+adds 40 six-segment documents, pinned chrF++/BLEU/COMET scoring, dual blinded
+LLM-judge sensitivity checks, context-length auditing, and a 73.4 MB
+lineage-complete candidate pair. The candidate is a meaningful JA→EN
+development improvement but remains unpromoted because the suite is public,
+EN→JA evidence is inconclusive, long-document critical failures remain, and
+distribution review is incomplete.
+
 ## Current decision
 
 The preferred-v3 student bundle is two direction-selected ElanMT-BT Marian
@@ -1555,3 +1564,469 @@ Stop before SSRU student training, q4 quality work, Swift porting, packaging, or
 default changes. This does not reject a purpose-pretrained deep-encoder/one-
 decoder architecture; it rejects spending the next training budget on the
 same-depth mutation of Mimi's current incumbent.
+
+### Direct low-rank and coherent-document control
+
+`marian_low_rank_adapter.py` and `train_marian_low_rank_adapter.py` provide a
+mergeable Marian adapter path with exact zero-init and tested merge equivalence.
+`build_alt_document_window_dataset.py` adds deterministic coherent 2–4-sentence
+licensed ALT train windows; `filter_training_dataset_against_protected.py`
+authenticates parent/output hashes and removes exact or high-overlap held-out
+source/target rows.
+
+The first two EN→JA rank-16 cells both select the untouched parent. Licensed
+validation chrF++ moves 31.110 → 30.292/29.975 for the sentence-only arm and
+31.110 → 30.910/30.909 after adding 2,000 document windows, lowering LR, and
+adding frozen-parent KL. Stop before q4, JA→EN replication, Swift work, or app
+integration. The requested Claude Fable 5 consultation agrees that another
+router is low value, but its metric and pack-size assumptions were corrected in
+the development report. The next model architecture should be a purpose-trained
+deep-encoder/shallow-decoder distilled student, not another adapter or post-hoc
+decoder deletion.
+
+### Superseding next step: final-sequence teacher pilot
+
+The second corrected Claude Fable 5 consultation and the completed 6e/2d,
+6e/4d, 6e/5d, full-depth-curriculum, checkpoint-averaging, and QAT evidence
+change the experiment order. The next training cell uses GPT-5.6 final
+translations with the intact 6e/6d Marian student. Reasoning traces are neither
+requested nor retained. A purpose-trained deep-encoder/shallow-decoder model
+remains a later architecture arm only if final-sequence signal clears q4 gates.
+
+Build the frozen 8,000-per-direction pilot with:
+
+```sh
+python3 scripts/translation/build_gpt56_distillation_pilot.py \
+  Research/translation/work/release-clean-full-depth-en-ja-v1 \
+  Research/translation/work/release-clean-full-depth-ja-en-v1 \
+  Research/translation/work/balanced-human-reference-alt-windows-en-ja-v1-development-screened \
+  Research/translation/work/balanced-human-reference-alt-windows-ja-en-v1-development-screened \
+  Research/translation/work/gpt56-final-translation-pilot-v1.seeds.jsonl \
+  --priority-seeds Research/translation/work/distillation-seeds-v7.jsonl \
+  --protected-suite Research/translation/benchmark/canary.jsonl \
+  --protected-suite Research/translation/benchmark/public-stress-v1.jsonl \
+  --protected-suite Research/translation/benchmark/public-stress-v2.jsonl \
+  --protected-suite Research/translation/benchmark/public-stress-v3.jsonl \
+  --protected-suite Research/translation/benchmark/legal-safety-validation-v1.jsonl \
+  --protected-suite Research/translation/benchmark/legal-safety-test-v1.jsonl \
+  --protected-suite Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl \
+  --protected-suite Research/translation/benchmark/development-accuracy-v1.jsonl \
+  --protected-suite Research/translation/benchmark/development-accuracy-v1.segments.jsonl \
+  --protected-suite Research/translation/benchmark/automated-claim-v1.sources.jsonl
+
+python3 scripts/translation/prepare_synthetic_batch.py \
+  Research/translation/work/gpt56-final-translation-pilot-v1.seeds.jsonl \
+  Research/translation/work/gpt56-final-translation-pilot-v1.requests.jsonl
+
+python3 scripts/translation/run_synthetic_batch.py validate \
+  Research/translation/work/gpt56-final-translation-pilot-v1.requests.jsonl
+
+uv run --no-project --with tiktoken \
+  python3 scripts/translation/estimate_openai_batch_cost.py \
+  Research/translation/work/gpt56-final-translation-pilot-v1.requests.jsonl \
+  Research/translation/work/gpt56-final-translation-pilot-v1.cost-estimate.json
+```
+
+The frozen seed and request SHA-256 values are
+`d555e88770d8ec88c5cc4de7991dcd4532a27176309a7c1a1a4444d31472dcde`
+and
+`17eede0183f2863190533867282a75de6d11179e79e066a31b260d60a787e3b7`.
+The request file is 41,149,810 bytes, contains 16,000 source-only Responses API
+requests, uses GPT-5.6 Sol with `reasoning.effort: none`, and was completely
+re-parsed to verify that references and student outputs are absent.
+
+At the official 2026-07-25 Batch prices, the planning estimate is $76.40 at 220
+output tokens/request; the input-plus-configured-maximum ceiling is $191.60.
+Refresh pricing before any submission. `store:false` does not make Batch API
+state Zero Data Retention eligible; current OpenAI documentation says Batch
+application state is retained until deleted.
+
+The pilot has **not** been uploaded or submitted. Do not use the API key pasted
+into chat: it is exposed and must be rotated. Submission requires a secure
+`OPENAI_API_KEY`, explicit acceptance of the refreshed cost and retention
+contract, and the exact hash-confirmation command already enforced by
+`run_synthetic_batch.py`.
+
+As a keyless alternative, the same frozen source-only corpus can be processed
+through the locally authenticated Codex CLI. The resumable transport preserves
+the sealed request SHA, strict candidate schema, source-only boundary, and
+Batch-compatible collected output:
+
+```sh
+python3 scripts/translation/run_codex_teacher.py prepare \
+  Research/translation/work/gpt56-final-translation-pilot-v1.requests.jsonl \
+  Research/translation/work/gpt56-final-translation-pilot-v1.codex-teacher-v1 \
+  --maximum-items 48 \
+  --maximum-source-characters 12000
+
+python3 scripts/translation/run_codex_teacher.py run \
+  Research/translation/work/gpt56-final-translation-pilot-v1.requests.jsonl \
+  Research/translation/work/gpt56-final-translation-pilot-v1.codex-teacher-v1 \
+  --maximum-shards 1
+
+python3 scripts/translation/run_codex_teacher.py status \
+  Research/translation/work/gpt56-final-translation-pilot-v1.requests.jsonl \
+  Research/translation/work/gpt56-final-translation-pilot-v1.codex-teacher-v1
+```
+
+The 2026-07-25 pilot completed 87 blind rows across two production shards. An
+adversarially tested reference-validated critical-token policy admitted 67
+sources: 44 EN→JA and 23 JA→EN. Its exact protected-token contract remains
+strict, and source-only rows receive no reference-based exception. The
+mixed-direction shard's natural-spoken EN→JA and meaning-conservative JA→EN
+candidates scored chrF++ 46.89 and 63.71 against licensed training references.
+These are teacher-data diagnostics, not held-out promotion results. See
+`Research/translation/codex-teacher-pilot-report-2026-07-25.md` for hashes,
+latency/token measurements, BLEU/chrF++ tables, rejection analysis, and the
+stop/go gate.
+
+Two independent non-teacher judge paths then completed all 67 sources: Claude
+Fable 5 through authenticated Claude CLI and pinned Apache-2.0 Qwen3-8B 4-bit
+locally through MLX. Candidate origins and reference provenance were blinded,
+and no reasoning traces were stored. Claude produced 10 unique threshold-
+eligible selections and 57 tie abstentions; Qwen produced 12 selections, 53
+tie abstentions, and two threshold abstentions. Both uniquely selected on five
+sources, but disagreed on all five. The unchanged fail-closed consensus gate
+therefore approved **0/67**. The remaining 335 teacher shards, student training,
+and publication are stopped. The machine-readable decision is
+`Research/translation/codex-teacher-pilot-consensus-2026-07-25.json`.
+
+No human reviewer is required for this pilot, but candidate admission remains
+independent and fail-closed. Apply deterministic language/number/date/unit/
+placeholder/negation checks, compare against local human references with
+chrF++ and COMET for 15,701 rows, and use a blinded judge distinct from the
+candidate generator. The 299 source-only BTEC rows require independent judge
+agreement plus round-trip/structure checks or are discarded. Train the intact
+6e/6d student for only 250 steps first, convert that checkpoint through the
+exact q4 path, and stop on any new critical or negation error. This work does
+not authorize Swift integration, packaging, public release, or a default
+change.
+
+After collecting teacher output, build the reference-anchored queue with:
+
+```sh
+python3 scripts/translation/filter_synthetic_batch.py \
+  Research/translation/work/gpt56-final-translation-pilot-v1.seeds.jsonl \
+  Research/translation/work/gpt56-final-translation-pilot-v1.output.jsonl \
+  Research/translation/benchmark/automated-claim-v1.sources.jsonl \
+  Research/translation/work/gpt56-final-translation-pilot-v1.review-queue.jsonl \
+  --include-licensed-reference-candidate \
+  --reference-validated-critical-equivalence \
+  --additional-protected-suite Research/translation/benchmark/canary.jsonl \
+  --additional-protected-suite Research/translation/benchmark/public-stress-v1.jsonl \
+  --additional-protected-suite Research/translation/benchmark/public-stress-v2.jsonl \
+  --additional-protected-suite Research/translation/benchmark/public-stress-v3.jsonl \
+  --additional-protected-suite Research/translation/benchmark/legal-safety-validation-v1.jsonl \
+  --additional-protected-suite Research/translation/benchmark/legal-safety-test-v1.jsonl \
+  --additional-protected-suite Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl \
+  --additional-protected-suite Research/translation/benchmark/development-accuracy-v1.jsonl \
+  --additional-protected-suite Research/translation/benchmark/development-accuracy-v1.segments.jsonl
+```
+
+For 15,701 sources, this adds the licensed human target as an anonymous fourth
+candidate. Exact teacher/reference duplicates are not repeated; they are
+locally marked reference-equivalent. `prepare_distillation_judge_batch.py`,
+`run_synthetic_batch.py`, `prioritize_distillation_judgments.py`, and
+`approve_automated_consensus.py` accept either three or four candidates.
+Neither judge sees candidate origin or reference provenance. A reference or
+reference-equivalent consensus emits no synthetic row; only the same uniquely
+preferred, error-free teacher candidate from two distinct non-teacher judge
+models can enter training. Three-candidate source-only consensus remains
+promotion-ineligible provisional SFT. Four-candidate reference-anchored
+consensus may train a promotion candidate, but it never counts as held-out
+promotion evidence; the exact-q4 model must pass the frozen gates independently.
+
+The completed three-style pilot shows a practical failure mode of this design:
+multiple semantically similar teacher candidates split or tie the judges'
+preference. Do not reinterpret a tie as approval or select a teacher style
+after seeing judgments. The next small pilot should preregister one canonical
+teacher target and compare it with the licensed reference and current Mimi
+baseline under the same deterministic and two-family consensus thresholds.
+
+Freeze the student recipe before collecting any output:
+
+```sh
+python3 scripts/translation/prepare_gpt56_student_experiment_contract.py \
+  Research/translation/work/gpt56-final-translation-pilot-v1.seeds.manifest.json \
+  Research/translation/work/gpt56-final-translation-pilot-v1.request-contract.json \
+  Research/translation/work/gpt56-final-translation-pilot-v1.cost-estimate.json \
+  Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3 \
+  Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1 \
+  Research/translation/benchmark/development-accuracy-v1.jsonl \
+  Research/translation/benchmark/development-accuracy-v1.segments.jsonl \
+  Research/translation/benchmark/development-accuracy-v1.results-summary.json \
+  Research/translation/benchmark/automated-claim-v1.sources.jsonl \
+  Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl \
+  Research/translation/benchmark/development-accuracy-v1.direct-under-192.manifest.json \
+  Research/translation/results/development-accuracy-v1-candidate-clean-pair.json \
+  Research/translation/results/development-accuracy-v1-candidate-clean-pair-segments.json \
+  Research/translation/results/development-accuracy-v1-candidate-clean-pair-direct-under-192.json \
+  Research/translation/results/development-accuracy-v1-candidate-clean-pair-comet22.json \
+  Research/translation/results/development-accuracy-v1-candidate-clean-pair-structure-audit.json \
+  Research/translation/work/gpt56-final-translation-pilot-v1.student-contract.json
+```
+
+The current contract hashes to
+`553453afc7dd5eb0643bd1c37e21d594993ca91ba5512b44dbbbc48a957ef211`.
+It binds both full-precision initial checkpoints, all admission/training/
+conversion/evaluation scripts, the public development suite, the frozen
+400+400 promotion-source draft, the exact incumbent raw/COMET/structure
+reports, the automatically selected direct-document slice, and the teacher
+request/cost artifacts. The JA→EN starting checkpoint is the actual
+development incumbent, the intact 6e/6d legal specialist, rather than the
+weaker broad full-depth parent.
+
+Phase 1 is fixed at 250 steps, learning rate 2e-6, effective batch 32,
+frozen-parent KL 0.10, L2-to-parent 0.01, and no fake quantization. Synthetic
+targets may be at most 25% of the training mix; every admitted teacher target
+requires at least three balanced licensed human-reference replay rows. Both
+directional checkpoints must be converted immediately to MLX affine q4/group
+64. Continuation is forbidden unless the q4 pair gains at least +0.25 mean
+parent-balanced sentence chrF++, +0.002 mean COMET-22, and +0.10 mean
+two-judge score. At least two of these three improvement signals must pass in
+each direction. All three retain registered 90% non-inferiority lower bounds,
+so a paraphrastic improvement is not forced to win chrF++ while a regression
+cannot hide behind one metric. The q4 model may introduce zero critical/
+negation/number/date/unit/placeholder or
+long-document repetition/nontermination failures, must remain under 175 ms
+warm segment p95 and 250 MB peak RSS, and should stay below the 150 MB target.
+The hard bundle ceiling remains 500 MB.
+
+The direct-document slice is generated by
+`prepare_direct_within_limit_suite.py` from the exact runtime tokenizer and has
+no manual inclusions or exclusions. It retains 197/200 frozen documents
+(EN→JA 98, JA→EN 99); the other three exceed 192 encoded source tokens. The
+incumbent direct-mode report is frozen alongside segment-then-join. After phase
+1, `evaluate_gpt56_student_continuation.py` authenticates the training
+datasets/checkpoints, exact q4/group-64 lineage, bundle inventory, raw reports,
+COMET reports, structure audits, and two blinded quality/critical judges from
+distinct families that are disjoint from the teacher-admission judges. It
+re-verifies that both training manifests screened the development cases and
+segments, recomputes chrF++/BLEU and safety sets from raw hypotheses, averages
+segments within each parent before paired bootstrap, checks direct and joined
+document modes, and returns exit 0 only when every preregistered gate passes.
+At most four decisions may use this development surface.
+Even a passing report authorizes only continued training, never promotion,
+Swift integration, or an app default change.
+
+Create each of the two evaluation-judge files with a different exact model and
+family (and neither admission-judge model), then collect its complete Batch
+output:
+
+```sh
+python3 scripts/translation/prepare_gpt56_phase1_judge_batch.py \
+  Research/translation/benchmark/development-accuracy-v1.jsonl \
+  PRIVATE_PATH/phase1-candidate.json \
+  Research/translation/results/development-accuracy-v1-candidate-clean-pair.json \
+  PRIVATE_PATH/phase1-judge-a.requests.jsonl \
+  --model EXACT_JUDGE_A_REVISION \
+  --model-family JUDGE_A_FAMILY \
+  --model-revision EXACT_JUDGE_A_REVISION \
+  --judge-role phase1-judge-a
+
+python3 scripts/translation/collect_gpt56_phase1_judge.py \
+  Research/translation/benchmark/development-accuracy-v1.jsonl \
+  PRIVATE_PATH/phase1-candidate.json \
+  Research/translation/results/development-accuracy-v1-candidate-clean-pair.json \
+  PRIVATE_PATH/phase1-judge-a.requests.jsonl \
+  PRIVATE_PATH/phase1-judge-a.batch-output.jsonl \
+  PRIVATE_PATH/phase1-judge-a.report.json
+```
+
+Repeat with `phase1-judge-b`. The request shuffles A/B independently by role,
+omits engine labels and references, requests no chain of thought, and uses
+strict structured scores. The collector replays the request assignment,
+rejects incomplete or reasoning-bearing responses, and binds every verdict to
+the suite and candidate/incumbent report hashes.
+
+The frozen incumbent direct slice scores 27.7258 chrF++ / 8.6615 BLEU at
+0.3247-second warm p95 for EN→JA and 49.9062 / 25.0542 at 0.3032 second for
+JA→EN. Direct p95 is reported but the 175 ms real-time gate remains a
+per-segment latency gate. Four existing direct outputs hit the deterministic
+generation-limit/repetition detector; they are retained as baseline failures,
+and the student may introduce zero new cases.
+
+`build_reference_anchored_distillation_dataset.py` enforces the registered data
+mixture rather than relying on training-command convention. It accepts only
+`two-judge-reference-anchored` rows, revalidates both complete judgment
+records, rejects every source-only provisional row, pairs each teacher target
+with its same-source licensed human reference, and adds two deterministic
+corpus-balanced human rows. It separately authenticates and screens a
+human-only validation split. The emitted manifest fails closed unless the
+result is exactly 25% synthetic, all rows are promotion-eligible, all licenses
+and provenance are present, and no train/validation/protected overlap remains.
+
+## Canonical-target v3 result: directional signal, bidirectional stop
+
+The follow-up removed three-style vote splitting by preregistering exactly one
+canonical teacher translation and judging it against absolute quality
+thresholds with Claude Fable 5 and local Apache-2.0 Qwen3-8B 4-bit. GPT-5.6
+teacher generation used the Codex CLI's cached ChatGPT authentication; no
+OpenAI API key or private reasoning trace was used.
+
+The fresh 400-source scale run approved 180 targets: 97 EN→JA and 83 JA→EN.
+Each direction's authenticated training mix was exactly 25% teacher targets,
+25% same-source licensed human anchors, and 50% balanced licensed human replay.
+The intact Marian pair then ran the frozen 250-step KL/L2 recipe and exact MLX
+q4/group-64 conversion.
+
+The 78.3 MB pair passes size, 80.5/90.4 ms warm segment p95 passes real-time
+latency, and 222.9 MB peak RSS passes memory. EN→JA passes both registered
+quality signals: composed-document mean paired chrF++ improves +0.7510 with a
+positive 90% interval and COMET-22 improves +0.00837. JA→EN regresses −0.3689
+paired chrF++, loses 0.4075 BLEU, and improves COMET only +0.00079, below the
++0.002 signal.
+
+The candidate also introduces two new union-critical cases, two new negation
+cases, four new typed critical cases, and two new repetition/generation-limit
+cases. Release packaging truthfully remains blocked because the mixed manifest
+does not yet project its retained per-row licenses into the legacy
+`effective_licenses` field. The machine result therefore rejects continuation,
+promotion, integration, and upload. Current Mimi stays unchanged.
+
+See `canonical-target-distillation-report-2026-07-25.md` and
+`canonical-target-student-v3-result-2026-07-25.json`. The result JSON hashes to
+`5469c71b48e02da6688ad51250f3286c48f7596249fcceb0de017dd640b54587`.
+
+A post-hoc 117.4 MB safety-routed diagnostic then kept JA→EN current and used
+the new EN→JA model only on source/output-safe segments. It introduced zero new
+deterministic safety failures but reached only +0.2934 paired document chrF++
+with a 90% interval crossing zero and +0.00196 COMET, just below the registered
+signal. It is exploratory, not claim-eligible, and did not consume the
+protected 2,800-case stress suite.
+
+## Current JA→EN v7: exact Sonnet 5 + Opus 5 admission
+
+The earlier v4-v6 pairwise experiments are stopped at their internal gate. Each
+reached only 0.60 validation pair accuracy against a preregistered 0.80
+requirement, so none was quantized or exposed to protected evaluation.
+
+V7 starts from 400 new JA→EN sources and a completed keyless GPT-5.6 Sol
+source-only teacher run. Deterministic checks produced a 230-source blinded
+teacher/reference/current-Mimi queue. Local Qwen and Claude Fable outputs are
+explicitly audit-only: they must not feed admission, pairwise selection,
+training, evaluation claims, or threshold changes.
+
+The active frozen dual-judge contract is
+`canonical-target-ja-en-scale-v7-claude5-judge-contract-v3-2026-07-25.json`
+(SHA-256
+`ebc1a12423de5e216136fd96c56c221d25e7fd4f8b59aef3241746faf9dc30b5`).
+It supersedes the first two contracts solely to carry hash-bound per-shard
+canonical-model evidence into the final judgment files and normalize bound
+script paths for portable reproduction; requests, candidates, models, and
+thresholds are unchanged. It binds identical blinded request payloads to exact
+`claude-sonnet-5` and
+`claude-opus-5` model IDs. These are two distinct models from the same provider;
+provider independence is not claimed. Every Claude CLI shard must prove the
+requested canonical primary model in returned model-usage metadata, with no
+fallback model. The small auxiliary Haiku bookkeeping request made by Claude
+CLI is recorded but is not a translation judge.
+
+The runs are resumable:
+
+```sh
+python3 scripts/translation/run_claude_consensus_judge.py \
+  Research/translation/work/canonical-target-ja-en-scale-v7.sonnet5-judge-requests.jsonl \
+  Research/translation/work/canonical-target-ja-en-scale-v7.sonnet5-run \
+  Research/translation/work/canonical-target-ja-en-scale-v7.sonnet5-output.jsonl \
+  --maximum-items 8 --maximum-characters 16000
+
+python3 scripts/translation/run_claude_consensus_judge.py \
+  Research/translation/work/canonical-target-ja-en-scale-v7.opus5-judge-requests.jsonl \
+  Research/translation/work/canonical-target-ja-en-scale-v7.opus5-run \
+  Research/translation/work/canonical-target-ja-en-scale-v7.opus5-output.jsonl \
+  --maximum-items 8 --maximum-characters 16000
+```
+
+No row is approved until both files cover all 230 sources and the fail-closed
+absolute gate accepts it. At least 120 canonical teacher targets must pass.
+Preference training is stricter still: each judge must score the teacher no
+worse than current Mimi on adequacy, fluency, and terminology and strictly
+better in total. No human reviewer is required, no reasoning trace is stored,
+and no partial judge output authorizes training. App integration, protected
+evaluation, and Hugging Face upload remain unauthorized.
+
+The downstream recipe is already frozen in
+`canonical-pairwise-v7-training-plan-2026-07-25.json` (SHA-256
+`40c2966cc2ba5906b3a717e84909ddbcdfdc1f9c8ed7c02625cb3b9f272bb8ea`).
+It permits one arm only after 120 absolute approvals, 60 unanimous Pareto
+pairs, and 12 validation pairs: 40 full-parameter steps at 5e-7 with the
+historical conservative parent-relative objective. Validation must reach 0.80
+relative pair accuracy and a positive mean margin. Hyperparameters may not be
+selected after seeing judgments; failure stops before MLX conversion and
+protected evaluation.
+
+The v7 run is now complete and rejected at the protected gate. Sonnet 5 and
+Opus 5 both completed all 230 blinded requests with exact primary-model usage
+evidence. Absolute consensus approved 215 targets, and unanimous Pareto
+selection retained 169 teacher-over-current pairs: 136 train and 33 untouched
+validation. A compatibility-only loader amendment was frozen after an initial
+pre-weight-load rejection; zero optimization steps had run, and the data,
+recipe, thresholds, and gates remained byte-for-byte identical. The amended
+plan hashes to
+`5f0babc033b3f235c2ade26a712f859d2042aaa0de37788b479624219f82a62c`.
+
+The single 40-step full-parameter arm passed its internal gate at step 40:
+0.8788 relative pair accuracy and +0.004049 mean relative margin over 33
+validation pairs. Exact MLX affine q4/group-64 conversion produced a
+39,138,970-byte JA→EN pack. Combined with the unchanged current EN→JA pack,
+the prospective pair is 78,277,210 bytes, comfortably below the preferred
+150 MB limit. On Apple M3 Pro, JA→EN warm segment p95 is 134.5 ms and peak RSS
+is 210.6 MB, so latency, memory, and size pass.
+
+Protected quality and safety do not pass. Across 100 composed JA→EN documents,
+mean paired sentence chrF++ improves only +0.0684 (registered 90% interval
+−0.1084 to +0.2797), below the +0.25 improvement signal. The long-document
+legal domain regresses −0.8822; direct long-document legal regresses −1.7567,
+both beyond the allowed −0.50 floor. The candidate also introduces one new
+negation failure and one new repetition/generation-limit failure, visible in
+both its failing segment and composed document. Its q4 manifest does not yet
+carry complete distribution provenance. COMET-22 and the independent blinded
+quality judge were not run after these mandatory failures fixed the rejection.
+
+The machine decision is
+`canonical-pairwise-v7-protected-result-2026-07-25.json` (SHA-256
+`4a2f2ef75d6e60ae23fd4765fe50ad35e9c496cd7ec7e5c35cdb90e8c3120022`).
+It keeps promotion, public upload, app change, and app-bundle creation false.
+`App/Resources/TranslationModels` remains unchanged.
+
+## V8/V9 retention follow-up
+
+V8 tested the requested licensed-data retention strategy rather than adding
+another architecture. A protected-screened replay dataset contains 136 train
+and 128 validation rows, balanced across legal negation, critical tokens, long
+legal, general legal, ALT, KFTT, Tatoeba, and Mimi UI. It is mixed one-to-one
+with the Claude-5 preference data under replay SFT, frozen-parent KL, and L2
+retention. The single frozen arm is rejected internally: its best relative
+preference accuracy is 0.7273 versus the required 0.80. Replay chrF++ changes
+by only -0.0133 and no genuine new critical, negation, or generation failure is
+introduced. A batch-padding repetition false positive was diagnosed and
+corrected for future experiments without changing the independent rejection.
+
+V9 tests training-free interpolation between the safe parent and v7 specialist,
+following NMT checkpoint averaging and robust fine-tuning literature. The
+frozen 0.25/0.50/0.75 grid selects 0.75. It restores 0.8788 preference
+accuracy, improves licensed replay chrF++ by +0.0103, and has zero new replay
+safety failures. Exact q4 remains operationally attractive:
+
+| V9 exact-q4 property | Result |
+| --- | ---: |
+| JA→EN direction pack | 39,138,970 bytes |
+| prospective EN↔JA pair | 78,277,210 bytes |
+| warm JA→EN segment p95 | 149.9 ms |
+| peak RSS | 223.3 MB |
+
+Protected quality rejects it. Paired composed-document chrF++ is only +0.0106
+(90% interval -0.1385 to +0.2076), direct long-legal is -2.2546, and the v7
+negation/repetition failures remain. Complete distribution provenance is also
+not yet projected into the q4 manifest. The result
+`canonical-pairwise-v9-protected-result-2026-07-25.json` hashes to
+`52603383e18edb628dbc87068915fc62a1005cfc9fd4f6acadb11c553e64648b`.
+It keeps bundle creation, app integration, promotion, and public upload false.
+
+The current app already contains its authenticated local EN↔JA model resources
+and remains unchanged. The next candidate must first learn a substantially
+stronger generation policy from a larger, error-stratified, independently
+screened sequence-distillation corpus. Weight interpolation is retained as a
+promising zero-byte retention technique only after that specialist clears a
+generation-level gate.

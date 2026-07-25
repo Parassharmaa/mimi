@@ -1,0 +1,115 @@
+{
+  "app_change_authorized": false,
+  "created_at": "2026-07-25T16:43:04.696175Z",
+  "data_gates": {
+    "absolute_canonical_approvals_minimum": 120,
+    "protected_jaccard_maximum_exclusive": 0.8,
+    "required_dataset_experiment": "canonical-pairwise-v7-ja-en-claude5",
+    "required_direction": "ja-en",
+    "unanimous_pareto_pairs_minimum": 60,
+    "validation_fraction": 0.2,
+    "validation_pairs_minimum": 12
+  },
+  "experiment": "canonical-pairwise-preference-claude5-v7-ja-en",
+  "historical_stop_evidence": {
+    "canonical-pairwise-v4-result-2026-07-25": {
+      "bytes": 11741,
+      "path": "Research/translation/canonical-pairwise-v4-result-2026-07-25.json",
+      "sha256": "2439bbdec1e738db0cac094fe01478df6c24c96e78aeb96a1db064cf064c43a3"
+    },
+    "canonical-pairwise-v5-result-2026-07-25": {
+      "bytes": 5692,
+      "path": "Research/translation/canonical-pairwise-v5-result-2026-07-25.json",
+      "sha256": "ad4a38440414302ac2a0e06a112c093c3ba06797f0b60cdf8f004fcb7fb153af"
+    },
+    "canonical-pairwise-v6-result-2026-07-25": {
+      "bytes": 6422,
+      "path": "Research/translation/canonical-pairwise-v6-result-2026-07-25.json",
+      "sha256": "d52f11cfe561153a7c104355283efc13027d00cbeb5f156ac0e9af91f6192fe0"
+    }
+  },
+  "human_reviewers_required": false,
+  "hyperparameter_selection_after_judgments_allowed": false,
+  "implementation": {
+    "build_canonical_pairwise_preference_dataset": {
+      "bytes": 19378,
+      "path": "scripts/translation/build_canonical_pairwise_preference_dataset.py",
+      "sha256": "4fba658bf2366bc3d79f5c9d08440fef52b670d3c957fc64ed268057510fa0b0"
+    },
+    "prepare_canonical_pairwise_v7_contract": {
+      "bytes": 10962,
+      "path": "scripts/translation/prepare_canonical_pairwise_v7_contract.py",
+      "sha256": "d4beee6b128d846aad0ca0dcbce9050528dda23f9797b65eed16ef7f7b4d49de"
+    },
+    "train_marian_claude5_preference": {
+      "bytes": 16857,
+      "path": "scripts/translation/train_marian_claude5_preference.py",
+      "sha256": "970cfc2e693e316a72c44a36253d2b72175e44c0a0a72e046a7730a83afe7926"
+    }
+  },
+  "internal_selection_gate": {
+    "checkpoint_steps": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "relative_margin_minimum_exclusive": 0.0,
+    "relative_pair_accuracy_minimum": 0.8,
+    "selection": "highest validation relative-pair accuracy, then relative margin, then lower loss",
+    "step_zero_is_not_a_trained_candidate": true
+  },
+  "judge_contract": {
+    "bytes": 5129,
+    "path": "Research/translation/canonical-target-ja-en-scale-v7-claude5-judge-contract-v3-2026-07-25.json",
+    "sha256": "ebc1a12423de5e216136fd96c56c221d25e7fd4f8b59aef3241746faf9dc30b5"
+  },
+  "judge_provider_independence_claimed": false,
+  "parent": {
+    "license": "CC-BY-SA-4.0",
+    "model_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "promotion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "public_upload_authorized": false,
+  "quantization_authorized": false,
+  "reasoning_traces_used": false,
+  "required_judge_model_ids": [
+    "claude-opus-5",
+    "claude-sonnet-5"
+  ],
+  "schema_version": 1,
+  "single_training_arm": true,
+  "status": "frozen-compatibility-amendment-before-any-training-step",
+  "supersedes": {
+    "bytes": 4102,
+    "change_scope": "dataset-loader compatibility only after a pre-training rejection; no optimization step, recipe, data, threshold, or gate changed",
+    "path": "Research/translation/canonical-pairwise-v7-training-plan-2026-07-25.json",
+    "sha256": "40c2966cc2ba5906b3a717e84909ddbcdfdc1f9c8ed7c02625cb3b9f272bb8ea",
+    "training_steps_before_amendment": 0
+  },
+  "training": {
+    "batch_size": 4,
+    "beta": 0.1,
+    "chosen_sft_weight": 0.02,
+    "evaluation_steps": 10,
+    "gradient_accumulation": 4,
+    "l2_to_parent_weight": 0.1,
+    "learning_rate": 5e-07,
+    "max_source_tokens": 192,
+    "max_steps": 40,
+    "max_target_tokens": 192,
+    "seed": 20260729,
+    "warmup_steps": 4,
+    "weight_decay": 0.01
+  },
+  "training_authorized": false
+}

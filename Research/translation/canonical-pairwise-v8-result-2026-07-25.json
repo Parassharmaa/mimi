@@ -1,0 +1,676 @@
+{
+  "app_change_authorized": false,
+  "bundle_creation_authorized": false,
+  "candidate": {
+    "directory": "Research/translation/models/elanmt-canonical-pairwise-v8-ja-en",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v8-ja-en/model.safetensors",
+      "sha256": "2c33b3e604d5d09818199101b92d9bd441b332bbbbb9f50987623a3733211505"
+    },
+    "training_manifest": {
+      "bytes": 32840,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v8-ja-en/mimi_automated_preference_manifest.json",
+      "sha256": "1275845b2e211652a50e0623a423b977b7ef7ff848d58c2d802554ba9772ec6f"
+    }
+  },
+  "contract": {
+    "bytes": 18787,
+    "path": "Research/translation/canonical-pairwise-v8-contract-2026-07-25.json",
+    "sha256": "004a66cb7ac42110685b169a7777fe62a70246adf0717d70313da6c994c25a03"
+  },
+  "created_at": "2026-07-25T17:15:48.426263Z",
+  "decision": "Stop before MLX conversion, protected evaluation, or bundling.",
+  "experiment": "canonical-pairwise-preference-replay-v8-ja-en",
+  "internal_gate": {
+    "checks": [
+      {
+        "actual": 40,
+        "name": "trained-checkpoint",
+        "passed": true,
+        "required": "> 0"
+      },
+      {
+        "actual": 0.7272727272727273,
+        "name": "relative-pair-accuracy",
+        "passed": false,
+        "required": 0.8
+      },
+      {
+        "actual": 0.0008140192790464921,
+        "name": "relative-margin",
+        "passed": true,
+        "required": "> 0.0"
+      },
+      {
+        "actual": -0.0007504256505930229,
+        "name": "replay-token-nll-delta",
+        "passed": true,
+        "required": "<= 0.01"
+      },
+      {
+        "actual": -0.013267956411446846,
+        "name": "replay-chrf++-delta",
+        "passed": true,
+        "required": ">= -0.1"
+      },
+      {
+        "actual": -0.026449761188032994,
+        "name": "legal-replay-chrf++-delta",
+        "passed": true,
+        "required": ">= -0.1"
+      },
+      {
+        "actual": [],
+        "name": "replay-newExact",
+        "passed": true,
+        "required": 0
+      },
+      {
+        "actual": [],
+        "name": "replay-newTyped",
+        "passed": true,
+        "required": 0
+      },
+      {
+        "actual": [],
+        "name": "replay-newNegation",
+        "passed": true,
+        "required": 0
+      },
+      {
+        "actual": [
+          "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+        ],
+        "name": "replay-newGeneration",
+        "passed": false,
+        "required": 0
+      }
+    ],
+    "passed": false
+  },
+  "promotion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "protected_evaluation_run": null,
+  "public_upload_authorized": false,
+  "quantization_authorized": false,
+  "quantization_run": null,
+  "schema_version": 1,
+  "status": "internal-preservation-gate-rejected",
+  "training": {
+    "best": {
+      "internal_gate": {
+        "checks": [
+          {
+            "actual": 40,
+            "name": "trained-checkpoint",
+            "passed": true,
+            "required": "> 0"
+          },
+          {
+            "actual": 0.7272727272727273,
+            "name": "relative-pair-accuracy",
+            "passed": false,
+            "required": 0.8
+          },
+          {
+            "actual": 0.0008140192790464921,
+            "name": "relative-margin",
+            "passed": true,
+            "required": "> 0.0"
+          },
+          {
+            "actual": -0.0007504256505930229,
+            "name": "replay-token-nll-delta",
+            "passed": true,
+            "required": "<= 0.01"
+          },
+          {
+            "actual": -0.013267956411446846,
+            "name": "replay-chrf++-delta",
+            "passed": true,
+            "required": ">= -0.1"
+          },
+          {
+            "actual": -0.026449761188032994,
+            "name": "legal-replay-chrf++-delta",
+            "passed": true,
+            "required": ">= -0.1"
+          },
+          {
+            "actual": [],
+            "name": "replay-newExact",
+            "passed": true,
+            "required": 0
+          },
+          {
+            "actual": [],
+            "name": "replay-newTyped",
+            "passed": true,
+            "required": 0
+          },
+          {
+            "actual": [],
+            "name": "replay-newNegation",
+            "passed": true,
+            "required": 0
+          },
+          {
+            "actual": [
+              "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+            ],
+            "name": "replay-newGeneration",
+            "passed": false,
+            "required": 0
+          }
+        ],
+        "passed": false
+      },
+      "last_train_objective": {
+        "chosen_sft_loss": 1.2274445295333862,
+        "l2_to_parent": 0.0003888918727170676,
+        "preference_loss": 0.6944031119346619,
+        "relative_margin": -0.024721577763557434,
+        "replay_kl": 0.08332547545433044,
+        "replay_sft_loss": 1.4163873195648193
+      },
+      "preference": {
+        "loss": 0.6931064562364058,
+        "pairs": 33,
+        "policy_pair_accuracy": 0.030303030303030304,
+        "relative_margin": 0.0008140192790464921,
+        "relative_pair_accuracy": 0.7272727272727273
+      },
+      "replay": {
+        "chrFPlusPlusDelta": -0.013267956411446846,
+        "legalChrFPlusPlusDelta": -0.026449761188032994,
+        "newExact": [],
+        "newGeneration": [
+          "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+        ],
+        "newNegation": [],
+        "newTyped": [],
+        "nonlegalChrFPlusPlusDelta": 0.0,
+        "tokenNLLDelta": -0.0007504256505930229
+      },
+      "step": 40
+    },
+    "best_eligible": null,
+    "history": [
+      {
+        "internal_gate": {
+          "checks": [
+            {
+              "actual": 0,
+              "name": "trained-checkpoint",
+              "passed": false,
+              "required": "> 0"
+            },
+            {
+              "actual": 0.0,
+              "name": "relative-pair-accuracy",
+              "passed": false,
+              "required": 0.8
+            },
+            {
+              "actual": 0.0,
+              "name": "relative-margin",
+              "passed": false,
+              "required": "> 0.0"
+            },
+            {
+              "actual": 0.0,
+              "name": "replay-token-nll-delta",
+              "passed": true,
+              "required": "<= 0.01"
+            },
+            {
+              "actual": 0.0,
+              "name": "replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": 0.0,
+              "name": "legal-replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": [],
+              "name": "replay-newExact",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newTyped",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newNegation",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newGeneration",
+              "passed": true,
+              "required": 0
+            }
+          ],
+          "passed": false
+        },
+        "preference": {
+          "loss": 0.6931471824645996,
+          "pairs": 33,
+          "policy_pair_accuracy": 0.030303030303030304,
+          "relative_margin": 0.0,
+          "relative_pair_accuracy": 0.0
+        },
+        "replay": {
+          "chrFPlusPlusDelta": 0.0,
+          "legalChrFPlusPlusDelta": 0.0,
+          "newExact": [],
+          "newGeneration": [],
+          "newNegation": [],
+          "newTyped": [],
+          "nonlegalChrFPlusPlusDelta": 0.0,
+          "tokenNLLDelta": 0.0
+        },
+        "step": 0
+      },
+      {
+        "internal_gate": {
+          "checks": [
+            {
+              "actual": 10,
+              "name": "trained-checkpoint",
+              "passed": true,
+              "required": "> 0"
+            },
+            {
+              "actual": 0.6666666666666666,
+              "name": "relative-pair-accuracy",
+              "passed": false,
+              "required": 0.8
+            },
+            {
+              "actual": 0.00028638767473625415,
+              "name": "relative-margin",
+              "passed": true,
+              "required": "> 0.0"
+            },
+            {
+              "actual": -0.0002805307337541141,
+              "name": "replay-token-nll-delta",
+              "passed": true,
+              "required": "<= 0.01"
+            },
+            {
+              "actual": -0.01631761579660207,
+              "name": "replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": -0.02500476952995001,
+              "name": "legal-replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": [],
+              "name": "replay-newExact",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newTyped",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newNegation",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [
+                "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+              ],
+              "name": "replay-newGeneration",
+              "passed": false,
+              "required": 0
+            }
+          ],
+          "passed": false
+        },
+        "last_train_objective": {
+          "chosen_sft_loss": 1.310695767402649,
+          "l2_to_parent": 6.968199886614457e-05,
+          "preference_loss": 0.694798469543457,
+          "relative_margin": -0.03274030238389969,
+          "replay_kl": 0.11369898170232773,
+          "replay_sft_loss": 1.4080159664154053
+        },
+        "preference": {
+          "loss": 0.6931328285824169,
+          "pairs": 33,
+          "policy_pair_accuracy": 0.030303030303030304,
+          "relative_margin": 0.00028638767473625415,
+          "relative_pair_accuracy": 0.6666666666666666
+        },
+        "replay": {
+          "chrFPlusPlusDelta": -0.01631761579660207,
+          "legalChrFPlusPlusDelta": -0.02500476952995001,
+          "newExact": [],
+          "newGeneration": [
+            "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+          ],
+          "newNegation": [],
+          "newTyped": [],
+          "nonlegalChrFPlusPlusDelta": 0.0,
+          "tokenNLLDelta": -0.0002805307337541141
+        },
+        "step": 10
+      },
+      {
+        "internal_gate": {
+          "checks": [
+            {
+              "actual": 20,
+              "name": "trained-checkpoint",
+              "passed": true,
+              "required": "> 0"
+            },
+            {
+              "actual": 0.7272727272727273,
+              "name": "relative-pair-accuracy",
+              "passed": false,
+              "required": 0.8
+            },
+            {
+              "actual": 0.0005554647156686494,
+              "name": "relative-margin",
+              "passed": true,
+              "required": "> 0.0"
+            },
+            {
+              "actual": -0.0005318426511737862,
+              "name": "replay-token-nll-delta",
+              "passed": true,
+              "required": "<= 0.01"
+            },
+            {
+              "actual": -0.057636979522072807,
+              "name": "replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": -0.0876651061497924,
+              "name": "legal-replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": [],
+              "name": "replay-newExact",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newTyped",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newNegation",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [
+                "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+              ],
+              "name": "replay-newGeneration",
+              "passed": false,
+              "required": 0
+            }
+          ],
+          "passed": false
+        },
+        "last_train_objective": {
+          "chosen_sft_loss": 1.5178167819976807,
+          "l2_to_parent": 0.00022047158563509583,
+          "preference_loss": 0.6875936985015869,
+          "relative_margin": 0.11148953437805176,
+          "replay_kl": 0.16337479650974274,
+          "replay_sft_loss": 2.2129459381103516
+        },
+        "preference": {
+          "loss": 0.6931193922505234,
+          "pairs": 33,
+          "policy_pair_accuracy": 0.030303030303030304,
+          "relative_margin": 0.0005554647156686494,
+          "relative_pair_accuracy": 0.7272727272727273
+        },
+        "replay": {
+          "chrFPlusPlusDelta": -0.057636979522072807,
+          "legalChrFPlusPlusDelta": -0.0876651061497924,
+          "newExact": [],
+          "newGeneration": [
+            "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+          ],
+          "newNegation": [],
+          "newTyped": [],
+          "nonlegalChrFPlusPlusDelta": 0.0,
+          "tokenNLLDelta": -0.0005318426511737862
+        },
+        "step": 20
+      },
+      {
+        "internal_gate": {
+          "checks": [
+            {
+              "actual": 30,
+              "name": "trained-checkpoint",
+              "passed": true,
+              "required": "> 0"
+            },
+            {
+              "actual": 0.7272727272727273,
+              "name": "relative-pair-accuracy",
+              "passed": false,
+              "required": 0.8
+            },
+            {
+              "actual": 0.0007421256917895693,
+              "name": "relative-margin",
+              "passed": true,
+              "required": "> 0.0"
+            },
+            {
+              "actual": -0.0006912688338711614,
+              "name": "replay-token-nll-delta",
+              "passed": true,
+              "required": "<= 0.01"
+            },
+            {
+              "actual": -0.057636979522072807,
+              "name": "replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": -0.0876651061497924,
+              "name": "legal-replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": [],
+              "name": "replay-newExact",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newTyped",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newNegation",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [
+                "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+              ],
+              "name": "replay-newGeneration",
+              "passed": false,
+              "required": 0
+            }
+          ],
+          "passed": false
+        },
+        "last_train_objective": {
+          "chosen_sft_loss": 1.253464698791504,
+          "l2_to_parent": 0.00033838613308034837,
+          "preference_loss": 0.6905090808868408,
+          "relative_margin": 0.052917636930942535,
+          "replay_kl": 0.11051104962825775,
+          "replay_sft_loss": 1.6569535732269287
+        },
+        "preference": {
+          "loss": 0.6931100487709045,
+          "pairs": 33,
+          "policy_pair_accuracy": 0.030303030303030304,
+          "relative_margin": 0.0007421256917895693,
+          "relative_pair_accuracy": 0.7272727272727273
+        },
+        "replay": {
+          "chrFPlusPlusDelta": -0.057636979522072807,
+          "legalChrFPlusPlusDelta": -0.0876651061497924,
+          "newExact": [],
+          "newGeneration": [
+            "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+          ],
+          "newNegation": [],
+          "newTyped": [],
+          "nonlegalChrFPlusPlusDelta": 0.0,
+          "tokenNLLDelta": -0.0006912688338711614
+        },
+        "step": 30
+      },
+      {
+        "internal_gate": {
+          "checks": [
+            {
+              "actual": 40,
+              "name": "trained-checkpoint",
+              "passed": true,
+              "required": "> 0"
+            },
+            {
+              "actual": 0.7272727272727273,
+              "name": "relative-pair-accuracy",
+              "passed": false,
+              "required": 0.8
+            },
+            {
+              "actual": 0.0008140192790464921,
+              "name": "relative-margin",
+              "passed": true,
+              "required": "> 0.0"
+            },
+            {
+              "actual": -0.0007504256505930229,
+              "name": "replay-token-nll-delta",
+              "passed": true,
+              "required": "<= 0.01"
+            },
+            {
+              "actual": -0.013267956411446846,
+              "name": "replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": -0.026449761188032994,
+              "name": "legal-replay-chrf++-delta",
+              "passed": true,
+              "required": ">= -0.1"
+            },
+            {
+              "actual": [],
+              "name": "replay-newExact",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newTyped",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [],
+              "name": "replay-newNegation",
+              "passed": true,
+              "required": 0
+            },
+            {
+              "actual": [
+                "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+              ],
+              "name": "replay-newGeneration",
+              "passed": false,
+              "required": 0
+            }
+          ],
+          "passed": false
+        },
+        "last_train_objective": {
+          "chosen_sft_loss": 1.2274445295333862,
+          "l2_to_parent": 0.0003888918727170676,
+          "preference_loss": 0.6944031119346619,
+          "relative_margin": -0.024721577763557434,
+          "replay_kl": 0.08332547545433044,
+          "replay_sft_loss": 1.4163873195648193
+        },
+        "preference": {
+          "loss": 0.6931064562364058,
+          "pairs": 33,
+          "policy_pair_accuracy": 0.030303030303030304,
+          "relative_margin": 0.0008140192790464921,
+          "relative_pair_accuracy": 0.7272727272727273
+        },
+        "replay": {
+          "chrFPlusPlusDelta": -0.013267956411446846,
+          "legalChrFPlusPlusDelta": -0.026449761188032994,
+          "newExact": [],
+          "newGeneration": [
+            "shallow-training:jlt:jlt:law-4141:tu-53:ja-en:ja-en"
+          ],
+          "newNegation": [],
+          "newTyped": [],
+          "nonlegalChrFPlusPlusDelta": 0.0,
+          "tokenNLLDelta": -0.0007504256505930229
+        },
+        "step": 40
+      }
+    ],
+    "trainable_parameters": 61047296
+  }
+}

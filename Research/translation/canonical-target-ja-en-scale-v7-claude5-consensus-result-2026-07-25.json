@@ -1,0 +1,84 @@
+{
+  "appChangeAuthorized": false,
+  "contract": {
+    "bytes": 5129,
+    "path": "Research/translation/canonical-target-ja-en-scale-v7-claude5-judge-contract-v3-2026-07-25.json",
+    "sha256": "ebc1a12423de5e216136fd96c56c221d25e7fd4f8b59aef3241746faf9dc30b5"
+  },
+  "counts": {
+    "approved": 215,
+    "approvedDomains": {
+      "conversational": 39,
+      "human-translated-news": 51,
+      "long-document-news": 32,
+      "mimi-product-ui": 17,
+      "ministry-published-legal": 20,
+      "professional-wikipedia-hard": 30,
+      "wikipedia": 26
+    },
+    "rejected": 15,
+    "sources": 230
+  },
+  "createdAt": "2026-07-25T16:40:52.170104Z",
+  "excludedJudgeEvidenceUsed": false,
+  "experiment": "canonical-target-ja-en-scale-v7",
+  "gates": {
+    "minimumApprovedSources": {
+      "actual": 215,
+      "passed": true,
+      "required": 120
+    }
+  },
+  "humanReviewersUsed": false,
+  "judges": {
+    "claude-opus-5": {
+      "identityEvidence": {
+        "bytes": 1437,
+        "path": "Research/translation/work/canonical-target-ja-en-scale-v7.opus5-judgments.jsonl.manifest.json",
+        "sha256": "5ce12388f8ab8dc8e9c0ca35111626d8fe3fa9e7ebcba17ed66e047b3b980c60"
+      },
+      "judgments": {
+        "bytes": 218014,
+        "path": "Research/translation/work/canonical-target-ja-en-scale-v7.opus5-judgments.jsonl",
+        "sha256": "bb2509fd779c7ee16b5670a4a532d69b557f187d1df6c732f9f03d32c18a856d"
+      }
+    },
+    "claude-sonnet-5": {
+      "identityEvidence": {
+        "bytes": 1449,
+        "path": "Research/translation/work/canonical-target-ja-en-scale-v7.sonnet5-judgments.jsonl.manifest.json",
+        "sha256": "6794f34502f167f6c56745a3ce4a85125b08d9676cbe3493042ed29bff5cce33"
+      },
+      "judgments": {
+        "bytes": 217340,
+        "path": "Research/translation/work/canonical-target-ja-en-scale-v7.sonnet5-judgments.jsonl",
+        "sha256": "97449318e036798e8144a11c04b976ca3e059408c0322484d7c606619955a65f"
+      }
+    }
+  },
+  "outputs": {
+    "approved": {
+      "bytes": 891014,
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.claude5-approved.jsonl",
+      "sha256": "9d2d44bdb77b3c0389e09bf00d3143bd338e342969cd04a5e43e9fd3ad08d905"
+    },
+    "rejected": {
+      "bytes": 4350,
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.claude5-rejected.jsonl",
+      "sha256": "a6940e0715144247281677fa5796571eec8e0c660d580228920863f67d81273b"
+    }
+  },
+  "pairwiseDatasetConstructionAuthorized": true,
+  "promotionAuthorized": false,
+  "protectedEvaluationAuthorized": false,
+  "publicUploadAuthorized": false,
+  "reasoningTracesStored": false,
+  "reviewQueue": {
+    "bytes": 1013901,
+    "path": "Research/translation/work/canonical-target-ja-en-scale-v7.review-queue.jsonl",
+    "sha256": "d65b3327a53b478b2df663ecc1baf50d16dedb91d2796ef05fe9d2d2850b08d9"
+  },
+  "schemaVersion": 1,
+  "status": "absolute-consensus-scale-gate-passed",
+  "trainingAuthorized": false
+}

@@ -1,0 +1,271 @@
+{
+  "app_change_authorized": false,
+  "conversion": {
+    "bits": 4,
+    "exact_shipping_quantization_required_before_claim": true,
+    "format": "MLX affine q4",
+    "group_size": 64,
+    "hard_two_direction_bundle_maximum_bytes": 500000000,
+    "preferred_two_direction_bundle_maximum_bytes": 150000000,
+    "unchanged_en_ja_current_model_plus_candidate_ja_en": true
+  },
+  "dataset": {
+    "decontamination": {
+      "character_ngram_size": 5,
+      "maximum_jaccard_exclusive": 0.8,
+      "protected_suites": [
+        {
+          "path": "Research/translation/benchmark/canary.jsonl",
+          "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+          "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+          "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+          "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+          "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+          "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+        },
+        {
+          "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+          "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+          "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+          "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+        }
+      ],
+      "screened_fields": [
+        "source",
+        "chosen",
+        "rejected"
+      ],
+      "train_validation_source_overlap": false
+    },
+    "directory": "Research/translation/work/canonical-pairwise-v4-ja-en",
+    "effective_licenses": {
+      "train": {
+        "CC-BY-2.0-FR": 3,
+        "CC-BY-4.0": 24,
+        "CC-BY-SA-3.0": 14,
+        "PDL-1.0-compatible-CC-BY-4.0": 7,
+        "project-owned": 3
+      },
+      "valid": {
+        "CC-BY-2.0-FR": 1,
+        "CC-BY-4.0": 4,
+        "CC-BY-SA-3.0": 3,
+        "PDL-1.0-compatible-CC-BY-4.0": 1,
+        "project-owned": 1
+      }
+    },
+    "files": {
+      "manifest.json": {
+        "bytes": 5147,
+        "path": "Research/translation/work/canonical-pairwise-v4-ja-en/manifest.json",
+        "sha256": "b5760e1ebd65827dcbeb650d21fe147f6ce1cf426f8c9d626a55af7228699634"
+      },
+      "train.jsonl": {
+        "bytes": 138554,
+        "path": "Research/translation/work/canonical-pairwise-v4-ja-en/train.jsonl",
+        "sha256": "a1c72ce7d512e4b48a0913c93ff92de167924c7e635ce0911f947b824333607c"
+      },
+      "valid.jsonl": {
+        "bytes": 25780,
+        "path": "Research/translation/work/canonical-pairwise-v4-ja-en/valid.jsonl",
+        "sha256": "d9dae05a9b2974299fe251740f857debdfe6c7b491a463f6c2e769fd9bcb3d90"
+      }
+    },
+    "pairs": {
+      "selected": 61,
+      "train": 51,
+      "valid": 10
+    },
+    "review_policy": {
+      "absolute_teacher_quality_required": true,
+      "human_reviewer_required": false,
+      "independent_judge_models": 2,
+      "score_fields": [
+        "adequacy",
+        "fluency",
+        "terminology"
+      ],
+      "strict_total_improvement_per_judge": true,
+      "teacher_not_a_judge": true,
+      "unanimous_pareto_preference_over_current_required": true
+    }
+  },
+  "direction": "ja-en",
+  "evidence": {
+    "v5_best_relative_margin": 0.004509344696998596,
+    "v5_best_relative_pair_accuracy": 0.6,
+    "v5_contract": {
+      "bytes": 10610,
+      "path": "Research/translation/canonical-pairwise-v5-contract-2026-07-25.json",
+      "sha256": "db97c807d64949b91c095e74919aba2ff863f4bf9c3cabe7be04d7d418154766"
+    },
+    "v5_failure_domains": [
+      "conversational",
+      "human-translated-news",
+      "human-translated-news",
+      "mimi-product-ui"
+    ],
+    "v5_result": {
+      "bytes": 5692,
+      "path": "Research/translation/canonical-pairwise-v5-result-2026-07-25.json",
+      "sha256": "ad4a38440414302ac2a0e06a112c093c3ba06797f0b60cdf8f004fcb7fb153af"
+    }
+  },
+  "experiment": "canonical-pairwise-preference-balanced-v6-ja-en",
+  "held_out_evaluation": {
+    "baseline": "current Mimi exact q4 pair",
+    "benchmarks": {
+      "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl": {
+        "bytes": 347454,
+        "path": "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl",
+        "sha256": "d5cef0834f897a2ee2179844e8eec9e0e5de4db0aaaf0d0265cee041b699dbba"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.jsonl": {
+        "bytes": 357062,
+        "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+        "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.results-summary.json": {
+        "bytes": 4332,
+        "path": "Research/translation/benchmark/development-accuracy-v1.results-summary.json",
+        "sha256": "e78322ade88f82bbcf4a2767cb3e2839de17abe9a5979b5f06bdb95b777f83a8"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.segments.jsonl": {
+        "bytes": 363568,
+        "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+        "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+      }
+    },
+    "candidate": "current Mimi EN-to-JA exact q4 plus selected v4 JA-to-EN exact q4",
+    "documents": {
+      "long_document_slices_required": true,
+      "segment_then_join_and_direct_evaluation_required": true
+    },
+    "licensing": {
+      "complete_distribution_provenance_required": true,
+      "per_row_attribution_sidecar_required": true,
+      "public_hugging_face_only_after_all_gates": true
+    },
+    "quality_each_direction": {
+      "chrf_pp_paired_90pct_lower_minimum": -0.25,
+      "comet22_mean_delta_minimum_for_signal": 0.002,
+      "comet22_paired_90pct_lower_minimum": -0.005,
+      "independent_judge_mean_delta_minimum_for_signal": 0.1,
+      "independent_judge_paired_90pct_lower_minimum": -0.25,
+      "maximum_direct_chrf_pp_regression": 0.5,
+      "maximum_domain_chrf_pp_regression": 0.5,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "minimum_improvement_signals": 2,
+      "sacrebleu_corpus_regression_maximum": 0.1
+    },
+    "runtime": {
+      "peak_resident_bytes_maximum": 250000000,
+      "warm_segment_p95_seconds_maximum_each_direction": 0.175
+    },
+    "safety": {
+      "new_judge_critical_errors_maximum": 0,
+      "new_negation_errors_maximum": 0,
+      "new_number_date_unit_placeholder_errors_maximum": 0,
+      "new_repetition_or_nontermination_failures_maximum": 0,
+      "new_union_critical_errors_maximum": 0
+    }
+  },
+  "human_reviewers_used": false,
+  "hypothesis": "V5 improved every legal, Wikipedia, and long-document validation pair but worsened the scarce conversation/UI pairs and two news pairs. Exact inverse-frequency domain balancing should preserve the preference signal while preventing high-count domains from dominating the update.",
+  "implementation": {
+    "train_marian_automated_preference_adapter": {
+      "bytes": 23236,
+      "path": "scripts/translation/train_marian_automated_preference_adapter.py",
+      "sha256": "b68b04cb4490ba1667e55bef88c30f319ebe5c47d7018f5783a7397c2e75a976"
+    },
+    "train_marian_automated_preference_full": {
+      "bytes": 14355,
+      "path": "scripts/translation/train_marian_automated_preference_full.py",
+      "sha256": "c378d3c1ab956c4160c45ce2143ccda9b5b82b9ba66d64a07a252707848d524c"
+    },
+    "train_marian_distillation": {
+      "bytes": 37097,
+      "path": "scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    },
+    "train_marian_dqo": {
+      "bytes": 20448,
+      "path": "scripts/translation/train_marian_dqo.py",
+      "sha256": "6b2078436d2314180a5a0da77ec732f22bcc8b4f7951fe410d86ffd23d5b39c9"
+    },
+    "trainer": {
+      "bytes": 15016,
+      "path": "scripts/translation/train_marian_automated_preference_balanced.py",
+      "sha256": "082f856032aa035336b2706b8890f30c106030eb70e5328b4a20bb6521e38f94"
+    }
+  },
+  "internal_selection_gate": {
+    "checkpoint_steps": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "relative_margin_minimum_exclusive": 0.0,
+    "relative_pair_accuracy_minimum": 0.8,
+    "selection": "highest validation relative-pair accuracy, then relative margin, then lower loss",
+    "step_zero_is_not_a_trained_candidate": true
+  },
+  "next_step_if_internal_gate_passes": "convert the one validation-selected checkpoint to exact MLX q4/group-64 and run the unchanged held-out promotion suite once",
+  "parent": {
+    "license": "CC-BY-SA-4.0",
+    "model_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "status": "preregistered-ready-for-training",
+  "stop_rule": "Stop before MLX conversion and protected evaluation if no trained checkpoint reaches 0.80 internal relative-pair accuracy with positive mean margin. Otherwise stop without integration or upload if any held-out quality, safety, runtime, size, or licensing gate fails.",
+  "teacher_authentication": "Codex cached ChatGPT authentication; no OpenAI API key used",
+  "training": {
+    "batch_size": 4,
+    "beta": 0.1,
+    "chosen_sft_weight": 0.02,
+    "evaluation_steps": 10,
+    "gradient_accumulation": 4,
+    "l2_to_parent_weight": 0.1,
+    "learning_rate": 5e-07,
+    "max_source_tokens": 192,
+    "max_steps": 40,
+    "max_target_tokens": 192,
+    "sampling": "exact-domain-balanced-cyclic-v1",
+    "seed": 20260728,
+    "warmup_steps": 4,
+    "weight_decay": 0.01
+  }
+}
