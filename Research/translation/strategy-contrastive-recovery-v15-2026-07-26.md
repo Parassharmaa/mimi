@@ -2,8 +2,8 @@
 
 Date: 2026-07-26
 
-Status: **literature review and experiment recommendation; no V15 contract or
-training is authorized by this document**
+Status: **literature review completed; the separate immutable V15 contract now
+authorizes one bounded arm**
 
 ## Problem exposed by V14
 

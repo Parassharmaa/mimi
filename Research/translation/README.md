@@ -2219,5 +2219,20 @@ a zero-byte diagnostic. It cannot rescue a model that fails omission,
 structure, or semantic gates. V12 and V14 suites remain regression barriers,
 and a new source-disjoint V15 suite is required for selection.
 
-This is a recommendation only; no V15 contract or training is authorized yet.
-See `strategy-contrastive-recovery-v15-2026-07-26.md`.
+The recommended arm is now frozen before training. Its 7,104 licensed-human
+positive rows, fresh 768-row suite, 2,048 recovery contrasts, 2,048 omission
+contrasts, two historical regression suites, code, checkpoints,
+hyperparameters, and thresholds are bound by
+`canonical-constrained-recovery-v15-contract-2026-07-26.json` at SHA-256
+`f342d8bf027f88143159c1b0ae2d5da3fb5ccad3cabb9aeb73e6d3175699549a`.
+Only one 50-update arm is authorized. It uses licensed-reference MLE,
+clean/perturbed recovery ordering, token-span omission ranking, safe-parent KL,
+and L2; it uses neither scheduled sampling nor unconditional EOS recovery.
+
+No q4, COMET, protected evaluation, app change, release, or upload is
+authorized. A candidate must first clear fresh V15, V12, and V14 quality and
+structure gates plus the frozen recovery/omission diagnostics, then receive
+exact independent Sonnet 5 and Opus 5 review of every new detector
+disagreement. The shipped translator is unchanged. See
+`strategy-contrastive-recovery-v15-2026-07-26.md` and
+`canonical-constrained-recovery-v15-plan-2026-07-26.md`.

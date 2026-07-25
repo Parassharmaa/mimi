@@ -2510,3 +2510,24 @@ MoE is deferred. V10–V14 show that this parameter count can move aggregate
 quality, while the blocking errors are structural and autoregressive. A new
 expert does not impose recovery or coverage. See
 `strategy-contrastive-recovery-v15-2026-07-26.md`.
+
+## V15 constrained recovery is frozen before training
+
+The single V15 arm now binds 7,104 licensed-human positive rows, a new
+source-disjoint 768-row legal selection suite, the complete V12 and V14
+regression suites, 2,048 recovery comparisons, and 2,048 omission comparisons.
+Generated rollout text is context or rejected-token evidence only. It never
+becomes a positive target.
+
+The objective combines licensed-reference MLE, correct-over-rejected recovery
+under perturbed prefixes, clean-over-perturbed ordering for the correct token,
+span-deletion omission ranking, and safe-parent KL/L2 retention. It preserves
+the compact 6+6 Marian architecture and adds no inference-time bytes. Scheduled
+sampling and unconditional EOS recovery are excluded.
+
+The contract SHA-256 is
+`f342d8bf027f88143159c1b0ae2d5da3fb5ccad3cabb9aeb73e6d3175699549a`.
+It permits one 50-update arm and forbids q4, COMET, protected evaluation, app
+changes, release, or upload unless all pre-semantic gates pass and the complete
+new detector-disagreement queue then clears exact Sonnet 5 plus Opus 5 review.
+See `canonical-constrained-recovery-v15-plan-2026-07-26.md`.
