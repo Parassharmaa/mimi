@@ -36,6 +36,32 @@ then compared all 800 sources with 599,317 normalized-unique controlled strings:
 zero exceeded 0.82, with a maximum of 0.798585. References and independent judge
 reports do not yet exist, so every row remains `claimEligible: false`.
 
+## Public development accuracy suite
+
+`development-accuracy-v1.jsonl` is a separate non-claimable development surface:
+200 case units, 100 per direction, with 160 sentences and 40 six-segment
+documents. `development-accuracy-v1.segments.jsonl` expands those documents
+into the exact 400 segment calls used by Mimi's segment-then-join behavior.
+
+The deterministic builder is
+`scripts/translation/prepare_development_accuracy_suite.py`. The suite manifest
+fixes its seed, corpus/domain quotas, hashes, public-overlap caveats, and
+`sealedPromotionSuiteTouched: false`. Aggregate chrF++/BLEU/COMET, latency,
+blind-judge sensitivity, long-context findings, Hugging Face storage, and the
+explicit no-promotion decision are in
+`development-accuracy-v1.results-summary.json` and
+`../development-accuracy-v1-report.md`.
+
+`development-accuracy-v1.direct-under-192.jsonl` is the companion direct-mode
+slice for the GPT-5.6 student futility gate. Its manifest proves that the exact
+runtime tokenizer retained every case at or below 192 source tokens: 197/200
+documents (98 EN→JA, 99 JA→EN), with no manual inclusion or exclusion. The
+remaining three cases are evaluated only through the complete 400-segment
+segment-then-join surface. This derived slice is paired evidence only and is
+also non-claimable.
+
+This suite must never substitute for either promotion lane described above.
+
 The final-output-only reference lane is pinned to `gpt-5.6-sol` for three
 candidates, `gpt-4o-2024-08-06` for judge A, and `gpt-4.1-2025-04-14` for judge
 B. They are three distinct model families and no training teacher exists in

@@ -45,9 +45,27 @@ def main() -> None:
     parser.add_argument("suite", type=Path)
     parser.add_argument("report", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument(
+        "--direction",
+        choices=("en-ja", "ja-en"),
+        help="Keep only one direction from the authenticated suite.",
+    )
     args = parser.parse_args()
 
     suite = load_suite(args.suite)
+    requested_direction = {
+        "en-ja": ("en-US", "ja-JP"),
+        "ja-en": ("ja-JP", "en-US"),
+    }.get(args.direction)
+    if requested_direction is not None:
+        suite = [
+            row
+            for row in suite
+            if (row.get("sourceLanguage"), row.get("targetLanguage"))
+            == requested_direction
+        ]
+        if not suite:
+            raise SystemExit(f"suite has no {args.direction} cases")
     report = json.loads(args.report.read_text(encoding="utf-8"))
     results = report.get("results")
     if not isinstance(results, list):

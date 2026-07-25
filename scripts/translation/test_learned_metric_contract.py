@@ -8,7 +8,6 @@ import json
 import tempfile
 from pathlib import Path
 
-
 SCRIPT = Path(__file__).with_name("score_comet.py")
 SPEC = importlib.util.spec_from_file_location("mimi_score_comet", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
@@ -43,7 +42,9 @@ def main() -> None:
         ]
         suite.write_text(
             "".join(
-                json.dumps({key: value for key, value in row.items() if key != "hypothesis"})
+                json.dumps(
+                    {key: value for key, value in row.items() if key != "hypothesis"}
+                )
                 + "\n"
                 for row in rows
             ),
@@ -65,7 +66,22 @@ def main() -> None:
         assert report["results"][1]["score"] == 0.9
         assert report["precision"] == "float32"
         assert report["modelLicense"] == "Apache-2.0"
+        assert report["emptyHypothesisCases"] == 0
         assert len(report["signatureSHA256"]) == 64
+
+        empty_rows = [{**rows[0], "hypothesis": ""}]
+        empty_report = SCORER.build_report(
+            suite,
+            engine,
+            empty_rows,
+            [0.0, 0.0],
+            model_repository=SCORER.DEFAULT_MODEL,
+            model_revision=SCORER.DEFAULT_REVISION,
+            package_version=SCORER.DEFAULT_PACKAGE_VERSION,
+            setuptools_version=SCORER.DEFAULT_SETUPTOOLS_VERSION,
+            torch_version="fixture",
+        )
+        assert empty_report["emptyHypothesisCases"] == 1
     print("Mimi pinned learned-metric report contract passed.")
 
 

@@ -12,7 +12,6 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 DEFAULT_MODEL = "Unbabel/wmt22-comet-da"
 DEFAULT_REVISION = "371e9839ca4e213dde891b066cf3080f75ec7e72"
 DEFAULT_PACKAGE_VERSION = "2.2.7"
@@ -40,19 +39,33 @@ def mean(values: list[float]) -> float:
 
 def validate_inputs(suite_rows: list[dict], engine_report: dict) -> list[dict]:
     suite = {str(row.get("id", "")): row for row in suite_rows}
-    results = {str(row.get("caseID", "")): row for row in engine_report.get("results", [])}
+    results = {
+        str(row.get("caseID", "")): row for row in engine_report.get("results", [])
+    }
     if not suite or len(suite) != len(suite_rows) or set(suite) != set(results):
-        raise SystemExit("suite and engine report must have identical non-empty case IDs")
+        raise SystemExit(
+            "suite and engine report must have identical non-empty case IDs"
+        )
     ordered: list[dict] = []
     for case_id in sorted(suite):
         case, result = suite[case_id], results[case_id]
-        for field in ("sourceLanguage", "targetLanguage", "domain", "source", "references"):
+        for field in (
+            "sourceLanguage",
+            "targetLanguage",
+            "domain",
+            "source",
+            "references",
+        ):
             if result.get(field) != case.get(field):
-                raise SystemExit(f"engine result disagrees with suite {field}: {case_id}")
-        hypothesis = str(result.get("hypothesis", "")).strip()
+                raise SystemExit(
+                    f"engine result disagrees with suite {field}: {case_id}"
+                )
+        if "hypothesis" not in result:
+            raise SystemExit(f"case lacks a hypothesis field: {case_id}")
+        hypothesis = str(result["hypothesis"]).strip()
         references = [str(value).strip() for value in case.get("references", [])]
-        if not hypothesis or not references or not all(references):
-            raise SystemExit(f"case lacks a hypothesis or reference: {case_id}")
+        if not references or not all(references):
+            raise SystemExit(f"case lacks a reference: {case_id}")
         ordered.append({**case, "hypothesis": hypothesis})
     return ordered
 
@@ -70,15 +83,19 @@ def build_report(
     torch_version: str,
 ) -> dict:
     expected_scores = sum(len(row["references"]) for row in rows)
-    if len(scores) != expected_scores or not all(isinstance(value, float) for value in scores):
-        raise SystemExit("COMET did not return exactly one float score per case/reference pair")
+    if len(scores) != expected_scores or not all(
+        isinstance(value, float) for value in scores
+    ):
+        raise SystemExit(
+            "COMET did not return exactly one float score per case/reference pair"
+        )
     offset = 0
     result_rows: list[dict] = []
     by_direction: dict[str, list[float]] = defaultdict(list)
     by_domain: dict[str, list[float]] = defaultdict(list)
     for row in rows:
         reference_count = len(row["references"])
-        reference_scores = scores[offset:offset + reference_count]
+        reference_scores = scores[offset : offset + reference_count]
         offset += reference_count
         score = mean(reference_scores)
         direction = f"{row['sourceLanguage']}>{row['targetLanguage']}"
@@ -118,6 +135,7 @@ def build_report(
         "engineReportSHA256": sha256(engine_report_path),
         "hardware": platform.machine(),
         "torchVersion": torch_version,
+        "emptyHypothesisCases": sum(not row["hypothesis"] for row in rows),
         "directions": {
             key: {"cases": len(values), "meanScore": mean(values)}
             for key, values in sorted(by_direction.items())
@@ -139,7 +157,11 @@ def main() -> None:
     parser.add_argument("--model-revision", default=DEFAULT_REVISION)
     parser.add_argument("--package-version", default=DEFAULT_PACKAGE_VERSION)
     parser.add_argument("--setuptools-version", default=DEFAULT_SETUPTOOLS_VERSION)
-    parser.add_argument("--cache-directory", type=Path, default=Path("Research/translation/models/hf-cache"))
+    parser.add_argument(
+        "--cache-directory",
+        type=Path,
+        default=Path("Research/translation/models/hf-cache"),
+    )
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--num-workers", type=int, default=1)
     args = parser.parse_args()
@@ -178,7 +200,9 @@ def main() -> None:
     )
     checkpoints = sorted(snapshot.rglob("*.ckpt"))
     if len(checkpoints) != 1:
-        raise SystemExit(f"expected one COMET checkpoint at pinned revision; found {len(checkpoints)}")
+        raise SystemExit(
+            f"expected one COMET checkpoint at pinned revision; found {len(checkpoints)}"
+        )
     model = load_from_checkpoint(str(checkpoints[0]))
     model.float()
     inputs = [
@@ -209,7 +233,11 @@ def main() -> None:
         json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    print(json.dumps({"output": str(args.output), "signatureSHA256": report["signatureSHA256"]}))
+    print(
+        json.dumps(
+            {"output": str(args.output), "signatureSHA256": report["signatureSHA256"]}
+        )
+    )
 
 
 if __name__ == "__main__":

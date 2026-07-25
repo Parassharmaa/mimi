@@ -11,7 +11,9 @@ from pathlib import Path
 from evaluate_typed_critical_token_policy import strict_tokens
 from typed_critical_token_policy import (
     narrow_temporal_preserves,
+    reference_validated_critical_preservation_mode,
     single_percentage_preserves,
+    strict_tokens,
     typed_preserves,
     typed_signature,
 )
@@ -43,6 +45,39 @@ assert not typed_preserves("1,2", "12", "en-US", "ja-JP")
 assert strict_tokens("Record 12.") == ["12"]
 assert strict_tokens("Version 1.2.3.") == ["1.2.3"]
 assert strict_tokens("Values 1,2") == ["1", "2"]
+assert strict_tokens("40 states") == strict_tokens("40か国")
+assert strict_tokens("9.6%") == strict_tokens("9.6%減")
+assert strict_tokens("Open https://example.com with {name}") == (
+    ["https://example.com", "{name}"]
+)
+assert reference_validated_critical_preservation_mode(
+    "The meeting is in September.",
+    "会議は9月です。",
+    "会議は9月にあります。",
+    "en-US",
+    "ja-JP",
+) == "reference-target-strict"
+assert reference_validated_critical_preservation_mode(
+    "The meeting is in September.",
+    "会議は6月です。",
+    "会議は9月にあります。",
+    "en-US",
+    "ja-JP",
+) is None
+assert reference_validated_critical_preservation_mode(
+    "Open https://example.com with {name}.",
+    "{name}でhttps://example.netを開きます。",
+    "{name}でhttps://example.netを開きます。",
+    "en-US",
+    "ja-JP",
+) is None
+assert reference_validated_critical_preservation_mode(
+    "There are seven people.",
+    "7人います。",
+    "七人います。",
+    "en-US",
+    "ja-JP",
+) == "reference-typed"
 assert single_percentage_preserves(
     "Provide 25 percent by 2025.",
     "2025年までに25%を供給する。",
