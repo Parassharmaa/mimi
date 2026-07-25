@@ -17,6 +17,17 @@ The current accuracy-first training decision is documented in
 final-output-only constrained sequence distillation into Marian first, with a
 cheap frozen M2M-100 418M single-model feasibility gate before any MLX port.
 
+The post-V16 strategy is documented in
+[`strategy-reward-confidence-multipair-v17-2026-07-26.md`](strategy-reward-confidence-multipair-v17-2026-07-26.md).
+It recommends a training-free diagnostic over real safe-parent rollouts before
+any V17 contract: confidence-aware, faithfulness-first multi-pair selection;
+an explicit gradient audit at the preference/safety-versus-MLE/retention
+boundary; and independent Claude Sonnet 5/Opus 5 consensus for the
+reviewer-free precision audit. It also scopes a single bidirectional 90–130M
+dense encoder-aware-distillation student as the next capacity experiment.
+Small MoE remains a later, capacity-matched ablation rather than the assumed
+next architecture.
+
 The reviewer-free promotion route is now preregistered separately from the
 legacy human contract. `benchmark/automated-claim-v1.manifest.json` fixes 400
 new sealed product-domain cases per direction, strong absolute chrF++/COMET
