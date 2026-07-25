@@ -2204,3 +2204,20 @@ bundling, release, and upload were not run.
 The result JSON hashes to
 `79ba77a4e540cedd91f1ae30b42b6b29ff0c1b85bb20136b26fdc9042e33bfb9`.
 See `canonical-rollout-repair-v14-report-2026-07-26.md`.
+
+## V15 literature decision
+
+The V14 evidence and current NMT literature favor constrained recovery over
+more capacity. The next proposed arm combines clean licensed-reference MLE,
+aligned recovery from free-running prefixes, a contrastive constraint that
+keeps the clean path above the recovery path, and explicit deletion-based
+omission contrast. Repetition recovery uses the correct licensed continuation,
+not unconditional EOS.
+
+A narrow third-contiguous-repeat decoder guard will be evaluated separately as
+a zero-byte diagnostic. It cannot rescue a model that fails omission,
+structure, or semantic gates. V12 and V14 suites remain regression barriers,
+and a new source-disjoint V15 suite is required for selection.
+
+This is a recommendation only; no V15 contract or training is authorized yet.
+See `strategy-contrastive-recovery-v15-2026-07-26.md`.

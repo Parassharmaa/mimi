@@ -2490,3 +2490,23 @@ Omission-risk retention must remain a hard gate.
 V14 stops before Sonnet/Opus judging, q4, protected evaluation, COMET, runtime
 comparison, bundling, release, or upload. The result hashes to
 `79ba77a4e540cedd91f1ae30b42b6b29ff0c1b85bb20136b26fdc9042e33bfb9`.
+
+## V15 should constrain recovery and omissions, not add experts
+
+The literature review changes the next-arm intuition. Recovery training can
+make an error-conditioned path more probable than the clean reference path;
+the appropriate correction is a three-objective token-level contrastive loss
+that learns clean prediction, error recovery, and clean-over-recovery
+ordering. Separate deletion negatives directly target V14's omission
+regression. Both mechanisms preserve standard compact Marian inference.
+
+The proposed V15 arm will use licensed continuations after aligned bad prefixes
+rather than unconditional EOS, plus deterministic parenthetical, enumerated,
+entity, amount, and rare-content deletion negatives. A narrow contiguous-loop
+token guard is a separate diagnostic with zero model bytes; the unguarded model
+must still pass.
+
+MoE is deferred. V10–V14 show that this parameter count can move aggregate
+quality, while the blocking errors are structural and autoregressive. A new
+expert does not impose recovery or coverage. See
+`strategy-contrastive-recovery-v15-2026-07-26.md`.
