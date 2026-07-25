@@ -723,9 +723,15 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             ? .automatic
             : .japanese
         store.engineID = .appleSpeechAnalyzer
-        store.translationMode = .translateFinalSegments
+        // Seed deterministic UI fixtures before enabling the visible
+        // translation mode. Otherwise every short-lived visual smoke process
+        // starts real MLX work and Darwin.exit can race Metal completion
+        // handlers during teardown. Dedicated translation smokes exercise the
+        // runtime separately.
+        store.translationMode = .off
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
+        store.translationMode = .translateFinalSegments
         let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
         if argument(after: "--e2e-language", in: arguments) == "japanese" {
             fixturePreferences.interfaceLanguage = .japanese
@@ -845,7 +851,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         e2eStore = store
         e2eWindow = window
 
-        if presentationState == "caption-stream" {
+        if exercisesLiveTranslation && presentationState == "caption-stream" {
             Task { @MainActor in
                 for tick in 1...600 {
                     try? await Task.sleep(for: .milliseconds(120))
@@ -855,7 +861,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                     )
                 }
             }
-        } else if presentationState == "translation-stream" {
+        } else if exercisesLiveTranslation && presentationState == "translation-stream" {
             Task { @MainActor in
                 for tick in 1...180 {
                     try? await Task.sleep(for: .milliseconds(300))
