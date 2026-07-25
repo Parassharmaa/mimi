@@ -2236,3 +2236,22 @@ exact independent Sonnet 5 and Opus 5 review of every new detector
 disagreement. The shipped translator is unchanged. See
 `strategy-contrastive-recovery-v15-2026-07-26.md` and
 `canonical-constrained-recovery-v15-plan-2026-07-26.md`.
+
+## V15 result: constrained recovery rejected
+
+Both V15 checkpoints are rejected before semantic judging. Step 25 improves
+the fresh 768-row suite by `+0.333` corpus and `+0.345` mean sentence chrF++,
+with a positive paired 90% interval, while step 50 is similar. Both also
+improve aggregate V12 and V14 regression scores.
+
+The targeted behavior does not generalize. Recovery preference changes by
+`0.0000`/`+0.00049`, omission preference by only `+0.00049`, and the known V14
+omission stratum regresses by `-1.344`/`-1.505`. Both checkpoints add one new
+generation failure on fresh V15 and one on V12. Step 50 also misses the fresh
+long-legal gate.
+
+The sealed result SHA-256 is
+`0f324061b3a8b4da8ac86844b433b7163559bb9ac8e79bd8f4ab792a70586d8f`.
+No Sonnet/Opus judging, q4, COMET, protected evaluation, app change, release,
+or upload is authorized. The shipped translator remains unchanged. See
+`canonical-constrained-recovery-v15-report-2026-07-26.md`.

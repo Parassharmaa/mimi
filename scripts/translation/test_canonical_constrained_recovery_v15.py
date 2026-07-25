@@ -20,6 +20,11 @@ CONTRACT = (
     / "Research/translation/canonical-constrained-recovery-v15-contract-2026-07-26.json"
 )
 CONTRACT_SHA256 = "f342d8bf027f88143159c1b0ae2d5da3fb5ccad3cabb9aeb73e6d3175699549a"
+RESULT = (
+    ROOT
+    / "Research/translation/canonical-constrained-recovery-v15-presemantic-result-2026-07-26.json"
+)
+RESULT_SHA256 = "0f324061b3a8b4da8ac86844b433b7163559bb9ac8e79bd8f4ab792a70586d8f"
 
 
 def sha256(path: Path) -> str:
@@ -77,6 +82,39 @@ def main() -> None:
     for item in contract["implementation"].values():
         path = ROOT / item["path"]
         assert sha256(path) == item["sha256"]
+
+    result = json.loads(RESULT.read_text(encoding="utf-8"))
+    assert sha256(RESULT) == RESULT_SHA256
+    assert result["experiment"] == contract["experiment"]
+    assert result["status"] == "pre-semantic-gate-rejected"
+    assert result["selected_for_semantic_audit_step"] is None
+    assert [candidate["step"] for candidate in result["candidates"]] == [25, 50]
+    assert not any(
+        candidate["eligible_for_dual_semantic_audit"]
+        for candidate in result["candidates"]
+    )
+    for candidate in result["candidates"]:
+        failed = {
+            gate["name"]
+            for gate in candidate["pre_semantic_gates"]
+            if not gate["passed"]
+        }
+        assert "v14-omission-risk-chrf++" in failed
+        assert "recovery-preference-improvement" in failed
+        assert "omission-preference-improvement" in failed
+        assert "fresh_v15-new-generation-failures" in failed
+        assert "v12_regression-new-generation-failures" in failed
+    for flag in (
+        "semantic_audit_complete",
+        "internal_gate_passed",
+        "exact_q4_conversion_authorized",
+        "comet_authorized",
+        "protected_evaluation_authorized_after_exact_q4",
+        "app_change_authorized",
+        "bundle_replacement_authorized",
+        "public_upload_authorized",
+    ):
+        assert result[flag] is False
 
     ids, mask, positions = pack_prefixes(
         [[4, 5], [6]],

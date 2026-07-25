@@ -2531,3 +2531,25 @@ It permits one 50-update arm and forbids q4, COMET, protected evaluation, app
 changes, release, or upload unless all pre-semantic gates pass and the complete
 new detector-disagreement queue then clears exact Sonnet 5 plus Opus 5 review.
 See `canonical-constrained-recovery-v15-plan-2026-07-26.md`.
+
+## V15 gains aggregate quality but does not repair the bound failures
+
+The best V15 checkpoint improves fresh mean sentence chrF++ by `+0.345` with a
+positive paired interval and improves aggregate V12 and V14 regression scores.
+The six-row fresh omission slice rises by 2.626 points, and one obvious
+generation loop becomes a finite translation.
+
+The intended contrast behavior barely changes: recovery preference moves by
+at most `+0.00049` and omission preference by `+0.00049`, versus required
+`+0.05` gains. The frozen 16-row V14 omission slice moves in the opposite
+direction, losing `1.344` points at step 25 and `1.505` at step 50. Both
+checkpoints also introduce one new generation failure on fresh V15 and one on
+V12.
+
+The result suggests that most token-level examples were already easy: initial
+recovery and omission preference were 72.3% and 95.5%, with large mean
+margins. A future arm must mine active sequence-level violations and balance
+historical hard slices, not merely increase V15's loss weights. V15 stops
+before every semantic, q4, COMET, protected, runtime, bundle, app, release, and
+upload stage. Full evidence is in
+`canonical-constrained-recovery-v15-report-2026-07-26.md`.
