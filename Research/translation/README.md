@@ -2103,3 +2103,46 @@ The contract, result, diagnostic, and detailed literature update are
 No q4 conversion, protected evaluation, COMET, LLM judge, bundle replacement,
 app integration, release, or public upload is authorized. The shipped
 translator and fallback are unchanged.
+
+## V13 dual-Claude safety-taxonomy calibration
+
+V13 uses exact `claude-sonnet-5` and `claude-opus-5` to independently assess
+the 27 V12 detector-disagreement cases. Each case contains four anonymous
+candidates, both judges receive byte-equivalent blinded payloads, exact
+canonical-model usage is proven for all seven shards per model, fallback
+models are forbidden, and no reasoning trace is retained.
+
+The result confirms that category calibration is necessary:
+
+| registered new event | step 50 supported by either judge | step 100 supported by either judge |
+| --- | ---: | ---: |
+| exact critical structure | 8 / 13 | 7 / 15 |
+| typed critical structure | 6 / 7 | 7 / 8 |
+| negation / polarity | **0 / 5** | **0 / 5** |
+| repetition / generation | **1 / 1** | **1 / 1** |
+
+All five newly flagged negation cases per checkpoint are false as *polarity*
+alerts: legal `No.` means “number,” and “not more than” can preserve Japanese
+upper-bound semantics. Four still have other critical errors such as wrong
+citations, amounts, or named entities. Both judges confirm the genuine
+`Article (25)` nontermination loop. Exact surface matching is noisier than the
+typed detector because equivalent `(ii)`/`(2)` representations can be safe.
+
+Critical-error agreement is 93/108 (86.1%); representation-only agreement is
+86/108 (79.6%). Because these 27 cases were selected for known failures, role
+counts are a calibration sample and not a system-level quality comparison.
+The future evaluator will separate detector and semantic categories, retain
+repetition as a hard failure, and fail closed on dual-judge disagreement.
+
+The contract and result are
+`canonical-safety-taxonomy-v13-contract-2026-07-26.json` and
+`canonical-safety-taxonomy-v13-result-2026-07-26.json`; their SHA-256 values
+are `993ee9d767f8f6b6f48a3f86197f10f81a6d6d08061b672f306de512ddaea2e1`
+and `d9b92810760ed5f0973a00927e0680b2604feca59b8e9c0ed44c03cc17fb05c5`.
+The detailed interpretation is in
+`canonical-safety-taxonomy-v13-report-2026-07-26.md`.
+
+V12 remains rejected. V13 does not authorize training, protected evaluation,
+COMET, q4 conversion, bundling, app changes, release, or upload. The next arm
+must be preregistered around rollout-conditioned bad prefixes and explicit
+EOS/repetition recovery.

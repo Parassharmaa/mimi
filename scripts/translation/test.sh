@@ -57,6 +57,7 @@ python3 scripts/translation/test_local_consensus_judge.py
 PYTHONPATH=scripts/translation python3 \
   scripts/translation/test_claude_consensus_judge.py
 python3 scripts/translation/test_claude_judgment_evidence.py
+python3 scripts/translation/test_canonical_safety_taxonomy_v13.py
 python3 scripts/translation/test_canonical_quality_consensus.py
 python3 scripts/translation/test_build_canonical_pairwise_preference_dataset.py
 python3 scripts/translation/test_apply_canonical_safety_router.py
@@ -187,6 +188,8 @@ python3 -m py_compile \
   scripts/translation/train_canonical_safety_repair_v12.py \
   scripts/translation/evaluate_canonical_safety_repair_v12.py \
   scripts/translation/diagnose_canonical_safety_repair_v12_failures.py \
+  scripts/translation/prepare_canonical_safety_taxonomy_v13_judge.py \
+  scripts/translation/collect_canonical_safety_taxonomy_v13_judge.py \
   scripts/translation/build_canonical_pairwise_v4_result.py \
   scripts/translation/build_canonical_pairwise_v5_result.py \
   scripts/translation/build_canonical_pairwise_v6_result.py \

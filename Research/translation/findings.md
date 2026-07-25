@@ -2377,3 +2377,54 @@ then train on model-generated bad prefixes and explicit EOS/repetition
 recovery; teacher-forced first-divergence negatives already have 97.7% chosen
 preference and do not solve exposure-driven loops. See
 `canonical-safety-repair-v12-report-2026-07-26.md`.
+
+## V13 semantic calibration of V12 safety failures
+
+The 27 V12 cases that contributed a new deterministic failure were frozen into
+an anonymous four-candidate audit. Exact `claude-sonnet-5` and
+`claude-opus-5` independently assessed the licensed reference, safe parent,
+step 50, and step 100 without seeing candidate origin. Both runs cover all 27
+sources in seven cryptographically bound shards, prove exact canonical-model
+usage, forbid fallback judges, and store no chain-of-thought.
+
+The audit confirms V12's genuine blocker and changes the future evaluator's
+taxonomy:
+
+| V12 registered event | Step 50 semantic support | Step 100 semantic support |
+| --- | ---: | ---: |
+| exact | either 8, both 3, registered 13 | either 7, both 3, registered 15 |
+| typed | either 6, both 5, registered 7 | either 7, both 5, registered 8 |
+| negation | either 0, both 0, registered 5 | either 0, both 0, registered 5 |
+| generation | either 1, both 1, registered 1 | either 1, both 1, registered 1 |
+
+The negation detector's ten checkpoint-events are all category false positives:
+`No.` is a legal-number abbreviation, while “not more than” can correctly
+express an upper bound. The judges nevertheless find other critical errors in
+four of those five underlying cases, including wrong amounts, citations, and
+named entities. Both judges independently confirm the `Article (25)`
+repetition/nontermination loop. Typed structure is a much stronger signal than
+untyped exact surface equality; equivalent Roman/Arabic numbering explains
+some exact-only events.
+
+Across all 108 assessments, the two judges agree on the critical-error boolean
+for 93 (86.1%) and on representation-only for 86 (79.6%). Fail-closed critical
+counts are 2/27 for licensed references, 20/27 for the safe parent, 19/27 for
+step 50, and 20/27 for step 100. These figures do not compare overall model
+quality because the sample intentionally contains known hard failures. The two
+reference failures also show why neither the licensed target nor one LLM judge
+can be treated as infallible.
+
+The future safety gate will report detector and semantic categories separately,
+special-case legal `No.` and equivalent upper-bound phrases, distinguish
+representation from identity changes, keep generation loops as deterministic
+hard failures, and fail closed on dual-judge disagreement. V12's rejection is
+not reinterpreted. The v13 contract and result hash to
+`993ee9d767f8f6b6f48a3f86197f10f81a6d6d08061b672f306de512ddaea2e1`
+and `d9b92810760ed5f0973a00927e0680b2604feca59b8e9c0ed44c03cc17fb05c5`.
+Training, protected evaluation, COMET, q4 conversion, bundling, app changes,
+release, and public upload remain unauthorized.
+
+The next arm should train on self-generated bad prefixes with explicit
+EOS/repetition recovery and legal-number/citation counterfactuals. Another
+teacher-forced first-divergence arm or additional model capacity is not
+justified yet.
