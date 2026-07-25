@@ -779,7 +779,11 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             fixturePreferences.floatingCaptionsEnabled = true
             fixturePreferences.floatingCaptionContent = .both
             fixturePreferences.floatingCaptionClickThrough = false
-            view = AnyView(FloatingCaptionView(store: store, preferences: fixturePreferences))
+            view = AnyView(FloatingCaptionView(
+                store: store,
+                preferences: fixturePreferences,
+                allowsLiveTranslation: exercisesLiveTranslation
+            ))
             size = NSSize(width: 820, height: 150)
         case "voice-typing":
             fixtureVoiceTyping.applyPresentationFixture(text: "")
