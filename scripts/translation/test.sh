@@ -90,6 +90,7 @@ PYTHONPATH=scripts/translation uv run --python 3.12 --with torch \
   --with sacrebleu==2.6.0 --with numpy \
   scripts/translation/test_active_sequence_risk_v16_contract.py
 python3 scripts/translation/test_active_sequence_risk_v16_result.py
+python3 scripts/translation/test_on_policy_multipair_v17.py
 uv run --python 3.12 --with torch --with transformers==4.57.6 \
   --with sentencepiece --with sacremoses --with sacrebleu==2.6.0 --with numpy \
   --with huggingface-hub scripts/translation/test_marian_negative_space_objective.py
