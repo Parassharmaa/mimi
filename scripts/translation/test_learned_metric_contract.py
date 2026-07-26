@@ -90,6 +90,7 @@ def main() -> None:
         assert report["runtimePackageVersions"] == {"fixture": "1.0"}
         assert report["modelCheckpoint"]["sha256"] == "checkpoint"
         assert report["inferenceConfiguration"]["batchSize"] == 8
+        assert "createdAt" not in report
         assert len(report["runtimeEnvironmentSHA256"]) == 64
         assert len(report["signatureSHA256"]) == 64
 

@@ -9,7 +9,6 @@ import importlib.metadata
 import json
 import platform
 from collections import defaultdict
-from datetime import datetime, timezone
 from pathlib import Path
 
 DEFAULT_MODEL = "Unbabel/wmt22-comet-da"
@@ -151,7 +150,6 @@ def build_report(
     ).hexdigest()
     return {
         "schemaVersion": 1,
-        "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         **signature_value,
         "signatureSHA256": signature,
         "engine": json.loads(engine_report_path.read_text(encoding="utf-8"))["engine"],
