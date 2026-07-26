@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360" role="img" aria-labelledby="title description">
   <title id="title">Apple SpeechAnalyzer and Mimi Speech Preview comparison</title>
-  <desc id="description">Mimi has lower Japanese character error rate and English word error rate. The language-aware streaming profile reduces Mimi's first-text latency while Apple remains faster.</desc>
+  <desc id="description">Mimi has lower Japanese character error rate and English word error rate. Apple remains faster to first text. Mimi's correctly paced production queue drops no audio, but finalization still exceeds the promotion target.</desc>
   <style>
     :root {
       color-scheme: light dark;
@@ -46,56 +46,56 @@
   <g transform="translate(20 62)">
     <text class="heading" x="0" y="0">Japanese CER</text>
     <text class="small" x="0" y="20">24 selected FLEURS clips</text>
-    <line class="grid" x1="72" y1="42" x2="252" y2="42"/>
+    <line class="grid" x1="72" y1="42" x2="230" y2="42"/>
     <line class="grid" x1="72" y1="42" x2="72" y2="132"/>
     <text class="small" x="72" y="151" text-anchor="middle">0%</text>
-    <text class="small" x="162" y="151" text-anchor="middle">6%</text>
-    <text class="small" x="252" y="151" text-anchor="middle">12%</text>
+    <text class="small" x="151" y="151" text-anchor="middle">6%</text>
+    <text class="small" x="230" y="151" text-anchor="middle">12%</text>
     <text x="0" y="70">Apple</text>
-    <rect class="apple" x="72" y="54" width="166" height="22" rx="4"/>
-    <text class="value" x="244" y="70">11.06%</text>
+    <rect class="apple" x="72" y="54" width="146" height="22" rx="4"/>
+    <text class="value" x="270" y="70" text-anchor="end">11.06%</text>
     <text x="0" y="110">Mimi</text>
-    <rect class="mimi" x="72" y="94" width="99" height="22" rx="4"/>
-    <text class="value" x="177" y="110">6.57%</text>
+    <rect class="mimi" x="72" y="94" width="87" height="22" rx="4"/>
+    <text class="value" x="270" y="110" text-anchor="end">6.57%</text>
   </g>
 
-  <g transform="translate(310 62)">
+  <g transform="translate(320 62)">
     <text class="heading" x="0" y="0">English WER</text>
     <text class="small" x="0" y="20">24 selected FLEURS clips</text>
-    <line class="grid" x1="72" y1="42" x2="252" y2="42"/>
+    <line class="grid" x1="72" y1="42" x2="230" y2="42"/>
     <line class="grid" x1="72" y1="42" x2="72" y2="132"/>
     <text class="small" x="72" y="151" text-anchor="middle">0%</text>
-    <text class="small" x="162" y="151" text-anchor="middle">5%</text>
-    <text class="small" x="252" y="151" text-anchor="middle">10%</text>
+    <text class="small" x="151" y="151" text-anchor="middle">5%</text>
+    <text class="small" x="230" y="151" text-anchor="middle">10%</text>
     <text x="0" y="70">Apple</text>
-    <rect class="apple" x="72" y="54" width="166" height="22" rx="4"/>
-    <text class="value" x="244" y="70">9.23%</text>
+    <rect class="apple" x="72" y="54" width="146" height="22" rx="4"/>
+    <text class="value" x="270" y="70" text-anchor="end">9.23%</text>
     <text x="0" y="110">Mimi</text>
-    <rect class="mimi" x="72" y="94" width="100" height="22" rx="4"/>
-    <text class="value" x="178" y="110">5.54%</text>
+    <rect class="mimi" x="72" y="94" width="88" height="22" rx="4"/>
+    <text class="value" x="270" y="110" text-anchor="end">5.54%</text>
   </g>
 
-  <g transform="translate(600 62)">
+  <g transform="translate(620 62)">
     <text class="heading" x="0" y="0">First text p50</text>
-    <text class="small" x="0" y="20">Nominal audio time plus decode</text>
-    <line class="grid" x1="72" y1="42" x2="252" y2="42"/>
+    <text class="small" x="0" y="20">Paced production queue</text>
+    <line class="grid" x1="72" y1="42" x2="230" y2="42"/>
     <line class="grid" x1="72" y1="42" x2="72" y2="192"/>
     <text class="small" x="72" y="211" text-anchor="middle">0 s</text>
-    <text class="small" x="162" y="211" text-anchor="middle">2.5 s</text>
-    <text class="small" x="252" y="211" text-anchor="middle">5 s</text>
+    <text class="small" x="151" y="211" text-anchor="middle">2.5 s</text>
+    <text class="small" x="230" y="211" text-anchor="middle">5 s</text>
     <text x="0" y="67">JA Apple</text>
-    <rect class="apple" x="72" y="51" width="118" height="20" rx="4"/>
-    <text class="value" x="196" y="67">3.27 s</text>
+    <rect class="apple" x="72" y="51" width="103" height="20" rx="4"/>
+    <text class="value" x="270" y="67" text-anchor="end">3.27 s</text>
     <text x="0" y="100">JA Mimi</text>
-    <rect class="mimi" x="72" y="84" width="140" height="20" rx="4"/>
-    <text class="value" x="218" y="100">3.90 s</text>
+    <rect class="mimi" x="72" y="84" width="123" height="20" rx="4"/>
+    <text class="value" x="270" y="100" text-anchor="end">3.88 s</text>
     <text x="0" y="145">EN Apple</text>
-    <rect class="apple" x="72" y="129" width="80" height="20" rx="4"/>
-    <text class="value" x="158" y="145">2.23 s</text>
+    <rect class="apple" x="72" y="129" width="70" height="20" rx="4"/>
+    <text class="value" x="270" y="145" text-anchor="end">2.23 s</text>
     <text x="0" y="178">EN Mimi</text>
-    <rect class="mimi" x="72" y="162" width="103" height="20" rx="4"/>
-    <text class="value" x="181" y="178">2.88 s</text>
+    <rect class="mimi" x="72" y="162" width="91" height="20" rx="4"/>
+    <text class="value" x="270" y="178" text-anchor="end">2.88 s</text>
   </g>
 
-  <text class="small" x="24" y="335">Mimi compute RTF: 0.385 JA and 0.387 EN. Apple RTF is not directly comparable because its harness includes real-time audio pacing.</text>
+  <text class="small" x="24" y="335">Mimi queue: 0 drops / 48 clips. Wake ≤ 9.7 ms. Final p95: 2.12 s JA / 1.73 s EN. Compute RTF: 0.397 JA / 0.405 EN.</text>
 </svg>

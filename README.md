@@ -41,12 +41,14 @@ Translation.
 Mimi Speech Preview is one 468.15 MB 4-bit model for both English and Japanese.
 On the fixed 24-clip screens, it scores 6.57% Japanese CER and 5.54% English
 WER, versus 11.06% and 9.23% for Apple SpeechAnalyzer progressive. Its mean
-compute RTF is 0.385 in Japanese and 0.387 in English. First-text p50 is 3.90
-seconds in Japanese and 2.88 seconds in English. It retained 6.57% CER and
-5.90% WER across six-minute and four-minute sessions with one-second utterance
-boundaries. Apple remains the default while noisy, paced-queue, and continuous
-speech gates remain. The preview currently requires manual English or Japanese
-selection.
+compute RTF is 0.397 in Japanese and 0.405 in English.
+The production-queue replay delivers audio on time with no drops and reaches
+first text at 3.88 seconds in Japanese and 2.88 seconds in English. It retained
+6.57% CER and 5.90% WER across six-minute and four-minute sessions with
+one-second utterance boundaries. Finalization p95 is still 2.12 seconds in
+Japanese and 1.73 seconds in English, and artificial gapless speech remains
+weak. Apple remains the default. The preview currently requires manual English
+or Japanese selection.
 
 - [Pinned public model](https://huggingface.co/mlx-community/whisper-large-v3-turbo-asr-4bit/tree/321a6ead9f6e0646bc8188a54d2a470e275c6b76)
 - [Native MLX loader review](https://github.com/Blaizzy/mlx-audio-swift/pull/235)

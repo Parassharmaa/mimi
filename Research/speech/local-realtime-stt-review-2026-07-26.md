@@ -13,9 +13,15 @@ in both speech-input languages on these selected slices:
 * Native live English WER: 5.54% versus Apple 9.23%.
 * Japanese alias-aware protected-term recall: 73.2% versus Apple 61.0%.
 * English alias-aware protected-term recall: 87.9% versus Apple 78.8%.
-* Native live compute RTF: 0.385 Japanese and 0.387 English.
-* Native live first text p50: 3.90 seconds Japanese and 2.88 seconds English.
-* Native live peak process RSS: approximately 1.15 GB.
+* Native live compute RTF: 0.397 Japanese and 0.405 English.
+* Paced production-queue first text p50: 3.88 seconds Japanese and 2.88
+  seconds English.
+* Paced input-delivery RTF: 1.00023 Japanese and 1.00035 English, with maximum
+  measured wake lateness of 8.4 and 9.7 ms and zero dropped samples or
+  backpressure events across 48 clips.
+* Finalization lag p95: 2.12 seconds Japanese and 1.73 seconds English.
+* Native live peak process RSS: approximately 1.14 GB on short screens and
+  1.17 GB in the longest paced soak.
 * Exact speech model pack: 468,150,715 bytes, including 463,462,815 bytes of
   weights.
 
@@ -29,11 +35,11 @@ rolling decoding:
 
 ```mermaid
 flowchart LR
-    A["Microphone and ring buffer"] --> B["VAD and endpointing"]
-    B --> C["Six-second window, language-aware first stride"]
-    C --> D["Whisper Large-v3 Turbo Q4"]
-    D --> E["Japanese filler rejection and bounded retry"]
-    E --> F["Final utterance confirmation"]
+    A["Microphone and 100 ms converter"] --> B["Eight-second bounded queue"]
+    B --> C["VAD and endpointing"]
+    C --> D["Six-second window, language-aware first stride"]
+    D --> E["Whisper Large-v3 Turbo Q4"]
+    E --> F["Complete final utterance confirmation"]
     F --> G["Mimi EN to JA or JA to EN translator"]
 ```
 
@@ -43,9 +49,11 @@ all app models therefore still requires further compression or optional asset
 packs.
 
 Accuracy on the current screens is no longer the main blocker. The integrated
-native path is faster than incoming audio and its bounded final text beats
-Apple on both selected slices. Japanese first-partial quality, 1.15 GB peak
-RSS, hypothesis churn, and missing noisy-session evidence still block default
+native path delivers incoming audio on time and its bounded final text beats
+Apple on both selected slices. Finalization misses the one-second p95 target,
+peak RSS remains above 1 GB, the 15 dB synthetic-noise screens are too small to
+resolve their observed term-recall losses, and artificial gapless speech
+exposes severe forced-segmentation errors. These failures still block default
 promotion.
 
 ## Native Swift integration probe
@@ -76,7 +84,7 @@ is accurate but not real time:
 | 2 s first stable text | 7.14 s | Not measured |
 
 The development integration replaces that naive prototype with a bounded
-four-second PCM queue, adaptive no-drop VAD, six-second partial windows,
+eight-second PCM queue, adaptive VAD, six-second partial windows,
 three-second decode stride, typo-tolerant overlap alignment, 750 ms silence
 endpointing, and complete final decodes capped at 30 seconds. The exact model
 pack's 13-file inventory, byte sizes, and hashes are checked before packaging
@@ -88,6 +96,28 @@ On the native 24+24 screens, Japanese CER is 6.57% with paired Mimi-minus-Apple
 interval [-6.02, -1.70]. Mimi wins 15 Japanese clips and 13 English clips;
 Apple wins 4 and 2 respectively. These intervals condition on selected
 term-heavy screens and are not final release claims.
+
+The real production queue is now a separate gate rather than an inference from
+the direct runner. The corrected paced harness sleeps until each buffer's
+absolute end-of-audio deadline before delivery, measures wake overshoot after
+sleeping, and records exact queue telemetry. On the final executable
+`0a71d7179b4a993137b817cf9863db47689e3bbcfb075a64dff9ce51f9af9c52`,
+all 48 clean short-screen hypotheses match same-hash direct actor reports
+exactly.
+
+| Paced clean screen | Japanese | English |
+| --- | ---: | ---: |
+| Error | 6.57% CER | 5.54% WER |
+| First text p50 / p95 | 3.88 / 3.94 s | 2.88 / 3.16 s |
+| Input-delivery RTF | 1.00023 | 1.00035 |
+| Maximum wake lateness | 8.4 ms | 9.7 ms |
+| Wall RTF including final decode | 1.113 | 1.103 |
+| Finalization lag p50 / p95 | 1.29 / 2.12 s | 0.99 / 1.73 s |
+| Peak queued audio | 1.3 s | 1.7 s |
+| Dropped samples / events | 0 / 0 | 0 / 0 |
+| Peak process RSS | 1,142,734,848 B | 1,139,146,752 B |
+
+The queue gate passes. The finalization gate fails in both languages.
 
 ## Streaming-profile audit
 
@@ -105,9 +135,9 @@ prefix. Coverage is the fraction of reference units visible in that update.
 
 | Profile | Final error | First p50 | First p95 | Prefix error | Coverage | Compute RTF | Decision |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| English 2 s initial, 3 s steady | 5.54% WER | 2.88 s | 3.15 s | 10.10% | 21.01% | 0.387 | Product |
+| English 2 s initial, 3 s steady | 5.54% WER | 2.95 s | 3.22 s | 10.10% | 21.01% | 0.405 | Product |
 | Japanese 2 s initial with retry | 6.57% CER | 3.37 s | 5.36 s | 45.12% | 7.60% | 0.481 | Rejected |
-| Japanese 3 s initial, no text filter | 6.57% CER | 3.90 s | 3.96 s | 29.66% | 13.20% | 0.385 | Product |
+| Japanese 3 s initial, no text filter | 6.57% CER | 3.93 s | 4.04 s | 29.66% | 13.20% | 0.397 | Product |
 | Japanese 3 s initial with retry | 6.57% CER | 3.98 s | 5.41 s | 24.16% | 13.59% | 0.421 | Rejected |
 
 The 2-second Japanese profile is rejected even though its median is faster.
@@ -122,6 +152,30 @@ first text by only about 60 ms, within run variation, and made Japanese about
 140 ms slower because repeated tokenizer decoding added work. It produced
 4 to 12 UI updates per short clip without changing final WER or CER. Mimi keeps
 one completed hypothesis per bounded decode instead.
+
+## Controlled-noise audit
+
+The noise fixture keeps each registered human recording and reference, adds
+deterministic seeded pink noise at 15 dB RMS SNR, and records the complete
+transform and output hashes. It preserves original source gain except where a
+minimal per-clip attenuation is needed for one decibel of predicted mix
+headroom. The maximum attenuation is 0.22 dB in English and 1.87 dB in
+Japanese. The manifest records SHA-256 hashes and versions for the exact
+FFmpeg and FFprobe executables. A separate full rebuild produced byte-identical
+WAV and manifest hashes.
+
+| Paced condition | Clean | Pink noise, 15 dB | Difference | Paired 95% interval |
+| --- | ---: | ---: | ---: | ---: |
+| English WER | 5.54% | 6.09% | +0.55 pp | -0.53 to +1.63 pp |
+| Japanese CER | 6.57% | 7.12% | +0.54 pp | -0.21 to +1.69 pp |
+| English alias-aware term recall | 87.9% | 84.8% | -3.0 pp | -9.1 to 0.0 pp |
+| Japanese alias-aware term recall | 73.2% | 68.3% | -4.9 pp | -11.9 to 0.0 pp |
+
+Both error-rate intervals cross zero on only 24 paired clips, so this screen
+does not establish an accuracy regression. The term-recall direction is
+concerning but also underpowered. No noisy case dropped audio; maximum measured
+wake lateness was 6.9 ms in either language. Real environmental noise,
+reverberation, microphones, accents, and competing speakers remain untested.
 
 ## Long-session audit
 
@@ -141,17 +195,64 @@ boundaries fired and CER rose to 21.89%. A 1.5-second control fired all 23
 boundaries and scored 5.88% CER. Mimi now evaluates 100 ms blocks while
 preserving the prior noise-floor adaptation time constant.
 
-| Language | Current one-second-gap duration | Error | Compute RTF | Short-screen error |
-| --- | ---: | ---: | ---: | ---: |
-| English | 271.36 s | 5.90% WER | 0.392 | 5.54% WER |
-| Japanese | 354.56 s | 6.57% CER | 0.402 | 6.57% CER |
+The first absolute-deadline Japanese paced soak exposed a second real bug. The
+four-second queue dropped 32,000 samples, or two seconds, during transient
+final-decode backlog and raised CER to 7.35%. The final eight-second queue peaks
+at 5.1 seconds, drops nothing, restores the direct hypothesis exactly, and
+returns CER to 6.57%. Its full capacity adds only 256 KB of float PCM over the
+old bound.
 
-Both current reports record the exact executable, model, suite, audio, cadence,
-and effective-profile hashes or values. The result supports bounded
-multi-minute sessions with detectable utterance boundaries. It does not yet
-promote Mimi Speech to the default: the live queue still needs a paced soak,
-and noisy speech, thermal behavior, and genuinely continuous monologues remain
-separate gates.
+| Final paced one-second-gap soak | Japanese | English |
+| --- | ---: | ---: |
+| Duration | 354.56 s | 271.42 s |
+| Error | 6.57% CER | 5.90% WER |
+| Input-delivery RTF | 1.000012 | 1.000003 |
+| Maximum wake lateness | 13.5 ms | 11.1 ms |
+| Wall RTF including final decode | 1.0059 | 1.0039 |
+| Peak queued audio | 5.1 s | 1.8 s |
+| Dropped samples / events | 0 / 0 | 0 / 0 |
+| Final utterance lag | 2.09 s | 1.05 s |
+| Peak process RSS | 1,172,520,960 B | 1,167,294,464 B |
+
+The same exact executable was paced through the artificial gapless
+multi-speaker concatenations. Throughput remains healthy with no drops, but
+quality fails:
+
+| Gapless stress | Japanese | English |
+| --- | ---: | ---: |
+| Duration | 331.56 s | 248.42 s |
+| Error | 26.76% CER | 20.66% WER |
+| Input-delivery RTF | 1.000011 | 1.000006 |
+| Maximum wake lateness | 10.5 ms | 13.9 ms |
+| Wall RTF | 1.0036 | 1.0028 |
+| Peak queued audio | 1.8 s | 2.1 s |
+| Dropped samples | 0 | 0 |
+
+This fixture is not a natural meeting because it joins 24 speakers without
+pauses. It nevertheless proves that the current exact 30-second hard reset is
+not robust to uninterrupted speaker and sentence boundaries. The next
+experiment is an adaptive low-energy forced boundary with held-out paused and
+continuous controls. Thermal, energy, real-noise, and natural-monologue gates
+also remain open.
+
+## Reproducible paced evidence
+
+The selected manifests and JSON reports are committed under
+`Research/speech/work`. Generated WAV files and model weights remain ignored
+and are recreated by the hash-checking fixture and model-pack scripts.
+
+* Clean direct controls:
+  `ja-product-direct-corrected-v2.json` and
+  `en-product-direct-corrected-v2.json`.
+* Clean production queue:
+  `ja-product-paced-queue-8s-corrected-v2.json` and
+  `en-product-paced-queue-8s-corrected-v2.json`.
+* Deterministic noise:
+  `noisy-ja-pink-15db-v2` and `noisy-en-pink-15db-v2`, each with its manifest,
+  paced report, and paired comparison.
+* Long paused and gapless controls:
+  the `mimi-product-paced-queue-*-8s-corrected-v2.json` reports in
+  `long-form-ja-v1` and `long-form-en-v1`.
 
 ## Why Japanese to English currently fails
 
