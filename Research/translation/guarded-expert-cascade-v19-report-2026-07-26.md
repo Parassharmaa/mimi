@@ -2,8 +2,9 @@
 
 Date: 2026-07-26
 
-Status: public development screen passed. This does not authorize replacing
-Mimi's bundled resources, protected evaluation, release, or publication.
+Status: stored-output public metrics passed, but the exact Swift runtime screen
+is rejected. This does not authorize replacing Mimi's bundled resources,
+protected evaluation, release, or publication.
 
 ## Outcome
 
@@ -75,6 +76,10 @@ V19 improves over bundled Mimi by +0.02154 EN→JA, with paired 95% interval
 COMET over the stronger pair; JA→EN long legal is unchanged. This passes the
 public COMET non-inferiority gate without weakening either direction.
 
+This is a stored-output result, not the final app-path result. The stored
+composition modeled the preregistered empty/repetition fallback but did not
+model the runtime's existing critical-token and plausibility guards.
+
 ## Actual Swift/MLX evidence
 
 The runtime change is developer-only and does not alter app resources.
@@ -98,18 +103,41 @@ The runtime change is developer-only and does not alter app resources.
   is not a promotion result because the V18 Metal evaluator was concurrent.
 - The complete developer pack passed Mimi's authenticated model-pack validator.
 
+### Full 400-segment runtime screen
+
+The exact Swift cascade rejects V19:
+
+| Direction | Segments | Expert | Local fallback | Failed closed |
+|---|---:|---:|---:|---:|
+| EN→JA | 200 | 166 | 5 | **29** |
+| JA→EN | 200 | 154 | 4 | **42** |
+| Total | 400 | 320 | 9 | **71** |
+
+All 71 failures are critical-token mismatches after both compact local parents
+were tried. The largest slice is JA→EN long legal (15/36), followed by EN→JA
+long news (10/48). Several are genuine severe number failures—for example,
+`300 miles (480 km)` becomes `3 km`, article 74 becomes 71, or list item 226
+becomes 222. Others are valid bilingual surface changes that the strict guard
+cannot currently prove, such as English number words becoming Japanese digits.
+
+Therefore the real runtime's 320/9/71 routing supersedes the simulated 398/2
+routing for every integration decision. The stored COMET result remains
+reproducible evidence about those exact stored hypotheses, but it cannot be
+claimed as app-path quality.
+
 ## Remaining gates
 
-V19 is not ready to ship yet:
+V19 is rejected for shipping in its current form:
 
-1. Run the complete long-document, critical-meaning, negation, typed-token, and
-   protected suites without changing the guard.
-2. Measure warm p50/p95, fallback-tail latency, preparation time, and peak RSS
-   using the exact Swift cascade pack.
-3. Resolve the pack's inherited attribution/share-alike distribution status
-   against the already-public candidate release sidecars.
-4. Only after all gates pass, copy the authenticated pack into
-   `App/Resources/TranslationModels`, rebuild the app, and run release parity.
+1. Train or select a stronger number- and legal-structure-preserving fallback,
+   or validate source-normalized constrained numeric decoding on adversarial
+   and held-out suites.
+2. Keep the strict app-path guard; do not promote the offline typed numeric
+   ablation because it has reference-disagreement accepts.
+3. Rerun the complete public Swift runtime screen before opening protected
+   evidence or measuring isolated latency.
+4. Resolve inherited attribution/share-alike status only after runtime safety
+   passes.
 
 The exact contract is
 `Research/translation/guarded-expert-cascade-v19-contract-2026-07-26.json`;
@@ -117,6 +145,8 @@ the machine-readable public result is
 `Research/translation/guarded-expert-cascade-v19-preliminary-result-2026-07-26.json`,
 and the pinned learned-metric result is
 `Research/translation/guarded-expert-cascade-v19-comet-result-2026-07-26.json`.
+The superseding app-path decision is
+`Research/translation/guarded-expert-cascade-v19-swift-runtime-result-2026-07-26.json`.
 Rebuild the developer pack without changing app resources:
 
 ```sh
