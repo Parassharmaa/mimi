@@ -32,6 +32,29 @@ English↔Japanese translation uses the bundled 73.4 MB ElanMT Marian model
 through MLX; translation text never leaves the Mac and does not use Apple
 Translation.
 
+## Local translation
+
+![Mimi translation model comparison](docs/images/translation-model-comparison.svg)
+
+Mimi ships a 73.4 MB bidirectional translator made from two small Marian
+specialists, one for each direction. A stronger 73.4 MB development candidate
+is also available:
+
+- [Model and weights on Hugging Face](https://huggingface.co/blazeofchi/mimi-en-ja-mlx-development-v1)
+- [Benchmark data on Hugging Face](https://huggingface.co/datasets/blazeofchi/mimi-en-ja-development-v1)
+
+The candidate starts from pinned ElanMT checkpoints and is continued on
+licensed human translations and Mimi-owned pairs. It was not trained from
+scratch and uses no synthetic targets or reasoning traces. The EN→JA model
+averages three checkpoints; the JA→EN model uses the strongest legal-specialist
+checkpoint. Both are quantized to 4-bit MLX weights.
+
+On the public 200-case benchmark, the candidate scores 28.41 and 55.19 chrF++,
+9.63 and 30.62 BLEU, and 0.8669 and 0.8192 COMET-22 for EN→JA and JA→EN. It
+stays below 171 ms segment p95 on the benchmark Mac. It is not the release
+default because a known long legal document can trigger repetition and the
+public suite is not a promotion test.
+
 ## Requirements
 
 - macOS 15 or later.
@@ -45,6 +68,13 @@ Translation.
 swift build
 scripts/build-app.sh debug
 open .build/Mimi.app
+```
+
+To build the development app with the pinned public candidate:
+
+```sh
+scripts/build-development-app.sh debug
+open .build/Mimi-development.app
 ```
 
 macOS asks for microphone or system-audio access only when the selected source
@@ -66,6 +96,7 @@ For implementation details, benchmarks, and physical-Mac checks, see:
 
 - [Version 1 plan](docs/V1_PLAN.md)
 - [Realtime benchmark](docs/REALTIME_BENCHMARK.md)
+- [Translation development report](Research/translation/development-accuracy-v1-report.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 ## Release status
