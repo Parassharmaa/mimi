@@ -97,6 +97,32 @@ def validate_completed_hyperparameters(
             raise SystemExit(f"completed run hyperparameter differs: {key}")
 
 
+def validate_observed_checkpoint_disclosure(
+    observed: dict[str, Any],
+    checkpoints: dict[int, Path],
+    expected_steps: list[int],
+) -> None:
+    if (
+        not expected_steps
+        or observed.get("maximum_observed_step") != max(expected_steps)
+    ):
+        raise SystemExit("evaluation freeze disclosure is invalid")
+    for step in expected_steps:
+        digest_key = f"step_{step}_checkpoint_manifest_sha256"
+        metrics_key = f"step_{step}_selector_metrics"
+        expected_digest = str(observed.get(digest_key, ""))
+        if (
+            not re.fullmatch(r"[0-9a-f]{64}", expected_digest)
+            or step not in checkpoints
+        ):
+            raise SystemExit("evaluation freeze disclosure is invalid")
+        manifest_path = checkpoints[step] / "mimi_checkpoint_manifest.json"
+        if sha256(manifest_path) != expected_digest:
+            raise SystemExit(f"disclosed step-{step} checkpoint differs")
+        if load_json(manifest_path).get("metrics") != observed.get(metrics_key):
+            raise SystemExit(f"disclosed step-{step} metrics differ")
+
+
 def display_path(path: Path, root: Path) -> str:
     resolved = path.resolve()
     try:
@@ -425,24 +451,11 @@ def validate_inputs(
     if sorted(checkpoints) != expected_steps:
         raise SystemExit("supplied checkpoint steps differ from evaluation contract")
     observed = evaluation_contract.get("observed_before_evaluation_freeze", {})
-    if (
-        observed.get("maximum_observed_step") != 250
-        or not re.fullmatch(
-            r"[0-9a-f]{64}",
-            str(observed.get("step_250_checkpoint_manifest_sha256", "")),
-        )
-        or 250 not in checkpoints
-        or sha256(checkpoints[250] / "mimi_checkpoint_manifest.json")
-        != observed.get("step_250_checkpoint_manifest_sha256")
-    ):
-        raise SystemExit("evaluation freeze disclosure is invalid")
-    if (
-        load_json(
-            checkpoints[250] / "mimi_checkpoint_manifest.json"
-        ).get("metrics")
-        != observed.get("step_250_selector_metrics")
-    ):
-        raise SystemExit("disclosed step-250 metrics differ")
+    validate_observed_checkpoint_disclosure(
+        observed,
+        checkpoints,
+        expected_steps,
+    )
     suites = validate_suites(evaluation_contract, root)
     for step, checkpoint in checkpoints.items():
         authenticate_checkpoint(

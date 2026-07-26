@@ -18,6 +18,7 @@ from evaluate_shared_bidirectional_v18_internal import (
     direction,
     normalized_row,
     validate_completed_hyperparameters,
+    validate_observed_checkpoint_disclosure,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -179,6 +180,14 @@ with tempfile.TemporaryDirectory(prefix="mimi-v18-eval-") as temporary:
         "contract_sha256": "a" * 64,
         "immutable_scheduled_checkpoint": True,
         "inference_config_use_cache": True,
+        "metrics": {
+            "directions": {
+                "en-ja": {"cases": 1, "chrf_pp": 30.0},
+                "ja-en": {"cases": 1, "chrf_pp": 50.0},
+            },
+            "loss": 1.0,
+            "macro_direction_chrf_pp": 40.0,
+        },
         "files": {
             "config.json": {
                 "bytes": config.stat().st_size,
@@ -199,6 +208,17 @@ with tempfile.TemporaryDirectory(prefix="mimi-v18-eval-") as temporary:
         step=250,
         contract_sha256="a" * 64,
     )["step"] == 250
+    validate_observed_checkpoint_disclosure(
+        {
+            "maximum_observed_step": 250,
+            "step_250_checkpoint_manifest_sha256": digest(
+                checkpoint / "mimi_checkpoint_manifest.json"
+            ),
+            "step_250_selector_metrics": manifest["metrics"],
+        },
+        {250: checkpoint},
+        [250],
+    )
     weights.write_bytes(b"tampered fixture")
     try:
         authenticate_checkpoint(

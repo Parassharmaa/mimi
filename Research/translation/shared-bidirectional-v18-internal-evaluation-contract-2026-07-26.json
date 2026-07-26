@@ -9,7 +9,7 @@
   "experiment": "shared-bidirectional-v18-full-precision-internal-eval",
   "implementation": {
     "path": "scripts/translation/evaluate_shared_bidirectional_v18_internal.py",
-    "sha256": "e766133e8ea26fbce7270aac658fd1dbfbd268c3508b93c080e81b6c2792e25b"
+    "sha256": "a0bbc20108dc445d2120e5a46814d57191b2fe7dd82207a06b60f5dcb610938c"
   },
   "observed_before_evaluation_freeze": {
     "disclosure": "All four balanced-selector checkpoint metrics were observed before this evaluator was re-frozen because its first post-training invocation stopped before model loading: the trainer serializes selection_validation_per_direction as validation_limit_per_direction in its completed manifest. The only implementation change accepts that exact authenticated alias. No threshold, suite, checkpoint, generation, regression, semantic, selection, q4, app, or publication behavior changed, and no regression-suite, teacher-baseline, or semantic output was available.",
