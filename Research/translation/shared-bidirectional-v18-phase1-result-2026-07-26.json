@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "experiment": "shared-bidirectional-v18-wide-dense-phase1",
+  "status": "completed-selector-rejected",
+  "training_manifest": {
+    "path": "Research/translation/work/shared-bidirectional-v18-phase1/mimi_training_manifest.json",
+    "bytes": 13484,
+    "sha256": "24d9704324c513d75e70a27b8a47920626d231bd3c1cb161e3ece6ac5e1f373f"
+  },
+  "architecture": {
+    "physical_models": 1,
+    "parameters": 92043009,
+    "encoder_layers": 6,
+    "decoder_layers": 6,
+    "model_dimension": 512,
+    "attention_heads": 8,
+    "encoder_ffn_dimension": 4608,
+    "decoder_ffn_dimension": 4608,
+    "projected_q4_pack_bytes": 54457871
+  },
+  "selector": {
+    "cases": 512,
+    "cases_per_direction": 256,
+    "trajectory": [
+      {
+        "step": 0,
+        "loss": 4.80236680759,
+        "en_ja_chrf_pp": 30.6906562162,
+        "ja_en_chrf_pp": 1.16774109645,
+        "macro_direction_chrf_pp": 15.9291986563
+      },
+      {
+        "step": 250,
+        "loss": 2.8671672370983288,
+        "en_ja_chrf_pp": 34.944392569466025,
+        "ja_en_chrf_pp": 13.929796576084888,
+        "macro_direction_chrf_pp": 24.437094572775457
+      },
+      {
+        "step": 500,
+        "loss": 2.696746915113181,
+        "en_ja_chrf_pp": 35.90294054200654,
+        "ja_en_chrf_pp": 16.85044510701346,
+        "macro_direction_chrf_pp": 26.376692824510002
+      },
+      {
+        "step": 750,
+        "loss": 2.628768577123992,
+        "en_ja_chrf_pp": 36.186333530758986,
+        "ja_en_chrf_pp": 19.070915542105137,
+        "macro_direction_chrf_pp": 27.628624536432064
+      },
+      {
+        "step": 1000,
+        "loss": 2.611906120320782,
+        "en_ja_chrf_pp": 36.02145194035551,
+        "ja_en_chrf_pp": 19.84712061404707,
+        "macro_direction_chrf_pp": 27.93428627720129
+      }
+    ],
+    "frozen_minimums": {
+      "en_ja_chrf_pp": 30.0,
+      "ja_en_chrf_pp": 50.0,
+      "macro_direction_chrf_pp": 40.0
+    },
+    "passed": false,
+    "blocking_gate": "JA-to-EN chrF++ 19.8471 is below the frozen 50.0 floor"
+  },
+  "decision": "Stop V18 before q4, COMET, Swift integration, app resources, or publication. The shared dense model learned both directions and demonstrated a sub-55 MB path, but it did not retain acceptable JA-to-EN quality.",
+  "q4_conversion_authorized": false,
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false
+}
