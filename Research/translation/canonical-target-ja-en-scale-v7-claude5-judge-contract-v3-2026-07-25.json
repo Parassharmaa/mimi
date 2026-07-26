@@ -1,0 +1,113 @@
+{
+  "absoluteThresholds": {
+    "minimumAdequacy": 4,
+    "minimumFluency": 3,
+    "minimumTerminology": 3,
+    "requireNoCriticalError": true,
+    "requireNoErrorTags": true,
+    "requireProtectedTokensPreserved": true
+  },
+  "appChangeAuthorized": false,
+  "candidateOriginExposedToJudges": false,
+  "createdAt": "2026-07-25T16:02:40.529939Z",
+  "experiment": "canonical-target-ja-en-scale-v7",
+  "goGateBeforeScaling": {
+    "acceptancePolicy": "dual-absolute-canonical",
+    "minimumApprovedSources": 120,
+    "preferenceTrainingRequiresUnanimousParetoWinOverCurrentMimi": true,
+    "requireBothJudgesCertifyCanonicalAbsoluteThresholds": true,
+    "requireZeroDeterministicCriticalFailures": true,
+    "trainingAuthorizedByPilotAlone": false
+  },
+  "inputs": {
+    "reviewQueue": {
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.review-queue.jsonl",
+      "sha256": "d65b3327a53b478b2df663ecc1baf50d16dedb91d2796ef05fe9d2d2850b08d9"
+    },
+    "reviewQueueManifest": {
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.review-queue.manifest.json",
+      "sha256": "0719c341efd080fe0048a3f996f92bcaf3e7bcc56ad3f64ffdf61d8c8647493d"
+    },
+    "scaleContract": {
+      "path": "Research/translation/canonical-target-ja-en-scale-v7-contract-2026-07-25.json",
+      "sha256": "23ed984a1aea8f3a98212a31ed8f1e13064568794ae5e3b1b244efb09056e655"
+    }
+  },
+  "judgePolicy": {
+    "actualCanonicalModelUsageRequiredPerShard": true,
+    "excludedArtifactsRetainedForAuditOnly": true,
+    "excludedFromAdmissionAndTrainingSelection": [
+      "all local Qwen judge outputs",
+      "all Claude Fable judge outputs"
+    ],
+    "fallbackModelAllowed": false,
+    "humanReviewersRequired": false,
+    "requiredJudgeModelIds": [
+      "claude-sonnet-5",
+      "claude-opus-5"
+    ],
+    "sameBlindedBatchRequired": true
+  },
+  "judgeRequests": {
+    "claude-opus-5": {
+      "model": "claude-opus-5",
+      "model_independent_payload_sha256": "49cb5f82511bc13cc9bbc420af523006354ae2ed4a14fcbef51a3f654e0c3cbf",
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.opus5-judge-requests.jsonl",
+      "prompt_sha256": "691abd1d75d595855d49721823186bc91d2eec3d171da8d8f5ea30b636018321",
+      "requests": 230,
+      "sha256": "82e54622af3489b0e61f474cb7aea4fa278d5187620ad6afcd48ef8d41794251"
+    },
+    "claude-sonnet-5": {
+      "model": "claude-sonnet-5",
+      "model_independent_payload_sha256": "49cb5f82511bc13cc9bbc420af523006354ae2ed4a14fcbef51a3f654e0c3cbf",
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.sonnet5-judge-requests.jsonl",
+      "prompt_sha256": "691abd1d75d595855d49721823186bc91d2eec3d171da8d8f5ea30b636018321",
+      "requests": 230,
+      "sha256": "f2f80d704e3ab3b762000a5f00134ce987f5128f2b2af18c6959f5e8a6186510"
+    }
+  },
+  "outputs": {
+    "pilotSeeds": {
+      "path": "Research/translation/work/canonical-target-ja-en-scale-v7.seeds.jsonl",
+      "sha256": "24dce470e572392b747436dbb556835fe1716d2af01d43bdea65eb1f9351f073"
+    }
+  },
+  "protectedEvaluationAuthorized": false,
+  "publicUploadAuthorized": false,
+  "reasoningTraceStored": false,
+  "schemaVersion": 1,
+  "scripts": {
+    "scripts/translation/approve_canonical_quality_consensus.py": {
+      "path": "scripts/translation/approve_canonical_quality_consensus.py",
+      "sha256": "8ec4993175cccd5980e82d212691899ea73ac3139010ed6cc5153817a7c15dd5"
+    },
+    "scripts/translation/build_canonical_pairwise_preference_dataset.py": {
+      "path": "scripts/translation/build_canonical_pairwise_preference_dataset.py",
+      "sha256": "4fba658bf2366bc3d79f5c9d08440fef52b670d3c957fc64ed268057510fa0b0"
+    },
+    "scripts/translation/prepare_claude5_dual_judge_contract.py": {
+      "path": "scripts/translation/prepare_claude5_dual_judge_contract.py",
+      "sha256": "cc3639054cbbeeea2ef4ad57db460caddc2690d4850e7e13a3f1d1aa0371b397"
+    },
+    "scripts/translation/prepare_distillation_judge_batch.py": {
+      "path": "scripts/translation/prepare_distillation_judge_batch.py",
+      "sha256": "3080ae0c85b4c2a2c8ad32ed33ab8937827f0ef02c7b83d6ad3f731d46f71a4a"
+    },
+    "scripts/translation/prioritize_distillation_judgments.py": {
+      "path": "scripts/translation/prioritize_distillation_judgments.py",
+      "sha256": "c73cb1f8be8817c64f046c08e0b569283f3493831d985a23789c39139fca7084"
+    },
+    "scripts/translation/run_claude_consensus_judge.py": {
+      "path": "scripts/translation/run_claude_consensus_judge.py",
+      "sha256": "951be0d62a0b0196641f40301ce91774ac69006c4c6971dd1038b626da4f402f"
+    }
+  },
+  "status": "frozen-before-complete-collection-and-content-inspection",
+  "supersedes": {
+    "changeScope": "fail-closed judgment evidence propagation only; judge requests, models, thresholds, and candidate data are unchanged",
+    "frozenBeforeCompleteCollectionAndBeforeJudgmentContentInspection": true,
+    "path": "Research/translation/canonical-target-ja-en-scale-v7-claude5-judge-contract-v2-2026-07-25.json",
+    "sha256": "1b5835607479f9dbc7e893dc6a026fbb37e4eb88fb2468f4f3e1820d98e1edd0"
+  },
+  "trainingAuthorized": false
+}

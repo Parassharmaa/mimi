@@ -185,6 +185,7 @@ def run() -> None:
                 ("mimi-shipped-ui-pair", "project-owned"),
             )
         ]
+        full_depth_rows[-1].pop("attribution")
         full_depth_manifest = {
             "target_source": LICENSED_HUMAN_REFERENCE_SOURCE,
             "promotion_eligible": False,

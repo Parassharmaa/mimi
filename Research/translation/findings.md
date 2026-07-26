@@ -1900,3 +1900,732 @@ and
 M2M-100 is rejected before quantization or MLX porting. This saves that effort
 for constrained Marian distillation and does not change Mimi's runtime or
 default.
+
+## GPT-5.6 final-translation pilot is frozen but not submitted
+
+The completed baseline/architecture audit leaves no stronger untested,
+distributable sub-500 MB checkpoint. Qwen3 0.6B, LMT-60 0.6B, CAT-Translate
+0.8B, Hy-MT2 1.8B ternary, SMaLL-100, M2M-100, QuickMT, and the tested Marian
+pruning/routing/adapter/runtime variants all fail at least one quality,
+critical-safety, latency, resident-memory, size, or lineage gate. The app
+translator and default remain unchanged.
+
+After correcting its first recommendation against the already-completed
+full-depth curriculum/QAT experiments, a second Claude CLI Fable 5 consultation
+selected the remaining falsifiable path: broad GPT-5.6 final-sequence
+distillation into the intact 6e/6d Marian student. It explicitly rejected
+reasoning-trace training and another immediate adapter/router/pruning run.
+
+`build_gpt56_distillation_pilot.py` now produces a deterministic, authenticated
+16,000-row seed set:
+
+- 8,000 sources per direction;
+- fixed Wikipedia/news/law/conversation/UI/document quotas;
+- 539 coherent multi-sentence ALT windows in each direction;
+- 900 previously mined exact-q4 hard KFTT rows in each direction;
+- 15,701 locally retained licensed human references and 299 source-only BTEC
+  utterances; and
+- per-row CC BY, CC BY-SA, PDL-compatible, or project-owned provenance.
+
+The builder verifies every parent train hash, collapses repeated training rows,
+checks both source and local reference against ten protected suites, and rejects
+exact or greater-than-0.8 five-character-Jaccard overlap. It excluded six
+selected candidates for protected exact/near overlap and one duplicate BTEC
+source while filling every quota from the remaining pool. The seed file
+SHA-256 is
+`d555e88770d8ec88c5cc4de7991dcd4532a27176309a7c1a1a4444d31472dcde`.
+
+The sealed source-only GPT-5.6 Sol request contract has:
+
+- 16,000 requests and 41,149,810 bytes;
+- request SHA-256
+  `17eede0183f2863190533867282a75de6d11179e79e066a31b260d60a787e3b7`;
+- prompt SHA-256
+  `45ba7f1da8056a184b37bfec83b9823995ea801fd2318c909486d7dde752d70b`;
+- `reasoning.effort: none`, `store: false`, and strict JSON Schema output; and
+- zero exposed human references or student hypotheses across a complete
+  16,000-request reparse.
+
+No request was uploaded or submitted. With the official 2026-07-25 Batch rates,
+complete-body `o200k_base` estimation gives 9,440,338 input tokens and a
+planning total of **$76.40** at 220 output tokens/request. The
+input-plus-maximum-output ceiling is **$191.60** at the configured 700-token
+limit. These are planning estimates and pricing must be refreshed immediately
+before submission. `store:false` does not remove Batch application-state
+retention or make Batch ZDR eligible.
+
+The next external action requires a rotated credential supplied through the
+environment and explicit acceptance of the refreshed spend/retention contract.
+After collection, admission is fully automated but independent: deterministic
+structure/critical checks, human-reference chrF++/COMET comparison where
+available, a blinded judge distinct from candidate generation, and stronger
+judge/round-trip requirements for the 299 source-only rows. The first training
+gate is a 250-step intact-6e/6d control followed by exact q4 evaluation. Any new
+critical/negation error or protected-slice regression stops the arm before a
+long run, Swift work, packaging, or app integration.
+
+The reviewer-free reference anchor is also implemented and tested. With
+`--include-licensed-reference-candidate`, each available licensed human target
+is a blinded fourth candidate. Candidate origin, reference provenance, teacher
+style, and risk metadata never enter either judge request. Exact
+teacher/reference matches are locally marked reference-equivalent rather than
+duplicated. `approve_automated_consensus.py` now accepts three- or
+four-candidate judgments but emits synthetic SFT data only when two distinct
+non-teacher models uniquely choose the same actual teacher candidate. A human
+reference or reference-equivalent consensus is a no-op, not synthetic data.
+The original three-candidate source-only contract remains supported but is
+promotion-ineligible. A four-candidate reference-anchored teacher win may train
+a promotion candidate; it is not held-out promotion evidence. Dedicated
+reference-anchor, automated-consensus, and end-to-end synthetic pipeline tests
+all pass.
+
+The first student experiment is now hash-bound before teacher collection. Its
+contract SHA-256 is
+`553453afc7dd5eb0643bd1c37e21d594993ca91ba5512b44dbbbc48a957ef211`.
+It authenticates the frozen seed/request/cost artifacts, the EN→JA averaged
+full-depth checkpoint (`d080ce30…c4b`) and the actual best-local JA→EN intact
+6e/6d legal-specialist checkpoint (`8e7f7eff…4f71`), the development and
+automated-claim source suites, and every admission/training/conversion/
+evaluation script. The earlier contract pointed at the weaker broad JA→EN
+parent while its baseline used the legal specialist; that mismatch is now
+removed before any teacher output or training exists.
+
+The continuation decision is now executable rather than a prose checklist.
+The exact runtime-tokenizer selection retains every direct document at or below
+192 input tokens: 197/200 cases, split 98 EN→JA and 99 JA→EN, with three
+automatic exclusions and no manual overrides. The same incumbent was measured
+directly on those 197 cases. The fail-closed evaluator authenticates both
+directional 250-step manifests, the exact 25% reference-anchored dataset
+mixture, the q4/group-64 conversion lineage and inventory, raw segment/joined/
+direct reports, COMET, recomputed deterministic critical sets, and a blinded
+non-teacher critical-error judge. Its segment chrF++ interval resamples parent
+documents, and any new union-critical, negation, typed numeric/date/unit/
+placeholder, repetition, generation-limit, or judge-critical case stops the
+run. A pass permits only the registered continuation to at most 1,000 steps;
+promotion and app changes remain false.
+
+On the direct slice, the incumbent records EN→JA 27.7258 chrF++, 8.6615 BLEU,
+and 0.3247-second warm p95; JA→EN records 49.9062, 25.0542, and 0.3032 second.
+These longer-unit timings are diagnostic—the 175 ms interaction budget is
+enforced on segments. Four incumbent direct cases already trigger the
+deterministic generation-limit/repetition detector. The paired comparison uses
+set difference, so those known failures are visible but do not by themselves
+reject a student; any newly failing case does.
+
+The registered first cell is intact 6e/6d full fine-tuning for 250 steps at
+2e-6, effective batch 32, KL 0.10, L2 0.01, maximum 25% reference-anchored
+synthetic targets, and at least three balanced human-reference replay rows per
+teacher row. Exact MLX q4/group-64 conversion is mandatory at step 250.
+Continuation to at most 1,000 steps requires, in both directions, at least
++0.25 parent-balanced mean sentence chrF++, +0.002 mean COMET, and +0.10 mean
+two-judge quality score. At least two of those three signals must pass, while
+all three keep registered 90% non-inferiority bounds. This avoids making
+reference overlap the sole definition of improvement. Material domain/BLEU
+regression, any new critical/negation/structured-token failure, new document
+repetition, warm
+segment p95 no greater than 175 ms, peak RSS no greater than 250 MB, and a
+bundle below 150 MB. The relative latency delta is diagnostic because the
+architecture and quantization are unchanged. The contract explicitly keeps
+promotion and app changes unauthorized.
+
+The corresponding dataset assembler is implemented and fixture-tested. It
+admits no source-only provisional consensus, fully replays both automated
+judgments for every teacher target, preserves the same-source human reference,
+adds two corpus-balanced licensed human rows, and outputs a human-only
+validation split. Its manifest proves an exact 25% synthetic fraction,
+per-row license/provenance, authenticated parent hashes, and protected plus
+train/validation screening.
+
+The canonical-target redesign then resolved the identifiability problem without
+weakening absolute quality thresholds. A fresh 40-source validation approved
+17/22 deterministically admitted targets, and the fresh 400-source scale run
+approved 180/223: 97 EN→JA and 83 JA→EN. Teacher output used Codex cached
+ChatGPT authentication, not an API key, and retained no private reasoning.
+
+The exact 25%-synthetic intact-Marian screen is complete and rejected for
+bidirectional continuation. After exact q4/group-64 conversion, EN→JA gains
++0.7510 paired document chrF++ and +0.00837 COMET-22, with both registered
+intervals passing. JA→EN loses 0.3689 paired document chrF++ and 0.4075 BLEU;
+its +0.00079 COMET delta is not an improvement signal. The pair is operationally
+excellent at 78.3 MB, 80.5/90.4 ms warm segment p95, and 222.9 MB peak RSS, but
+it introduces two new union-critical cases, two negation cases, four typed
+critical cases, and two generation-stability cases. The dataset-to-release
+manifest bridge also leaves distribution provenance blocked.
+
+This is evidence for a direction-specific EN→JA canonical-target follow-up, not
+for continuing the current symmetric recipe or adding MoE capacity. Preserve
+the current translator. Full evidence and hashes are in
+`canonical-target-distillation-report-2026-07-25.md` and
+`canonical-target-student-v3-result-2026-07-25.json`.
+
+## Authenticated Codex CLI unblocks a keyless teacher pilot
+
+The exposed API key remains unused. `run_codex_teacher.py` instead reuses the
+local Codex CLI's cached ChatGPT login while preserving the frozen 16,000-row
+request contract. The runner uses GPT-5.6 Sol with reasoning effort `none`,
+ephemeral/read-only execution, no personal config or repo rules, strict batched
+Structured Outputs, source-only prompts, deterministic hashes, resumable shard
+files, and Batch-compatible collected JSONL. Its offline contract proves that
+licensed references and student hypotheses never enter the teacher prompt,
+that completed shards are idempotent, and that the existing fail-closed
+candidate filter accepts the collected transport.
+
+The full request corpus is frozen into 337 shards at no more than 48 rows and
+12,000 source characters. Two real production shards have completed:
+
+- shard 00000: 39 EN→JA long-document rows, 11,728 characters, 426.46 seconds,
+  15,850 reported tokens, and 19/39 deterministic source admissions;
+- shard 00169: 23 EN→JA Mimi UI plus 25 JA→EN long-document rows, 4,049
+  characters, 245.92 seconds, 37,369 reported tokens, and 33/48 admissions.
+
+On shard 00169, natural-spoken EN→JA reaches 46.89 chrF++ and 15.34 BLEU
+against licensed training references; meaning-conservative JA→EN reaches 63.71
+and 38.81. A reference-leaking per-row candidate oracle reaches 53.53 and
+66.07 chrF++ respectively. These are teacher-data diagnostics, not held-out
+student results or promotion evidence.
+
+The original protected-token screen rejected 30 of the 87 real rows. An
+adversarially tested replacement now recognizes safe bilingual typed forms
+such as ASCII digits adjacent to Japanese text while retaining exact URLs,
+placeholders, printf tokens, and markup. Source-only rows remain strict; a
+licensed reference can witness only its own validated target-side critical
+structure. The re-filter admits 67 sources and rejects 20.
+
+Claude Fable 5 and pinned Apache-2.0 Qwen3-8B 4-bit then independently judged
+all 265 anonymous candidates without origin or reference-provenance leakage.
+Claude uniquely selected 10 sources and abstained on 57 ties. The purpose-built
+side-by-side Qwen judge selected 12, abstained on 53 ties, and found no
+threshold candidate for two. Both selected uniquely on five sources but chose
+different candidates every time. The unchanged automated-consensus gate
+approved **0/67**. No dataset was frozen, no student was trained, and the
+remaining 335 teacher shards are stopped.
+
+This is evidence against the three-style candidate design under a unique-best
+gate, not evidence that all candidates are poor. The next bounded experiment
+should preregister one canonical teacher translation per source and compare it
+blindly with the licensed reference and current Mimi baseline, preserving the
+same safety and two-family thresholds. The measured report and machine decision
+are in `Research/translation/codex-teacher-pilot-report-2026-07-25.md` and
+`Research/translation/codex-teacher-pilot-consensus-2026-07-25.json`.
+
+## JA→EN pairwise v4-v6 are closed; v7 uses Claude 5 judges only
+
+The first teacher-over-current preference dataset retained 61 of the 83
+canonical-target v3 JA→EN approvals. It was useful as a bounded diagnostic but
+was selected by Claude Fable 5 plus local Qwen3-8B judgments. Three
+preregistered training variants all failed the same internal gate:
+
+| arm | update | best relative pair accuracy | best relative margin | decision |
+| --- | --- | ---: | ---: | --- |
+| v4 | rank-8 adapter | 0.60 | +0.001001 | reject |
+| v5 | full parameter | 0.60 | +0.004509 | reject |
+| v6 | full parameter, exact domain balance | 0.60 | +0.003963 | reject |
+
+The required pair accuracy was 0.80 with a positive margin. None of these arms
+was converted to MLX, run on the protected benchmark, integrated, or uploaded.
+The ten-pair validation set is retired for tuning.
+
+The replacement v7 source pool is new and directional: 400 JA→EN sources across
+conversation, news, long documents, Mimi UI, ministry-published law,
+professional Wikipedia, and Wikipedia. It excludes all 400 v3 source IDs and
+screens source/reference text against the protected suites. Keyless Codex
+teacher generation completed 400/400 source-only requests. The teacher output
+hash is
+`22da9e708ac6fea1d4c2bacdf4e7081f095e62c1df43b417cf3f27de5b8974f8`.
+Deterministic structure, duplication, length, script, and contamination checks
+admitted 230 three-candidate sources; the blinded queue hashes to
+`d65b3327a53b478b2df663ecc1baf50d16dedb91d2796ef05fe9d2d2850b08d9`.
+
+Per the updated evaluation decision, all local Qwen and Claude Fable judgments
+are excluded from v7 admission, preference selection, training, and claims.
+They remain only as audit artifacts. The frozen replacement uses the exact
+`claude-sonnet-5` and `claude-opus-5` identifiers on identical blinded payloads.
+Live probes verified both canonical identities. The runner now rejects a shard
+unless its returned `modelUsage` proves the exact requested primary model and
+contains no non-Haiku fallback. The contract also requires 120 absolute-quality
+approvals before scaling and unanimous Pareto preference over current Mimi
+before a row can enter preference training. The evidence-strengthened v2
+contract additionally requires a hash-bound sidecar proving every Claude shard
+and the final judgment file. The portable v3 contract records relative script
+paths and supersedes v1/v2 without changing requests, models, candidates, or
+thresholds. It hashes to
+`ebc1a12423de5e216136fd96c56c221d25e7fd4f8b59aef3241746faf9dc30b5`.
+
+Sonnet 5 and Opus 5 are distinct judge models from one provider; provider-level
+independence is not claimed. No partial result can authorize a row. Current
+Mimi remains unchanged until a future exact-q4 candidate independently passes
+the registered quality, safety, long-document, latency, memory, size, lineage,
+and licensing gates.
+
+Before either judge collection completed or any judgment content was inspected,
+the one-arm downstream recipe was also frozen. It requires at least 120
+absolute approvals, 60 unanimous teacher-over-current Pareto pairs, and 12
+untouched validation pairs. The only allowed arm is 40 full-parameter steps at
+5e-7 with a frozen-parent preference reference, chosen-target SFT weight 0.02,
+and L2-to-parent weight 0.10. It must reach 0.80 validation pair accuracy plus a
+positive relative margin before quantization or protected evaluation. The plan
+hash is
+`40c2966cc2ba5906b3a717e84909ddbcdfdc1f9c8ed7c02625cb3b9f272bb8ea`;
+post-judgment hyperparameter selection is explicitly forbidden.
+
+The exact-Claude v7 experiment is complete. Both judges covered all 230 blinded
+sources with canonical-model evidence; absolute consensus approved 215, and
+the stricter unanimous Pareto rule retained 169 preference pairs (136 train,
+33 validation). A pre-weight-load compatibility failure exposed a historical
+hard-coded dataset name. The replacement loader was frozen as a
+compatibility-only amendment after verifying that zero training steps had run
+and that every recipe and gate field was unchanged.
+
+| v7 stage | result | gate |
+| --- | ---: | ---: |
+| absolute Claude-5 approvals | 215 / 230 | at least 120 |
+| unanimous Pareto pairs | 169 | at least 60 |
+| untouched validation pairs | 33 | at least 12 |
+| step-40 relative pair accuracy | 0.8788 | at least 0.80 |
+| step-40 relative margin | +0.004049 | greater than 0 |
+| exact-q4 JA→EN pack | 39.14 MB | operational input |
+| prospective two-direction pair | 78.28 MB | at most 150 MB preferred |
+| warm JA→EN segment p95 | 134.5 ms | at most 175 ms |
+| peak RSS | 210.6 MB | at most 250 MB |
+
+Internal preference success did not transfer strongly enough to the protected
+suite. Composed-document mean paired sentence chrF++ is only +0.0684, with a
+registered 90% interval from −0.1084 to +0.2797. Direct-document mean is
++0.0206. More importantly, composed long-document legal falls −0.8822 and
+direct long-document legal falls −1.7567, beyond the allowed −0.50 domain
+regression. One new negation case and one new repetition/generation-limit case
+also appear. The converted manifest still lacks complete per-row distribution
+provenance. These mandatory failures make COMET-22 and a further independent
+quality judge decision-irrelevant, so they were not run.
+
+The protected result hashes to
+`4a2f2ef75d6e60ae23fd4765fe50ad35e9c496cd7ec7e5c35cdb90e8c3120022`.
+It rejects promotion, app integration, app-bundle creation, public upload, and
+any weakening of the current fallback. The existing shipping translator is
+unchanged. The useful lesson is narrower: the Sonnet/Opus preference signal is
+learnable, but the current 40-step parent-relative objective overweights
+teacher preference relative to long-document legal preservation. A successor
+must add protected-independent legal replay or a safety-constrained objective
+before it is worth another protected run.
+
+## V8 preservation replay and V9 weight interpolation
+
+V8 added a frozen 136-row licensed replay train split and 128-row replay
+validation split to the 136/33 Claude-5 preference data. Replay is balanced
+across four Japanese-law categories plus ALT, KFTT, Tatoeba, and Mimi UI, with
+no preference/replay source overlap and source/target screening against all ten
+protected suites. The single preregistered arm used equal preference/replay
+batches, replay SFT, frozen-parent KL, and parent L2 retention.
+
+It is rejected internally. Step 40 reaches only 0.7273 relative pair accuracy,
+below the 0.80 gate, although replay NLL improves by 0.00075 and replay/legal
+chrF++ stay within -0.0133/-0.0264 of the parent with zero new exact, typed, or
+negation failures. The initially recorded replay generation error is a
+measurement artifact: batch padding after EOS created repeated pad trigrams.
+The underlying translation terminates normally in 41 tokens. The corrected
+measurement is used only in the successor and does not rescue v8's independent
+preference-accuracy failure.
+
+V9 freezes a training-free parent/v7 interpolation line. Selectable specialist
+weights are 0.25, 0.50, and 0.75; parent and full specialist are diagnostic
+anchors. Every selectable point passes internal retention. The registered
+ordering selects 0.75 with 0.8788 preference accuracy, +0.003036 relative
+margin, +0.0103 replay chrF++, +0.0109 legal replay chrF++, and no new replay
+safety failure. Exact q4 remains 39,138,970 bytes for JA→EN and 78,277,210
+bytes for the prospective pair.
+
+The protected result is still a rejection:
+
+| V9 protected metric | Result | Gate |
+| --- | ---: | ---: |
+| paired document chrF++ | +0.0106 | at least +0.25 signal |
+| paired 90% interval | -0.1385 to +0.2076 | lower at least -0.25 |
+| worst composed domain | -0.3862 | at least -0.50 |
+| direct mean chrF++ | -0.0786 | at least -0.50 |
+| direct long-legal domain | -2.2546 | at least -0.50 |
+| new negation failures | 1 | 0 |
+| new repetition/generation failures | 1 case | 0 |
+| warm segment p95 | 149.9 ms | at most 175 ms |
+| peak RSS | 223.3 MB | at most 250 MB |
+| prospective two-direction bytes | 78,277,210 | at most 150,000,000 preferred |
+
+The machine results are
+`canonical-pairwise-v8-result-2026-07-25.json` (SHA-256
+`4c7172e0c303356261f4e6ec08d8f2590193d0fcf99bcf1458daaa35306bdb73`)
+and `canonical-pairwise-v9-protected-result-2026-07-25.json` (SHA-256
+`52603383e18edb628dbc87068915fc62a1005cfc9fd4f6acadb11c553e64648b`).
+Neither authorizes quantization beyond the recorded research pack, bundling,
+app integration, public upload, or promotion. The app resources remain
+unchanged.
+
+The retention mechanism now has positive evidence; the specialist does not.
+The next data/model arm should use a much larger independently screened,
+error-stratified sequence-distillation set with explicit long-document legal,
+negation, terminology, omission, and repetition coverage. It must produce
+generation-level gains before another interpolation, adapter, or router is
+evaluated.
+
+## V10 error-stratified distillation and V11 interpolation
+
+V10 implemented that larger directional arm without changing the app. Its
+frozen JA→EN corpus contains 8,192 training rows and 1,024 source-disjoint
+validation rows. Training combines 1,088 repeats of 136 GPT-5.6 canonical
+sequences unanimously approved by exact `claude-sonnet-5` and
+`claude-opus-5`, 136 same-source licensed anchors, and 6,968 licensed human
+rows. The synthetic fraction is 13.28125%. Human coverage includes Japanese
+law negation, critical-token, long, terminology, omission, repetition-risk,
+and general strata plus ALT, KFTT, Tatoeba, and Mimi UI. No private reasoning
+trace was requested or retained.
+
+Every row carries source provenance and an effective distributable license:
+CC-BY-2.0-FR, CC-BY-4.0, CC-BY-SA-3.0,
+PDL-1.0-compatible-CC-BY-4.0, or project-owned. The builder screened sources
+and targets against all ten protected suites. A second independent replay over
+all 9,216 train/validation rows found zero protected hits and excluded zero
+additional rows. The authenticated dataset manifest hashes to
+`d0eebc93eb4c9237b931293af91d6a1e999bf626420b37d8def15b8290709d38`.
+
+The one preregistered training arm starts from the shipped-lineage JA→EN
+specialist and runs 250 full-parameter steps at 2e-6, effective batch 32,
+frozen-parent KL 0.10, parent L2 1e-5, and a teacher-sequence weight annealed
+from 4 to 2. The internal result has a real generation-quality signal, but both
+checkpoints fail mandatory safety and slice gates:
+
+| V10 checkpoint | corpus chrF++ delta | mean sentence delta | teacher delta | long legal delta | worst stratum | new exact / typed / negation / generation |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| step 125 | +0.6238 | +0.5628 | -0.0202 | +0.8347 | -0.5755 | 18 / 9 / 1 / 2 |
+| step 250 | +0.8119 | +0.8582 | +0.1966 | +1.2729 | -1.1865 | 16 / 13 / 2 / 3 |
+
+V11 was frozen before creating any blended checkpoint. It is a training-free
+linear interpolation between the safe parent and V10 step 250 at specialist
+weights 0.0625, 0.125, 0.1875, 0.25, 0.375, 0.50, 0.625, and 0.75. Because it
+reuses the V10 internal split after observing V10, it is explicitly exploratory
+model selection, not final evaluation. Its teacher gate is non-regression
+rather than V10's +0.50 improvement requirement; all protected promotion gates
+remain unchanged.
+
+| V11 specialist weight | mean sentence delta | long legal delta | worst stratum | new exact / typed / negation / generation | decision |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 0.0625 | +0.0355 | +0.1877 | -0.2790 | 2 / 1 / 0 / 1 | reject |
+| 0.1250 | +0.0546 | +0.2426 | -0.2070 | 2 / 1 / 0 / 1 | reject |
+| 0.1875 | +0.1448 | +0.4163 | -0.2100 | 2 / 1 / 0 / 2 | reject |
+| 0.2500 | +0.1457 | +0.4919 | -0.3366 | 2 / 2 / 0 / 2 | reject |
+| 0.3750 | +0.2707 | +0.7199 | -0.2560 | 4 / 3 / 0 / 1 | reject |
+| 0.5000 | +0.2874 | +0.7286 | -0.3132 | 5 / 5 / 0 / 3 | reject |
+| 0.6250 | +0.3846 | +0.6713 | -0.8389 | 6 / 8 / 1 / 4 | reject |
+| 0.7500 | +0.6307 | +0.8837 | -0.8389 | 9 / 9 / 1 / 4 | reject |
+
+The 0.375 blend is the clearest boundary: it passes the registered aggregate,
+long-legal, teacher-retention, and worst-stratum quality gates, but still
+introduces four exact-critical, three typed-critical, and one generation
+failure. Even the weakest blend introduces new failures, so no interpolation
+is eligible.
+
+The V10 contract/result hashes are
+`c396811189916db38414d51a2d545137551bedbcbb171fc0ec3ed11cf6a03579`
+and
+`f6ae7dc7c68f74cf931e7e4bd06e9a9c5af4a4e1b1f54fecaadb17189106e386`.
+The V11 contract/result hashes are
+`1041a42a7b912acbce25d5df9734189612956189ad2a2a7ab00ad0915b0ad855`
+and
+`835106b8edfa52cd86442474d10b4524c28e5cb240fd710e88281870d25f7089`.
+Both results keep q4 conversion, protected evaluation, bundle creation, app
+integration, promotion, and public upload unauthorized. No protected output was
+used for V10/V11 selection, no new model was placed in
+`App/Resources/TranslationModels`, and the shipping translator is unchanged.
+
+This closes weight interpolation for this specialist and retires the V10
+validation split from further tuning. A successor should use a newly generated,
+protected-independent corpus with explicit counterfactual critical-token and
+termination examples, plus a constraint-aware objective that penalizes
+structural and generation failures during training. More interpolation or a
+larger/MoE package is not justified until a new specialist clears that
+generation-level safety gate.
+
+## V12 constraint-aware repair: quality passes, safety rejects
+
+V12 uses 7,104 licensed-human JA→EN training rows and a fresh 1,536-row
+validation suite. Every validation source is disjoint from V10, and both sides
+of every row were screened against all ten protected suites. The suite contains
+1,088 stratified legal cases and 448 independent ALT/KFTT/Tatoeba cases. No
+free-form synthetic translation or reasoning trace is used.
+
+Starting from the V11 0.375 boundary checkpoint, the single preregistered arm
+adds token-local unlikelihood, chosen-over-rejected ranking, and frozen-parent
+KL/L2 retention. Both checkpoints pass every aggregate, uncertainty,
+negative-space, long-legal, general, and worst-stratum gate:
+
+| V12 checkpoint | corpus chrF++ | BLEU | mean sentence chrF++ | paired 90% interval | long legal | new exact / typed / negation / generation |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| step 50 | +0.3735 | +0.6327 | +0.3236 | +0.1951 to +0.4443 | +0.3371 | 13 / 7 / 5 / 1 |
+| step 100 | +0.3695 | +0.5840 | +0.3275 | +0.1953 to +0.4645 | +0.2503 | 15 / 8 / 5 / 1 |
+
+Absolute failure counts improve in every category—step 50 resolves 23 exact,
+43 typed, seven negation-policy, and five generation cases—but the frozen rule
+does not allow exchanging old critical failures for new ones. One new
+generation case is a genuine “Article (25)” autoregressive loop. The negation
+audit also reveals detector artifacts around legal `No.` and semantically
+correct “not more than” phrases; those do not rescue the genuine loop and
+number/article errors.
+
+The result hashes to
+`0db46aee124cb3d9e61898630349e61cfa2a1fcecc5d04f591d3f5c5a2a9dcd1`
+and rejects both checkpoints before q4, protected evaluation, COMET, LLM
+judging, bundling, app changes, or upload. The shipped translator remains
+unchanged. The next bounded arm should first calibrate the safety taxonomy,
+then train on model-generated bad prefixes and explicit EOS/repetition
+recovery; teacher-forced first-divergence negatives already have 97.7% chosen
+preference and do not solve exposure-driven loops. See
+`canonical-safety-repair-v12-report-2026-07-26.md`.
+
+## V13 semantic calibration of V12 safety failures
+
+The 27 V12 cases that contributed a new deterministic failure were frozen into
+an anonymous four-candidate audit. Exact `claude-sonnet-5` and
+`claude-opus-5` independently assessed the licensed reference, safe parent,
+step 50, and step 100 without seeing candidate origin. Both runs cover all 27
+sources in seven cryptographically bound shards, prove exact canonical-model
+usage, forbid fallback judges, and store no chain-of-thought.
+
+The audit confirms V12's genuine blocker and changes the future evaluator's
+taxonomy:
+
+| V12 registered event | Step 50 semantic support | Step 100 semantic support |
+| --- | ---: | ---: |
+| exact | either 8, both 3, registered 13 | either 7, both 3, registered 15 |
+| typed | either 6, both 5, registered 7 | either 7, both 5, registered 8 |
+| negation | either 0, both 0, registered 5 | either 0, both 0, registered 5 |
+| generation | either 1, both 1, registered 1 | either 1, both 1, registered 1 |
+
+The negation detector's ten checkpoint-events are all category false positives:
+`No.` is a legal-number abbreviation, while “not more than” can correctly
+express an upper bound. The judges nevertheless find other critical errors in
+four of those five underlying cases, including wrong amounts, citations, and
+named entities. Both judges independently confirm the `Article (25)`
+repetition/nontermination loop. Typed structure is a much stronger signal than
+untyped exact surface equality; equivalent Roman/Arabic numbering explains
+some exact-only events.
+
+Across all 108 assessments, the two judges agree on the critical-error boolean
+for 93 (86.1%) and on representation-only for 86 (79.6%). Fail-closed critical
+counts are 2/27 for licensed references, 20/27 for the safe parent, 19/27 for
+step 50, and 20/27 for step 100. These figures do not compare overall model
+quality because the sample intentionally contains known hard failures. The two
+reference failures also show why neither the licensed target nor one LLM judge
+can be treated as infallible.
+
+The future safety gate will report detector and semantic categories separately,
+special-case legal `No.` and equivalent upper-bound phrases, distinguish
+representation from identity changes, keep generation loops as deterministic
+hard failures, and fail closed on dual-judge disagreement. V12's rejection is
+not reinterpreted. The v13 contract and result hash to
+`993ee9d767f8f6b6f48a3f86197f10f81a6d6d08061b672f306de512ddaea2e1`
+and `d9b92810760ed5f0973a00927e0680b2604feca59b8e9c0ed44c03cc17fb05c5`.
+Training, protected evaluation, COMET, q4 conversion, bundling, app changes,
+release, and public upload remain unauthorized.
+
+The next arm should train on self-generated bad prefixes with explicit
+EOS/repetition recovery and legal-number/citation counterfactuals. Another
+teacher-forced first-divergence arm or additional model capacity is not
+justified yet.
+
+## V14 rollout-conditioned repair is frozen before training
+
+V14 directly tests the exposure-bias hypothesis from V12. Its 7,104 positive
+training rows are authenticated licensed-human references, while its 768
+fresh legal validation rows exclude every V10/V12 source and both-side screen
+cleanly against all ten protected suites. V12 validation remains evaluation
+history and is never converted into V14 training data.
+
+A deterministic greedy pass over all 7,104 training sources finds 74 genuine
+contiguous repetition loops. V14 preserves each actual decoder prefix and
+repeated next token as negative evidence, then fills a 2,048-row hard budget
+with stable-ranked structural disagreements. The rollout strings never become
+positive targets.
+
+The one frozen arm runs 50 low-rate updates from rejected V12 step 50:
+licensed-reference cross-entropy, 20% one-step scheduled replacement, explicit
+EOS recovery under real repeated prefixes, repeated-token unlikelihood,
+EOS-over-repeat ranking, and frozen-safe-parent KL/L2. This is a decoder-policy
+repair with no additional parameters, experts, inference passes, or bundle
+bytes.
+
+The fresh pre-semantic gate requires +0.25 corpus and mean sentence chrF++,
++0.20 long-legal, a -0.50 worst-stratum floor, non-increasing repeated-token
+probability, at least 0.90 recovery preference, and zero new generation
+failures. V13's calibration is applied prospectively: new exact, typed, or
+negation-detector cases must be judged on identical blinded payloads by exact
+Sonnet 5 and Opus 5. Any disagreement fails closed, and zero new semantic
+critical errors relative to the safe parent are required.
+
+Dataset, rollout, and contract hashes are
+`1cd2e3629513f4662c6c9ffd6854d463bd638f08c8001bdb73027db0dc03d245`,
+`f93ecd7d724e37f468321cca8fbf3e9ac472ee290bb2f979daa380cb5dddd4e4`,
+and `63ae84a0661b3b84aba62232b2c0115fe2ee61b23a07578c6e18717e4f9b4618`.
+No training had started when the contract was written, and no later stage is
+authorized.
+
+## V14 improves aggregate quality but fails recovery and omission gates
+
+The registered run completed without a recipe amendment. Against the frozen
+safe parent on 768 fresh legal rows, step 25 gains +0.432 corpus chrF++,
++0.470 mean sentence chrF++, and +0.395 long-legal chrF++. It reduces total
+generation failures from nine to seven and introduces no new generation
+failure. Step 50 keeps +0.301 corpus chrF++ but creates two new loops.
+
+Neither checkpoint is eligible. Both lose 1.142 mean sentence chrF++ on the
+16-row omission-risk stratum, beyond the -0.50 floor. Repeated-token
+probability moves from 0.596 to 0.573 and 0.564, and the EOS-minus-repeat
+margin moves from -7.949 to -7.572 and -7.421, but all 74 recovery cases still
+prefer the repeated token over EOS. Step 50 demonstrates that merely extending
+this recipe worsens translation quality and creates new generation failures.
+
+The result supports using actual free-running prefixes but rejects EOS-only
+recovery as the next production path. A new arm should first test a
+zero-bundle-byte bounded decoder that backtracks to a safe alternate token on
+detected contiguous repetition. If training is attempted, recovery targets
+should be licensed-reference continuations rather than unconditional EOS.
+Omission-risk retention must remain a hard gate.
+
+V14 stops before Sonnet/Opus judging, q4, protected evaluation, COMET, runtime
+comparison, bundling, release, or upload. The result hashes to
+`79ba77a4e540cedd91f1ae30b42b6b29ff0c1b85bb20136b26fdc9042e33bfb9`.
+
+## V15 should constrain recovery and omissions, not add experts
+
+The literature review changes the next-arm intuition. Recovery training can
+make an error-conditioned path more probable than the clean reference path;
+the appropriate correction is a three-objective token-level contrastive loss
+that learns clean prediction, error recovery, and clean-over-recovery
+ordering. Separate deletion negatives directly target V14's omission
+regression. Both mechanisms preserve standard compact Marian inference.
+
+The proposed V15 arm will use licensed continuations after aligned bad prefixes
+rather than unconditional EOS, plus deterministic parenthetical, enumerated,
+entity, amount, and rare-content deletion negatives. A narrow contiguous-loop
+token guard is a separate diagnostic with zero model bytes; the unguarded model
+must still pass.
+
+MoE is deferred. V10–V14 show that this parameter count can move aggregate
+quality, while the blocking errors are structural and autoregressive. A new
+expert does not impose recovery or coverage. See
+`strategy-contrastive-recovery-v15-2026-07-26.md`.
+
+## V15 constrained recovery is frozen before training
+
+The single V15 arm now binds 7,104 licensed-human positive rows, a new
+source-disjoint 768-row legal selection suite, the complete V12 and V14
+regression suites, 2,048 recovery comparisons, and 2,048 omission comparisons.
+Generated rollout text is context or rejected-token evidence only. It never
+becomes a positive target.
+
+The objective combines licensed-reference MLE, correct-over-rejected recovery
+under perturbed prefixes, clean-over-perturbed ordering for the correct token,
+span-deletion omission ranking, and safe-parent KL/L2 retention. It preserves
+the compact 6+6 Marian architecture and adds no inference-time bytes. Scheduled
+sampling and unconditional EOS recovery are excluded.
+
+The contract SHA-256 is
+`f342d8bf027f88143159c1b0ae2d5da3fb5ccad3cabb9aeb73e6d3175699549a`.
+It permits one 50-update arm and forbids q4, COMET, protected evaluation, app
+changes, release, or upload unless all pre-semantic gates pass and the complete
+new detector-disagreement queue then clears exact Sonnet 5 plus Opus 5 review.
+See `canonical-constrained-recovery-v15-plan-2026-07-26.md`.
+
+## V15 gains aggregate quality but does not repair the bound failures
+
+The best V15 checkpoint improves fresh mean sentence chrF++ by `+0.345` with a
+positive paired interval and improves aggregate V12 and V14 regression scores.
+The six-row fresh omission slice rises by 2.626 points, and one obvious
+generation loop becomes a finite translation.
+
+The intended contrast behavior barely changes: recovery preference moves by
+at most `+0.00049` and omission preference by `+0.00049`, versus required
+`+0.05` gains. The frozen 16-row V14 omission slice moves in the opposite
+direction, losing `1.344` points at step 25 and `1.505` at step 50. Both
+checkpoints also introduce one new generation failure on fresh V15 and one on
+V12.
+
+The result suggests that most token-level examples were already easy: initial
+recovery and omission preference were 72.3% and 95.5%, with large mean
+margins. A future arm must mine active sequence-level violations and balance
+historical hard slices, not merely increase V15's loss weights. V15 stops
+before every semantic, q4, COMET, protected, runtime, bundle, app, release, and
+upload stage. Full evidence is in
+`canonical-constrained-recovery-v15-report-2026-07-26.md`.
+
+## V16 should mine active full-sequence risks from the safe parent
+
+The V15 contrast sets are mostly too easy to supply a useful update. The next
+diagnostic should score a complete licensed reference against a complete
+deletion or structurally bad rollout, retain only low-margin comparisons, and
+start from the safe parent so it does not inherit V12's known failures.
+
+Sequence-level omission contrast and minimum-risk NMT support this direction,
+while hard-negative theory supports mining near the model distribution.
+Conflict-aware gradient methods are only conditional tools: first measure the
+fixed-batch gradient norms and cosines for MLE, omission, rollout, and
+retention. Choose and freeze one optimizer before translation training.
+
+No V16 training is authorized yet. See
+`strategy-active-sequence-risk-v16-2026-07-26.md`.
+
+## V16 has enough hard sequences and measurable safety-objective conflict
+
+The fixed safe-parent diagnostic finds 677 active full-sequence comparisons
+from 2,028 candidates. This includes 228 omissions and 449 repetitions; 169
+corruptions receive a higher length-normalized score than the complete
+licensed reference. Positive targets are licensed human translations, and
+neither validation nor protected rows enter the diagnostic.
+
+MLE aligns positively with both safety objectives on every one of four
+disjoint gradient batches. Omission and repetition gradients conflict on all
+four, with cosine range `-0.161` to `-0.095`. The V16 training contract should
+therefore preserve ordinary MLE and use deterministic symmetric PCGrad only
+between the two sequence-ranking gradients.
+
+This evidence chooses the prospective gradient rule but does not authorize an
+optimizer step. A separate preregistration must bind data, weights, update
+count, validation suites, and gates before training. Full evidence is in
+`active-sequence-risk-v16-diagnostic-report-2026-07-26.md`; the sealed result
+SHA-256 is
+`0272e49d4a6ebd9d87df8b51099beb354510c26f277b4b29b29d9ab98d98978d`.
+
+## V16 freezes one safe-parent PCGrad arm
+
+The preregistered arm keeps MLE unprojected and applies symmetric PCGrad only
+between omission and repetition gradients. It starts from the distributable
+safe parent, uses all 677 active full-sequence comparisons, and adds no
+parameters or inference-time work.
+
+Fresh selection has exhausted the omission/repetition legal reservoir, so
+V16 does not manufacture replacements or reuse held-out rows. Its new
+768-case suite uses the remaining critical, long, negation, terminology, and
+general rows, while the complete V12/V14/V15 suites retain the historical
+omission and repetition gates.
+
+The dataset manifest SHA-256 is
+`21a3c7e23c190b28bb6d2ded323f3bd1bbde93e8fda44216d44c5be466b25902`;
+the frozen contract SHA-256 is
+`4a3c8ee0fa08a97bf9707501cb6c1b4d36d11b70bec58dfe2c16a64b720ff6c9`.
+Training is limited to 50 updates and two checkpoints. Downstream semantic
+judging, q4, COMET, protected evaluation, bundling, app work, release, and
+upload remain unauthorized.
+
+## V16 PCGrad works mechanically but the bounded update is insufficient
+
+The optimizer sees an omission/repetition conflict in 46 of 50 updates and
+makes every post-rule cosine positive. Step 50 nevertheless moves active-pair
+preference by only `+0.0059`, omission margin by `+0.0010`, and repetition
+margin by `+0.0067`, all below the frozen gates.
+
+Translation movement is also too small: fresh corpus/mean sentence chrF++
+rise `+0.085`/`+0.049`, V14/V15 means rise `+0.110`/`+0.078`, and V12 mean
+falls `0.007`. The fresh seven-row terminology slice loses `0.767`. No new
+generation-limit failure appears, but exact/typed detector disagreements would
+still require semantic review if the numeric gates had passed.
+
+V16 is rejected at result SHA-256
+`fd986b7099b72affd7a9dc3d51c1413911b087c0d7a21a044c95f24f74f646c1`.
+Increasing weights, learning rate, or update count now would be a new
+experiment, not a continuation of the preregistered arm.

@@ -1,0 +1,62 @@
+{
+  "app_change_authorized": false,
+  "candidate": {
+    "config_sha256": "d6017a159385f38ce5d4988c3df2b205d98344571ece71b15f0c27f5e54180b8",
+    "decoder_ffn_dim": 4608,
+    "decoder_layers": 6,
+    "encoder_ffn_dim": 4608,
+    "encoder_layers": 6,
+    "temporary_checkpoint_retained": false,
+    "transformation_manifest_sha256": "2d08863975caf8b109c232322c38f904a6aefd35d0ecc3842a8caeca60e4db20",
+    "weights_bytes": 368201220,
+    "weights_sha256": "3bf516afdb544bcc12c1a15a85c470e96125fab0c5e010530d0a2ec955f2c990"
+  },
+  "evaluation": {
+    "cases": 6,
+    "device": "mps",
+    "direction": "en-ja",
+    "finite_logit_mask_equal": true,
+    "generated_steps": 20,
+    "maximum_absolute_finite_logit_delta": 0.0,
+    "suite": {
+      "path": "Research/translation/benchmark/canary.jsonl",
+      "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+    },
+    "token_sequences_equal": true
+  },
+  "experiment": "single-bidirectional-v18-wide-parent-initialization-parity-smoke",
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "public_upload_authorized": false,
+  "q4_conversion_performed": false,
+  "runtime": {
+    "numpy": "2.5.1",
+    "safetensors": "0.8.0",
+    "torch": "2.13.0",
+    "transformers": "4.57.6"
+  },
+  "schema_version": 1,
+  "source": {
+    "identity_manifest": {
+      "path": "Research/translation/models/elanmt-conversational-control-en-ja-mlx-4bit/manifest.json",
+      "sha256": "a4686264d5d57aaef674938edf88c429d94b178ae19226906594395fb379d1ef"
+    },
+    "path": "Research/translation/models/elanmt-conversational-control-en-ja",
+    "repository": "Mitsua/elan-mt-bt-en-ja",
+    "revision": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
+    "weights_sha256": "ce0ad1efebd0f69e52528c1df2e072304616242d8963edb98d61f60e57e0739e"
+  },
+  "status": "initialization-parity-passed",
+  "tools": {
+    "test": {
+      "path": "scripts/translation/test_widen_marian_checkpoint_ffn.py",
+      "sha256": "5aac8cdb3f468b2fd43e3a29185939c8de95142a5ed5ee95a4aab1aaf42e7f0f"
+    },
+    "widening": {
+      "path": "scripts/translation/widen_marian_checkpoint_ffn.py",
+      "sha256": "8ac496a9ecd2ea71bc8db92fd03c2103cfb90fe104be085eceed58672001b59f"
+    }
+  },
+  "training_authorized": false,
+  "training_performed": false
+}

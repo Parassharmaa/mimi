@@ -1,0 +1,272 @@
+{
+  "app_change_authorized": false,
+  "amendments": [
+    {
+      "change": "force use_cache=true only for greedy validation generation while retaining use_cache=false for loss evaluation and gradient-checkpointed training",
+      "evaluation_implementation_changed": true,
+      "new_trainer_sha256": "22f31a09111715ceec42a6954734a5bd038c6c86d38dd08a1cf1d0afd0eb4b51",
+      "old_trainer_sha256": "a9d8642948819a58cba4942ce833508d0b422469fd6c03cb08dcaea364f68afb",
+      "optimization_recipe_changed": false,
+      "pre_amendment_persisted_checkpoint": {
+        "step": 0,
+        "training_manifest_sha256": "eaba1b562cb61e3337e9e7be80eb2d88812d8b5898f1ae92a35301550621ec93",
+        "weights_sha256": "3bf516afdb544bcc12c1a15a85c470e96125fab0c5e010530d0a2ec955f2c990"
+      },
+      "reason": "gradient checkpointing correctly disabled cache for training, but validation generation inherited the setting and performed unnecessarily slow full-prefix decoding",
+      "restart_authorized": true,
+      "selection_evidence_inspected_before_change": "step-0 baseline only; no post-update checkpoint was serialized or inspected"
+    },
+    {
+      "abandoned_run": {
+        "in_memory_progress_at_stop": "entered the step-250 evaluation call; evaluation did not return",
+        "output_manifest_sha256": "7d25f40608d5b6611d7df1736763c69fece1e34786fcfc5248ef3b72bb42a001",
+        "persisted_history_steps": [
+          0
+        ],
+        "persisted_weights_sha256": "3bf516afdb544bcc12c1a15a85c470e96125fab0c5e010530d0a2ec955f2c990",
+        "post_update_metrics_printed_or_serialized": false,
+        "status": "abandoned-infrastructure-run-not-experimental-evidence",
+        "stopped_at": "2026-07-26T03:08:54Z"
+      },
+      "changes_before_replacement_run": [
+        "persist immutable model/tokenizer checkpoints at every scheduled evaluation regardless of best score",
+        "retain one rolling authenticated optimizer/scheduler/RNG/DataLoader resume state under an explicit disk-bound policy",
+        "drop the final two-example microbatch so every optimizer update contains exactly 32 examples",
+        "aggregate recorded objectives over all eight microbatches and over each 250-update interval",
+        "bind the launch fail-closed to exact contract, data, selection, model, tool, hyperparameter, and runtime hashes",
+        "replace the KFTT-heavy random selector with a frozen direction/domain/length-stratified 512-case artifact"
+      ],
+      "reason": "independent read-only review found the prior trainer could not satisfy frozen checkpoint semantics, produced two 30-example updates, and selected checkpoints on a materially KFTT-heavy subset",
+      "replacement_run_authorized": true,
+      "selection_evidence_inspected_before_change": "no step-250 output was returned, printed, or serialized; only the exact step-0 initializer and one-record history were inspected"
+    }
+  ],
+  "architecture": {
+    "d_model": 512,
+    "decoder_ffn_dim": 4608,
+    "decoder_layers": 6,
+    "encoder_ffn_dim": 4608,
+    "encoder_layers": 6,
+    "parameters": 92043009,
+    "projected_q4_one_model_pack_bytes": 54457871,
+    "source_prefixes": {
+      "en-ja": "<2ja> ",
+      "ja-en": "<2en> "
+    }
+  },
+  "dataset": {
+    "manifest": {
+      "materialized_path": "Research/translation/work/shared-bidirectional-v18-licensed-human/manifest.json",
+      "sha256": "9e7fb7289db3f041020f9008b4b6929f713b9fa55516d2f0e4353ad02e7f0037"
+    },
+    "result": {
+      "path": "Research/translation/shared-bidirectional-v18-dataset-result-2026-07-26.json",
+      "sha256": "ba0a89b60c1d9535ac30cf9707eca8b82966f78d745e3cc25270276fa16a4965"
+    },
+    "candidate_training_eligible": true,
+    "distribution_eligible": false,
+    "distribution_eligibility_blocker": "structured per-source URL, acquisition-date, transformation-history, normalized-content-hash, and offline attribution audit remains required",
+    "licensed_human_targets_only": true,
+    "promotion_eligible": true,
+    "protected_suites": [
+      "Research/translation/benchmark/canary.jsonl",
+      "Research/translation/benchmark/public-stress-v1.jsonl",
+      "Research/translation/benchmark/public-stress-v2.jsonl",
+      "Research/translation/benchmark/public-stress-v3.jsonl",
+      "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+      "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+      "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+      "Research/translation/benchmark/development-accuracy-v1.jsonl",
+      "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+      "Research/translation/benchmark/automated-claim-v1.sources.jsonl"
+    ],
+    "train_rows": 12066,
+    "train_sha256": "3e71f54c5cc59ea5bee3f303a623cb2aab75675965cae50515e84954d6e931a4",
+    "v17_generated_candidates_used": false,
+    "valid_rows": 2370,
+    "valid_sha256": "f85a82ae367a8af075c52f366f91ce0ae94c4a86c751e0f234dc2b0ce88f0142"
+  },
+  "evaluation_gates": {
+    "full_precision_internal": {
+      "maximum_directional_chrf_pp_regression_from_teacher": 1.0,
+      "minimum_chrf_pp": {
+        "en-ja": 30.0,
+        "ja-en": 50.0
+      },
+      "minimum_macro_direction_chrf_pp": 40.0,
+      "required_regression_suites": [
+        "canary",
+        "development-accuracy-v1",
+        "legal-safety-validation-v1",
+        "legal-safety-test-v1"
+      ],
+      "run_on_every_saved_checkpoint_before_selecting_for_q4": true,
+      "zero_new_critical_meaning_failures": true,
+      "zero_new_generation_limit_or_repetition_failures": true,
+      "zero_new_negation_failures": true,
+      "zero_new_typed_structure_failures": true
+    },
+    "q4": {
+      "conversion_bits": 4,
+      "conversion_group_size": 64,
+      "maximum_directional_chrf_pp_regression": 0.25,
+      "maximum_one_model_bundle_bytes": 150000000,
+      "maximum_peak_resident_bytes": 500000000,
+      "maximum_warm_segment_p95_seconds": 0.25,
+      "required_swift_python_token_parity": true,
+      "zero_new_safety_failures": true
+    },
+    "promotion": {
+      "apple_translation_role": "diagnostic comparator only",
+      "held_out_cases_per_direction": 400,
+      "metrics": [
+        "chrF++",
+        "BLEU",
+        "COMET-22",
+        "latency",
+        "peak resident memory",
+        "bundle bytes"
+      ],
+      "must_beat_best_prior_local_model_with_positive_paired_lower_bound": true,
+      "requires_dual_family_blinded_semantic_judgment": true,
+      "requires_long_document_evaluation_both_directions": true,
+      "requires_non_apple_failure_path": true,
+      "requires_zero_critical_error_union": true
+    }
+  },
+  "experiment": "shared-bidirectional-v18-wide-dense-phase1",
+  "initialization": {
+    "cache_parity_report": {
+      "path": "Research/translation/shared-bidirectional-v18-validation-cache-parity-2026-07-26.json",
+      "sha256": "8a9a3f4ccdf19774fa9e69090e4744d49d67cb6559d021f46a1a92a0342e34b9"
+    },
+    "expected_widened_weights_sha256": "3bf516afdb544bcc12c1a15a85c470e96125fab0c5e010530d0a2ec955f2c990",
+    "parity_report": {
+      "path": "Research/translation/shared-bidirectional-v18-wide-parent-parity-smoke-2026-07-26.json",
+      "sha256": "1ceec8027ca8b3cc6c838e116d47567eed9548a7f440c032c049396f4012dcf6"
+    },
+    "source": {
+      "path": "Research/translation/models/elanmt-conversational-control-en-ja",
+      "weights_sha256": "ce0ad1efebd0f69e52528c1df2e072304616242d8963edb98d61f60e57e0739e"
+    },
+    "widening_manifest_sha256": "2d08863975caf8b109c232322c38f904a6aefd35d0ecc3842a8caeca60e4db20"
+  },
+  "phase1_training": {
+    "authorized_updates": 1000,
+    "checkpoint_policy": {
+      "best_is_manifest_pointer_only": true,
+      "immutable_model_and_tokenizer_at_every_scheduled_step": true,
+      "resume_only_from_authenticated_scheduled_checkpoint": true,
+      "rolling_full_resume_state_retained": 1,
+      "rolling_state_reason": "bounded local disk; scheduled model/tokenizer checkpoints remain immutable while only the newest optimizer/scheduler/RNG state is needed for crash recovery"
+    },
+    "checkpoint_steps": [
+      250,
+      500,
+      750,
+      1000
+    ],
+    "hyperparameters": {
+      "batch_size": 4,
+      "drop_last": true,
+      "effective_batch_size": 32,
+      "encoder_alignment_weight": 0.05,
+      "evaluation_steps": 250,
+      "gradient_accumulation": 8,
+      "gradient_checkpointing": true,
+      "learning_rate": 5e-06,
+      "max_steps": 1000,
+      "max_source_tokens": 192,
+      "max_target_tokens": 192,
+      "seed": 271828,
+      "selection_validation_per_direction": 256,
+      "teacher_float16": true,
+      "teacher_kl_weight": 0.25,
+      "teacher_temperature": 1.0,
+      "warmup_steps": 100,
+      "weight_decay": 0.01
+    },
+    "objective": [
+      "licensed-human-reference cross-entropy",
+      "direction-specific frozen-teacher token KL",
+      "projection-free unprefixed encoder-state MSE"
+    ],
+    "selection": "maximum unweighted macro-direction chrF++ on the exact frozen direction/domain/length-stratified 256-case-per-direction artifact; tie-break minimum aggregate loss",
+    "selection_artifact": {
+      "cases_per_direction": 256,
+      "manifest_path": "Research/translation/selection/shared-bidirectional-v18-phase1.manifest.json",
+      "manifest_sha256": "d92099674c98c5fb30697926eef27e8e4fcb5ff6a6afdb15b2a7ad6ca207e094",
+      "path": "Research/translation/selection/shared-bidirectional-v18-phase1.jsonl",
+      "sha256": "0f7aadfc825b288a000ed6382a53afa18799352057a5cfd8bf91595ddf641382"
+    },
+    "selection_limits": [
+      "no EN-JA news row exists in the licensed source validation set",
+      "no legal row exists in the licensed source validation set",
+      "no JA-EN source reaches 100 Unicode characters",
+      "every saved checkpoint must therefore face the separate legal and true long-input suites before q4 selection"
+    ],
+    "source_only_teacher_sequences_as_positive_targets": false
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "public_upload_authorized": false,
+  "runtime": {
+    "packages": {
+      "numpy": "2.5.1",
+      "python": "3.12.12",
+      "sacrebleu": "2.6.0",
+      "sacremoses": "0.1.1",
+      "sentencepiece": "0.2.2",
+      "torch": "2.13.0",
+      "transformers": "4.57.6"
+    }
+  },
+  "schema_version": 1,
+  "status": "phase1-capacity-control-authorized",
+  "teachers": {
+    "en-ja": {
+      "lineage_manifest": {
+        "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/mimi_checkpoint_averaging_manifest.json",
+        "sha256": "65df5b3a7220c0c524b03b0bfb1d689548a144059ffea4be9cf9b5afa2abf5f4"
+      },
+      "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3",
+      "weights_sha256": "d080ce30490e878ab745206220c97bf18d4b2662a35e5fff0bdd2157a7c4dc4b"
+    },
+    "ja-en": {
+      "lineage_manifest": {
+        "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+        "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+      },
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+      "weights_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    }
+  },
+  "tools": {
+    "dataset_builder": {
+      "path": "scripts/translation/build_shared_bidirectional_v18_dataset.py",
+      "sha256": "abbb8a6361cf9351ee6c7a097bbc1fc229388008048f2fc39f830d7f452c9597"
+    },
+    "selection_builder": {
+      "path": "scripts/translation/build_shared_bidirectional_v18_selection.py",
+      "sha256": "88989e814b67bd3a2dd3021afb2c76d795efb353085dd7c730fc1ccdc0659373"
+    },
+    "cache_parity_verifier": {
+      "path": "scripts/translation/verify_marian_validation_cache_parity.py",
+      "sha256": "a8c59ece7a756a0666bbdf82f68c46c7be21ceabd1534291d916e910033fd3fb"
+    },
+    "trainer": {
+      "path": "scripts/translation/train_bidirectional_marian.py",
+      "sha256": "de941d0ca048e104014bfaa574255309c4a745e649ee5930f92dbd8954f8047a"
+    },
+    "widening": {
+      "path": "scripts/translation/widen_marian_checkpoint_ffn.py",
+      "sha256": "8ac496a9ecd2ea71bc8db92fd03c2103cfb90fe104be085eceed58672001b59f"
+    }
+  },
+  "training_path_smoke": {
+    "path": "Research/translation/shared-bidirectional-v18-training-path-smoke-2026-07-26.json",
+    "sha256": "1a694b5179eb69f20f2c56fbb0bb16aeacced21d895a73e087d8ac7ba2aed164"
+  },
+  "training_authorized": true,
+  "training_scope": "exactly one evidence-bearing phase-1 1000-update dense shared-capacity control; abandoned premetric infrastructure launches are not experimental evidence"
+}

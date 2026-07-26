@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "experiment": "guarded-expert-cascade-v19-comet",
+  "status": "public-comet-passed-runtime-canary-passed-release-gates-pending",
+  "contract": {
+    "path": "Research/translation/guarded-expert-cascade-v19-contract-2026-07-26.json",
+    "sha256": "dfde09991709ab7aca7342e411045e08fd1776da8a724959d6388411d08a10fc"
+  },
+  "inputs": {
+    "composed_development_report": {
+      "path": "Research/translation/work/guarded-expert-cascade-v19/composed-development-report.json",
+      "sha256": "646e9fe2d80b83900f205977838b0fcc3b7a73689fbbf26d41f2d22f0c90d72a"
+    },
+    "expert_parent_comet_report": {
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-comet22.json",
+      "sha256": "72f39af12e94d58ec27e332a4c42f24c2853a1d488e0072dcfd4b2ae316bf968"
+    },
+    "bundled_parent_comet_report": {
+      "path": "Research/translation/results/development-accuracy-v1-bundled-mimi-comet22.json",
+      "sha256": "72318c409f4d381f73a2fb6c53a66cbd4f71033371dac638b48bfdee7110a602"
+    }
+  },
+  "metric": {
+    "name": "COMET-22",
+    "model_repository": "Unbabel/wmt22-comet-da",
+    "model_revision": "371e9839ca4e213dde891b066cf3080f75ec7e72",
+    "model_license": "Apache-2.0",
+    "package": "unbabel-comet",
+    "package_version": "2.2.7",
+    "precision": "float32",
+    "signature_sha256": "0ad95e732054805a015b87dcabc019cdf03a89f64648c19d43ac593c686eb97a",
+    "scorer": {
+      "path": "scripts/translation/score_comet.py",
+      "sha256": "3d6ac4d7839527dbe74ad46c5809868ce74f03f3e717f097aaf916989ac2acc0"
+    },
+    "comparison": {
+      "path": "scripts/translation/compare_learned_metric.py",
+      "sha256": "8d5dbff69b15438a08ba2ff18fad1abc14b318498b4b6ed12b063f8176fde071"
+    }
+  },
+  "cascade_comet_report": {
+    "path": "Research/translation/work/guarded-expert-cascade-v19/comet22.json",
+    "sha256": "4d902ee08f1d53f8999344f98e4ab71eabf0babc55ea123a34a1f0955d291e14",
+    "empty_hypothesis_cases": 0,
+    "directions": {
+      "en-ja": {
+        "cases": 100,
+        "mean": 0.8701638853549958
+      },
+      "ja-en": {
+        "cases": 100,
+        "mean": 0.8192148298025131
+      }
+    }
+  },
+  "paired_comparisons": {
+    "expert_parent": {
+      "path": "Research/translation/work/guarded-expert-cascade-v19/comet22-vs-candidate.json",
+      "sha256": "fa4a600509f281d472b8891eaf229754db0560be5e81c0300ec3ed55c3d33b98",
+      "bootstrap_samples": 10000,
+      "confidence": 0.95,
+      "seed": 20260718,
+      "directions": {
+        "en-ja": {
+          "mean_delta": 0.003279578685760498,
+          "interval": [
+            1.1920928955078125e-09,
+            0.008881762027740478
+          ]
+        },
+        "ja-en": {
+          "mean_delta": 0.0,
+          "interval": [
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "bundled_parent": {
+      "path": "Research/translation/work/guarded-expert-cascade-v19/comet22-vs-bundled.json",
+      "sha256": "33e6292f231491fb36dab95727514417c4db7c66d27b8a6a68ccd6ef79908939",
+      "bootstrap_samples": 10000,
+      "confidence": 0.95,
+      "seed": 20260718,
+      "directions": {
+        "en-ja": {
+          "mean_delta": 0.021535525918006896,
+          "interval": [
+            0.004039090871810913,
+            0.0426227080821991
+          ]
+        },
+        "ja-en": {
+          "mean_delta": 0.03667041957378388,
+          "interval": [
+            0.018891376554965974,
+            0.057575512826442715
+          ]
+        }
+      }
+    }
+  },
+  "long_document_comet": {
+    "en-ja_legal": {
+      "cases": 6,
+      "mean": 0.7502673168977102,
+      "delta_vs_expert_parent": 0.03871011734008789,
+      "paired_interval_vs_expert_parent": [
+        0.0,
+        0.11613031228383382
+      ]
+    },
+    "ja-en_legal": {
+      "cases": 6,
+      "mean": 0.7346941729386648,
+      "delta_vs_expert_parent": 0.0,
+      "paired_interval_vs_expert_parent": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "gates": {
+    "comet_noninferior_to_expert_parent_in_each_direction": true,
+    "comet_improves_bundled_parent_in_each_direction": true,
+    "empty_hypotheses_zero": true,
+    "public_comet_gate_passed": true
+  },
+  "evidence_boundary": {
+    "public_development_suite_only": true,
+    "stored_exact_q4_outputs": true,
+    "actual_swift_canary_passed": true,
+    "actual_swift_full_public_runtime_pending": true,
+    "protected_suite_opened": false,
+    "private_reasoning_traces_used": false,
+    "apple_translation_used": false
+  },
+  "app_resource_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false
+}

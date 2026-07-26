@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-07-25T02:39:35Z",
+  "visibility": "public",
+  "dataset": {
+    "repository": "blazeofchi/mimi-en-ja-development-v1",
+    "url": "https://huggingface.co/datasets/blazeofchi/mimi-en-ja-development-v1",
+    "commit": "f2d1c104bca40aef8c726f9e9e448ef0252bc690",
+    "manifestSHA256": "4a23dbc552bff3db8c7c9b1ff93c40cf32ba0a4d4f8fbc4613955db67d5455ea",
+    "caseSuiteSHA256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605",
+    "segmentSuiteSHA256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+  },
+  "model": {
+    "repository": "blazeofchi/mimi-en-ja-mlx-development-v1",
+    "url": "https://huggingface.co/blazeofchi/mimi-en-ja-mlx-development-v1",
+    "commit": "e6a02099fc62d9f351ffab1fa1efbd46b2c512a0",
+    "bundleBytes": 73425808,
+    "manifestSHA256": "824214ae6434ef0abdf06e7b208077ff3014d372144ab905b64127bbe7c1b8f7",
+    "equivalenceSHA256": "e996706e826b275d8f9d2ca79117894190ca35fb6bca898f12e575fe9054c600",
+    "license": "CC-BY-SA-4.0",
+    "distributionStatus": "public-open-cc-by-sa-4.0"
+  },
+  "verification": {
+    "remoteVisibilityConfirmedPublic": true,
+    "remoteManifestHashesMatchLocal": true,
+    "attributionSidecarsPublished": true,
+    "anonymousDownloadVerified": true,
+    "appleOutputsUploaded": false,
+    "judgeMappingsOrVerdictsUploaded": false,
+    "sealedEvaluationUploaded": false,
+    "secretsUploaded": false
+  }
+}

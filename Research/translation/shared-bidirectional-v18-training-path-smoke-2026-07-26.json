@@ -1,0 +1,79 @@
+{
+  "app_change_authorized": false,
+  "dataset": {
+    "manifest_sha256": "9e7fb7289db3f041020f9008b4b6929f713b9fa55516d2f0e4353ad02e7f0037",
+    "selection_valid_rows": 2,
+    "train_rows": 12066,
+    "train_sha256": "3e71f54c5cc59ea5bee3f303a623cb2aab75675965cae50515e84954d6e931a4",
+    "valid_rows": 2370,
+    "valid_sha256": "f85a82ae367a8af075c52f366f91ce0ae94c4a86c751e0f234dc2b0ce88f0142"
+  },
+  "experiment": "shared-bidirectional-v18-real-mps-training-path-smoke",
+  "hyperparameters": {
+    "batch_size": 1,
+    "encoder_alignment_weight": 0.05,
+    "gradient_accumulation": 1,
+    "learning_rate": 1e-06,
+    "max_source_tokens": 64,
+    "max_steps": 1,
+    "max_target_tokens": 64,
+    "seed": 271828,
+    "teacher_kl_weight": 0.25,
+    "teacher_temperature": 1.0
+  },
+  "initialization": {
+    "temporary_checkpoint_retained": false,
+    "weights_sha256": "3bf516afdb544bcc12c1a15a85c470e96125fab0c5e010530d0a2ec955f2c990",
+    "widening_manifest_sha256": "2d08863975caf8b109c232322c38f904a6aefd35d0ecc3842a8caeca60e4db20"
+  },
+  "objective": {
+    "cross_entropy": 6.206672191619873,
+    "encoder_alignment": 0.19943372905254364,
+    "teacher_kl": 5.900323390960693
+  },
+  "output": {
+    "temporary_checkpoint_retained": false,
+    "training_manifest_sha256": "03fd38dc437a2fbd5ef648b7eeb67ab7b8a583823272520d329aa1192d97acb9",
+    "weights_sha256": "3f15f00e5ac517cee67f1a1d4be02d4f08e8ac6cc823dcf4ad44d83fbd1a28e7"
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "public_upload_authorized": false,
+  "runtime": {
+    "device": "mps",
+    "hardware": "Apple M3 Pro",
+    "numpy": "2.5.1",
+    "operating_system": "macOS-26.5.1-arm64-arm-64bit",
+    "torch": "2.13.0",
+    "transformers": "4.57.6"
+  },
+  "schema_version": 1,
+  "status": "one-update-training-path-passed",
+  "student_teacher_compatibility": {
+    "d_model": 512,
+    "decoder_ffn": {
+      "student": 4608,
+      "teacher": 2048
+    },
+    "decoder_layers": 6,
+    "encoder_ffn": {
+      "student": 4608,
+      "teacher": 2048
+    },
+    "encoder_layers": 6,
+    "tokenizer_assets_equal": true,
+    "vocabulary_size": 32001
+  },
+  "teachers": {
+    "en-ja": {
+      "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3",
+      "weights_sha256": "d080ce30490e878ab745206220c97bf18d4b2662a35e5fff0bdd2157a7c4dc4b"
+    },
+    "ja-en": {
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+      "weights_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    }
+  },
+  "training_authorized": false,
+  "training_performed": "one-update infrastructure smoke only"
+}

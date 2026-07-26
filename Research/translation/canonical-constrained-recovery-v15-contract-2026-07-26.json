@@ -1,0 +1,253 @@
+{
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "capacity_change": false,
+  "comet_authorized": false,
+  "contrastive_examples": {
+    "counts": {
+      "omission": 2048,
+      "recovery": 2048
+    },
+    "directory": "Research/translation/work/canonical-constrained-recovery-v15-ja-en-examples",
+    "generated_strings_are_positive_targets": false,
+    "manifest": {
+      "bytes": 4017,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en-examples/manifest.json",
+      "sha256": "60556bba503a41b2d2b4daf95d2fe7434657fa9be0df590ec311b5a2b6e5efdb"
+    },
+    "omission": {
+      "bytes": 2371361,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en-examples/omission.jsonl",
+      "sha256": "0290afd9906ab7f868ac560c0942b18745b1844055d9c93916235fce7611e5e8"
+    },
+    "recovery": {
+      "bytes": 2458546,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en-examples/recovery.jsonl",
+      "sha256": "ab1e71b55d1d6cc922e81a82a9ecdc264ce2cbbaa58d687f643a2e98033823d5"
+    },
+    "recovery_roles": {
+      "aligned-free-running-first-error": 1024,
+      "licensed-reference-third-repeat-counterfactual": 1024
+    }
+  },
+  "dataset": {
+    "attribution": {
+      "bytes": 1408813,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en/attribution.jsonl",
+      "sha256": "64b738a450b3e3fead4a9b51b0f1751e547600a24a240807716474d9bb1d1f71"
+    },
+    "counts": {
+      "fresh_valid": 768,
+      "train": 7104,
+      "v12_regression": 1536,
+      "v14_regression": 768
+    },
+    "directory": "Research/translation/work/canonical-constrained-recovery-v15-ja-en",
+    "distribution_provenance": {
+      "all_positive_targets_are_licensed_human_references": true,
+      "all_rows_have_source_license": true,
+      "all_rows_have_source_provenance": true,
+      "generated_strings_are_positive_targets": false,
+      "private_reasoning_traces_used": false
+    },
+    "effective_licenses": [
+      "CC-BY-2.0-FR",
+      "CC-BY-4.0",
+      "CC-BY-SA-3.0",
+      "PDL-1.0-compatible-CC-BY-4.0",
+      "project-owned"
+    ],
+    "free_form_synthetic_translations_used_as_targets": false,
+    "fresh_valid": {
+      "bytes": 1042202,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en/valid.jsonl",
+      "sha256": "b074c6ca26697e94c42f75ba783b86690b7d6facc81cad94ae35de5561ad798b"
+    },
+    "manifest": {
+      "bytes": 8706,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en/manifest.json",
+      "sha256": "9b412e0a7d49234ab374f4e47fc71e0f70e9cb432af6f792d26e7ce56910c523"
+    },
+    "private_reasoning_traces_used": false,
+    "train": {
+      "bytes": 10484484,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en/train.jsonl",
+      "sha256": "b6a93a017f8dd7dba7c50ba84e09d3525c13dddd7e7a2b5d744f72b074af7fea"
+    },
+    "v12_regression": {
+      "bytes": 1860973,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en/valid.jsonl",
+      "sha256": "8594d49aad5ab4696d5c20a9ffe142729d6381a00c9532268e42e9b70aca4ba6"
+    },
+    "v14_regression": {
+      "bytes": 1049166,
+      "path": "Research/translation/work/canonical-rollout-repair-v14-ja-en/valid.jsonl",
+      "sha256": "3228c256ab1b4b8f878edb52f67d977c2f454bc67a6c3e04e07926a5aba4d040"
+    }
+  },
+  "decoder_or_bundle_size_change_during_training": false,
+  "direction": "ja-en",
+  "exact_q4_conversion_authorized": false,
+  "experiment": "canonical-constrained-recovery-v15-ja-en",
+  "human_reviewer_required": false,
+  "hypothesis": "starting from rejected v12 step 50, licensed-reference MLE plus clean-over-perturbed recovery ordering and explicit token-span omission contrasts can retain fresh legal gains without making a recovery path outrank the clean reference path",
+  "implementation": {
+    "audit_translation_structures.py": {
+      "bytes": 5491,
+      "path": "scripts/translation/audit_translation_structures.py",
+      "sha256": "bb4edf46dc0a9932aaf6ebe29e84a65c2713919aa710e4ced969c61106070075"
+    },
+    "build_canonical_constrained_recovery_v15_dataset.py": {
+      "bytes": 13981,
+      "path": "scripts/translation/build_canonical_constrained_recovery_v15_dataset.py",
+      "sha256": "ee89e585df531977baf519005da91320d74beba42f316fcbb0fddc93264a9f06"
+    },
+    "build_canonical_constrained_recovery_v15_examples.py": {
+      "bytes": 17356,
+      "path": "scripts/translation/build_canonical_constrained_recovery_v15_examples.py",
+      "sha256": "ec7cb0dd1cbf92116befd1c9335bf4f512790356a7bf693d678ca0755e50847b"
+    },
+    "evaluate_canonical_constrained_recovery_v15.py": {
+      "bytes": 21453,
+      "path": "scripts/translation/evaluate_canonical_constrained_recovery_v15.py",
+      "sha256": "59c3cba2bb1446ab4dfd13ba5aae41b2c53ca7e46a89a8e1773297f32e158a3c"
+    },
+    "evaluate_canonical_sequence_v10_internal.py": {
+      "bytes": 24688,
+      "path": "scripts/translation/evaluate_canonical_sequence_v10_internal.py",
+      "sha256": "d6e0db607df7c2022c002cfc0be9441cb5c5a872fa553bc55d21b78969f92dd3"
+    },
+    "prepare_canonical_constrained_recovery_v15_contract.py": {
+      "bytes": 16374,
+      "path": "scripts/translation/prepare_canonical_constrained_recovery_v15_contract.py",
+      "sha256": "da5115afe141302a71be24e179037c9f2fd565c31ec5a3dacd103fe94b163e57"
+    },
+    "train_canonical_constrained_recovery_v15.py": {
+      "bytes": 28187,
+      "path": "scripts/translation/train_canonical_constrained_recovery_v15.py",
+      "sha256": "d991124009e1518692069b8a603a3300173359178d8d7fcc5d8687aa4210e111"
+    },
+    "train_marian_distillation.py": {
+      "bytes": 37097,
+      "path": "scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    },
+    "typed_critical_token_policy.py": {
+      "bytes": 20489,
+      "path": "scripts/translation/typed_critical_token_policy.py",
+      "sha256": "ba6e947c24190df46e0346087c077f57f91f018e9df88e096441bc8942c3b82e"
+    }
+  },
+  "initial_checkpoint": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-safety-repair-v12-ja-en-checkpoints/step-0000050/model.safetensors",
+      "sha256": "cf67fb44a4e9a0991c95b5e87578a4427610cc8e4110fbd3bb03909356600f2b"
+    },
+    "path": "Research/translation/models/elanmt-canonical-safety-repair-v12-ja-en-checkpoints/step-0000050",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "source_experiment": "rejected v12 step 50; research initialization only",
+    "training_manifest": {
+      "bytes": 10456,
+      "path": "Research/translation/models/elanmt-canonical-safety-repair-v12-ja-en-checkpoints/step-0000050/mimi_training_manifest.json",
+      "sha256": "68de542ff5476800aab88b075cac05b5e3dd3da21330d15d1d7910a587a9c533"
+    }
+  },
+  "internal_selection": {
+    "baseline": "frozen safe parent",
+    "candidate_steps": [
+      25,
+      50
+    ],
+    "detector_policy": "new exact, typed, or negation-detector cases from any suite form a semantic-audit queue; detectors do not adjudicate semantic correctness",
+    "dual_semantic_audit_required_before_internal_pass": true,
+    "no_q4_comet_or_protected_evaluation_before_semantic_audit": true,
+    "ordering": "pre-semantic eligible checkpoints only; highest fresh mean sentence chrF++, then v14 omission-risk chrF++, then recovery preference improvement",
+    "required_exact_semantic_judges": [
+      "claude-sonnet-5",
+      "claude-opus-5"
+    ],
+    "requirements": {
+      "clean_over_recovery_accuracy_delta_minimum": -0.02,
+      "fresh_corpus_chrf_pp_delta_minimum": 0.25,
+      "fresh_long_legal_chrf_pp_delta_minimum": 0.2,
+      "fresh_mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "fresh_paired_chrf_pp_90pct_lower_minimum": -0.25,
+      "fresh_worst_stratum_chrf_pp_delta_minimum": -0.5,
+      "new_repetition_or_generation_limit_failures_maximum_per_suite": 0,
+      "omission_preference_accuracy_delta_minimum": 0.05,
+      "recovery_preference_accuracy_delta_minimum": 0.05,
+      "recovery_rejected_probability_delta_maximum": 0.0,
+      "v12_mean_sentence_chrf_pp_delta_minimum": 0.2,
+      "v12_worst_stratum_chrf_pp_delta_minimum": -0.5,
+      "v14_mean_sentence_chrf_pp_delta_minimum": 0.2,
+      "v14_omission_risk_chrf_pp_delta_minimum": -0.5,
+      "v14_worst_stratum_chrf_pp_delta_minimum": -0.5
+    },
+    "selection_uses_protected_outputs": false,
+    "step_zero_is_diagnostic_only": true,
+    "stop_if_no_checkpoint_is_pre_semantic_eligible": true,
+    "suites": {
+      "fresh_v15": "768 source-unique held-out legal examples, disjoint from v10, v12, and v14 development rows and screened on both sides against ten protected suites",
+      "v12_regression": "frozen 1,536-row v12 validation suite",
+      "v14_regression": "frozen 768-row v14 validation suite"
+    }
+  },
+  "moe_added": false,
+  "preservation_checkpoint": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "protected_evaluation_authorized": false,
+  "public_upload_authorized": false,
+  "scheduled_sampling_used": false,
+  "schema_version": 1,
+  "status": "preregistered-ready-for-one-arm-training",
+  "training": {
+    "batch_size": 4,
+    "checkpoint_steps": [
+      25,
+      50
+    ],
+    "clean_over_recovery_target_margin": 0.01,
+    "constrained_recovery_weight": 0.1,
+    "contrast_batch_size": 4,
+    "effective_batch_size": 32,
+    "evaluation_batch_size": 16,
+    "evaluation_steps": 25,
+    "frozen_parent_kl_weight": 0.1,
+    "gradient_accumulation": 8,
+    "gradient_checkpointing": false,
+    "l2_to_parent_weight": 1e-05,
+    "learning_rate": 3e-07,
+    "max_source_tokens": 192,
+    "max_steps": 50,
+    "max_target_tokens": 192,
+    "omission_target_margin": 0.5,
+    "omission_weight": 0.5,
+    "one_arm_only": true,
+    "post_result_hyperparameter_changes_forbidden": true,
+    "recovery_target_margin": 0.1,
+    "recovery_weight": 0.25,
+    "seed": 20260818,
+    "warmup_steps": 5,
+    "weight_decay": 0.01
+  },
+  "unconditional_eos_recovery_used": false,
+  "v12_and_v14_rejections_final": true
+}

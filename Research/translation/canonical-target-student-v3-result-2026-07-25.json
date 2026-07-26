@@ -1,0 +1,630 @@
+{
+  "appChangeAuthorized": false,
+  "bundleBytes": 78279760,
+  "continueTraining": false,
+  "contract": {
+    "bytes": 24091,
+    "path": "Research/translation/canonical-target-student-v3-contract-2026-07-25.json",
+    "sha256": "49f52ca20f9e12a66bc0a61a179dcf85b85387aed5facdd49fbbf3b55f2d7351"
+  },
+  "decision": "Stop this 250-step recipe. Preserve the current Mimi translator; do not continue training, integrate, publish, or claim bidirectional improvement.",
+  "directions": {
+    "en-ja": {
+      "comet22": {
+        "baselineMeanScore": 0.8668843066692352,
+        "candidateMeanScore": 0.8752559012174607,
+        "cases": 100,
+        "meanPairedDelta": 0.008371594548225402,
+        "pairedBootstrapInterval": {
+          "lower": 0.003885628581047058,
+          "upper": 0.013425133228302001
+        }
+      },
+      "document": {
+        "baseline": {
+          "cases": 100,
+          "chrfPlusPlus": 28.40629630999253,
+          "sacreBLEUIntl": 9.628669489707992,
+          "warmP50Seconds": 0.06273350003175437,
+          "warmP95Seconds": 0.5502667489927262
+        },
+        "candidate": {
+          "cases": 100,
+          "chrfPlusPlus": 29.284472972400533,
+          "sacreBLEUIntl": 9.811589080573434,
+          "warmP50Seconds": 0.042584207840263844,
+          "warmP95Seconds": 0.32264362648129463
+        },
+        "pairedChrFPlusPlus": {
+          "cases": 100,
+          "meanDelta": 0.7509681220552323,
+          "pairedBootstrapInterval": {
+            "confidence": 0.9,
+            "lower": 0.20496100229855269,
+            "upper": 1.35820936513619
+          },
+          "samples": 10000,
+          "seed": 20260725
+        }
+      },
+      "gates": [
+        {
+          "actual": {
+            "COMET-22": true,
+            "chrF++": true,
+            "independentJudge": "not-run-decision-already-fixed",
+            "passedSignals": 2
+          },
+          "name": "minimum-two-improvement-signals",
+          "passed": true,
+          "required": 2
+        },
+        {
+          "actual": 0.20496100229855269,
+          "name": "chrF++-paired-90pct-lower",
+          "passed": true,
+          "required": -0.25
+        },
+        {
+          "actual": 0.003885628581047058,
+          "name": "COMET-22-paired-90pct-lower",
+          "passed": true,
+          "required": -0.005
+        },
+        {
+          "actual": 0.18291959086544196,
+          "name": "BLEU-corpus-regression",
+          "passed": true,
+          "required": ">= -0.10"
+        },
+        {
+          "actual": 0.08049449999816716,
+          "name": "warm-segment-p95",
+          "passed": true,
+          "required": "<= 0.175"
+        }
+      ],
+      "passed": true,
+      "segments": {
+        "baseline": {
+          "cases": 200,
+          "chrfPlusPlus": 27.4283841395179,
+          "sacreBLEUIntl": 10.011727447310856,
+          "warmP50Seconds": 0.06141187506727874,
+          "warmP95Seconds": 0.16543629090301692
+        },
+        "candidate": {
+          "cases": 200,
+          "chrfPlusPlus": 28.24187192132615,
+          "sacreBLEUIntl": 9.965966086855374,
+          "warmP50Seconds": 0.040137542178854346,
+          "warmP95Seconds": 0.08049449999816716
+        }
+      }
+    },
+    "ja-en": {
+      "comet22": {
+        "baselineMeanScore": 0.8192148298025131,
+        "candidateMeanScore": 0.820009463429451,
+        "cases": 100,
+        "meanPairedDelta": 0.0007946336269378662,
+        "pairedBootstrapInterval": {
+          "lower": -0.0028997951745986937,
+          "upper": 0.004511479735374451
+        }
+      },
+      "document": {
+        "baseline": {
+          "cases": 100,
+          "chrfPlusPlus": 55.19028118139918,
+          "sacreBLEUIntl": 30.620668547248126,
+          "warmP50Seconds": 0.07544479216448963,
+          "warmP95Seconds": 0.5496272502932698
+        },
+        "candidate": {
+          "cases": 100,
+          "chrfPlusPlus": 54.870840621346794,
+          "sacreBLEUIntl": 30.21313329332972,
+          "warmP50Seconds": 0.048445167019963264,
+          "warmP95Seconds": 0.3346759998239577
+        },
+        "pairedChrFPlusPlus": {
+          "cases": 100,
+          "meanDelta": -0.36889521510394263,
+          "pairedBootstrapInterval": {
+            "confidence": 0.9,
+            "lower": -1.0499421935317381,
+            "upper": 0.3047678143993491
+          },
+          "samples": 10000,
+          "seed": 20260725
+        }
+      },
+      "gates": [
+        {
+          "actual": {
+            "COMET-22": false,
+            "chrF++": false,
+            "independentJudge": "not-run-decision-already-fixed",
+            "passedSignals": 0
+          },
+          "name": "minimum-two-improvement-signals",
+          "passed": false,
+          "required": 2
+        },
+        {
+          "actual": -1.0499421935317381,
+          "name": "chrF++-paired-90pct-lower",
+          "passed": false,
+          "required": -0.25
+        },
+        {
+          "actual": -0.0028997951745986937,
+          "name": "COMET-22-paired-90pct-lower",
+          "passed": true,
+          "required": -0.005
+        },
+        {
+          "actual": -0.4075352539184074,
+          "name": "BLEU-corpus-regression",
+          "passed": false,
+          "required": ">= -0.10"
+        },
+        {
+          "actual": 0.09036504221148789,
+          "name": "warm-segment-p95",
+          "passed": true,
+          "required": "<= 0.175"
+        }
+      ],
+      "passed": false,
+      "segments": {
+        "baseline": {
+          "cases": 200,
+          "chrfPlusPlus": 52.83887703926926,
+          "sacreBLEUIntl": 29.797269546305802,
+          "warmP50Seconds": 0.06928591593168676,
+          "warmP95Seconds": 0.1595136250834912
+        },
+        "candidate": {
+          "cases": 200,
+          "chrfPlusPlus": 52.57268466560524,
+          "sacreBLEUIntl": 29.510537364927163,
+          "warmP50Seconds": 0.043136792024597526,
+          "warmP95Seconds": 0.09036504221148789
+        }
+      }
+    }
+  },
+  "experiment": "canonical-target-scale-v3-intact-marian-step250",
+  "globalGates": [
+    {
+      "actual": [
+        "development-accuracy-v1:sentence:jlt:law-3215:tu-2834:en-ja",
+        "development-accuracy-v1:sentence:jlt:law-4281:tu-517:en-ja"
+      ],
+      "name": "new-union-critical-errors",
+      "passed": false,
+      "required": 0
+    },
+    {
+      "actual": [
+        "development-accuracy-v1:document:kftt:kftt-block-0055:ja-en",
+        "development-accuracy-v1:sentence:jlt:law-4613:tu-186:ja-en"
+      ],
+      "name": "new-negation-errors",
+      "passed": false,
+      "required": 0
+    },
+    {
+      "actual": [
+        "development-accuracy-v1:document:alt:SNT.117294:ja-en",
+        "development-accuracy-v1:document:jlt:law-3518:en-ja",
+        "development-accuracy-v1:sentence:alt:SNT.146231.18667:en-ja",
+        "development-accuracy-v1:sentence:jlt:law-4281:tu-517:en-ja"
+      ],
+      "name": "new-typed-critical-errors",
+      "passed": false,
+      "required": 0
+    },
+    {
+      "actual": [
+        "direct:development-accuracy-v1:document:jlt:law-4948:en-ja",
+        "segment-then-join:development-accuracy-v1:document:jlt:law-4754:ja-en"
+      ],
+      "name": "new-repetition-or-generation-limit-errors",
+      "passed": false,
+      "required": 0
+    },
+    {
+      "actual": 222937088,
+      "name": "peak-resident-bytes",
+      "passed": true,
+      "required": 250000000
+    },
+    {
+      "actual": 78279760,
+      "name": "preferred-bundle-bytes",
+      "passed": true,
+      "required": 150000000
+    },
+    {
+      "actual": 78279760,
+      "name": "hard-bundle-bytes",
+      "passed": true,
+      "required": 500000000
+    },
+    {
+      "actual": {
+        "en-ja": "provenance-incomplete-not-approved-for-distribution",
+        "ja-en": "provenance-incomplete-not-approved-for-distribution"
+      },
+      "name": "distribution-provenance",
+      "passed": false,
+      "required": "complete distributable provenance and attribution review"
+    }
+  ],
+  "independentQualityJudge": {
+    "reason": "JA-to-EN missed both pre-judge improvement signals; one remaining judge signal cannot reach the required two-of-three gate",
+    "run": false
+  },
+  "inputs": {
+    "baseline_comet": {
+      "bytes": 61386,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-comet22.json",
+      "sha256": "72f39af12e94d58ec27e332a4c42f24c2853a1d488e0072dcfd4b2ae316bf968"
+    },
+    "baseline_direct": {
+      "bytes": 284490,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-direct-under-192.json",
+      "sha256": "88024b008acf9ca3fc95470a725aa8452b80dbdfbbd19cc10abf8b5c3ab892d4"
+    },
+    "baseline_documents": {
+      "bytes": 495550,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair.json",
+      "sha256": "fa1287745281accecbba44bf0d14f3a0dfeede55ddf0a7e502bf41a5e1efc760"
+    },
+    "baseline_segments": {
+      "bytes": 403110,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-segments.json",
+      "sha256": "107a7838ce667aed3ad9e9c52c9c472a5abd30aa1a3994e6c21194ff25696a4e"
+    },
+    "baseline_structure": {
+      "bytes": 121744,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-structure-audit.json",
+      "sha256": "60979a6b187d1ff3bb7718852bc70fd462e1586b88b2069327420e7f64fa42d4"
+    },
+    "candidate_comet": {
+      "bytes": 61392,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v3-step250-comet22.json",
+      "sha256": "34b90e79a8195a4166a867ec5e678453054e55f305700773d3247670099e228b"
+    },
+    "candidate_direct": {
+      "bytes": 284739,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v3-step250-direct-under-192.json",
+      "sha256": "fef428cd34b79cc15d3c2c67f310fa3bb0581cf1076f1c974babe81913afcc55"
+    },
+    "candidate_documents": {
+      "bytes": 493633,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v3-step250.json",
+      "sha256": "28707e41768ea89ed6308351c3f2865c256c98bfeb5384a658ddba4d9f3f0666"
+    },
+    "candidate_segments": {
+      "bytes": 401642,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v3-step250-segments.json",
+      "sha256": "8204241727559bcb955f4fc475b6d00b3cad6f1752b17a94b90f35627a8005fd"
+    },
+    "candidate_structure": {
+      "bytes": 119693,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v3-step250-structure-audit.json",
+      "sha256": "48606fd09f6a881de2b788354ebf31b03c80040310038b3f4a4ab28d0784b9a0"
+    },
+    "candidate_typed": {
+      "bytes": 28275,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v3-step250-typed-critical.json",
+      "sha256": "425889ccaaac60e700fb038fb6d6e14d7b7610de4b150159f22a68ab61b38456"
+    },
+    "comet_comparison": {
+      "bytes": 6088,
+      "path": "Research/translation/results/development-accuracy-v1-canonical-v3-step250-vs-current-comet22.json",
+      "sha256": "bf6dc4f40bc70fbe985c5c5e9f8073e2e3f68e0ef05c33a2862ba757a5e182f3"
+    }
+  },
+  "peakResidentBytes": 222937088,
+  "privateReasoningTracesUsed": false,
+  "promotionAuthorized": false,
+  "publicUploadAuthorized": false,
+  "q4": {
+    "en-ja": {
+      "bytes": 39139880,
+      "directory": "Research/translation/models/elanmt-canonical-target-scale-v3-en-ja-step250-mlx-4bit",
+      "distributionStatus": "provenance-incomplete-not-approved-for-distribution",
+      "manifest": {
+        "bytes": 3602,
+        "path": "Research/translation/models/elanmt-canonical-target-scale-v3-en-ja-step250-mlx-4bit/manifest.json",
+        "sha256": "7226605643d1243cfcf90a9fe542ea8dd7f401b51674ebb8bba56d164a83ce7a"
+      },
+      "sourceWeightsSha256": "d5cee2abe995d0092aa4694cc5b86d62454c073d9e19fca69f2efd55a89709a3",
+      "weights": {
+        "bytes": 34297451,
+        "path": "Research/translation/models/elanmt-canonical-target-scale-v3-en-ja-step250-mlx-4bit/model.safetensors",
+        "sha256": "6403b190ca37086fb4d440810c22ec56e162f28866bcf99c6793b6f9c57d7952"
+      }
+    },
+    "ja-en": {
+      "bytes": 39139880,
+      "directory": "Research/translation/models/elanmt-canonical-target-scale-v3-ja-en-step250-mlx-4bit",
+      "distributionStatus": "provenance-incomplete-not-approved-for-distribution",
+      "manifest": {
+        "bytes": 3602,
+        "path": "Research/translation/models/elanmt-canonical-target-scale-v3-ja-en-step250-mlx-4bit/manifest.json",
+        "sha256": "1bd9a2a49e9b3736f595f2400c70be2a5d3ec4169a4e280d94c8d28d6839f214"
+      },
+      "sourceWeightsSha256": "812d0c7850f90e60e5f100277189a4ee6531e805ed76687aaced33ca46a440af",
+      "weights": {
+        "bytes": 34297451,
+        "path": "Research/translation/models/elanmt-canonical-target-scale-v3-ja-en-step250-mlx-4bit/model.safetensors",
+        "sha256": "238726b0ff293054b79f7ab17948e25246e92774ff2148dd6745c2b8d34c41ed"
+      }
+    }
+  },
+  "safety": {
+    "baselineExactFailures": 62,
+    "baselineGenerationFailures": 6,
+    "baselineNegationFailures": 32,
+    "baselineTypedFailures": 64,
+    "baselineUnionFailures": 96,
+    "candidateExactFailures": 60,
+    "candidateGenerationFailures": 4,
+    "candidateNegationFailures": 30,
+    "candidateTypedFailures": 63,
+    "candidateUnionFailures": 96,
+    "newExactCaseIDs": [
+      "development-accuracy-v1:document:jlt:law-3518:en-ja",
+      "development-accuracy-v1:sentence:jlt:law-3215:tu-2834:en-ja"
+    ],
+    "newGenerationFailureIDs": [
+      "direct:development-accuracy-v1:document:jlt:law-4948:en-ja",
+      "segment-then-join:development-accuracy-v1:document:jlt:law-4754:ja-en"
+    ],
+    "newNegationCaseIDs": [
+      "development-accuracy-v1:document:kftt:kftt-block-0055:ja-en",
+      "development-accuracy-v1:sentence:jlt:law-4613:tu-186:ja-en"
+    ],
+    "newTypedCaseIDs": [
+      "development-accuracy-v1:document:alt:SNT.117294:ja-en",
+      "development-accuracy-v1:document:jlt:law-3518:en-ja",
+      "development-accuracy-v1:sentence:alt:SNT.146231.18667:en-ja",
+      "development-accuracy-v1:sentence:jlt:law-4281:tu-517:en-ja"
+    ],
+    "newUnionCaseIDs": [
+      "development-accuracy-v1:sentence:jlt:law-3215:tu-2834:en-ja",
+      "development-accuracy-v1:sentence:jlt:law-4281:tu-517:en-ja"
+    ]
+  },
+  "schemaVersion": 1,
+  "status": "phase-1-continuation-rejected",
+  "teacherAuthentication": "Codex cached ChatGPT authentication; no OpenAI API key used",
+  "training": {
+    "en-ja": {
+      "directory": "Research/translation/models/elanmt-canonical-target-scale-v3-en-ja-step250",
+      "fullPrecisionChrFPlusPlusDelta": 0.07922667570500863,
+      "history": [
+        {
+          "chrf_pp": 31.015658623633406,
+          "hypotheses": 1285,
+          "loss": 1.240209079855611,
+          "slices": {
+            "domain": {
+              "conversational": {
+                "cases": 151,
+                "chrf_pp": 60.626843513411345
+              },
+              "human-translated-news": {
+                "cases": 200,
+                "chrf_pp": 34.342582084615394
+              },
+              "mimi-product-ui": {
+                "cases": 13,
+                "chrf_pp": 13.341159725107888
+              },
+              "wikipedia": {
+                "cases": 921,
+                "chrf_pp": 29.24004049158829
+              }
+            },
+            "origin": {
+              "human-alt-parallel": {
+                "cases": 200,
+                "chrf_pp": 34.342582084615394
+              },
+              "human-kftt-replay": {
+                "cases": 921,
+                "chrf_pp": 29.24004049158829
+              },
+              "human-tatoeba-bidirectional-agreement-filtered": {
+                "cases": 151,
+                "chrf_pp": 60.626843513411345
+              },
+              "mimi-shipped-ui-pair": {
+                "cases": 13,
+                "chrf_pp": 13.341159725107888
+              }
+            }
+          },
+          "step": 0
+        },
+        {
+          "chrf_pp": 31.094885299338415,
+          "hypotheses": 1285,
+          "loss": 1.2441415962542077,
+          "slices": {
+            "domain": {
+              "conversational": {
+                "cases": 151,
+                "chrf_pp": 58.70988194287206
+              },
+              "human-translated-news": {
+                "cases": 200,
+                "chrf_pp": 34.80541820642537
+              },
+              "mimi-product-ui": {
+                "cases": 13,
+                "chrf_pp": 13.341159725107888
+              },
+              "wikipedia": {
+                "cases": 921,
+                "chrf_pp": 29.348030366243055
+              }
+            },
+            "origin": {
+              "human-alt-parallel": {
+                "cases": 200,
+                "chrf_pp": 34.80541820642537
+              },
+              "human-kftt-replay": {
+                "cases": 921,
+                "chrf_pp": 29.348030366243055
+              },
+              "human-tatoeba-bidirectional-agreement-filtered": {
+                "cases": 151,
+                "chrf_pp": 58.70988194287206
+              },
+              "mimi-shipped-ui-pair": {
+                "cases": 13,
+                "chrf_pp": 13.341159725107888
+              }
+            }
+          },
+          "step": 250,
+          "training_objective": {
+            "domain_loss_weight": 1.0,
+            "frozen_base_kl": 0.10471967607736588,
+            "l2_to_base": 0.2246369868516922,
+            "sequence_loss": 1.0564296245574951
+          }
+        }
+      ],
+      "manifest": {
+        "bytes": 7921,
+        "path": "Research/translation/models/elanmt-canonical-target-scale-v3-en-ja-step250/mimi_training_manifest.json",
+        "sha256": "9b514fec2d18304b8164c6c2db9c443b6efdb15cda69a3ce2e9276bd9e9f0545"
+      },
+      "weights": {
+        "bytes": 242249092,
+        "path": "Research/translation/models/elanmt-canonical-target-scale-v3-en-ja-step250/model.safetensors",
+        "sha256": "d5cee2abe995d0092aa4694cc5b86d62454c073d9e19fca69f2efd55a89709a3"
+      }
+    },
+    "ja-en": {
+      "directory": "Research/translation/models/elanmt-canonical-target-scale-v3-ja-en-step250-checkpoints/step-0000250",
+      "fullPrecisionChrFPlusPlusDelta": -0.017053661490741945,
+      "history": [
+        {
+          "chrf_pp": 52.601658632184446,
+          "hypotheses": 1285,
+          "loss": 1.201989697853415,
+          "slices": {
+            "domain": {
+              "conversational": {
+                "cases": 151,
+                "chrf_pp": 82.7507047750439
+              },
+              "human-translated-news": {
+                "cases": 200,
+                "chrf_pp": 55.64615915745622
+              },
+              "mimi-product-ui": {
+                "cases": 13,
+                "chrf_pp": 29.175979115274775
+              },
+              "wikipedia": {
+                "cases": 921,
+                "chrf_pp": 50.095553493251664
+              }
+            },
+            "origin": {
+              "human-alt-parallel": {
+                "cases": 200,
+                "chrf_pp": 55.64615915745622
+              },
+              "human-kftt-replay": {
+                "cases": 921,
+                "chrf_pp": 50.095553493251664
+              },
+              "human-tatoeba-bidirectional-agreement-filtered": {
+                "cases": 151,
+                "chrf_pp": 82.7507047750439
+              },
+              "mimi-shipped-ui-pair": {
+                "cases": 13,
+                "chrf_pp": 29.175979115274775
+              }
+            }
+          },
+          "step": 0
+        },
+        {
+          "chrf_pp": 52.584604970693704,
+          "hypotheses": 1285,
+          "loss": 1.2024606583183377,
+          "slices": {
+            "domain": {
+              "conversational": {
+                "cases": 151,
+                "chrf_pp": 82.79164669840543
+              },
+              "human-translated-news": {
+                "cases": 200,
+                "chrf_pp": 56.06699271003016
+              },
+              "mimi-product-ui": {
+                "cases": 13,
+                "chrf_pp": 28.808020786472042
+              },
+              "wikipedia": {
+                "cases": 921,
+                "chrf_pp": 49.951071888336216
+              }
+            },
+            "origin": {
+              "human-alt-parallel": {
+                "cases": 200,
+                "chrf_pp": 56.06699271003016
+              },
+              "human-kftt-replay": {
+                "cases": 921,
+                "chrf_pp": 49.951071888336216
+              },
+              "human-tatoeba-bidirectional-agreement-filtered": {
+                "cases": 151,
+                "chrf_pp": 82.79164669840543
+              },
+              "mimi-shipped-ui-pair": {
+                "cases": 13,
+                "chrf_pp": 28.808020786472042
+              }
+            }
+          },
+          "step": 250,
+          "training_objective": {
+            "domain_loss_weight": 1.0,
+            "frozen_base_kl": 0.14535576105117798,
+            "l2_to_base": 0.21604914963245392,
+            "sequence_loss": 1.343508005142212
+          }
+        }
+      ],
+      "manifest": {
+        "bytes": 8124,
+        "path": "Research/translation/models/elanmt-canonical-target-scale-v3-ja-en-step250-checkpoints/step-0000250/mimi_training_manifest.json",
+        "sha256": "c2714c9149b512fe1b3cc8b16981627d0f78e2225582b32723dbbb7ee9121d1e"
+      },
+      "weights": {
+        "bytes": 242249092,
+        "path": "Research/translation/models/elanmt-canonical-target-scale-v3-ja-en-step250-checkpoints/step-0000250/model.safetensors",
+        "sha256": "812d0c7850f90e60e5f100277189a4ee6531e805ed76687aaced33ca46a440af"
+      }
+    }
+  }
+}

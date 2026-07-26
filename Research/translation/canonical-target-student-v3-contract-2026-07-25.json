@@ -1,0 +1,541 @@
+{
+  "admission": {
+    "approved_by_direction": {
+      "en-ja": 97,
+      "ja-en": 83
+    },
+    "approved_targets": {
+      "bytes": 792071,
+      "path": "Research/translation/work/canonical-target-scale-v3.approved.jsonl",
+      "sha256": "336316887e660d53f6fec3442af8948c252e2b3e040d2de479b1a78fd3579448"
+    },
+    "approved_total": 180,
+    "judge_families": [
+      "Claude Fable 5",
+      "Qwen3-8B-4bit-MLX"
+    ],
+    "required_review_status": "two-judge-reference-anchored-canonical-absolute",
+    "scale_contract": {
+      "bytes": 4422,
+      "path": "Research/translation/canonical-target-scale-v3-contract-2026-07-25.json",
+      "sha256": "9771c6cb13590d3519f2050e4f5d2e4983a725711f86819104115070ba4957d2"
+    },
+    "teacher_model": "gpt-5.6-sol via Codex session"
+  },
+  "app_change_authorized": false,
+  "benchmarks": {
+    "apple_translation_role": "diagnostic historical comparison only; never a runtime dependency",
+    "baseline_metrics": {
+      "en-ja": {
+        "chrfPlusPlus": 28.40629630999253,
+        "comet22": 0.8668843066692352,
+        "sacreBLEUIntl": 9.628669489707992,
+        "warmSegmentP50Seconds": 0.06166808307170868,
+        "warmSegmentP95Seconds": 0.16543629090301692
+      },
+      "ja-en": {
+        "chrfPlusPlus": 55.19028118139918,
+        "comet22": 0.8192148298025131,
+        "sacreBLEUIntl": 30.620668547248126,
+        "warmSegmentP50Seconds": 0.06940462486818433,
+        "warmSegmentP95Seconds": 0.1595136250834912
+      }
+    },
+    "baseline_summary": {
+      "bytes": 4332,
+      "path": "Research/translation/benchmark/development-accuracy-v1.results-summary.json",
+      "sha256": "e78322ade88f82bbcf4a2767cb3e2839de17abe9a5979b5f06bdb95b777f83a8"
+    },
+    "inputs": {
+      "Research/translation/benchmark/automated-claim-v1.sources.jsonl": {
+        "bytes": 988395,
+        "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+        "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl": {
+        "bytes": 347454,
+        "path": "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl",
+        "sha256": "d5cef0834f897a2ee2179844e8eec9e0e5de4db0aaaf0d0265cee041b699dbba"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.direct-under-192.manifest.json": {
+        "bytes": 2048,
+        "path": "Research/translation/benchmark/development-accuracy-v1.direct-under-192.manifest.json",
+        "sha256": "5082aa3183a884145948d745f86b1d6bbdd83f6edee77cc723ae9d1205777cf7"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.jsonl": {
+        "bytes": 357062,
+        "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+        "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.segments.jsonl": {
+        "bytes": 363568,
+        "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+        "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+      },
+      "Research/translation/results/development-accuracy-v1-candidate-clean-pair-comet22.json": {
+        "bytes": 61386,
+        "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-comet22.json",
+        "sha256": "72f39af12e94d58ec27e332a4c42f24c2853a1d488e0072dcfd4b2ae316bf968"
+      },
+      "Research/translation/results/development-accuracy-v1-candidate-clean-pair-direct-under-192.json": {
+        "bytes": 284490,
+        "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-direct-under-192.json",
+        "sha256": "88024b008acf9ca3fc95470a725aa8452b80dbdfbbd19cc10abf8b5c3ab892d4"
+      },
+      "Research/translation/results/development-accuracy-v1-candidate-clean-pair-segments.json": {
+        "bytes": 403110,
+        "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-segments.json",
+        "sha256": "107a7838ce667aed3ad9e9c52c9c472a5abd30aa1a3994e6c21194ff25696a4e"
+      },
+      "Research/translation/results/development-accuracy-v1-candidate-clean-pair-structure-audit.json": {
+        "bytes": 121744,
+        "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair-structure-audit.json",
+        "sha256": "60979a6b187d1ff3bb7718852bc70fd462e1586b88b2069327420e7f64fa42d4"
+      },
+      "Research/translation/results/development-accuracy-v1-candidate-clean-pair.json": {
+        "bytes": 495550,
+        "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair.json",
+        "sha256": "fa1287745281accecbba44bf0d14f3a0dfeede55ddf0a7e502bf41a5e1efc760"
+      }
+    }
+  },
+  "continuation_gates": {
+    "documents": {
+      "new_repetition_or_nontermination_failures_maximum": 0,
+      "segment_then_join_and_direct_evaluation_required": true
+    },
+    "licensing": {
+      "distribution_review_required": true,
+      "hugging_face_visibility_when_eligible": "public",
+      "per_row_license_and_attribution_sidecar_required": true
+    },
+    "quality_each_direction": {
+      "chrf_pp_paired_90pct_lower_minimum": -0.25,
+      "comet22_mean_delta_minimum_for_signal": 0.002,
+      "comet22_paired_90pct_lower_minimum": -0.005,
+      "independent_judge_mean_delta_minimum_for_signal": 0.1,
+      "independent_judge_paired_90pct_lower_minimum": -0.25,
+      "maximum_direct_chrf_pp_regression": 0.5,
+      "maximum_domain_chrf_pp_regression": 0.5,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "minimum_improvement_signals": 2,
+      "sacrebleu_corpus_regression_maximum": 0.1
+    },
+    "runtime": {
+      "peak_resident_bytes_maximum": 250000000,
+      "warm_segment_p95_seconds_maximum_each_direction": 0.175
+    },
+    "safety": {
+      "new_judge_critical_errors_maximum": 0,
+      "new_negation_errors_maximum": 0,
+      "new_number_date_unit_placeholder_errors_maximum": 0,
+      "new_union_critical_errors_maximum": 0
+    }
+  },
+  "conversion": {
+    "bits": 4,
+    "format": "MLX affine q4",
+    "group_size": 64,
+    "hard_two_direction_bundle_maximum_bytes": 500000000,
+    "preferred_two_direction_bundle_maximum_bytes": 150000000,
+    "required_before_decision": true
+  },
+  "datasets": {
+    "en-ja": {
+      "counts": {
+        "approved_teacher_targets": 97,
+        "general_human_replay": 194,
+        "licenses": {
+          "CC-BY-2.0-FR": 255,
+          "CC-BY-4.0": 335,
+          "CC-BY-SA-3.0": 1007,
+          "PDL-1.0-compatible-CC-BY-4.0": 53,
+          "project-owned": 23
+        },
+        "same_source_human_anchors": 97,
+        "train": 388,
+        "train_origins": {
+          "automated-gpt-teacher-reference-anchored": 97,
+          "finalized-japanese-law-translation": 39,
+          "human-alt-document-window": 14,
+          "human-alt-parallel": 43,
+          "human-kftt-replay": 48,
+          "human-tatoeba-bidirectional-agreement-filtered": 48,
+          "licensed-human-reference-anchor": 97,
+          "mimi-shipped-ui-pair": 2
+        },
+        "valid_human_only": 1285
+      },
+      "directory": "Research/translation/work/canonical-target-scale-v3-dataset-en-ja",
+      "licenses": {
+        "CC-BY-2.0-FR": 255,
+        "CC-BY-4.0": 335,
+        "CC-BY-SA-3.0": 1007,
+        "PDL-1.0-compatible-CC-BY-4.0": 53,
+        "project-owned": 23
+      },
+      "manifest": {
+        "bytes": 6279,
+        "path": "Research/translation/work/canonical-target-scale-v3-dataset-en-ja/manifest.json",
+        "sha256": "6bad263aa1e8571881a621544ed39643310dc29768eb16a26ca9d6be93289358"
+      },
+      "protected_suites": [
+        {
+          "path": "Research/translation/benchmark/canary.jsonl",
+          "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+          "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+          "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+          "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+          "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+          "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+        },
+        {
+          "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+          "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+          "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+          "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+        }
+      ],
+      "synthetic_policy": {
+        "actual_synthetic_fraction": 0.25,
+        "human_replay_per_synthetic": 3,
+        "licensed_reference_anchor_required": true,
+        "maximum_synthetic_fraction": 0.25,
+        "review_statuses": [
+          "two-judge-reference-anchored-canonical-absolute"
+        ],
+        "same_source_human_anchor_required": true,
+        "source_only_provisional_rows_allowed": false
+      },
+      "train": {
+        "bytes": 447828,
+        "path": "Research/translation/work/canonical-target-scale-v3-dataset-en-ja/train.jsonl",
+        "sha256": "eef7cf331fb81f6b4710840a907dd5272943155312ee945107aa0ed8af2cac96"
+      },
+      "valid": {
+        "bytes": 877571,
+        "path": "Research/translation/work/canonical-target-scale-v3-dataset-en-ja/valid.jsonl",
+        "sha256": "56744f496536cdc3a8b2dc7b79c88eb100e1d8498f72122ff7ba6f4c010cd5d4"
+      }
+    },
+    "ja-en": {
+      "counts": {
+        "approved_teacher_targets": 83,
+        "general_human_replay": 166,
+        "licenses": {
+          "CC-BY-2.0-FR": 208,
+          "CC-BY-4.0": 323,
+          "CC-BY-SA-3.0": 1002,
+          "PDL-1.0-compatible-CC-BY-4.0": 51,
+          "project-owned": 33
+        },
+        "same_source_human_anchors": 83,
+        "train": 332,
+        "train_origins": {
+          "automated-gpt-teacher-reference-anchored": 83,
+          "finalized-japanese-law-translation": 33,
+          "human-alt-document-window": 12,
+          "human-alt-parallel": 37,
+          "human-kftt-replay": 41,
+          "human-tatoeba-bidirectional-agreement-filtered": 41,
+          "licensed-human-reference-anchor": 83,
+          "mimi-shipped-ui-pair": 2
+        },
+        "valid_human_only": 1285
+      },
+      "directory": "Research/translation/work/canonical-target-scale-v3-dataset-ja-en",
+      "licenses": {
+        "CC-BY-2.0-FR": 208,
+        "CC-BY-4.0": 323,
+        "CC-BY-SA-3.0": 1002,
+        "PDL-1.0-compatible-CC-BY-4.0": 51,
+        "project-owned": 33
+      },
+      "manifest": {
+        "bytes": 6279,
+        "path": "Research/translation/work/canonical-target-scale-v3-dataset-ja-en/manifest.json",
+        "sha256": "dd4c7119dd6f41c543e884531dacffb05cdaff99575d830316437d910d224be0"
+      },
+      "protected_suites": [
+        {
+          "path": "Research/translation/benchmark/canary.jsonl",
+          "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+          "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+          "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+          "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+          "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+          "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+        },
+        {
+          "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+          "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+          "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+          "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+        }
+      ],
+      "synthetic_policy": {
+        "actual_synthetic_fraction": 0.25,
+        "human_replay_per_synthetic": 3,
+        "licensed_reference_anchor_required": true,
+        "maximum_synthetic_fraction": 0.25,
+        "review_statuses": [
+          "two-judge-reference-anchored-canonical-absolute"
+        ],
+        "same_source_human_anchor_required": true,
+        "source_only_provisional_rows_allowed": false
+      },
+      "train": {
+        "bytes": 390896,
+        "path": "Research/translation/work/canonical-target-scale-v3-dataset-ja-en/train.jsonl",
+        "sha256": "3b4134010b8ec26aeabd172c889dac16937c4ba5ff21c7f8017cbb5c99931252"
+      },
+      "valid": {
+        "bytes": 875782,
+        "path": "Research/translation/work/canonical-target-scale-v3-dataset-ja-en/valid.jsonl",
+        "sha256": "598e850fc204332399593becd169f88172ba10aaa0b90bbcda28cb876b72e467"
+      }
+    }
+  },
+  "experiment": "canonical-target-scale-v3-intact-marian-step250",
+  "hypothesis": "two-judge absolute-quality canonical teacher targets can improve the current intact Marian students after exact MLX q4/group-64 conversion without new critical, document, latency, memory, size, or license failures",
+  "implementation": {
+    "scripts/translation/approve_canonical_quality_consensus.py": {
+      "bytes": 7715,
+      "path": "scripts/translation/approve_canonical_quality_consensus.py",
+      "sha256": "479df5a7554db40aa171eeb0a50623169fdc2668e6012008e73bcb7b12c6c22c"
+    },
+    "scripts/translation/build_reference_anchored_distillation_dataset.py": {
+      "bytes": 24139,
+      "path": "scripts/translation/build_reference_anchored_distillation_dataset.py",
+      "sha256": "84fb64d396aab00680d2991b62e330c49a3261a343424abc5b15e9cb4596ba37"
+    },
+    "scripts/translation/evaluate_gpt56_student_continuation.py": {
+      "bytes": 49659,
+      "path": "scripts/translation/evaluate_gpt56_student_continuation.py",
+      "sha256": "520362345ec199784e2af74d9dae8d94ddfc7d79bc7523413b0b1772f7b5087c"
+    },
+    "scripts/translation/prepare_canonical_student_experiment_contract.py": {
+      "bytes": 13552,
+      "path": "scripts/translation/prepare_canonical_student_experiment_contract.py",
+      "sha256": "9ddeb1672f7c6bcf082d62e365fe2b0765bf39cd94626d4b1d38fc7d47ac8695"
+    },
+    "scripts/translation/prepare_elanmt_mlx.py": {
+      "bytes": 14941,
+      "path": "scripts/translation/prepare_elanmt_mlx.py",
+      "sha256": "c9ef062db342eea88fa94fde3745a5ce131cd58f66116729b9dcaff06d0e839d"
+    },
+    "scripts/translation/run_mlx_marian_benchmark.py": {
+      "bytes": 19518,
+      "path": "scripts/translation/run_mlx_marian_benchmark.py",
+      "sha256": "682f41160bd628414a48775bb7bdcbc470e44c6171a438120968d77315e29f75"
+    },
+    "scripts/translation/score_comet.py": {
+      "bytes": 8684,
+      "path": "scripts/translation/score_comet.py",
+      "sha256": "7e8717e2d4c4504e11a4edcccc1b3652c2449c31fd35b8e5551fb0c647e85613"
+    },
+    "scripts/translation/train_marian_distillation.py": {
+      "bytes": 37097,
+      "path": "scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    }
+  },
+  "pending_before_any_promotion": [
+    "exact q4 held-out development and safety evaluation",
+    "COMET-22 comparison in both directions",
+    "two-family blinded quality and critical-error comparison",
+    "Swift MLX parity",
+    "bundle, latency, peak-RSS, and license-distribution gates",
+    "sealed promotion evaluation with positive paired lower bounds"
+  ],
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "status": "preregistered-ready-for-training",
+  "student": {
+    "architecture": "two intact direction-specific Marian 6e/6d models",
+    "continuation": {
+      "authorized_by_this_contract": false,
+      "maximum_total_steps_if_separately_authorized": 1000
+    },
+    "parents": {
+      "en-ja": {
+        "architecture": "Marian encoder-decoder 6e/6d",
+        "direction": "en-ja",
+        "files": {
+          "config.json": {
+            "bytes": 979,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/config.json",
+            "sha256": "93d1fefca902bf0209d015fb45435899fe428f3554bda21e92fc8c967123fd88"
+          },
+          "generation_config.json": {
+            "bytes": 288,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/generation_config.json",
+            "sha256": "d66a78c639f71be4ada80c06324eb090bbbaf51fd9fa78a69619d628df46cb7e"
+          },
+          "mimi_checkpoint_averaging_manifest.json": {
+            "bytes": 6048,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/mimi_checkpoint_averaging_manifest.json",
+            "sha256": "65df5b3a7220c0c524b03b0bfb1d689548a144059ffea4be9cf9b5afa2abf5f4"
+          },
+          "model.safetensors": {
+            "bytes": 242249092,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/model.safetensors",
+            "sha256": "d080ce30490e878ab745206220c97bf18d4b2662a35e5fff0bdd2157a7c4dc4b"
+          },
+          "source.spm": {
+            "bytes": 792751,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/source.spm",
+            "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+          },
+          "special_tokens_map.json": {
+            "bytes": 416,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/special_tokens_map.json",
+            "sha256": "80f4c6c5cf3867d7669ff8aa8f6aebb8a7499322e62d7faae06262d6014edd61"
+          },
+          "target.spm": {
+            "bytes": 792751,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/target.spm",
+            "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+          },
+          "tokenizer_config.json": {
+            "bytes": 846,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/tokenizer_config.json",
+            "sha256": "14857780440c0c98aaf30abbbc73d2ab03b17f96738535e10eec854ed232f842"
+          },
+          "vocab.json": {
+            "bytes": 849909,
+            "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3/vocab.json",
+            "sha256": "98f1903df87693f20efcdbe0151158b0b6a22d34993247df7d7bca0d6a350d30"
+          }
+        },
+        "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3",
+        "repository": "Mitsua/elan-mt-bt-en-ja",
+        "revision": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa"
+      },
+      "ja-en": {
+        "architecture": "Marian encoder-decoder 6e/6d",
+        "direction": "ja-en",
+        "files": {
+          "config.json": {
+            "bytes": 979,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/config.json",
+            "sha256": "93d1fefca902bf0209d015fb45435899fe428f3554bda21e92fc8c967123fd88"
+          },
+          "generation_config.json": {
+            "bytes": 288,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/generation_config.json",
+            "sha256": "d66a78c639f71be4ada80c06324eb090bbbaf51fd9fa78a69619d628df46cb7e"
+          },
+          "mimi_training_manifest.json": {
+            "bytes": 18003,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+            "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+          },
+          "model.safetensors": {
+            "bytes": 242249092,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+            "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+          },
+          "source.spm": {
+            "bytes": 792751,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/source.spm",
+            "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+          },
+          "special_tokens_map.json": {
+            "bytes": 416,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/special_tokens_map.json",
+            "sha256": "80f4c6c5cf3867d7669ff8aa8f6aebb8a7499322e62d7faae06262d6014edd61"
+          },
+          "target.spm": {
+            "bytes": 792751,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/target.spm",
+            "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+          },
+          "tokenizer_config.json": {
+            "bytes": 846,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/tokenizer_config.json",
+            "sha256": "c7f15cbe2c7fa0cdbb8a2d6fbde4e3eb1546bbeafd1e618c1472548b3d12ecf2"
+          },
+          "vocab.json": {
+            "bytes": 849909,
+            "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/vocab.json",
+            "sha256": "98f1903df87693f20efcdbe0151158b0b6a22d34993247df7d7bca0d6a350d30"
+          }
+        },
+        "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+        "repository": "Mitsua/elan-mt-bt-ja-en",
+        "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97"
+      }
+    },
+    "phase_1": {
+      "batch_size": 8,
+      "effective_batch_size": 32,
+      "evaluation_steps": 250,
+      "frozen_parent_kl_weight": 0.1,
+      "gradient_accumulation": 4,
+      "l2_to_parent_weight": 0.01,
+      "learning_rate": 2e-06,
+      "max_source_tokens": 192,
+      "max_steps": 250,
+      "max_target_tokens": 192,
+      "preservation_origins": [
+        "finalized-japanese-law-translation",
+        "human-alt-document-window",
+        "human-alt-parallel",
+        "human-kftt-replay",
+        "human-tatoeba-bidirectional-agreement-filtered",
+        "licensed-human-reference-anchor",
+        "mimi-shipped-ui-pair"
+      ],
+      "seed": 20260725,
+      "training_description": "sequence-level distillation from accepted canonical final translations with licensed human-reference anchors and replay; no private chain-of-thought",
+      "warmup_steps": 25,
+      "weight_decay": 0.01
+    }
+  },
+  "teacher_authentication": "Codex cached ChatGPT authentication; no OpenAI API key used"
+}

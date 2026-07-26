@@ -1,0 +1,73 @@
+{
+  "app_change_authorized": false,
+  "counts": {
+    "balanced_train_per_direction": 6033,
+    "excluded": 6402,
+    "exclusions_by_reason": {
+      "explicitly-promotion-ineligible": 6400,
+      "protected-overlap": 2
+    },
+    "input": {
+      "en-ja": {
+        "train": 7546,
+        "valid": 1085
+      },
+      "ja-en": {
+        "train": 9235,
+        "valid": 1285
+      }
+    },
+    "repeated_train_rows": 1687,
+    "retained": {
+      "en-ja": {
+        "train": 4346,
+        "valid": 1085
+      },
+      "ja-en": {
+        "train": 6033,
+        "valid": 1285
+      }
+    },
+    "train": 12066,
+    "valid": 2370
+  },
+  "dataset_manifest": {
+    "path": "Research/translation/work/shared-bidirectional-v18-licensed-human/manifest.json",
+    "sha256": "9e7fb7289db3f041020f9008b4b6929f713b9fa55516d2f0e4353ad02e7f0037"
+  },
+  "experiment": "shared-bidirectional-v18-licensed-human-dataset",
+  "licensed_human_targets_only": true,
+  "licenses": {
+    "train": {
+      "CC-BY-2.0-FR": 3315,
+      "CC-BY-4.0": 1998,
+      "CC-BY-SA-3.0": 6601,
+      "project-owned": 152
+    },
+    "valid": {
+      "CC-BY-2.0-FR": 302,
+      "CC-BY-4.0": 200,
+      "CC-BY-SA-3.0": 1842,
+      "project-owned": 26
+    }
+  },
+  "outputs": {
+    "train": {
+      "path": "Research/translation/work/shared-bidirectional-v18-licensed-human/train.jsonl",
+      "rows": 12066,
+      "sha256": "3e71f54c5cc59ea5bee3f303a623cb2aab75675965cae50515e84954d6e931a4"
+    },
+    "valid": {
+      "path": "Research/translation/work/shared-bidirectional-v18-licensed-human/valid.jsonl",
+      "rows": 2370,
+      "sha256": "f85a82ae367a8af075c52f366f91ce0ae94c4a86c751e0f234dc2b0ce88f0142"
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_eligible": true,
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "status": "dataset-ready-training-not-authorized",
+  "training_authorized": false,
+  "v17_generated_candidates_used": false
+}

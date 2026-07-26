@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "experiment": "typed-numeric-preservation-v20-bounded-continuation",
+  "status": "rejected-before-q4",
+  "contract": {
+    "path": "Research/translation/typed-numeric-preservation-v20-contract-2026-07-26.json",
+    "sha256": "229a84e7dd37b0a338435d284aae6ff0f9e181815d2ae6e229839c4c8c8b73fd"
+  },
+  "selection_thresholds": {
+    "minimum_focus_chrf_pp_delta": 0.1,
+    "minimum_full_validation_chrf_pp_delta": -0.1,
+    "maximum_domain_chrf_pp_regression": 0.5
+  },
+  "directions": {
+    "en-ja": {
+      "training_manifest": {
+        "path": "Research/translation/work/typed-numeric-preservation-v20-en-ja-model/mimi_training_manifest.json",
+        "bytes": 11156,
+        "sha256": "bbc07c6caa1b24b98fcc27d0068cee0c70be0afc0b45b03d049cc3c935614a0d"
+      },
+      "output_weights_sha256": "608417037bcccb487ffbe9efddd328e064d72c182018e2016448dbf37126f231",
+      "trajectory": [
+        {
+          "step": 0,
+          "full_validation_chrf_pp": 31.015658623633406,
+          "focus_chrf_pp": 30.92478312555494
+        },
+        {
+          "step": 50,
+          "full_validation_chrf_pp": 31.04144407041786,
+          "full_delta": 0.025785446784454047,
+          "focus_chrf_pp": 30.91462752988771,
+          "focus_delta": -0.010155595667230787
+        },
+        {
+          "step": 100,
+          "full_validation_chrf_pp": 31.021090609668754,
+          "full_delta": 0.005431986035347114,
+          "focus_chrf_pp": 30.91462752988771,
+          "focus_delta": -0.010155595667230787
+        }
+      ],
+      "best_eligible_step": null,
+      "blocking_gate": "Neither checkpoint improved the typed-numeric focus slice by the required +0.1 chrF++."
+    },
+    "ja-en": {
+      "training_manifest": {
+        "path": "Research/translation/work/typed-numeric-preservation-v20-ja-en-model/mimi_training_manifest.json",
+        "bytes": 11032,
+        "sha256": "df3cdab9cd6c25ffd4ca1d47f58025c1961c8e23ea1c9c4bef3e3458f876be24"
+      },
+      "output_weights_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+      "trajectory": [
+        {
+          "step": 0,
+          "full_validation_chrf_pp": 52.601658632184446,
+          "focus_chrf_pp": 52.99799765941741
+        },
+        {
+          "step": 50,
+          "full_validation_chrf_pp": 52.56884096100628,
+          "full_delta": -0.03281767117816425,
+          "focus_chrf_pp": 52.872729387692495,
+          "focus_delta": -0.1252682717249154
+        },
+        {
+          "step": 100,
+          "full_validation_chrf_pp": 52.5468531491372,
+          "full_delta": -0.05480548304724531,
+          "focus_chrf_pp": 52.81821053703456,
+          "focus_delta": -0.17978712238284955
+        }
+      ],
+      "best_eligible_step": null,
+      "blocking_gate": "Both checkpoints regressed the typed-numeric focus slice; the saved output remains the unchanged step-0 parent."
+    }
+  },
+  "interpretation": "Ordinary low-rate weighted MLE with frozen-parent KL did not improve bilingual typed-numeric behavior in either direction. More updates under the same objective are not authorized.",
+  "next_research_direction": "Use an objective that directly supervises critical-value retention or a source-conditioned constrained decoder, then evaluate against the same strict Swift guard without relaxing it.",
+  "q4_conversion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false
+}

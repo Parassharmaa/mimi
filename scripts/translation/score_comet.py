@@ -9,15 +9,27 @@ import importlib.metadata
 import json
 import platform
 from collections import defaultdict
-from datetime import datetime, timezone
 from pathlib import Path
-
 
 DEFAULT_MODEL = "Unbabel/wmt22-comet-da"
 DEFAULT_REVISION = "371e9839ca4e213dde891b066cf3080f75ec7e72"
 DEFAULT_PACKAGE_VERSION = "2.2.7"
 DEFAULT_SETUPTOOLS_VERSION = "80.9.0"
 MODEL_LICENSE = "Apache-2.0"
+PINNED_RUNTIME_PACKAGES = {
+    "huggingface-hub": "0.36.2",
+    "numpy": "1.26.4",
+    "pandas": "3.0.5",
+    "pytorch-lightning": "2.6.5",
+    "scipy": "1.17.1",
+    "sentencepiece": "0.2.2",
+    "setuptools": DEFAULT_SETUPTOOLS_VERSION,
+    "tokenizers": "0.22.2",
+    "torch": "2.13.0",
+    "torchmetrics": "0.10.3",
+    "transformers": "4.57.6",
+    "unbabel-comet": DEFAULT_PACKAGE_VERSION,
+}
 
 
 def load_jsonl(path: Path) -> list[dict]:
@@ -40,19 +52,33 @@ def mean(values: list[float]) -> float:
 
 def validate_inputs(suite_rows: list[dict], engine_report: dict) -> list[dict]:
     suite = {str(row.get("id", "")): row for row in suite_rows}
-    results = {str(row.get("caseID", "")): row for row in engine_report.get("results", [])}
+    results = {
+        str(row.get("caseID", "")): row for row in engine_report.get("results", [])
+    }
     if not suite or len(suite) != len(suite_rows) or set(suite) != set(results):
-        raise SystemExit("suite and engine report must have identical non-empty case IDs")
+        raise SystemExit(
+            "suite and engine report must have identical non-empty case IDs"
+        )
     ordered: list[dict] = []
     for case_id in sorted(suite):
         case, result = suite[case_id], results[case_id]
-        for field in ("sourceLanguage", "targetLanguage", "domain", "source", "references"):
+        for field in (
+            "sourceLanguage",
+            "targetLanguage",
+            "domain",
+            "source",
+            "references",
+        ):
             if result.get(field) != case.get(field):
-                raise SystemExit(f"engine result disagrees with suite {field}: {case_id}")
-        hypothesis = str(result.get("hypothesis", "")).strip()
+                raise SystemExit(
+                    f"engine result disagrees with suite {field}: {case_id}"
+                )
+        if "hypothesis" not in result:
+            raise SystemExit(f"case lacks a hypothesis field: {case_id}")
+        hypothesis = str(result["hypothesis"]).strip()
         references = [str(value).strip() for value in case.get("references", [])]
-        if not hypothesis or not references or not all(references):
-            raise SystemExit(f"case lacks a hypothesis or reference: {case_id}")
+        if not references or not all(references):
+            raise SystemExit(f"case lacks a reference: {case_id}")
         ordered.append({**case, "hypothesis": hypothesis})
     return ordered
 
@@ -68,17 +94,24 @@ def build_report(
     package_version: str,
     setuptools_version: str,
     torch_version: str,
+    runtime_package_versions: dict[str, str],
+    model_checkpoint: dict[str, int | str],
+    inference_configuration: dict[str, int | str],
 ) -> dict:
     expected_scores = sum(len(row["references"]) for row in rows)
-    if len(scores) != expected_scores or not all(isinstance(value, float) for value in scores):
-        raise SystemExit("COMET did not return exactly one float score per case/reference pair")
+    if len(scores) != expected_scores or not all(
+        isinstance(value, float) for value in scores
+    ):
+        raise SystemExit(
+            "COMET did not return exactly one float score per case/reference pair"
+        )
     offset = 0
     result_rows: list[dict] = []
     by_direction: dict[str, list[float]] = defaultdict(list)
     by_domain: dict[str, list[float]] = defaultdict(list)
     for row in rows:
         reference_count = len(row["references"])
-        reference_scores = scores[offset:offset + reference_count]
+        reference_scores = scores[offset : offset + reference_count]
         offset += reference_count
         score = mean(reference_scores)
         direction = f"{row['sourceLanguage']}>{row['targetLanguage']}"
@@ -108,16 +141,28 @@ def build_report(
     signature = hashlib.sha256(
         json.dumps(signature_value, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+    runtime_environment_sha256 = hashlib.sha256(
+        json.dumps(
+            runtime_package_versions,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode()
+    ).hexdigest()
     return {
         "schemaVersion": 1,
-        "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         **signature_value,
         "signatureSHA256": signature,
         "engine": json.loads(engine_report_path.read_text(encoding="utf-8"))["engine"],
         "suiteSHA256": sha256(suite_path),
         "engineReportSHA256": sha256(engine_report_path),
         "hardware": platform.machine(),
+        "pythonVersion": platform.python_version(),
         "torchVersion": torch_version,
+        "modelCheckpoint": model_checkpoint,
+        "inferenceConfiguration": inference_configuration,
+        "runtimePackageVersions": dict(sorted(runtime_package_versions.items())),
+        "runtimeEnvironmentSHA256": runtime_environment_sha256,
+        "emptyHypothesisCases": sum(not row["hypothesis"] for row in rows),
         "directions": {
             key: {"cases": len(values), "meanScore": mean(values)}
             for key, values in sorted(by_direction.items())
@@ -139,7 +184,11 @@ def main() -> None:
     parser.add_argument("--model-revision", default=DEFAULT_REVISION)
     parser.add_argument("--package-version", default=DEFAULT_PACKAGE_VERSION)
     parser.add_argument("--setuptools-version", default=DEFAULT_SETUPTOOLS_VERSION)
-    parser.add_argument("--cache-directory", type=Path, default=Path("Research/translation/models/hf-cache"))
+    parser.add_argument(
+        "--cache-directory",
+        type=Path,
+        default=Path("Research/translation/models/hf-cache"),
+    )
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--num-workers", type=int, default=1)
     args = parser.parse_args()
@@ -161,6 +210,23 @@ def main() -> None:
             "setuptools version mismatch: "
             f"installed={installed_setuptools} required={args.setuptools_version}"
         )
+    runtime_package_versions = {
+        package: importlib.metadata.version(package)
+        for package in PINNED_RUNTIME_PACKAGES
+    }
+    mismatches = {
+        package: {
+            "installed": runtime_package_versions[package],
+            "required": required,
+        }
+        for package, required in PINNED_RUNTIME_PACKAGES.items()
+        if runtime_package_versions[package] != required
+    }
+    if mismatches:
+        raise SystemExit(
+            "pinned COMET runtime package mismatch: "
+            + json.dumps(mismatches, sort_keys=True)
+        )
 
     import torch
     from comet import load_from_checkpoint
@@ -178,7 +244,9 @@ def main() -> None:
     )
     checkpoints = sorted(snapshot.rglob("*.ckpt"))
     if len(checkpoints) != 1:
-        raise SystemExit(f"expected one COMET checkpoint at pinned revision; found {len(checkpoints)}")
+        raise SystemExit(
+            f"expected one COMET checkpoint at pinned revision; found {len(checkpoints)}"
+        )
     model = load_from_checkpoint(str(checkpoints[0]))
     model.float()
     inputs = [
@@ -193,6 +261,18 @@ def main() -> None:
         num_workers=args.num_workers,
     )
     scores = [float(value) for value in prediction.scores]
+    checkpoint = checkpoints[0]
+    model_checkpoint = {
+        "bytes": checkpoint.stat().st_size,
+        "sha256": sha256(checkpoint),
+    }
+    inference_configuration = {
+        "accelerator": "cpu",
+        "batchSize": args.batch_size,
+        "numWorkers": args.num_workers,
+        "torchInteropThreads": torch.get_num_interop_threads(),
+        "torchThreads": torch.get_num_threads(),
+    }
     report = build_report(
         args.suite,
         args.engine_report,
@@ -203,13 +283,20 @@ def main() -> None:
         package_version=installed,
         setuptools_version=installed_setuptools,
         torch_version=torch.__version__,
+        runtime_package_versions=runtime_package_versions,
+        model_checkpoint=model_checkpoint,
+        inference_configuration=inference_configuration,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    print(json.dumps({"output": str(args.output), "signatureSHA256": report["signatureSHA256"]}))
+    print(
+        json.dumps(
+            {"output": str(args.output), "signatureSHA256": report["signatureSHA256"]}
+        )
+    )
 
 
 if __name__ == "__main__":

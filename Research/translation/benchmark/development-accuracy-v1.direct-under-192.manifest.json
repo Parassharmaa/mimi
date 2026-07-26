@@ -1,0 +1,60 @@
+{
+  "caseSuite": {
+    "cases": 200,
+    "directions": {
+      "en-ja": 100,
+      "ja-en": 100
+    },
+    "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+    "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+  },
+  "claimEligible": false,
+  "excluded": [
+    {
+      "caseID": "development-accuracy-v1:document:alt:SNT.24239:en-ja",
+      "direction": "en-ja",
+      "sourceTokens": 201
+    },
+    {
+      "caseID": "development-accuracy-v1:document:alt:SNT.24239:ja-en",
+      "direction": "ja-en",
+      "sourceTokens": 207
+    },
+    {
+      "caseID": "development-accuracy-v1:document:jlt:law-3518:en-ja",
+      "direction": "en-ja",
+      "sourceTokens": 197
+    }
+  ],
+  "models": {
+    "en-ja": {
+      "manifestSHA256": "d86f6c764a69b3db9359180ae2a7032e55b9418d32328ba940228becfd077507",
+      "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3-mlx-4bit",
+      "sourcePrefix": "",
+      "tokenizerSHA256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+    },
+    "ja-en": {
+      "manifestSHA256": "48cbaea921d6f6fb6108c40ba94d8399bb610a260ddd38b028fcb0046691f95a",
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1-mlx-4bit",
+      "sourcePrefix": "",
+      "tokenizerSHA256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+    }
+  },
+  "output": {
+    "cases": 197,
+    "directions": {
+      "en-ja": 98,
+      "ja-en": 99
+    },
+    "path": "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl",
+    "sha256": "d5cef0834f897a2ee2179844e8eec9e0e5de4db0aaaf0d0265cee041b699dbba"
+  },
+  "purpose": "all frozen development documents whose exact runtime tokenizer input fits the registered direct limit",
+  "schemaVersion": 1,
+  "selection": {
+    "manualExclusions": [],
+    "manualInclusions": [],
+    "maximumSourceTokensInclusive": 192,
+    "method": "tokenizers.Tokenizer.encode(sourcePrefix + source), including tokenizer post-processor"
+  }
+}

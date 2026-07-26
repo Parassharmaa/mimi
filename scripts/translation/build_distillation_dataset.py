@@ -103,6 +103,7 @@ def validate_automated_consensus(
         "fluency": int(policy.get("minimum_fluency", -1)),
         "terminology": int(policy.get("minimum_terminology", -1)),
     }
+    candidate_count = int(policy.get("candidate_count", 3))
     if (
         minimums["adequacy"] < 4
         or minimums["fluency"] < 3
@@ -117,8 +118,16 @@ def validate_automated_consensus(
                 "require_matching_selection",
             )
         )
+        or candidate_count not in {3, 4}
     ):
         raise SystemExit(f"automated consensus policy was weakened: {source_id}")
+    if (
+        policy.get("selected_candidate_must_be_teacher_only") is True
+        and str(row.get("candidate_origin") or "teacher") != "teacher"
+    ):
+        raise SystemExit(
+            f"automated consensus selected a non-teacher anchor: {source_id}"
+        )
     judgments = row.get("automated_judgments")
     if not isinstance(judgments, list) or len(judgments) != 2:
         raise SystemExit(f"automated consensus requires two judgments: {source_id}")
@@ -129,7 +138,10 @@ def validate_automated_consensus(
         judge_model = str(judgment.get("judge_model", "")).strip()
         seen_models.add(judge_model)
         assessments = judgment.get("assessments")
-        if not isinstance(assessments, dict) or len(assessments) != 3:
+        if (
+            not isinstance(assessments, dict)
+            or len(assessments) != candidate_count
+        ):
             raise SystemExit(f"automated judgment assessment mismatch: {source_id}")
         eligible: list[tuple[int, str]] = []
         for assessed_id, assessment in assessments.items():
@@ -165,6 +177,7 @@ def synthetic_rows(
     direction: str,
     target_mode: str,
     allow_automated_consensus: bool = False,
+    allow_reference_anchored_consensus: bool = False,
 ) -> list[dict]:
     expected_source, expected_target = LANGUAGES[direction]
     selected_sources: set[str] = set()
@@ -188,18 +201,38 @@ def synthetic_rows(
             raise SystemExit(f"approved row lacks two independent reviewers: {source_id}")
         if status == "adjudicated" and len(reviewers) < 3:
             raise SystemExit(f"adjudicated row has invalid reviewer record: {source_id}")
-        automated = status == "two-judge-consensus-provisional"
+        provisional_automated = status == "two-judge-consensus-provisional"
+        reference_anchored = status == "two-judge-reference-anchored"
+        automated = provisional_automated or reference_anchored
         judge_models = {
             str(value).strip()
             for value in row.get("judge_model_ids", [])
             if str(value).strip()
         }
-        if automated and (
+        if provisional_automated and (
             not allow_automated_consensus
             or len(judge_models) != 2
             or row.get("promotion_eligible") is not False
         ):
             raise SystemExit(f"invalid or unauthorized automated consensus row: {source_id}")
+        if reference_anchored and (
+            not allow_reference_anchored_consensus
+            or len(judge_models) != 2
+            or row.get("promotion_eligible") is not True
+            or not str(row.get("licensed_reference") or "").strip()
+            or not str(row.get("reference_provenance") or "").strip()
+            or row.get("automated_consensus_policy", {}).get(
+                "licensed_reference_blinded_when_available"
+            )
+            is not True
+            or row.get("automated_consensus_policy", {}).get(
+                "selected_candidate_must_be_teacher_only"
+            )
+            is not True
+        ):
+            raise SystemExit(
+                f"invalid or unauthorized reference-anchored consensus row: {source_id}"
+            )
         if automated:
             validate_automated_consensus(row, source_id, candidate_id, judge_models)
         if status not in {
@@ -207,6 +240,7 @@ def synthetic_rows(
             "two-reviewer-selected",
             "adjudicated",
             "two-judge-consensus-provisional",
+            "two-judge-reference-anchored",
         }:
             raise SystemExit(f"unapproved synthetic row: {source_id}")
         license_name = str(row.get("source_license", "")).strip()
@@ -225,9 +259,13 @@ def synthetic_rows(
                 "target": target,
                 "domain": row.get("domain", "unknown"),
                 "origin": (
-                    "automated-gpt-teacher-provisional"
-                    if automated
-                    else "reviewed-gpt-teacher"
+                    "automated-gpt-teacher-reference-anchored"
+                    if reference_anchored
+                    else (
+                        "automated-gpt-teacher-provisional"
+                        if provisional_automated
+                        else "reviewed-gpt-teacher"
+                    )
                 ),
                 "source_license": license_name,
                 "source_provenance": row["source_provenance"],
@@ -239,7 +277,7 @@ def synthetic_rows(
                 "review_status": status,
                 "reviewer_ids": sorted(reviewers),
                 "judge_model_ids": sorted(judge_models),
-                "promotion_eligible": not automated,
+                "promotion_eligible": not provisional_automated,
                 "automated_judgments": row.get("automated_judgments"),
                 "source_level_reviews": row.get("source_level_reviews"),
                 "adjudication": row.get("adjudication"),
@@ -392,6 +430,14 @@ def main() -> None:
             "the resulting dataset is not promotion eligible."
         ),
     )
+    parser.add_argument(
+        "--allow-reference-anchored-automated-consensus",
+        action="store_true",
+        help=(
+            "Admit a teacher target only when two distinct non-teacher judges "
+            "uniquely prefer it over an anonymous licensed human reference."
+        ),
+    )
     args = parser.parse_args()
 
     if not 0 < args.validation_fraction < 0.5:
@@ -411,6 +457,7 @@ def main() -> None:
         args.direction,
         args.reviewed_target_mode,
         args.allow_automated_consensus,
+        args.allow_reference_anchored_automated_consensus,
     )
     synthetic_train = [
         row
@@ -501,8 +548,16 @@ def main() -> None:
     valid_path = args.output_directory / "valid.jsonl"
     write_jsonl(train_path, train)
     write_jsonl(valid_path, valid)
-    contains_automated_consensus = any(
+    contains_provisional_automated_consensus = any(
         row["origin"] == "automated-gpt-teacher-provisional" for row in synthetic
+    )
+    contains_reference_anchored_consensus = any(
+        row["origin"] == "automated-gpt-teacher-reference-anchored"
+        for row in synthetic
+    )
+    contains_automated_consensus = (
+        contains_provisional_automated_consensus
+        or contains_reference_anchored_consensus
     )
     manifest = {
         "schema_version": 1,
@@ -519,15 +574,29 @@ def main() -> None:
         "one_canonical_target_per_source": True,
         "maximum_reviewed_target_variants_per_source": 2,
         "minimum_review": (
-            "two distinct automated judge models must uniquely select the same "
-            "error-free candidate; provisional SFT only"
-            if contains_automated_consensus
-            else "the same candidate selected by two independent bilingual reviewers, "
-            "or selection by an independent third adjudicator"
+            "two distinct non-teacher judge models must uniquely prefer the same "
+            "error-free teacher candidate over a blinded licensed human reference"
+            if contains_reference_anchored_consensus
+            and not contains_provisional_automated_consensus
+            else (
+                "two distinct automated judge models must uniquely select the same "
+                "error-free candidate; unanchored rows are provisional SFT only"
+                if contains_automated_consensus
+                else "the same candidate selected by two independent bilingual "
+                "reviewers, or selection by an independent third adjudicator"
+            )
         ),
         "contains_automated_consensus": contains_automated_consensus,
-        "promotion_eligible": not contains_automated_consensus,
-        "human_review_required_for_promotion": True,
+        "contains_provisional_automated_consensus": (
+            contains_provisional_automated_consensus
+        ),
+        "contains_reference_anchored_consensus": (
+            contains_reference_anchored_consensus
+        ),
+        "promotion_eligible": not contains_provisional_automated_consensus,
+        "human_review_required_for_promotion": (
+            contains_provisional_automated_consensus
+        ),
         "private_chain_of_thought_stored": False,
         "counts": {
             "synthetic_train": len(synthetic_train),

@@ -1,0 +1,297 @@
+{
+  "app_change_authorized": false,
+  "consensus_result": {
+    "bytes": 2956,
+    "path": "Research/translation/canonical-target-ja-en-scale-v7-claude5-consensus-result-2026-07-25.json",
+    "sha256": "19bc701bafdb5af89c1fa699c51a42c4bd4d9139c1247e591e134bb70c307d2e"
+  },
+  "conversion": {
+    "bits": 4,
+    "exact_shipping_quantization_required_before_claim": true,
+    "format": "MLX affine q4",
+    "group_size": 64,
+    "hard_two_direction_bundle_maximum_bytes": 500000000,
+    "preferred_two_direction_bundle_maximum_bytes": 150000000,
+    "unchanged_en_ja_current_model_plus_candidate_ja_en": true
+  },
+  "dataset": {
+    "decontamination": {
+      "character_ngram_size": 5,
+      "maximum_jaccard_exclusive": 0.8,
+      "protected_suites": [
+        {
+          "path": "Research/translation/benchmark/canary.jsonl",
+          "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+          "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+          "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+          "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+          "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+          "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+        },
+        {
+          "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+          "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+          "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+          "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+        },
+        {
+          "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+          "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+        }
+      ],
+      "screened_fields": [
+        "source",
+        "chosen",
+        "rejected"
+      ],
+      "train_validation_source_overlap": false
+    },
+    "directory": "Research/translation/work/canonical-pairwise-v7-ja-en-claude5",
+    "effective_licenses": {
+      "train": {
+        "CC-BY-2.0-FR": 15,
+        "CC-BY-4.0": 57,
+        "CC-BY-SA-3.0": 35,
+        "PDL-1.0-compatible-CC-BY-4.0": 16,
+        "project-owned": 13
+      },
+      "valid": {
+        "CC-BY-2.0-FR": 4,
+        "CC-BY-4.0": 14,
+        "CC-BY-SA-3.0": 8,
+        "PDL-1.0-compatible-CC-BY-4.0": 4,
+        "project-owned": 3
+      }
+    },
+    "files": {
+      "manifest.json": {
+        "bytes": 5371,
+        "path": "Research/translation/work/canonical-pairwise-v7-ja-en-claude5/manifest.json",
+        "sha256": "ae72f0b4c8fa42cb21c4c6e0c1f1e75fd998cc5b2415c4977fcb2990613631fb"
+      },
+      "train.jsonl": {
+        "bytes": 333668,
+        "path": "Research/translation/work/canonical-pairwise-v7-ja-en-claude5/train.jsonl",
+        "sha256": "5cf7fee23d1a94dc81be4df05a1309a5f28069af0ca45c7020eca06d8af97cb0"
+      },
+      "valid.jsonl": {
+        "bytes": 81800,
+        "path": "Research/translation/work/canonical-pairwise-v7-ja-en-claude5/valid.jsonl",
+        "sha256": "724aa74a5a52558505739b8a9002f095c28de043f3c689664814f2f58fc9fce3"
+      }
+    },
+    "pairs": {
+      "selected": 169,
+      "train": 136,
+      "valid": 33
+    },
+    "required_judge_model_ids": [
+      "claude-opus-5",
+      "claude-sonnet-5"
+    ],
+    "review_policy": {
+      "absolute_teacher_quality_required": true,
+      "human_reviewer_required": false,
+      "independent_judge_models": 2,
+      "score_fields": [
+        "adequacy",
+        "fluency",
+        "terminology"
+      ],
+      "strict_total_improvement_per_judge": true,
+      "teacher_not_a_judge": true,
+      "unanimous_pareto_preference_over_current_required": true
+    }
+  },
+  "direction": "ja-en",
+  "experiment": "canonical-pairwise-preference-claude5-v7-ja-en",
+  "held_out_evaluation": {
+    "baseline": "current Mimi exact q4 pair",
+    "benchmarks": {
+      "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl": {
+        "bytes": 347454,
+        "path": "Research/translation/benchmark/development-accuracy-v1.direct-under-192.jsonl",
+        "sha256": "d5cef0834f897a2ee2179844e8eec9e0e5de4db0aaaf0d0265cee041b699dbba"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.jsonl": {
+        "bytes": 357062,
+        "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+        "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.results-summary.json": {
+        "bytes": 4332,
+        "path": "Research/translation/benchmark/development-accuracy-v1.results-summary.json",
+        "sha256": "e78322ade88f82bbcf4a2767cb3e2839de17abe9a5979b5f06bdb95b777f83a8"
+      },
+      "Research/translation/benchmark/development-accuracy-v1.segments.jsonl": {
+        "bytes": 363568,
+        "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+        "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+      }
+    },
+    "candidate": "current Mimi EN-to-JA exact q4 plus selected v4 JA-to-EN exact q4",
+    "documents": {
+      "long_document_slices_required": true,
+      "segment_then_join_and_direct_evaluation_required": true
+    },
+    "licensing": {
+      "complete_distribution_provenance_required": true,
+      "per_row_attribution_sidecar_required": true,
+      "public_hugging_face_only_after_all_gates": true
+    },
+    "quality_each_direction": {
+      "chrf_pp_paired_90pct_lower_minimum": -0.25,
+      "comet22_mean_delta_minimum_for_signal": 0.002,
+      "comet22_paired_90pct_lower_minimum": -0.005,
+      "independent_judge_mean_delta_minimum_for_signal": 0.1,
+      "independent_judge_paired_90pct_lower_minimum": -0.25,
+      "maximum_direct_chrf_pp_regression": 0.5,
+      "maximum_domain_chrf_pp_regression": 0.5,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "minimum_improvement_signals": 2,
+      "sacrebleu_corpus_regression_maximum": 0.1
+    },
+    "runtime": {
+      "peak_resident_bytes_maximum": 250000000,
+      "warm_segment_p95_seconds_maximum_each_direction": 0.175
+    },
+    "safety": {
+      "new_judge_critical_errors_maximum": 0,
+      "new_negation_errors_maximum": 0,
+      "new_number_date_unit_placeholder_errors_maximum": 0,
+      "new_repetition_or_nontermination_failures_maximum": 0,
+      "new_union_critical_errors_maximum": 0
+    }
+  },
+  "historical_stop_evidence": {
+    "canonical-pairwise-v4-result-2026-07-25": {
+      "bestRelativeMargin": 0.0010013997554779053,
+      "bestRelativePairAccuracy": 0.6,
+      "bytes": 11741,
+      "path": "Research/translation/canonical-pairwise-v4-result-2026-07-25.json",
+      "sha256": "2439bbdec1e738db0cac094fe01478df6c24c96e78aeb96a1db064cf064c43a3"
+    },
+    "canonical-pairwise-v5-result-2026-07-25": {
+      "bestRelativeMargin": 0.004509344696998596,
+      "bestRelativePairAccuracy": 0.6,
+      "bytes": 5692,
+      "path": "Research/translation/canonical-pairwise-v5-result-2026-07-25.json",
+      "sha256": "ad4a38440414302ac2a0e06a112c093c3ba06797f0b60cdf8f004fcb7fb153af"
+    },
+    "canonical-pairwise-v6-result-2026-07-25": {
+      "bestRelativeMargin": 0.003963208198547364,
+      "bestRelativePairAccuracy": 0.6,
+      "bytes": 6422,
+      "path": "Research/translation/canonical-pairwise-v6-result-2026-07-25.json",
+      "sha256": "d52f11cfe561153a7c104355283efc13027d00cbeb5f156ac0e9af91f6192fe0"
+    }
+  },
+  "human_reviewers_used": false,
+  "hypothesis": "The prior 51-train/10-validation Qwen/Fable-selected preference set produced positive mean margins but only 0.60 pair accuracy in three recipes. A fresh set with at least 60 Sonnet-5/Opus-5 unanimous teacher-over-current pairs and at least 12 untouched validation pairs can test the same conservative full-parameter objective without confounding judge quality, data volume, and optimization changes.",
+  "implementation": {
+    "train_marian_automated_preference_adapter": {
+      "bytes": 23236,
+      "path": "scripts/translation/train_marian_automated_preference_adapter.py",
+      "sha256": "b68b04cb4490ba1667e55bef88c30f319ebe5c47d7018f5783a7397c2e75a976"
+    },
+    "train_marian_automated_preference_full": {
+      "bytes": 14355,
+      "path": "scripts/translation/train_marian_automated_preference_full.py",
+      "sha256": "c378d3c1ab956c4160c45ce2143ccda9b5b82b9ba66d64a07a252707848d524c"
+    },
+    "train_marian_distillation": {
+      "bytes": 37097,
+      "path": "scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    },
+    "train_marian_dqo": {
+      "bytes": 20448,
+      "path": "scripts/translation/train_marian_dqo.py",
+      "sha256": "6b2078436d2314180a5a0da77ec732f22bcc8b4f7951fe410d86ffd23d5b39c9"
+    },
+    "trainer": {
+      "bytes": 16857,
+      "path": "scripts/translation/train_marian_claude5_preference.py",
+      "sha256": "970cfc2e693e316a72c44a36253d2b72175e44c0a0a72e046a7730a83afe7926"
+    }
+  },
+  "internal_selection_gate": {
+    "checkpoint_steps": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "relative_margin_minimum_exclusive": 0.0,
+    "relative_pair_accuracy_minimum": 0.8,
+    "selection": "highest validation relative-pair accuracy, then relative margin, then lower loss",
+    "step_zero_is_not_a_trained_candidate": true,
+    "validation_pairs_minimum": 12
+  },
+  "judge_models": [
+    "claude-opus-5",
+    "claude-sonnet-5"
+  ],
+  "judge_provider_independence_claimed": false,
+  "next_step_if_internal_gate_passes": "convert the single validation-selected checkpoint to exact MLX q4/group-64 and run the unchanged held-out promotion suite once",
+  "parent": {
+    "license": "CC-BY-SA-4.0",
+    "model_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "status": "preregistered-ready-for-training",
+  "stop_rule": "Stop before training unless at least 120 absolute canonical approvals and 60 unanimous Pareto pairs exist. Stop before MLX conversion and protected evaluation unless a trained checkpoint reaches 0.80 internal relative-pair accuracy with positive mean margin. Any held-out quality, safety, runtime, size, lineage, or licensing failure stops integration and upload.",
+  "teacher_authentication": "Codex cached ChatGPT authentication; no OpenAI API key used",
+  "training": {
+    "batch_size": 4,
+    "beta": 0.1,
+    "chosen_sft_weight": 0.02,
+    "evaluation_steps": 10,
+    "gradient_accumulation": 4,
+    "l2_to_parent_weight": 0.1,
+    "learning_rate": 5e-07,
+    "max_source_tokens": 192,
+    "max_steps": 40,
+    "max_target_tokens": 192,
+    "seed": 20260729,
+    "warmup_steps": 4,
+    "weight_decay": 0.01
+  },
+  "training_plan": {
+    "bytes": 4501,
+    "path": "Research/translation/canonical-pairwise-v7-training-plan-v2-2026-07-25.json",
+    "sha256": "5f0babc033b3f235c2ade26a712f859d2042aaa0de37788b479624219f82a62c"
+  }
+}

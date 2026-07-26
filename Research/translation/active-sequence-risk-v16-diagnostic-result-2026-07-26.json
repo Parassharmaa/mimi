@@ -1,0 +1,315 @@
+{
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "configuration": {
+    "active_margin": 0.25,
+    "batch_size": 16,
+    "gradient_batch_size": 16,
+    "gradient_replicates": 4,
+    "maximum_source_tokens": 192,
+    "maximum_target_tokens": 192,
+    "row_limit": 1024,
+    "seed": 20260820
+  },
+  "counts": {
+    "active_pairs": 677,
+    "active_roles": {
+      "omission": 228,
+      "repetition": 449
+    },
+    "active_strata": {
+      "legal:long": 437,
+      "legal:omission-risk": 181,
+      "legal:repetition-risk": 59
+    },
+    "candidate_pairs": 2028,
+    "candidate_roles": {
+      "omission": 1004,
+      "repetition": 1024
+    }
+  },
+  "created_at": "2026-07-25T22:32:21.701785Z",
+  "dataset": {
+    "manifest": {
+      "bytes": 8706,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en/manifest.json",
+      "sha256": "9b412e0a7d49234ab374f4e47fc71e0f70e9cb432af6f792d26e7ce56910c523"
+    },
+    "protected_rows_used": false,
+    "selected_rows": 1024,
+    "train": {
+      "bytes": 10484484,
+      "path": "Research/translation/work/canonical-constrained-recovery-v15-ja-en/train.jsonl",
+      "sha256": "b6a93a017f8dd7dba7c50ba84e09d3525c13dddd7e7a2b5d744f72b074af7fea"
+    },
+    "validation_rows_used": false
+  },
+  "device": "mps",
+  "direction": "ja-en",
+  "distribution_provenance": {
+    "all_positive_targets_are_licensed_human_references": true,
+    "all_rows_have_source_license": true,
+    "all_rows_have_source_provenance": true,
+    "negative_strings_are_positive_targets": false,
+    "private_reasoning_traces_used": false
+  },
+  "experiment": "active-sequence-risk-v16-ja-en-diagnostic",
+  "gradient_audit": {
+    "cosine_summary": {
+      "mle_vs_omission": {
+        "maximum": 0.18372198440794638,
+        "mean": 0.14180493551405093,
+        "minimum": 0.11311823806960927,
+        "negative_fraction": 0.0
+      },
+      "mle_vs_repetition": {
+        "maximum": 0.23810086337330916,
+        "mean": 0.15930315849858154,
+        "minimum": 0.06255975660153085,
+        "negative_fraction": 0.0
+      },
+      "omission_vs_repetition": {
+        "maximum": -0.09485504066738497,
+        "mean": -0.11885682834052252,
+        "minimum": -0.16131439045789442,
+        "negative_fraction": 1.0
+      }
+    },
+    "diagnostic_is_not_optimizer_authorization": true,
+    "optimizer_selected": false,
+    "replicates": [
+      {
+        "cosine_similarity": {
+          "mle": {
+            "mle": 1.0,
+            "omission": 0.18372198440794638,
+            "repetition": 0.1680057573368461
+          },
+          "omission": {
+            "mle": 0.18372198440794638,
+            "omission": 1.0,
+            "repetition": -0.10701911152302031
+          },
+          "repetition": {
+            "mle": 0.1680057573368461,
+            "omission": -0.10701911152302031,
+            "repetition": 1.0
+          }
+        },
+        "objectives": {
+          "mle": {
+            "active_fraction": 1.0,
+            "gradient_norm": 4.028487438619732,
+            "loss": 2.6232941150665283,
+            "rows": 16.0
+          },
+          "omission": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.4075716756950007,
+            "loss": 0.7298763990402222,
+            "rows": 16.0
+          },
+          "repetition": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.8625799415356465,
+            "loss": 0.5596365332603455,
+            "rows": 16.0
+          }
+        },
+        "replicate": 0
+      },
+      {
+        "cosine_similarity": {
+          "mle": {
+            "mle": 1.0,
+            "omission": 0.14334548331709,
+            "repetition": 0.16854625668264
+          },
+          "omission": {
+            "mle": 0.14334548331709,
+            "omission": 1.0,
+            "repetition": -0.11223877071379042
+          },
+          "repetition": {
+            "mle": 0.16854625668264,
+            "omission": -0.11223877071379042,
+            "repetition": 1.0
+          }
+        },
+        "objectives": {
+          "mle": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.9990624697804793,
+            "loss": 2.26042103767395,
+            "rows": 16.0
+          },
+          "omission": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.1073787481690758,
+            "loss": 0.5268850326538086,
+            "rows": 16.0
+          },
+          "repetition": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.378570953028957,
+            "loss": 0.4025614261627197,
+            "rows": 16.0
+          }
+        },
+        "replicate": 1
+      },
+      {
+        "cosine_similarity": {
+          "mle": {
+            "mle": 1.0,
+            "omission": 0.11311823806960927,
+            "repetition": 0.23810086337330916
+          },
+          "omission": {
+            "mle": 0.11311823806960927,
+            "omission": 1.0,
+            "repetition": -0.09485504066738497
+          },
+          "repetition": {
+            "mle": 0.23810086337330916,
+            "omission": -0.09485504066738497,
+            "repetition": 1.0
+          }
+        },
+        "objectives": {
+          "mle": {
+            "active_fraction": 1.0,
+            "gradient_norm": 4.323685347778043,
+            "loss": 2.110445976257324,
+            "rows": 16.0
+          },
+          "omission": {
+            "active_fraction": 1.0,
+            "gradient_norm": 2.8661974243157777,
+            "loss": 0.3598712086677551,
+            "rows": 16.0
+          },
+          "repetition": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.4638453595120744,
+            "loss": 0.3235371708869934,
+            "rows": 16.0
+          }
+        },
+        "replicate": 2
+      },
+      {
+        "cosine_similarity": {
+          "mle": {
+            "mle": 1.0,
+            "omission": 0.12703403626155807,
+            "repetition": 0.06255975660153085
+          },
+          "omission": {
+            "mle": 0.12703403626155807,
+            "omission": 1.0,
+            "repetition": -0.16131439045789442
+          },
+          "repetition": {
+            "mle": 0.06255975660153085,
+            "omission": -0.16131439045789442,
+            "repetition": 1.0
+          }
+        },
+        "objectives": {
+          "mle": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.6143128478458677,
+            "loss": 2.003786087036133,
+            "rows": 16.0
+          },
+          "omission": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.1724609414237794,
+            "loss": 0.3035351037979126,
+            "rows": 16.0
+          },
+          "repetition": {
+            "active_fraction": 1.0,
+            "gradient_norm": 3.8194102777555896,
+            "loss": 0.27197664976119995,
+            "rows": 16.0
+          }
+        },
+        "replicate": 3
+      }
+    ],
+    "selection": "disjoint stratum-balanced low-margin active batches per role; MLE uses an even role mix"
+  },
+  "hardware": "Apple M3 Pro",
+  "implementation": {
+    "bytes": 23962,
+    "path": "scripts/translation/diagnose_active_sequence_risk_v16.py",
+    "sha256": "9dc0ef32b6f80ea58a82542c4f288cb33c5f82be19c464812cd9930a9602ba67"
+  },
+  "margins": {
+    "omission": {
+      "active": 228,
+      "active_fraction": 0.22709163346613545,
+      "quantiles": {
+        "maximum": 2.7277626991271973,
+        "median": 0.5700711011886597,
+        "minimum": -1.0826572179794312,
+        "p10": 0.05576422214508064,
+        "p25": 0.2774553894996643,
+        "p75": 0.9596432447433472,
+        "p90": 1.2527629613876343
+      }
+    },
+    "repetition": {
+      "active": 449,
+      "active_fraction": 0.4384765625,
+      "quantiles": {
+        "maximum": 1.6237276792526245,
+        "median": 0.27917057275772095,
+        "minimum": -0.538729190826416,
+        "p10": 0.018586921691894562,
+        "p25": 0.13541346788406372,
+        "p75": 0.4280858635902405,
+        "p90": 0.573272043466568
+      }
+    }
+  },
+  "model_checkpoint_written": false,
+  "operating_system": "macOS-26.5.1-arm64-arm-64bit",
+  "optimizer_step_executed": false,
+  "outputs": {
+    "active": {
+      "bytes": 1122075,
+      "path": "Research/translation/work/active-sequence-risk-v16-ja-en-diagnostic-v3/active.jsonl",
+      "rows": 677,
+      "sha256": "ce93785835a7a0c37b6b3661479aef4cc7059c0b1e60f2245c7dfe89a5598e50"
+    },
+    "scored": {
+      "bytes": 3275609,
+      "path": "Research/translation/work/active-sequence-risk-v16-ja-en-diagnostic-v3/scored.jsonl",
+      "rows": 2028,
+      "sha256": "2de01459ab1b978f870b5bd69c665586a4de7531aa5a375af61b3f318f40da97"
+    }
+  },
+  "public_upload_authorized": false,
+  "purpose": "full-sequence active-risk and gradient-conflict measurement before any v16 training contract",
+  "safe_parent": {
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "schema_version": 1,
+  "status": "diagnostic-complete-no-training-authorized",
+  "torch": "2.13.0",
+  "training_authorized": false,
+  "transformers": "4.57.6"
+}

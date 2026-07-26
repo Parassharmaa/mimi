@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Admit conservative two-judge consensus targets for provisional SFT only."""
+"""Admit conservative, reference-anchored two-judge targets for provisional SFT."""
 
 from __future__ import annotations
 
@@ -46,14 +46,20 @@ def judgment_map(
             raise SystemExit(f"judgment has no judge model: {source_id}")
         judge_models.add(judge_model)
         assessments = row.get("assessments")
-        if not isinstance(assessments, list) or len(assessments) != 3:
-            raise SystemExit(f"judgment must contain three assessments: {source_id}")
+        expected_count = len(queue[source_id])
+        if not isinstance(assessments, list) or len(assessments) != expected_count:
+            raise SystemExit(
+                f"judgment must contain {expected_count} assessments: {source_id}"
+            )
         by_candidate = {
             str(assessment.get("candidate_id", "")): assessment
             for assessment in assessments
             if isinstance(assessment, dict)
         }
-        if len(by_candidate) != 3 or set(by_candidate) != set(queue[source_id]):
+        if (
+            len(by_candidate) != expected_count
+            or set(by_candidate) != set(queue[source_id])
+        ):
             raise SystemExit(f"judgment candidate coverage mismatch: {source_id}")
         output[source_id] = {**row, "assessments": by_candidate}
     if len(judge_models) != 1:
@@ -128,8 +134,10 @@ def main() -> None:
         if not source_id or not candidate_id or candidate_id in queue[source_id]:
             raise SystemExit(f"invalid or duplicate review candidate: {source_id}/{candidate_id}")
         queue[source_id][candidate_id] = candidate
-    if not queue or any(len(candidates) != 3 for candidates in queue.values()):
-        raise SystemExit("every source must contain exactly three candidates")
+    if not queue or any(
+        len(candidates) not in {3, 4} for candidates in queue.values()
+    ):
+        raise SystemExit("every source must contain three or four candidates")
 
     judge_a, judgments_a = judgment_map(args.judgments_a, queue)
     judge_b, judgments_b = judgment_map(args.judgments_b, queue)
@@ -158,11 +166,29 @@ def main() -> None:
             args.minimum_fluency,
             args.minimum_terminology,
         )
-        if selected_a is not None and selected_a == selected_b:
+        consensus_origin = (
+            str(candidates[selected_a].get("candidate_origin") or "teacher")
+            if selected_a is not None and selected_a == selected_b
+            else None
+        )
+        if (
+            selected_a is not None
+            and selected_a == selected_b
+            and consensus_origin == "teacher"
+        ):
+            reference_anchor_present = any(
+                str(candidate.get("candidate_origin") or "teacher")
+                in {"licensed-reference", "teacher-reference-equivalent"}
+                for candidate in candidates.values()
+            )
             approved.append(
                 {
                     **candidates[selected_a],
-                    "review_status": "two-judge-consensus-provisional",
+                    "review_status": (
+                        "two-judge-reference-anchored"
+                        if reference_anchor_present
+                        else "two-judge-consensus-provisional"
+                    ),
                     "reviewer_ids": [],
                     "judge_model_ids": sorted([judge_a, judge_b]),
                     "automated_judgments": [
@@ -170,7 +196,7 @@ def main() -> None:
                         judgments_b[source_id],
                     ],
                     "approved_alternative": None,
-                    "promotion_eligible": False,
+                    "promotion_eligible": reference_anchor_present,
                     "automated_consensus_policy": {
                         "minimum_adequacy": args.minimum_adequacy,
                         "minimum_fluency": args.minimum_fluency,
@@ -180,10 +206,20 @@ def main() -> None:
                         "require_protected_tokens_preserved": True,
                         "require_unique_best_per_judge": True,
                         "require_matching_selection": True,
+                        "candidate_count": len(candidates),
+                        "licensed_reference_blinded_when_available": (
+                            reference_anchor_present
+                        ),
+                        "selected_candidate_must_be_teacher_only": True,
                     },
                 }
             )
             continue
+        if consensus_origin in {
+            "licensed-reference",
+            "teacher-reference-equivalent",
+        }:
+            reason_a = reason_b = f"{consensus_origin}-won"
         rejected.append(
             {
                 "source_id": source_id,
@@ -205,7 +241,15 @@ def main() -> None:
                 "rejected": len(rejected),
                 "sources": len(queue),
                 "judge_models": sorted([judge_a, judge_b]),
-                "use": "provisional supervised training only; never DQO or promotion evidence",
+                "use": (
+                    "reference-anchored rows may train a promotion candidate; "
+                    "source-only rows remain provisional SFT; neither is held-out "
+                    "promotion evidence"
+                ),
+                "reference_anchor": (
+                    "licensed references are blinded as anonymous candidates; "
+                    "reference or exact-reference-equivalent wins emit no synthetic row"
+                ),
             },
             sort_keys=True,
         )

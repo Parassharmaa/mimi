@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "experiment": "guarded-expert-cascade-v19-swift-runtime",
+  "status": "rejected-runtime-safety",
+  "decision": "Do not integrate the V19 developer pack. The exact Swift runtime fails closed on 71 of 400 public segments because neither local parent preserves the current critical-token contract.",
+  "inputs": {
+    "suite": {
+      "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+      "cases": 400,
+      "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+    },
+    "model_pack": {
+      "path": "Research/translation/work/guarded-expert-cascade-v19/bundle",
+      "manifest_sha256": "ecaedc9965019a7cf275671e7ecb59f082d4620b0e362e02fd1ca80b6c0b5da1",
+      "bytes": 146816974
+    }
+  },
+  "runtime": {
+    "report": {
+      "path": "Research/translation/work/guarded-expert-cascade-v19/swift-development-runtime-concurrent.json",
+      "sha256": "344fb842b3f02380c9c9bec3ab207499ba069e5d7efed5009339c84172ad76e6"
+    },
+    "benchmark_implementation": {
+      "path": "Sources/Mimi/TranslationCascadeBenchmark.swift",
+      "bytes": 8372,
+      "sha256": "6d26ea057ae39850b6c2d705fc5cda208ecb24658f2117a36ff6bb0f0bb63dbc"
+    },
+    "translation_implementation": {
+      "path": "Sources/Mimi/ExperimentalMLXTranslationEngine.swift",
+      "bytes": 49056,
+      "sha256": "e2aaa93a2e9e25263b45ca2e24f860fe5ab218d968c829c54b0422f5af4db005"
+    },
+    "warm_runs_per_case": 0,
+    "timing_claim_eligible": false,
+    "timing_blocker": "V18 Metal evaluation ran concurrently",
+    "preparation_seconds": 0.116517875,
+    "peak_resident_bytes": 533004288
+  },
+  "routing": {
+    "expert": 320,
+    "bundled_local_fallback": 9,
+    "failed_closed": 71,
+    "failure_reason": "critical-token-mismatch",
+    "directions": {
+      "en-ja": {
+        "cases": 200,
+        "expert": 166,
+        "bundled_local_fallback": 5,
+        "failed_closed": 29
+      },
+      "ja-en": {
+        "cases": 200,
+        "expert": 154,
+        "bundled_local_fallback": 4,
+        "failed_closed": 42
+      }
+    }
+  },
+  "largest_failure_slices": {
+    "ja-en_long-document-legal": {
+      "cases": 36,
+      "failed_closed": 15
+    },
+    "en-ja_long-document-news": {
+      "cases": 48,
+      "failed_closed": 10
+    },
+    "ja-en_long-document-news": {
+      "cases": 48,
+      "failed_closed": 7
+    },
+    "en-ja_long-document-wikipedia": {
+      "cases": 36,
+      "failed_closed": 6
+    },
+    "ja-en_long-document-wikipedia": {
+      "cases": 36,
+      "failed_closed": 6
+    },
+    "ja-en_ministry-published-legal": {
+      "cases": 20,
+      "failed_closed": 6
+    }
+  },
+  "interpretation": [
+    "The earlier stored-output composition modeled only empty and repeated-token fallback. The real runtime also enforces critical-token and plausibility guards, so its 320/9/71 routing supersedes the stored 398/2 routing for integration decisions.",
+    "The pinned COMET result remains reproducible for the stored composition, but it is not an app-path quality result and cannot authorize promotion.",
+    "The 12-case app-path canary passes after a narrow calendar-month equivalence fix with wrong-month negative controls, but that fix does not cover general bilingual numeric transformations.",
+    "The repository's typed bilingual numeric policy remains an offline ablation and has unsafe reference disagreements; it is not promoted into the runtime.",
+    "Adding the available critical-specialist Marian pair does not solve the dominant failures because many are genuine number, article, score, or coordinate mistranslations shared across the compact parents."
+  ],
+  "next_strategy": "Train or select a stronger number- and legal-structure-preserving fallback, or implement source-normalized constrained numeric decoding with adversarial and held-out validation. Do not broadly relax the runtime guard.",
+  "protected_suite_opened": false,
+  "app_resource_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false
+}

@@ -224,6 +224,24 @@ def mask_protected(value: str) -> tuple[str, tuple[str, ...]]:
     return PROTECTED_RE.sub(lambda match: " " * len(match.group(0)), value), protected
 
 
+def strict_tokens(value: str) -> list[str]:
+    """Return exact critical surfaces without ASCII word-boundary assumptions.
+
+    URLs, placeholders, printf tokens, and markup are masked before standalone
+    percentages and numbers are extracted. The digit-only lookarounds in
+    ``ASCII_NUMBER_RE`` intentionally recognize surfaces such as ``40か国``.
+    """
+
+    normalized = normalize(value)
+    masked, protected = mask_protected(normalized)
+    percentages = tuple("%" for _ in re.finditer("%", masked))
+    numbers = tuple(
+        match.group(0).replace(",", "")
+        for match in ASCII_NUMBER_RE.finditer(masked)
+    )
+    return sorted((*protected, *percentages, *numbers))
+
+
 def single_percentage_signature(value: str) -> SinglePercentageSignature | None:
     normalized = normalize(value)
     masked, protected = mask_protected(normalized)
@@ -561,3 +579,64 @@ def typed_preserves(
         output,
         target_language,
     )
+
+
+def reference_validated_critical_preservation_mode(
+    source: str,
+    output: str,
+    reference: str,
+    source_language: str,
+    target_language: str,
+) -> str | None:
+    """Return the narrow admission arm proving critical-token preservation.
+
+    Exact source-surface preservation does not require a reference. Every
+    bilingual relaxation requires a non-empty licensed reference, and exact
+    URLs/placeholders/printf tokens/markup must agree with the source in all
+    arms. This function proves only critical-token structure; semantic quality
+    still requires the independent candidate judges.
+    """
+
+    source_protected = mask_protected(normalize(source))[1]
+    output_protected = mask_protected(normalize(output))[1]
+    if source_protected != output_protected:
+        return None
+    if strict_tokens(source) == strict_tokens(output):
+        return "source-strict"
+    if not reference.strip():
+        return None
+    reference_protected = mask_protected(normalize(reference))[1]
+    if source_protected != reference_protected:
+        return None
+    if strict_tokens(reference) == strict_tokens(output):
+        return "reference-target-strict"
+    if typed_preserves(
+        source,
+        output,
+        source_language,
+        target_language,
+    ) and typed_preserves(
+        source,
+        reference,
+        source_language,
+        target_language,
+    ):
+        return "reference-typed"
+    if single_percentage_preserves(
+        source,
+        output,
+    ) and single_percentage_preserves(source, reference):
+        return "reference-single-percentage"
+    if narrow_temporal_preserves(
+        source,
+        output,
+        source_language,
+        target_language,
+    ) and narrow_temporal_preserves(
+        source,
+        reference,
+        source_language,
+        target_language,
+    ):
+        return "reference-narrow-temporal"
+    return None

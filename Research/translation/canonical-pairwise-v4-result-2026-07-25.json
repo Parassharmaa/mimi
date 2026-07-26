@@ -1,0 +1,330 @@
+{
+  "app_change_authorized": false,
+  "continue_this_recipe": false,
+  "contract": {
+    "bytes": 11206,
+    "path": "Research/translation/canonical-pairwise-v4-contract-2026-07-25.json",
+    "sha256": "181dc326f39521f1a567b57104b87982f861208bf2dee2ea8bb7f7aea16a462b"
+  },
+  "dataset": {
+    "decontamination": {
+      "character_ngram_size": 5,
+      "maximum_jaccard_exclusive": 0.8,
+      "protected_suites": [
+        {
+          "path": "Research/translation/benchmark/canary.jsonl",
+          "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+          "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+          "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+        },
+        {
+          "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+          "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+          "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+        },
+        {
+          "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+          "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+        },
+        {
+          "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+          "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+          "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+        },
+        {
+          "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+          "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+        }
+      ],
+      "screened_fields": [
+        "source",
+        "chosen",
+        "rejected"
+      ],
+      "train_validation_source_overlap": false
+    },
+    "directory": "Research/translation/work/canonical-pairwise-v4-ja-en",
+    "effective_licenses": {
+      "train": {
+        "CC-BY-2.0-FR": 3,
+        "CC-BY-4.0": 24,
+        "CC-BY-SA-3.0": 14,
+        "PDL-1.0-compatible-CC-BY-4.0": 7,
+        "project-owned": 3
+      },
+      "valid": {
+        "CC-BY-2.0-FR": 1,
+        "CC-BY-4.0": 4,
+        "CC-BY-SA-3.0": 3,
+        "PDL-1.0-compatible-CC-BY-4.0": 1,
+        "project-owned": 1
+      }
+    },
+    "files": {
+      "manifest.json": {
+        "bytes": 5147,
+        "path": "Research/translation/work/canonical-pairwise-v4-ja-en/manifest.json",
+        "sha256": "b5760e1ebd65827dcbeb650d21fe147f6ce1cf426f8c9d626a55af7228699634"
+      },
+      "train.jsonl": {
+        "bytes": 138554,
+        "path": "Research/translation/work/canonical-pairwise-v4-ja-en/train.jsonl",
+        "sha256": "a1c72ce7d512e4b48a0913c93ff92de167924c7e635ce0911f947b824333607c"
+      },
+      "valid.jsonl": {
+        "bytes": 25780,
+        "path": "Research/translation/work/canonical-pairwise-v4-ja-en/valid.jsonl",
+        "sha256": "d9dae05a9b2974299fe251740f857debdfe6c7b491a463f6c2e769fd9bcb3d90"
+      }
+    },
+    "pairs": {
+      "selected": 61,
+      "train": 51,
+      "valid": 10
+    },
+    "review_policy": {
+      "absolute_teacher_quality_required": true,
+      "human_reviewer_required": false,
+      "independent_judge_models": 2,
+      "score_fields": [
+        "adequacy",
+        "fluency",
+        "terminology"
+      ],
+      "strict_total_improvement_per_judge": true,
+      "teacher_not_a_judge": true,
+      "unanimous_pareto_preference_over_current_required": true
+    }
+  },
+  "decision": "Stop the rank-8 v4 recipe before MLX conversion or protected held-out evaluation. Do not integrate, publish, or claim improvement.",
+  "experiment": "canonical-pairwise-preference-adapter-v4-ja-en",
+  "human_reviewers_used": false,
+  "internal_gate": {
+    "checks": [
+      {
+        "actual": 0.6,
+        "name": "relative-pair-accuracy",
+        "passed": false,
+        "required": 0.8
+      },
+      {
+        "actual": 0.0010013997554779053,
+        "name": "relative-margin",
+        "passed": true,
+        "required": "> 0.0"
+      },
+      {
+        "actual": 40,
+        "name": "trained-checkpoint",
+        "passed": true,
+        "required": "step > 0"
+      }
+    ],
+    "passed": false
+  },
+  "mlx_conversion_performed": false,
+  "next_hypothesis": "Test whether rank-8 module placement caused underfit using a separately preregistered full-parameter preference update at a very low learning rate with explicit displacement regularization.",
+  "parent": {
+    "license": "CC-BY-SA-4.0",
+    "model_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_authorized": false,
+  "protected_held_out_evaluation_performed": false,
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "status": "internal-preference-gate-rejected",
+  "teacher_authentication": "Codex cached ChatGPT authentication; no OpenAI API key used",
+  "training": {
+    "adapter": {
+      "bytes": 1777432,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v4-ja-en/adapters.safetensors",
+      "sha256": "a6cd0366f7f5e48c56bf0668c61298d490b652ec5141822e7b2c7004837bfdbb"
+    },
+    "best": {
+      "last_train_objective": {
+        "chosen_sft_loss": 1.0412346124649048,
+        "preference_loss": 0.6911388039588928,
+        "relative_margin": 0.040302202105522156
+      },
+      "loss": 0.6930971026420594,
+      "pairs": 10,
+      "policy_pair_accuracy": 0.1,
+      "relative_margin": 0.0010013997554779053,
+      "relative_pair_accuracy": 0.6,
+      "step": 40
+    },
+    "checkpoints": [
+      {
+        "bytes": 1777432,
+        "metrics": {
+          "last_train_objective": {
+            "chosen_sft_loss": 1.3278312683105469,
+            "preference_loss": 0.6925751566886902,
+            "relative_margin": 0.011479973793029785
+          },
+          "loss": 0.6931301116943359,
+          "pairs": 10,
+          "policy_pair_accuracy": 0.1,
+          "relative_margin": 0.0003412097692489624,
+          "relative_pair_accuracy": 0.6,
+          "step": 10
+        },
+        "path": "Research/translation/models/elanmt-canonical-pairwise-v4-ja-en-checkpoints/step-0000010.safetensors",
+        "sha256": "2f7748ecf89e4ab1e219fcdc63c69652e1c5e649d9b74d2b9544bbf7754af950",
+        "step": 10
+      },
+      {
+        "bytes": 1777432,
+        "metrics": {
+          "last_train_objective": {
+            "chosen_sft_loss": 1.1243547201156616,
+            "preference_loss": 0.6906374096870422,
+            "relative_margin": 0.050454288721084595
+          },
+          "loss": 0.6931124925613403,
+          "pairs": 10,
+          "policy_pair_accuracy": 0.1,
+          "relative_margin": 0.0006925255060195923,
+          "relative_pair_accuracy": 0.6,
+          "step": 20
+        },
+        "path": "Research/translation/models/elanmt-canonical-pairwise-v4-ja-en-checkpoints/step-0000020.safetensors",
+        "sha256": "32a0225044d8dba4b86f16b19ece02b832cb1e67c2c6058938edd966123e9ad6",
+        "step": 20
+      },
+      {
+        "bytes": 1777432,
+        "metrics": {
+          "last_train_objective": {
+            "chosen_sft_loss": 1.4655969142913818,
+            "preference_loss": 0.6941587924957275,
+            "relative_margin": -0.01963011920452118
+          },
+          "loss": 0.6931012153625489,
+          "pairs": 10,
+          "policy_pair_accuracy": 0.1,
+          "relative_margin": 0.0009187996387481689,
+          "relative_pair_accuracy": 0.6,
+          "step": 30
+        },
+        "path": "Research/translation/models/elanmt-canonical-pairwise-v4-ja-en-checkpoints/step-0000030.safetensors",
+        "sha256": "74150bc6200a7d5264a911e555dc6e84aab47c0d95643f6eeeb3df985db52dc8",
+        "step": 30
+      },
+      {
+        "bytes": 1777432,
+        "metrics": {
+          "last_train_objective": {
+            "chosen_sft_loss": 1.0412346124649048,
+            "preference_loss": 0.6911388039588928,
+            "relative_margin": 0.040302202105522156
+          },
+          "loss": 0.6930971026420594,
+          "pairs": 10,
+          "policy_pair_accuracy": 0.1,
+          "relative_margin": 0.0010013997554779053,
+          "relative_pair_accuracy": 0.6,
+          "step": 40
+        },
+        "path": "Research/translation/models/elanmt-canonical-pairwise-v4-ja-en-checkpoints/step-0000040.safetensors",
+        "sha256": "a6cd0366f7f5e48c56bf0668c61298d490b652ec5141822e7b2c7004837bfdbb",
+        "step": 40
+      }
+    ],
+    "history": [
+      {
+        "loss": 0.6931471824645996,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0,
+        "relative_pair_accuracy": 0.0,
+        "step": 0
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.3278312683105469,
+          "preference_loss": 0.6925751566886902,
+          "relative_margin": 0.011479973793029785
+        },
+        "loss": 0.6931301116943359,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0003412097692489624,
+        "relative_pair_accuracy": 0.6,
+        "step": 10
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.1243547201156616,
+          "preference_loss": 0.6906374096870422,
+          "relative_margin": 0.050454288721084595
+        },
+        "loss": 0.6931124925613403,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0006925255060195923,
+        "relative_pair_accuracy": 0.6,
+        "step": 20
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.4655969142913818,
+          "preference_loss": 0.6941587924957275,
+          "relative_margin": -0.01963011920452118
+        },
+        "loss": 0.6931012153625489,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0009187996387481689,
+        "relative_pair_accuracy": 0.6,
+        "step": 30
+      },
+      {
+        "last_train_objective": {
+          "chosen_sft_loss": 1.0412346124649048,
+          "preference_loss": 0.6911388039588928,
+          "relative_margin": 0.040302202105522156
+        },
+        "loss": 0.6930971026420594,
+        "pairs": 10,
+        "policy_pair_accuracy": 0.1,
+        "relative_margin": 0.0010013997554779053,
+        "relative_pair_accuracy": 0.6,
+        "step": 40
+      }
+    ],
+    "manifest": {
+      "bytes": 10768,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v4-ja-en/mimi_automated_preference_manifest.json",
+      "sha256": "45eb5bd79c9d07dac979fb128f930d55e3fd87395408cbb9eb3ffb38607c9289"
+    },
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-pairwise-v4-ja-en/model.safetensors",
+      "sha256": "e779b66b4cb7094ee9d47478a20dfa794a923b4ecb69598d6156bd0dd2042287"
+    },
+    "selected_modules": 36,
+    "trainable_parameters": 442368
+  }
+}

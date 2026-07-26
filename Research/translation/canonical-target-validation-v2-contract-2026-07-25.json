@@ -1,0 +1,113 @@
+{
+  "appChangeAuthorized": false,
+  "candidateDesign": [
+    "one fresh canonical teacher translation",
+    "one licensed human reference",
+    "one current Mimi baseline translation"
+  ],
+  "claimEligible": false,
+  "counts": {
+    "directions": {
+      "en-ja": 20,
+      "ja-en": 20
+    },
+    "domains": {
+      "en-ja:conversational": 4,
+      "en-ja:human-translated-news": 3,
+      "en-ja:long-document-news": 2,
+      "en-ja:mimi-product-ui": 2,
+      "en-ja:ministry-published-legal": 3,
+      "en-ja:professional-wikipedia-hard": 3,
+      "en-ja:wikipedia": 3,
+      "ja-en:conversational": 4,
+      "ja-en:human-translated-news": 3,
+      "ja-en:long-document-news": 2,
+      "ja-en:mimi-product-ui": 2,
+      "ja-en:ministry-published-legal": 3,
+      "ja-en:professional-wikipedia-hard": 3,
+      "ja-en:wikipedia": 3
+    },
+    "licenses": {
+      "CC-BY-2.0-FR": 8,
+      "CC-BY-4.0": 10,
+      "CC-BY-SA-3.0": 12,
+      "PDL-1.0-compatible-CC-BY-4.0": 6,
+      "project-owned": 4
+    },
+    "total": 40
+  },
+  "createdAt": "2026-07-25T12:41:28.400819Z",
+  "excludedPriorSourceIds": 40,
+  "exclusionSeeds": [
+    {
+      "path": "Research/translation/work/canonical-target-pilot-v1.seeds.jsonl",
+      "sha256": "27727f458fe731c28039f6e0b27dd9eaaf11004a2dc4e3f8e94897391f3430fb",
+      "sourceIds": 40
+    }
+  ],
+  "goGateBeforeScaling": {
+    "acceptancePolicy": "dual-absolute-canonical",
+    "minimumApprovedEachDirection": 5,
+    "minimumApprovedTotal": 12,
+    "requireBothJudgesCertifyCanonicalAbsoluteThresholds": true,
+    "requireSameUniqueTeacherSelectionFromTwoJudgeFamilies": false,
+    "requireZeroDeterministicCriticalFailures": true,
+    "trainingAuthorizedByPilotAlone": false
+  },
+  "inputs": {
+    "incumbentModels": {
+      "en-ja": {
+        "manifestSha256": "d86f6c764a69b3db9359180ae2a7032e55b9418d32328ba940228becfd077507",
+        "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3-mlx-4bit",
+        "tokenizerSha256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+      },
+      "ja-en": {
+        "manifestSha256": "48cbaea921d6f6fb6108c40ba94d8399bb610a260ddd38b028fcb0046691f95a",
+        "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1-mlx-4bit",
+        "tokenizerSha256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+      }
+    },
+    "sourceManifest": {
+      "path": "Research/translation/work/gpt56-final-translation-pilot-v1.seeds.manifest.json",
+      "sha256": "01d26d4376f63964e20cc908f122a03a80b1f6f4f845abbf8b2bfab5af01df3f"
+    },
+    "sourceSeeds": {
+      "path": "Research/translation/work/gpt56-final-translation-pilot-v1.seeds.jsonl",
+      "sha256": "d555e88770d8ec88c5cc4de7991dcd4532a27176309a7c1a1a4444d31472dcde"
+    }
+  },
+  "maximumSourceTokens": 192,
+  "outputs": {
+    "incumbentSuite": {
+      "path": "Research/translation/work/canonical-target-validation-v2.incumbent-suite.jsonl",
+      "sha256": "5cf12e56ce0138888bc1b608133d3852cfbd277f5d0b2b52506f772cbde2dbec"
+    },
+    "pilotSeeds": {
+      "path": "Research/translation/work/canonical-target-validation-v2.seeds.jsonl",
+      "sha256": "8d2016f047c7a2fe7789ef662081dbbb4ef8b351383b68bd1446e2df845642ed"
+    },
+    "teacherRequests": {
+      "path": "Research/translation/work/canonical-target-validation-v2.requests.jsonl",
+      "sha256": "728e5d1b19a024179e1a1149f0aa306d35122e5dba380e062aa432c57e8e20e9"
+    }
+  },
+  "publicUploadAuthorized": false,
+  "purpose": "balanced canonical-target teacher and incumbent comparison pilot",
+  "quotasPerDirection": {
+    "conversational": 4,
+    "human-translated-news": 3,
+    "long-document-news": 2,
+    "mimi-product-ui": 2,
+    "ministry-published-legal": 3,
+    "professional-wikipedia-hard": 3,
+    "wikipedia": 3
+  },
+  "schemaVersion": 1,
+  "selectionSeed": "mimi-canonical-target-validation-v2",
+  "selectionUsesPreviousTeacherOrJudgeOutputs": false,
+  "sourceOnlyTeacher": true,
+  "teacherModel": "gpt-5.6-sol",
+  "teacherPromptSha256": "6cd2e5c2d970724b1b067149a25351a4723a21ae007009c3d4420f0e23d0613b",
+  "teacherReasoningEffort": "none",
+  "teacherReasoningTraceStored": false
+}

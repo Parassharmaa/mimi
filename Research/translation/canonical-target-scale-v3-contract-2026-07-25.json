@@ -1,0 +1,119 @@
+{
+  "appChangeAuthorized": false,
+  "candidateDesign": [
+    "one fresh canonical teacher translation",
+    "one licensed human reference",
+    "one current Mimi baseline translation"
+  ],
+  "claimEligible": false,
+  "counts": {
+    "directions": {
+      "en-ja": 200,
+      "ja-en": 200
+    },
+    "domains": {
+      "en-ja:conversational": 40,
+      "en-ja:human-translated-news": 30,
+      "en-ja:long-document-news": 20,
+      "en-ja:mimi-product-ui": 20,
+      "en-ja:ministry-published-legal": 30,
+      "en-ja:professional-wikipedia-hard": 30,
+      "en-ja:wikipedia": 30,
+      "ja-en:conversational": 40,
+      "ja-en:human-translated-news": 30,
+      "ja-en:long-document-news": 20,
+      "ja-en:mimi-product-ui": 20,
+      "ja-en:ministry-published-legal": 30,
+      "ja-en:professional-wikipedia-hard": 30,
+      "ja-en:wikipedia": 30
+    },
+    "licenses": {
+      "CC-BY-2.0-FR": 80,
+      "CC-BY-4.0": 100,
+      "CC-BY-SA-3.0": 120,
+      "PDL-1.0-compatible-CC-BY-4.0": 60,
+      "project-owned": 40
+    },
+    "total": 400
+  },
+  "createdAt": "2026-07-25T12:46:25.361009Z",
+  "excludedPriorSourceIds": 80,
+  "exclusionSeeds": [
+    {
+      "path": "Research/translation/work/canonical-target-pilot-v1.seeds.jsonl",
+      "sha256": "27727f458fe731c28039f6e0b27dd9eaaf11004a2dc4e3f8e94897391f3430fb",
+      "sourceIds": 40
+    },
+    {
+      "path": "Research/translation/work/canonical-target-validation-v2.seeds.jsonl",
+      "sha256": "8d2016f047c7a2fe7789ef662081dbbb4ef8b351383b68bd1446e2df845642ed",
+      "sourceIds": 40
+    }
+  ],
+  "goGateBeforeScaling": {
+    "acceptancePolicy": "dual-absolute-canonical",
+    "minimumApprovedEachDirection": 50,
+    "minimumApprovedTotal": 120,
+    "requireBothJudgesCertifyCanonicalAbsoluteThresholds": true,
+    "requireSameUniqueTeacherSelectionFromTwoJudgeFamilies": false,
+    "requireZeroDeterministicCriticalFailures": true,
+    "trainingAuthorizedByPilotAlone": false
+  },
+  "inputs": {
+    "incumbentModels": {
+      "en-ja": {
+        "manifestSha256": "d86f6c764a69b3db9359180ae2a7032e55b9418d32328ba940228becfd077507",
+        "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3-mlx-4bit",
+        "tokenizerSha256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+      },
+      "ja-en": {
+        "manifestSha256": "48cbaea921d6f6fb6108c40ba94d8399bb610a260ddd38b028fcb0046691f95a",
+        "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1-mlx-4bit",
+        "tokenizerSha256": "84b75e5fb6540c393026cd01b212acdf8769f32df8d7adc88c8b748610401b7f"
+      }
+    },
+    "sourceManifest": {
+      "path": "Research/translation/work/gpt56-final-translation-pilot-v1.seeds.manifest.json",
+      "sha256": "01d26d4376f63964e20cc908f122a03a80b1f6f4f845abbf8b2bfab5af01df3f"
+    },
+    "sourceSeeds": {
+      "path": "Research/translation/work/gpt56-final-translation-pilot-v1.seeds.jsonl",
+      "sha256": "d555e88770d8ec88c5cc4de7991dcd4532a27176309a7c1a1a4444d31472dcde"
+    }
+  },
+  "maximumSourceTokens": 192,
+  "outputs": {
+    "incumbentSuite": {
+      "path": "Research/translation/work/canonical-target-scale-v3.incumbent-suite.jsonl",
+      "sha256": "5f952fa2fffbe3e3018bb7b6a56f0fa99fed22bb8c58c74d3d68057a8aa952ea"
+    },
+    "pilotSeeds": {
+      "path": "Research/translation/work/canonical-target-scale-v3.seeds.jsonl",
+      "sha256": "107ae2ff81404721ffd0be0142d696dd2a435421daf3b48471e7be8605f84b3a"
+    },
+    "teacherRequests": {
+      "path": "Research/translation/work/canonical-target-scale-v3.requests.jsonl",
+      "sha256": "db2e16c57e52b29ee752e910a73d3f02707de9fdef145631746753ee94d2cc2d"
+    }
+  },
+  "publicUploadAuthorized": false,
+  "purpose": "balanced canonical-target teacher and incumbent comparison pilot",
+  "quotaMultiplier": 10,
+  "quotasPerDirection": {
+    "conversational": 40,
+    "human-translated-news": 30,
+    "long-document-news": 20,
+    "mimi-product-ui": 20,
+    "ministry-published-legal": 30,
+    "professional-wikipedia-hard": 30,
+    "wikipedia": 30
+  },
+  "schemaVersion": 1,
+  "selectionSeed": "mimi-canonical-target-scale-v3",
+  "selectionUsesPreviousTeacherOrJudgeOutputs": false,
+  "sourceOnlyTeacher": true,
+  "teacherModel": "gpt-5.6-sol",
+  "teacherPromptSha256": "6cd2e5c2d970724b1b067149a25351a4723a21ae007009c3d4420f0e23d0613b",
+  "teacherReasoningEffort": "none",
+  "teacherReasoningTraceStored": false
+}

@@ -1,0 +1,432 @@
+{
+  "app_change_authorized": false,
+  "bundle_creation_authorized": false,
+  "dataset": {
+    "attribution": {
+      "bytes": 1519632,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en/attribution.jsonl",
+      "sha256": "5f6d73fbe45db64c8b1a433ff5be6e88ff34a1218e4b7893ef0391188906e776"
+    },
+    "counts": {
+      "rejected": {
+        "general:human-alt-test:protected-overlap": 587,
+        "general:human-kftt-test:protected-overlap": 691,
+        "general:human-tatoeba-test:protected-overlap": 524,
+        "legal:critical:protected-overlap": 9,
+        "legal:critical:source-overlap": 6,
+        "legal:general:protected-overlap": 14,
+        "legal:general:source-overlap": 2,
+        "legal:long:protected-overlap": 11,
+        "legal:long:source-overlap": 1,
+        "legal:negation:protected-overlap": 4,
+        "legal:negation:source-overlap": 4,
+        "legal:omission-risk:source-overlap": 1,
+        "legal:terminology-risk:protected-overlap": 9,
+        "legal:terminology-risk:source-overlap": 14
+      },
+      "train": 7104,
+      "train_origins": {
+        "finalized-japanese-law-translation": 5000,
+        "human-alt-parallel": 650,
+        "human-kftt-replay": 650,
+        "human-tatoeba-bidirectional-agreement-filtered": 621,
+        "licensed-human-reference-anchor": 136,
+        "mimi-shipped-ui-pair": 47
+      },
+      "train_strata": {
+        "general:human-alt-parallel": 650,
+        "general:human-kftt-replay": 650,
+        "general:human-tatoeba-bidirectional-agreement-filtered": 621,
+        "general:mimi-shipped-ui-pair": 47,
+        "legal:critical": 900,
+        "legal:general": 950,
+        "legal:long": 1000,
+        "legal:negation": 900,
+        "legal:omission-risk": 450,
+        "legal:repetition-risk": 100,
+        "legal:terminology-risk": 700,
+        "same-source-licensed-human-anchor": 136
+      },
+      "unique_train_sources": 7104,
+      "unique_valid_sources": 1536,
+      "valid": 1536,
+      "valid_origins": {
+        "finalized-japanese-law-translation": 1088,
+        "human-alt-test": 128,
+        "human-kftt-test": 216,
+        "human-tatoeba-test": 104
+      },
+      "valid_strata": {
+        "general:human-alt-test": 128,
+        "general:human-kftt-test": 216,
+        "general:human-tatoeba-test": 104,
+        "legal:critical": 160,
+        "legal:general": 328,
+        "legal:long": 240,
+        "legal:negation": 160,
+        "legal:omission-risk": 64,
+        "legal:repetition-risk": 8,
+        "legal:terminology-risk": 128
+      }
+    },
+    "directory": "Research/translation/work/canonical-safety-repair-v12-ja-en",
+    "distribution_provenance": {
+      "all_rows_have_source_license": true,
+      "all_rows_have_source_provenance": true,
+      "attribution_sidecar": {
+        "bytes": 1519632,
+        "path": "Research/translation/work/canonical-safety-repair-v12-ja-en/attribution.jsonl",
+        "sha256": "5f6d73fbe45db64c8b1a433ff5be6e88ff34a1218e4b7893ef0391188906e776"
+      },
+      "licenses_are_open_or_project_owned": [
+        "CC-BY-2.0-FR",
+        "CC-BY-4.0",
+        "CC-BY-SA-3.0",
+        "PDL-1.0-compatible-CC-BY-4.0",
+        "project-owned"
+      ]
+    },
+    "effective_licenses": {
+      "train": {
+        "CC-BY-2.0-FR": 636,
+        "CC-BY-4.0": 707,
+        "CC-BY-SA-3.0": 685,
+        "PDL-1.0-compatible-CC-BY-4.0": 5016,
+        "project-owned": 60
+      },
+      "valid": {
+        "CC-BY-2.0-FR": 104,
+        "CC-BY-4.0": 128,
+        "CC-BY-SA-3.0": 216,
+        "PDL-1.0-compatible-CC-BY-4.0": 1088
+      }
+    },
+    "free_form_synthetic_translations_used": false,
+    "manifest": {
+      "bytes": 9413,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en/manifest.json",
+      "sha256": "6ef8e99fe52ce30613119e81c1b0d788655d73c46ca7852d42a302e039b9c3ac"
+    },
+    "private_reasoning_traces_used": false,
+    "train": {
+      "bytes": 9602676,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en/train.jsonl",
+      "sha256": "d94030549980e0120aa5ef4b7fbee278ac2bf209df1b47c48b41727fdc8376f9"
+    },
+    "valid": {
+      "bytes": 1860973,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en/valid.jsonl",
+      "sha256": "8594d49aad5ab4696d5c20a9ffe142729d6381a00c9532268e42e9b70aca4ba6"
+    }
+  },
+  "direction": "ja-en",
+  "experiment": "canonical-safety-repair-v12-ja-en",
+  "hypothesis": "starting at the v11 quality/safety boundary, low-rate licensed-human cross-entropy plus token-local unlikelihood and chosen-over-rejected ranking can remove deterministic safety failure modes while frozen-parent KL/L2 preserves the safe parent and greedy-decoding latency",
+  "implementation": {
+    "audit_translation_structures.py": {
+      "bytes": 5491,
+      "path": "scripts/translation/audit_translation_structures.py",
+      "sha256": "bb4edf46dc0a9932aaf6ebe29e84a65c2713919aa710e4ced969c61106070075"
+    },
+    "build_canonical_safety_repair_v12_dataset.py": {
+      "bytes": 19840,
+      "path": "scripts/translation/build_canonical_safety_repair_v12_dataset.py",
+      "sha256": "5fef8acce8e428a36a30c7e257a4e8f4bc937c4813a85101c802030eab874635"
+    },
+    "build_marian_negative_space_dataset.py": {
+      "bytes": 16832,
+      "path": "scripts/translation/build_marian_negative_space_dataset.py",
+      "sha256": "f9a42ed02d877fa2e8acc04aa87d655db435d603f35acb1437051ba84e568e7f"
+    },
+    "evaluate_canonical_safety_repair_v12.py": {
+      "bytes": 19603,
+      "path": "scripts/translation/evaluate_canonical_safety_repair_v12.py",
+      "sha256": "73451153716b4bf5ae13d39c22a4846b54812048a2bb20ce7d073f6496393c95"
+    },
+    "evaluate_canonical_sequence_v10_internal.py": {
+      "bytes": 24688,
+      "path": "scripts/translation/evaluate_canonical_sequence_v10_internal.py",
+      "sha256": "d6e0db607df7c2022c002cfc0be9441cb5c5a872fa553bc55d21b78969f92dd3"
+    },
+    "prepare_canonical_safety_repair_v12_contract.py": {
+      "bytes": 17039,
+      "path": "scripts/translation/prepare_canonical_safety_repair_v12_contract.py",
+      "sha256": "e359c9a69e3504f11570b4181c75a817ada97b2cded45d0842c5e3bb35e678ba"
+    },
+    "train_canonical_safety_repair_v12.py": {
+      "bytes": 18428,
+      "path": "scripts/translation/train_canonical_safety_repair_v12.py",
+      "sha256": "5fb3283a7bfba948a11a433ee706c6a5d7dc375b6bd5febed264c9251e1922c2"
+    },
+    "train_marian_distillation.py": {
+      "bytes": 37097,
+      "path": "scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    },
+    "train_marian_negative_space.py": {
+      "bytes": 23540,
+      "path": "scripts/translation/train_marian_negative_space.py",
+      "sha256": "7339ec74dc7159b87f0cda4da97717789886244eaaf3291afd8850b7e51ced3a"
+    },
+    "typed_critical_token_policy.py": {
+      "bytes": 20489,
+      "path": "scripts/translation/typed_critical_token_policy.py",
+      "sha256": "ba6e947c24190df46e0346087c077f57f91f018e9df88e096441bc8942c3b82e"
+    }
+  },
+  "initial_checkpoint": {
+    "adapted_weight": 0.375,
+    "interpolation_manifest": {
+      "bytes": 1955,
+      "path": "Research/translation/models/elanmt-canonical-sequence-v11-ja-en-alpha0375/mimi_checkpoint_interpolation_manifest.json",
+      "sha256": "84db1af7288e9744eb6182c4a6c74671a32ab83c9b221f3a7cab51ca7e1d5356"
+    },
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-sequence-v11-ja-en-alpha0375/model.safetensors",
+      "sha256": "33a045164ff00712aa5dbf8c6b0a2f4736aeb976d37053c061f1bd0241c81249"
+    },
+    "path": "Research/translation/models/elanmt-canonical-sequence-v11-ja-en-alpha0375",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 17887,
+      "path": "Research/translation/models/elanmt-canonical-sequence-v11-ja-en-alpha0375/mimi_training_manifest.json",
+      "sha256": "409cdc56dc3d49e08c80873dcacd3f86d6d75f68c09a43834d1adf2101347ea9"
+    }
+  },
+  "internal_selection": {
+    "baseline": "frozen safe parent, not the v11 initial checkpoint",
+    "candidate_steps": [
+      50,
+      100
+    ],
+    "ordering": "eligible checkpoints only; highest mean sentence chrF++, then long-legal chrF++, then fresh-general chrF++",
+    "requirements": {
+      "corpus_chrf_pp_delta_minimum": 0.25,
+      "fresh_general_chrf_pp_delta_minimum": 0.0,
+      "long_legal_chrf_pp_delta_minimum": 0.25,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "negative_validation_rejected_probability_delta_maximum": 0.0,
+      "new_exact_critical_failures_maximum": 0,
+      "new_negation_failures_maximum": 0,
+      "new_repetition_or_generation_limit_failures_maximum": 0,
+      "new_typed_critical_failures_maximum": 0,
+      "paired_chrf_pp_90pct_lower_minimum": -0.25,
+      "worst_stratum_chrf_pp_delta_minimum": -0.5
+    },
+    "selection_uses_protected_outputs": false,
+    "step_zero_is_diagnostic_only": true,
+    "stop_if_no_checkpoint_is_eligible": true,
+    "suite": "v12 frozen 1,536-row test-split suite, source-disjoint from all v10 rows and source/target-screened against ten protected suites"
+  },
+  "negative_dataset": {
+    "counts": {
+      "train_licenses": {
+        "CC-BY-2.0-FR": 1271,
+        "CC-BY-4.0": 2480,
+        "CC-BY-SA-3.0": 2167,
+        "PDL-1.0-compatible-CC-BY-4.0": 17958,
+        "project-owned": 48
+      },
+      "train_pairs": 23924,
+      "train_violation_types": {
+        "content-duplication-full": 4742,
+        "content-duplication-tail": 4803,
+        "content-omission-head": 4713,
+        "content-omission-tail": 4678,
+        "negation-reversal": 1282,
+        "number-substitution": 3688,
+        "unit-substitution": 18
+      },
+      "valid_licenses": {
+        "CC-BY-2.0-FR": 15,
+        "CC-BY-4.0": 100,
+        "CC-BY-SA-3.0": 239,
+        "PDL-1.0-compatible-CC-BY-4.0": 1665
+      },
+      "valid_pairs": 2019,
+      "valid_violation_types": {
+        "content-duplication-full": 374,
+        "content-duplication-tail": 372,
+        "content-omission-head": 333,
+        "content-omission-tail": 321,
+        "negation-reversal": 147,
+        "number-substitution": 468,
+        "unit-substitution": 4
+      }
+    },
+    "directory": "Research/translation/work/canonical-safety-repair-v12-ja-en-negatives",
+    "manifest": {
+      "bytes": 2496,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en-negatives/manifest.json",
+      "sha256": "1f9ba19e39c2cdd4a89324cdc753341a909289f3931372cb039c7353c6ba16ca"
+    },
+    "negative_strings_are_positive_targets": false,
+    "selection": {
+      "maximum_violations_per_positive": 4,
+      "policy": "critical-bearing rows first, then deterministic SHA-256 rank; duplicate source-target pairs removed",
+      "train_positive_rows": 6000,
+      "valid_positive_rows": 512
+    },
+    "train": {
+      "bytes": 33425220,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en-negatives/train.jsonl",
+      "sha256": "7f2b723cdfe50e7a31cbbc6cd227c3afd47149d75dc2b0b352f448b798ab5641"
+    },
+    "valid": {
+      "bytes": 2737266,
+      "path": "Research/translation/work/canonical-safety-repair-v12-ja-en-negatives/valid.jsonl",
+      "sha256": "1617854b2d3b06fde2d1374b77bca7252f996a9870134535cd7c529e64ee630f"
+    }
+  },
+  "next_step_if_internal_gate_passes": {
+    "bits": 4,
+    "exact_q4_conversion_required": true,
+    "group_size": 64,
+    "metrics_required": [
+      "chrF++",
+      "BLEU",
+      "COMET-22",
+      "two-family blinded judge",
+      "critical-structure audits",
+      "latency",
+      "memory",
+      "bundle size"
+    ],
+    "protected_evaluation_required": true,
+    "protected_suites": [
+      {
+        "bytes": 6629,
+        "path": "Research/translation/benchmark/canary.jsonl",
+        "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+      },
+      {
+        "bytes": 635946,
+        "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+        "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+      },
+      {
+        "bytes": 1919046,
+        "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+        "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+      },
+      {
+        "bytes": 2340716,
+        "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+        "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+      },
+      {
+        "bytes": 953146,
+        "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+        "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+      },
+      {
+        "bytes": 942342,
+        "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+        "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+      },
+      {
+        "bytes": 83633,
+        "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+        "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+      },
+      {
+        "bytes": 357062,
+        "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+        "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+      },
+      {
+        "bytes": 363568,
+        "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+        "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+      },
+      {
+        "bytes": 988395,
+        "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+        "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+      }
+    ]
+  },
+  "preservation_checkpoint": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "promotion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "protected_promotion_gates": {
+    "packaging": {
+      "complete_distribution_provenance_required": true,
+      "hard_two_direction_bundle_maximum_bytes": 500000000,
+      "preferred_two_direction_bundle_maximum_bytes": 150000000,
+      "public_hugging_face_only_after_all_gates": true
+    },
+    "quality_each_direction": {
+      "chrf_pp_paired_90pct_lower_minimum": -0.25,
+      "comet22_mean_delta_minimum_for_signal": 0.002,
+      "comet22_paired_90pct_lower_minimum": -0.005,
+      "independent_judge_mean_delta_minimum_for_signal": 0.1,
+      "independent_judge_paired_90pct_lower_minimum": -0.25,
+      "maximum_direct_chrf_pp_regression": 0.5,
+      "maximum_domain_chrf_pp_regression": 0.5,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "minimum_improvement_signals": 2,
+      "sacrebleu_corpus_regression_maximum": 0.1
+    },
+    "runtime": {
+      "peak_resident_bytes_maximum": 250000000,
+      "warm_segment_p95_seconds_maximum_each_direction": 0.175
+    },
+    "safety": {
+      "new_judge_critical_errors_maximum": 0,
+      "new_negation_errors_maximum": 0,
+      "new_number_date_unit_placeholder_errors_maximum": 0,
+      "new_repetition_or_nontermination_failures_maximum": 0,
+      "new_union_critical_errors_maximum": 0
+    }
+  },
+  "public_upload_authorized": false,
+  "quantization_authorized": false,
+  "schema_version": 1,
+  "status": "preregistered-ready-for-one-arm-training",
+  "stop_rule": "Stop before q4 conversion and protected evaluation unless one checkpoint passes every frozen internal quality, uncertainty, negative-space, and zero-new-safety-failure gate. Stop before app integration, fallback changes, bundle replacement, release, or public upload on any protected quality, safety, runtime, size, or distribution-provenance failure.",
+  "training": {
+    "batch_size": 8,
+    "checkpoint_steps": [
+      50,
+      100
+    ],
+    "effective_batch_size": 32,
+    "evaluation_batch_size": 16,
+    "evaluation_steps": 50,
+    "frozen_parent_kl_weight": 0.1,
+    "gradient_accumulation": 4,
+    "gradient_checkpointing": false,
+    "l2_to_parent_weight": 1e-05,
+    "learning_rate": 5e-07,
+    "max_source_tokens": 192,
+    "max_steps": 100,
+    "max_target_tokens": 192,
+    "negative_weight": 0.15,
+    "one_arm_only": true,
+    "post_result_hyperparameter_changes_forbidden": true,
+    "ranking_target_margin": 1.0,
+    "ranking_weight": 0.25,
+    "seed": 20260804,
+    "warmup_steps": 10,
+    "weight_decay": 0.01
+  }
+}

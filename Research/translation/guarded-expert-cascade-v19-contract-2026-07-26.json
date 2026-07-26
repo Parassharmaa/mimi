@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "experiment": "guarded-expert-cascade-v19",
+  "status": "frozen-public-development-screen",
+  "hypothesis": "Run the stronger public two-specialist q4 pair first, detect only deterministic empty output or three consecutive repeated token phrases, and retry that segment with Mimi's current local q4 pair. This can remove known nontermination failures without weakening ordinary candidate translations or using Apple Translation.",
+  "implementation": {
+    "path": "scripts/translation/evaluate_guarded_expert_cascade_v19.py",
+    "bytes": 14133,
+    "sha256": "1e7f5df18f4d53bbacc2a066f75e2469de6f2b7f24e0f39b7d6d07afb815d8b4"
+  },
+  "inputs": {
+    "suite": {
+      "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+      "bytes": 357062,
+      "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+    },
+    "candidate_report": {
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair.json",
+      "bytes": 495550,
+      "sha256": "fa1287745281accecbba44bf0d14f3a0dfeede55ddf0a7e502bf41a5e1efc760"
+    },
+    "bundled_report": {
+      "path": "Research/translation/results/development-accuracy-v1-bundled-mimi.json",
+      "bytes": 481850,
+      "sha256": "42c2eea9dad9cb92f16c623e7ed85804a919cccb42b7b3b67d25f2ff4cb24801"
+    },
+    "candidate_model_revision": "direction-manifests-sha256:1f9cfba173b8b914a3200f4bcc55d6307621749b085a6586c16532d3e87bed11",
+    "bundled_model_revision": "pair-manifest-sha256:8e55e8f24eed07e89bdad6db0ca1d65aa791905123f764130ed021bc2380807a"
+  },
+  "guard": {
+    "expert_failure_conditions": [
+      "empty decoded segment",
+      "the same token-ID phrase of width 3 through 16 occurs three consecutive times"
+    ],
+    "fallback": "retry the exact source segment with Mimi's current bundled local Marian direction specialist",
+    "fallback_failure": "reject the cascade if the bundled output is empty or contains the same repeated-token loop",
+    "critical_token_guard_unchanged": true,
+    "apple_translation_used": false,
+    "cloud_translation_used": false
+  },
+  "runtime": {
+    "implementation": {
+      "path": "Sources/Mimi/ExperimentalMLXTranslationEngine.swift",
+      "bytes": 46880,
+      "sha256": "e83ef3b9669b29362a19e85a201a68d3217cbc2a0dc3f071a99b2e0335cfe5e3"
+    },
+    "swift_build_passed": true,
+    "pure_runtime_contract_passed": true,
+    "normal_en_ja_expert_smoke_passed": true,
+    "normal_ja_en_expert_smoke_passed": true,
+    "known_en_ja_loop_fallback_smoke_passed": true
+  },
+  "bundle": {
+    "packager": {
+      "path": "scripts/translation/package_guarded_expert_cascade_v19.sh",
+      "bytes": 617,
+      "sha256": "c3eea01fe5e444f7c4d3998c7aeb6c7c275d5577b3d286d946c2d556084f6b80"
+    },
+    "routers": {
+      "en-ja": {
+        "path": "Research/translation/routers/guarded-expert-cascade-v19-en-ja.json",
+        "bytes": 654,
+        "sha256": "b233b97072d999ece67a568240e62177970659316799591f3df2ff3f10ee0fd8"
+      },
+      "ja-en": {
+        "path": "Research/translation/routers/guarded-expert-cascade-v19-ja-en.json",
+        "bytes": 654,
+        "sha256": "e668f21015c96c8e02a8e653796eb69913c1216a4094ef7546c018dfc6a29817"
+      }
+    },
+    "developer_pack_manifest": {
+      "path": "Research/translation/work/guarded-expert-cascade-v19/bundle/manifest.json",
+      "bytes": 11007,
+      "sha256": "ecaedc9965019a7cf275671e7ecb59f082d4620b0e362e02fd1ca80b6c0b5da1"
+    },
+    "format": "mimi-mlx-marian-moe-v1",
+    "expert_pair_bytes": 73425808,
+    "bundled_fallback_pair_bytes": 73403427,
+    "measured_complete_pack_bytes": 146816974,
+    "distribution_status": "blocked-pending-share-alike-and-attribution-review",
+    "app_resources_unchanged": true
+  },
+  "requirements": {
+    "minimum_fallback_segments": 1,
+    "maximum_invalid_fallback_segments": 0,
+    "maximum_bundle_bytes": 150000000,
+    "each_direction_chrf_pp_noninferior_to_candidate": true,
+    "each_direction_bleu_noninferior_to_candidate": true
+  },
+  "evidence_boundary": {
+    "public_suite_only": true,
+    "stored_exact_q4_outputs_composed": true,
+    "actual_swift_known-loop_fallback_smoke_required": true,
+    "comet_not_yet_measured": true,
+    "cascade_latency_not_yet_measured": true,
+    "cascade_peak_memory_not_yet_measured": true,
+    "protected_suite_not_opened": true
+  },
+  "protected_evaluation_authorized": false,
+  "app_resource_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false
+}

@@ -36,6 +36,8 @@ LICENSED_PARALLEL_ORIGINS = frozenset(
     {
         "finalized-japanese-law-translation",
         "human-alt-parallel",
+        "human-alt-document-window",
+        "human-balanced-hard-reference",
         "human-kftt-replay",
         "human-tatoeba-bidirectional-agreement-filtered",
         "mimi-shipped-ui-pair",
@@ -248,7 +250,10 @@ def derive_target_provenance(
             if any(
                 not row.get("source_license")
                 or not row.get("source_provenance")
-                or not row.get("attribution")
+                or (
+                    not row.get("attribution")
+                    and row.get("source_license") != "project-owned"
+                )
                 for row in train_rows
             ):
                 raise SystemExit(

@@ -8,7 +8,6 @@ import json
 import tempfile
 from pathlib import Path
 
-
 SCRIPT = Path(__file__).with_name("score_comet.py")
 SPEC = importlib.util.spec_from_file_location("mimi_score_comet", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
@@ -17,6 +16,17 @@ SPEC.loader.exec_module(SCORER)
 
 
 def main() -> None:
+    requirements = (
+        SCRIPT.parents[2]
+        / "Research/translation/comet-runtime-v1-requirements.txt"
+    )
+    pinned = dict(
+        line.strip().split("==", 1)
+        for line in requirements.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    )
+    assert pinned == SCORER.PINNED_RUNTIME_PACKAGES
+
     with tempfile.TemporaryDirectory(prefix="mimi-comet-contract-") as temporary:
         work = Path(temporary)
         suite = work / "suite.jsonl"
@@ -43,7 +53,9 @@ def main() -> None:
         ]
         suite.write_text(
             "".join(
-                json.dumps({key: value for key, value in row.items() if key != "hypothesis"})
+                json.dumps(
+                    {key: value for key, value in row.items() if key != "hypothesis"}
+                )
                 + "\n"
                 for row in rows
             ),
@@ -60,12 +72,50 @@ def main() -> None:
             package_version=SCORER.DEFAULT_PACKAGE_VERSION,
             setuptools_version=SCORER.DEFAULT_SETUPTOOLS_VERSION,
             torch_version="fixture",
+            runtime_package_versions={"fixture": "1.0"},
+            model_checkpoint={"bytes": 123, "sha256": "checkpoint"},
+            inference_configuration={
+                "accelerator": "cpu",
+                "batchSize": 8,
+                "numWorkers": 1,
+                "torchInteropThreads": 1,
+                "torchThreads": 4,
+            },
         )
         assert report["results"][0]["score"] == 0.7
         assert report["results"][1]["score"] == 0.9
         assert report["precision"] == "float32"
         assert report["modelLicense"] == "Apache-2.0"
+        assert report["emptyHypothesisCases"] == 0
+        assert report["runtimePackageVersions"] == {"fixture": "1.0"}
+        assert report["modelCheckpoint"]["sha256"] == "checkpoint"
+        assert report["inferenceConfiguration"]["batchSize"] == 8
+        assert "createdAt" not in report
+        assert len(report["runtimeEnvironmentSHA256"]) == 64
         assert len(report["signatureSHA256"]) == 64
+
+        empty_rows = [{**rows[0], "hypothesis": ""}]
+        empty_report = SCORER.build_report(
+            suite,
+            engine,
+            empty_rows,
+            [0.0, 0.0],
+            model_repository=SCORER.DEFAULT_MODEL,
+            model_revision=SCORER.DEFAULT_REVISION,
+            package_version=SCORER.DEFAULT_PACKAGE_VERSION,
+            setuptools_version=SCORER.DEFAULT_SETUPTOOLS_VERSION,
+            torch_version="fixture",
+            runtime_package_versions={"fixture": "1.0"},
+            model_checkpoint={"bytes": 123, "sha256": "checkpoint"},
+            inference_configuration={
+                "accelerator": "cpu",
+                "batchSize": 8,
+                "numWorkers": 1,
+                "torchInteropThreads": 1,
+                "torchThreads": 4,
+            },
+        )
+        assert empty_report["emptyHypothesisCases"] == 1
     print("Mimi pinned learned-metric report contract passed.")
 
 

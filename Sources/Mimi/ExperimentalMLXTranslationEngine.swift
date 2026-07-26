@@ -166,7 +166,19 @@ actor ExperimentalMLXTranslationEngine {
         var outputTokenIDs = runtime.translateTokenIDs(text)
         var output = Self.clean(runtime.decode(tokens: outputTokenIDs))
         var selectedExpert = useExpert
-        if !Self.preservesCriticalTokens(source: text, output: output) {
+        let primaryPreservesCriticalTokens = Self.preservesCriticalTokens(
+            source: text,
+            output: output
+        )
+        let primaryIsPlausible = Self.isPlausible(
+            output,
+            source: text,
+            sourceLanguage: sourceLanguage
+        )
+        let primaryHasRepeatedTokenLoop = Self.hasRepeatedTokenLoop(outputTokenIDs)
+        if !primaryPreservesCriticalTokens
+            || !primaryIsPlausible
+            || primaryHasRepeatedTokenLoop {
             if useExpert {
                 let generalist = try await loadRuntime(
                     sourceLanguage: sourceLanguage,
@@ -178,15 +190,21 @@ actor ExperimentalMLXTranslationEngine {
                 guard Self.preservesCriticalTokens(source: text, output: fallback) else {
                     throw ExperimentalMLXTranslationError.criticalTokenMismatch
                 }
+                guard Self.isPlausible(
+                    fallback,
+                    source: text,
+                    sourceLanguage: sourceLanguage
+                ), !Self.hasRepeatedTokenLoop(fallbackTokenIDs) else {
+                    throw ExperimentalMLXTranslationError.implausibleOutput
+                }
                 output = fallback
                 outputTokenIDs = fallbackTokenIDs
                 selectedExpert = false
-            } else {
+            } else if !primaryPreservesCriticalTokens {
                 throw ExperimentalMLXTranslationError.criticalTokenMismatch
+            } else {
+                throw ExperimentalMLXTranslationError.implausibleOutput
             }
-        }
-        guard Self.isPlausible(output, source: text, sourceLanguage: sourceLanguage) else {
-            throw ExperimentalMLXTranslationError.implausibleOutput
         }
         return .init(
             output: output,
@@ -618,6 +636,22 @@ actor ExperimentalMLXTranslationEngine {
         }
     }
 
+    static func hasRepeatedTokenLoop(_ tokenIDs: [Int]) -> Bool {
+        guard tokenIDs.count >= 9 else { return false }
+        for width in 3...min(16, tokenIDs.count / 3) {
+            for start in 0...(tokenIDs.count - width * 3) {
+                let phrase = tokenIDs[start..<(start + width)]
+                if tokenIDs[(start + width)..<(start + width * 2)]
+                    .elementsEqual(phrase),
+                   tokenIDs[(start + width * 2)..<(start + width * 3)]
+                    .elementsEqual(phrase) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     static func preservesCriticalTokens(source: String, output: String) -> Bool {
         if criticalTokens(source) == criticalTokens(output) {
             return true
@@ -714,10 +748,46 @@ actor ExperimentalMLXTranslationEngine {
         let pattern = #"https?://[A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-]+|\{[^{}]+\}|%[A-Za-z]|<[A-Za-z][^<>]*>|%|(?<![\d.])(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)*(?!\d|\.\d)"#
         guard let expression = try? NSRegularExpression(pattern: pattern) else { return [] }
         let range = NSRange(normalized.startIndex..., in: normalized)
-        return expression.matches(in: normalized, range: range).compactMap { match in
+        var tokens: [String] = expression.matches(in: normalized, range: range).compactMap { match in
             guard let swiftRange = Range(match.range, in: normalized) else { return nil }
             return normalized[swiftRange].replacingOccurrences(of: ",", with: "")
-        }.sorted()
+        }
+        let monthNames = [
+            "january": "1",
+            "february": "2",
+            "march": "3",
+            "april": "4",
+            "may": "5",
+            "june": "6",
+            "july": "7",
+            "august": "8",
+            "september": "9",
+            "october": "10",
+            "november": "11",
+            "december": "12",
+        ]
+        let monthAlternation = monthNames.keys.sorted().joined(separator: "|")
+        let monthPattern =
+            #"\b("# + monthAlternation + #")\s+\d{1,2}\b|\b\d{1,2}\s+("#
+            + monthAlternation + #")\b"#
+        if let monthExpression = try? NSRegularExpression(
+            pattern: monthPattern,
+            options: [.caseInsensitive]
+        ) {
+            for match in monthExpression.matches(in: normalized, range: range) {
+                for captureIndex in 1...2 where match.range(at: captureIndex).location != NSNotFound {
+                    guard let captureRange = Range(
+                        match.range(at: captureIndex),
+                        in: normalized
+                    ) else { continue }
+                    let month = normalized[captureRange].lowercased()
+                    if let number = monthNames[month] {
+                        tokens.append(number)
+                    }
+                }
+            }
+        }
+        return tokens.sorted()
     }
 }
 
@@ -775,6 +845,7 @@ struct TranslationRuntimeCacheVerificationReport: Codable {
     let configurationChangeClearsBothDirections: Bool
     let newConfigurationCanCacheBothDirections: Bool
     let criticalTokenGuardPasses: Bool
+    let repeatedTokenLoopGuardPasses: Bool
     let translationMemoryNormalizationPasses: Bool
 }
 
@@ -835,6 +906,12 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
         source: "Open https://example.com at 14:30 with {name}.",
         output: "{name}を使って14:30にhttps://example.comを開きます。"
     ) && ExperimentalMLXTranslationEngine.preservesCriticalTokens(
+        source: "The train leaves at 18:42 from platform 7 on October 3.",
+        output: "列車は10月3日の7番ホームから18時42分に出発します。"
+    ) && ExperimentalMLXTranslationEngine.preservesCriticalTokens(
+        source: "請求額は12,480円で、支払期限は7月31日です。",
+        output: "The bill is 12,480 yen, and the deadline is July 31."
+    ) && ExperimentalMLXTranslationEngine.preservesCriticalTokens(
         source: "Version １２ costs 1,200 yen.",
         output: "バージョン12は1200円です。"
     ) && ExperimentalMLXTranslationEngine.preservesCriticalTokens(
@@ -861,7 +938,21 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
     ) && !ExperimentalMLXTranslationEngine.preservesCriticalTokens(
         source: "Keep 25% at https://example.com.",
         output: "https://example.netで20%を維持します。"
+    ) && !ExperimentalMLXTranslationEngine.preservesCriticalTokens(
+        source: "The train leaves on October 3.",
+        output: "列車は11月3日に出発します。"
+    ) && !ExperimentalMLXTranslationEngine.preservesCriticalTokens(
+        source: "支払期限は7月31日です。",
+        output: "The payment deadline is August 31."
     )
+    let repeatedTokenLoopGuardPasses =
+        ExperimentalMLXTranslationEngine.hasRepeatedTokenLoop(
+            [7, 8, 9, 7, 8, 9, 7, 8, 9]
+        )
+        && !ExperimentalMLXTranslationEngine.hasRepeatedTokenLoop(
+            [7, 8, 9, 7, 8, 10, 7, 8, 9]
+        )
+        && !ExperimentalMLXTranslationEngine.hasRepeatedTokenLoop([])
     let translationMemoryNormalizationPasses = MarianExactTranslationMemory.normalize(
         "  Ａ\t\nＢ　Ｃ  "
     ) == "A B C"
@@ -872,6 +963,7 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
         && configurationChangeClearsBothDirections
         && newConfigurationCanCacheBothDirections
         && criticalTokenGuardPasses
+        && repeatedTokenLoopGuardPasses
         && translationMemoryNormalizationPasses
     return .init(
         schemaVersion: 1,
@@ -883,6 +975,7 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
         configurationChangeClearsBothDirections: configurationChangeClearsBothDirections,
         newConfigurationCanCacheBothDirections: newConfigurationCanCacheBothDirections,
         criticalTokenGuardPasses: criticalTokenGuardPasses,
+        repeatedTokenLoopGuardPasses: repeatedTokenLoopGuardPasses,
         translationMemoryNormalizationPasses: translationMemoryNormalizationPasses
     )
 }

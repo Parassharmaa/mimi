@@ -125,6 +125,7 @@ struct FloatingCaptionView: View {
 
     @Bindable var store: AppStore
     @Bindable var preferences: UserPreferences
+    var allowsLiveTranslation = true
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @State private var configuration: TranslationSession.Configuration?
     @State private var pipeline = LiveTranslationPipeline()
@@ -152,7 +153,8 @@ struct FloatingCaptionView: View {
         CaptionTranslationInput(
             text: sourceText,
             language: sourceLanguage,
-            isEnabled: preferences.floatingCaptionContent != .original
+            isEnabled: allowsLiveTranslation
+                && preferences.floatingCaptionContent != .original
                 && localTranslationConfiguration != nil
         )
     }
@@ -163,7 +165,8 @@ struct FloatingCaptionView: View {
         CaptionTranslationInput(
             text: sourceText,
             language: sourceLanguage,
-            isEnabled: preferences.floatingCaptionContent != .original
+            isEnabled: allowsLiveTranslation
+                && preferences.floatingCaptionContent != .original
                 && usesAppleTranslationForLivePartials
         )
     }

@@ -1,0 +1,396 @@
+{
+  "app_change_authorized": false,
+  "bundle_creation_authorized": false,
+  "dataset": {
+    "attribution": {
+      "bytes": 3123300,
+      "path": "Research/translation/work/canonical-sequence-v10-ja-en/attribution.jsonl",
+      "sha256": "490c6cce1a161a1632d2f57c7df13bc13dfe3a0b6eb7f10b0ece56e85e3ab32b"
+    },
+    "counts": {
+      "general_input_by_split_and_origin": {
+        "train:human-alt-parallel": 2000,
+        "train:human-kftt-replay": 2586,
+        "train:human-tatoeba-bidirectional-agreement-filtered": 1386,
+        "train:mimi-shipped-ui-pair": 63,
+        "valid:human-alt-parallel": 200,
+        "valid:human-kftt-replay": 921,
+        "valid:human-tatoeba-bidirectional-agreement-filtered": 151,
+        "valid:mimi-shipped-ui-pair": 13
+      },
+      "human_error_stratified_train_rows": 6968,
+      "human_error_stratified_valid_rows": 991,
+      "legal_input_by_split_and_category": {
+        "train:critical": 21237,
+        "train:general": 130134,
+        "train:long": 34504,
+        "train:negation": 13395,
+        "train:omission-risk": 975,
+        "train:repetition-risk": 258,
+        "train:terminology-risk": 3904,
+        "valid:critical": 683,
+        "valid:general": 4516,
+        "valid:long": 1254,
+        "valid:negation": 440,
+        "valid:omission-risk": 24,
+        "valid:repetition-risk": 8,
+        "valid:terminology-risk": 107
+      },
+      "licensed_anchor_train_rows": 136,
+      "rejected": {
+        "train:general:human-alt-parallel:source-overlap": 4,
+        "train:general:human-tatoeba-bidirectional-agreement-filtered:source-overlap": 1,
+        "train:general:mimi-shipped-ui-pair:source-overlap": 16,
+        "train:legal:critical:protected-overlap": 3,
+        "train:legal:critical:source-overlap": 5,
+        "train:legal:general:source-overlap": 3,
+        "train:legal:long:protected-overlap": 1,
+        "train:legal:long:source-overlap": 5,
+        "train:legal:negation:protected-overlap": 3,
+        "train:legal:negation:source-overlap": 20,
+        "train:legal:omission-risk:source-overlap": 5,
+        "train:legal:repetition-risk:source-overlap": 1,
+        "train:legal:terminology-risk:protected-overlap": 1,
+        "train:legal:terminology-risk:source-overlap": 15,
+        "valid:legal:critical:protected-overlap": 7,
+        "valid:legal:critical:source-overlap": 3,
+        "valid:legal:general:protected-overlap": 11,
+        "valid:legal:long:protected-overlap": 12,
+        "valid:legal:long:source-overlap": 3,
+        "valid:legal:negation:protected-overlap": 12,
+        "valid:legal:negation:source-overlap": 6,
+        "valid:legal:omission-risk:protected-overlap": 3,
+        "valid:legal:terminology-risk:protected-overlap": 5
+      },
+      "teacher_train_rows": 1088,
+      "teacher_valid_rows": 33,
+      "train": 8192,
+      "unique_train_sources": 7104,
+      "unique_valid_sources": 1024,
+      "valid": 1024
+    },
+    "directory": "Research/translation/work/canonical-sequence-v10-ja-en",
+    "distribution_provenance": {
+      "all_rows_have_source_license": true,
+      "all_rows_have_source_provenance": true,
+      "attribution_sidecar": {
+        "bytes": 3123300,
+        "path": "Research/translation/work/canonical-sequence-v10-ja-en/attribution.jsonl",
+        "sha256": "490c6cce1a161a1632d2f57c7df13bc13dfe3a0b6eb7f10b0ece56e85e3ab32b"
+      },
+      "licenses_are_open_or_project_owned": [
+        "CC-BY-2.0-FR",
+        "CC-BY-4.0",
+        "CC-BY-SA-3.0",
+        "PDL-1.0-compatible-CC-BY-4.0",
+        "project-owned"
+      ]
+    },
+    "effective_licenses": {
+      "train": {
+        "CC-BY-2.0-FR": 756,
+        "CC-BY-4.0": 1163,
+        "CC-BY-SA-3.0": 965,
+        "PDL-1.0-compatible-CC-BY-4.0": 5144,
+        "project-owned": 164
+      },
+      "valid": {
+        "CC-BY-2.0-FR": 121,
+        "CC-BY-4.0": 126,
+        "CC-BY-SA-3.0": 120,
+        "PDL-1.0-compatible-CC-BY-4.0": 644,
+        "project-owned": 13
+      }
+    },
+    "manifest": {
+      "bytes": 13281,
+      "path": "Research/translation/work/canonical-sequence-v10-ja-en/manifest.json",
+      "sha256": "d0eebc93eb4c9237b931293af91d6a1e999bf626420b37d8def15b8290709d38"
+    },
+    "origins": {
+      "train": {
+        "finalized-japanese-law-translation": 5000,
+        "gpt56-claude5-approved-canonical-sequence": 1088,
+        "human-alt-parallel": 650,
+        "human-kftt-replay": 650,
+        "human-tatoeba-bidirectional-agreement-filtered": 621,
+        "licensed-human-reference-anchor": 136,
+        "mimi-shipped-ui-pair": 47
+      },
+      "valid": {
+        "finalized-japanese-law-translation": 640,
+        "gpt56-claude5-approved-canonical-sequence": 33,
+        "human-alt-parallel": 112,
+        "human-kftt-replay": 112,
+        "human-tatoeba-bidirectional-agreement-filtered": 117,
+        "mimi-shipped-ui-pair": 10
+      }
+    },
+    "strata": {
+      "train": {
+        "general:human-alt-parallel": 650,
+        "general:human-kftt-replay": 650,
+        "general:human-tatoeba-bidirectional-agreement-filtered": 621,
+        "general:mimi-shipped-ui-pair": 47,
+        "independently-approved-canonical-teacher-target": 1088,
+        "legal:critical": 900,
+        "legal:general": 950,
+        "legal:long": 1000,
+        "legal:negation": 900,
+        "legal:omission-risk": 450,
+        "legal:repetition-risk": 100,
+        "legal:terminology-risk": 700,
+        "same-source-licensed-human-anchor": 136
+      },
+      "valid": {
+        "general:human-alt-parallel": 112,
+        "general:human-kftt-replay": 112,
+        "general:human-tatoeba-bidirectional-agreement-filtered": 117,
+        "general:mimi-shipped-ui-pair": 10,
+        "independently-approved-canonical-teacher-target": 33,
+        "legal:critical": 96,
+        "legal:general": 163,
+        "legal:long": 163,
+        "legal:negation": 96,
+        "legal:omission-risk": 20,
+        "legal:repetition-risk": 6,
+        "legal:terminology-risk": 96
+      }
+    },
+    "synthetic_policy": {
+      "absolute_quality_required": true,
+      "admission_judges": [
+        "claude-opus-5",
+        "claude-sonnet-5"
+      ],
+      "reasoning_traces_requested_or_retained": false,
+      "same_source_licensed_anchor_rows": 136,
+      "synthetic_train_fraction": 0.1328125,
+      "synthetic_train_rows": 1088,
+      "teacher_model": "gpt-5.6-sol-via-codex-cli",
+      "teacher_repeat_factor": 8,
+      "unanimous_pareto_preference_required": true,
+      "unique_teacher_sources": 136
+    },
+    "train": {
+      "bytes": 10954044,
+      "path": "Research/translation/work/canonical-sequence-v10-ja-en/train.jsonl",
+      "sha256": "1c967ff583f60862515880800cd932eca5d1a5a4ba907ddc0ed53f9c45c313a3"
+    },
+    "valid": {
+      "bytes": 1287824,
+      "path": "Research/translation/work/canonical-sequence-v10-ja-en/valid.jsonl",
+      "sha256": "a418a6c49cc24176c763bfa2de0ad63e16602c968888c58cb7374dbcd4e5385f"
+    }
+  },
+  "direction": "ja-en",
+  "experiment": "canonical-sequence-v10-ja-en-error-stratified",
+  "hypothesis": "generation-level supervised updates from Claude-5-approved GPT-5.6 final sequences will become usable when combined with a much larger protected-independent, error-stratified licensed replay set",
+  "implementation": {
+    "audit_translation_structures.py": {
+      "bytes": 5491,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/audit_translation_structures.py",
+      "sha256": "bb4edf46dc0a9932aaf6ebe29e84a65c2713919aa710e4ced969c61106070075"
+    },
+    "build_canonical_sequence_v10_dataset.py": {
+      "bytes": 27776,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/build_canonical_sequence_v10_dataset.py",
+      "sha256": "4d36d5a8c7f6019b6933036cfe7607ffcebd8e0efe8f6eeb0e0b04bcc793262f"
+    },
+    "marian_mlx.py": {
+      "bytes": 41937,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/marian_mlx.py",
+      "sha256": "661a1eb2a745c40ecbe6d7e042d60eaccee5527897032a3fbe6880b0d68693b3"
+    },
+    "prepare_elanmt_mlx.py": {
+      "bytes": 14941,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/prepare_elanmt_mlx.py",
+      "sha256": "c9ef062db342eea88fa94fde3745a5ce131cd58f66116729b9dcaff06d0e839d"
+    },
+    "run_mlx_marian_benchmark.py": {
+      "bytes": 19518,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/run_mlx_marian_benchmark.py",
+      "sha256": "682f41160bd628414a48775bb7bdcbc470e44c6171a438120968d77315e29f75"
+    },
+    "train_marian_distillation.py": {
+      "bytes": 37097,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    },
+    "typed_critical_token_policy.py": {
+      "bytes": 20489,
+      "path": "/Users/paras/.codex/worktrees/c779/Language Local TTS/scripts/translation/typed_critical_token_policy.py",
+      "sha256": "ba6e947c24190df46e0346087c077f57f91f018e9df88e096441bc8942c3b82e"
+    }
+  },
+  "internal_selection": {
+    "candidate_steps": [
+      125,
+      250
+    ],
+    "ordering": "eligible checkpoints only; highest mean sentence chrF++, then long-legal chrF++, teacher-slice chrF++, and lower loss",
+    "requirements": {
+      "corpus_chrf_pp_delta_minimum": 0.25,
+      "long_legal_chrf_pp_delta_minimum": 0.25,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "new_exact_critical_failures_maximum": 0,
+      "new_negation_failures_maximum": 0,
+      "new_repetition_or_generation_limit_failures_maximum": 0,
+      "new_typed_critical_failures_maximum": 0,
+      "teacher_slice_chrf_pp_delta_minimum": 0.5,
+      "worst_stratum_chrf_pp_delta_minimum": -0.5
+    },
+    "selection_uses_protected_outputs": false,
+    "step_zero_is_baseline_only": true,
+    "stop_if_no_checkpoint_is_eligible": true,
+    "suite": "v10 frozen 1,024-row source-disjoint development split"
+  },
+  "next_step_if_internal_gate_passes": {
+    "bits": 4,
+    "comet22_and_two_family_judge_required_if_decision_relevant": true,
+    "exact_q4_conversion_required": true,
+    "group_size": 64,
+    "protected_evaluation_required": true,
+    "protected_suites": [
+      {
+        "bytes": 6629,
+        "path": "Research/translation/benchmark/canary.jsonl",
+        "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+      },
+      {
+        "bytes": 635946,
+        "path": "Research/translation/benchmark/public-stress-v1.jsonl",
+        "sha256": "f345e151403579143f2c7143372eb5498c3a10aca5d87d791a140239ffdece5a"
+      },
+      {
+        "bytes": 1919046,
+        "path": "Research/translation/benchmark/public-stress-v2.jsonl",
+        "sha256": "2a29b15a0d06b8eb271c094c7cedec0206a0c4f6284bff4bf2618d7641115f1f"
+      },
+      {
+        "bytes": 2340716,
+        "path": "Research/translation/benchmark/public-stress-v3.jsonl",
+        "sha256": "ffff66c6cd6b7458785c2217b931e9aec9155b7441769700fc082bb97fe9db06"
+      },
+      {
+        "bytes": 953146,
+        "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+        "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+      },
+      {
+        "bytes": 942342,
+        "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+        "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+      },
+      {
+        "bytes": 83633,
+        "path": "Research/translation/benchmark/m2m100-418m-feasibility-v1.jsonl",
+        "sha256": "344d7f460704ac61620270122dbdf8e3bf0ba1ba5fc940562e7b0d226bda3519"
+      },
+      {
+        "bytes": 357062,
+        "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+        "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+      },
+      {
+        "bytes": 363568,
+        "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+        "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f"
+      },
+      {
+        "bytes": 988395,
+        "path": "Research/translation/benchmark/automated-claim-v1.sources.jsonl",
+        "sha256": "f039ce456c55f051e8bbcc13ed9bc8270a722819308e008b39da7f30327ec16c"
+      }
+    ]
+  },
+  "parent": {
+    "license": "CC-BY-SA-4.0",
+    "model": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
+    "training_manifest": {
+      "bytes": 18003,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    }
+  },
+  "promotion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "protected_promotion_gates": {
+    "packaging": {
+      "complete_distribution_provenance_required": true,
+      "hard_two_direction_bundle_maximum_bytes": 500000000,
+      "preferred_two_direction_bundle_maximum_bytes": 150000000,
+      "public_hugging_face_only_after_all_gates": true
+    },
+    "quality_each_direction": {
+      "chrf_pp_paired_90pct_lower_minimum": -0.25,
+      "comet22_mean_delta_minimum_for_signal": 0.002,
+      "comet22_paired_90pct_lower_minimum": -0.005,
+      "independent_judge_mean_delta_minimum_for_signal": 0.1,
+      "independent_judge_paired_90pct_lower_minimum": -0.25,
+      "maximum_direct_chrf_pp_regression": 0.5,
+      "maximum_domain_chrf_pp_regression": 0.5,
+      "mean_sentence_chrf_pp_delta_minimum": 0.25,
+      "minimum_improvement_signals": 2,
+      "sacrebleu_corpus_regression_maximum": 0.1
+    },
+    "runtime": {
+      "peak_resident_bytes_maximum": 250000000,
+      "warm_segment_p95_seconds_maximum_each_direction": 0.175
+    },
+    "safety": {
+      "new_judge_critical_errors_maximum": 0,
+      "new_negation_errors_maximum": 0,
+      "new_number_date_unit_placeholder_errors_maximum": 0,
+      "new_repetition_or_nontermination_failures_maximum": 0,
+      "new_union_critical_errors_maximum": 0
+    }
+  },
+  "public_upload_authorized": false,
+  "quantization_authorized": false,
+  "schema_version": 1,
+  "status": "preregistered-ready-for-one-arm-training",
+  "stop_rule": "Stop before q4 conversion and protected evaluation unless one checkpoint passes every frozen internal generation, slice, and safety gate. Stop before app integration, fallback changes, bundle replacement, release, or public upload on any protected quality, safety, runtime, size, or distribution-provenance failure.",
+  "training": {
+    "batch_size": 8,
+    "canonical_sequence_loss_weight_end": 2.0,
+    "canonical_sequence_loss_weight_start": 4.0,
+    "checkpoint_steps": [
+      125,
+      250
+    ],
+    "curriculum_ramp_steps": 250,
+    "effective_batch_size": 32,
+    "evaluation_steps": 125,
+    "frozen_parent_kl_weight": 0.1,
+    "gradient_accumulation": 4,
+    "gradient_checkpointing": false,
+    "initial_checkpoint": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "l2_to_parent_weight": 1e-05,
+    "learning_rate": 2e-06,
+    "max_source_tokens": 192,
+    "max_steps": 250,
+    "max_target_tokens": 192,
+    "one_arm_only": true,
+    "post_result_hyperparameter_changes_forbidden": true,
+    "preservation_checkpoint": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "preservation_origins": [
+      "finalized-japanese-law-translation",
+      "human-alt-parallel",
+      "human-kftt-replay",
+      "human-tatoeba-bidirectional-agreement-filtered",
+      "licensed-human-reference-anchor",
+      "mimi-shipped-ui-pair"
+    ],
+    "seed": 20260802,
+    "warmup_steps": 25,
+    "weight_decay": 0.01
+  }
+}

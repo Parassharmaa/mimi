@@ -6,33 +6,20 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import re
-import unicodedata
 from collections import Counter
 from pathlib import Path
 
 from typed_critical_token_policy import (
     narrow_temporal_preserves,
     single_percentage_preserves,
+    strict_tokens,
     typed_preserves,
     typed_signature,
 )
 
 
-STRICT_RE = re.compile(
-    r"https?://[A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-]+"
-    r"|\{[^{}]+\}|%[A-Za-z]|<[A-Za-z][^<>]*>|%"
-    r"|(?<![\d.])(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)*(?!\d|\.\d)"
-)
-
-
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def strict_tokens(value: str) -> list[str]:
-    normalized = unicodedata.normalize("NFKC", value)
-    return sorted(token.replace(",", "") for token in STRICT_RE.findall(normalized))
 
 
 def main() -> None:

@@ -1,0 +1,165 @@
+{
+  "app_resource_change_authorized": false,
+  "bundle": {
+    "bytes": 146816974,
+    "distribution_status": "blocked-pending-share-alike-and-attribution-review",
+    "format": "mimi-mlx-marian-moe-v1",
+    "manifest": {
+      "bytes": 11007,
+      "path": "Research/translation/work/guarded-expert-cascade-v19/bundle/manifest.json",
+      "sha256": "ecaedc9965019a7cf275671e7ecb59f082d4620b0e362e02fd1ca80b6c0b5da1"
+    }
+  },
+  "bundle_replacement_authorized": false,
+  "bundled_metrics": {
+    "en-ja": {
+      "BLEU": 9.142666056802659,
+      "cases": 100,
+      "chrFPlusPlus": 28.128252381074116
+    },
+    "ja-en": {
+      "BLEU": 25.769859525059086,
+      "cases": 100,
+      "chrFPlusPlus": 50.0632074081628
+    }
+  },
+  "candidate_metrics": {
+    "en-ja": {
+      "BLEU": 9.628669489707992,
+      "cases": 100,
+      "chrFPlusPlus": 28.40629630999253
+    },
+    "ja-en": {
+      "BLEU": 30.620668547248126,
+      "cases": 100,
+      "chrFPlusPlus": 55.19028118139918
+    }
+  },
+  "candidate_segments": 398,
+  "cases": 200,
+  "comet_required": true,
+  "composed_report": {
+    "bytes": 490832,
+    "path": "Research/translation/work/guarded-expert-cascade-v19/composed-development-report.json",
+    "sha256": "646e9fe2d80b83900f205977838b0fcc3b7a73689fbbf26d41f2d22f0c90d72a"
+  },
+  "contract": {
+    "bytes": 4527,
+    "path": "Research/translation/guarded-expert-cascade-v19-contract-2026-07-26.json",
+    "sha256": "dfde09991709ab7aca7342e411045e08fd1776da8a724959d6388411d08a10fc"
+  },
+  "experiment": "guarded-expert-cascade-v19",
+  "fallback_segment_count": 2,
+  "fallback_segments": [
+    "development-accuracy-v1:document:jlt:law-3518:en-ja:segment-05",
+    "development-accuracy-v1:sentence:jlt:law-3215:tu-102:en-ja:segment-01"
+  ],
+  "gates": [
+    {
+      "actual": 28.554313779766044,
+      "minimum": 28.40629630999253,
+      "name": "en-ja-chrFPlusPlus-noninferior-to-candidate",
+      "passed": true
+    },
+    {
+      "actual": 9.631440297837006,
+      "minimum": 9.628669489707992,
+      "name": "en-ja-BLEU-noninferior-to-candidate",
+      "passed": true
+    },
+    {
+      "actual": 55.19028118139918,
+      "minimum": 55.19028118139918,
+      "name": "ja-en-chrFPlusPlus-noninferior-to-candidate",
+      "passed": true
+    },
+    {
+      "actual": 30.620668547248126,
+      "minimum": 30.620668547248126,
+      "name": "ja-en-BLEU-noninferior-to-candidate",
+      "passed": true
+    },
+    {
+      "actual": 2,
+      "minimum": 1,
+      "name": "fallback-segments",
+      "passed": true
+    },
+    {
+      "actual": 0,
+      "maximum": 0,
+      "name": "invalid-fallback-segments",
+      "passed": true
+    },
+    {
+      "actual": 146816974,
+      "maximum": 150000000,
+      "name": "bundle-bytes",
+      "passed": true
+    }
+  ],
+  "implementation": {
+    "bytes": 14133,
+    "path": "scripts/translation/evaluate_guarded_expert_cascade_v19.py",
+    "sha256": "1e7f5df18f4d53bbacc2a066f75e2469de6f2b7f24e0f39b7d6d07afb815d8b4"
+  },
+  "inputs": {
+    "bundled_report": {
+      "bytes": 481850,
+      "path": "Research/translation/results/development-accuracy-v1-bundled-mimi.json",
+      "sha256": "42c2eea9dad9cb92f16c623e7ed85804a919cccb42b7b3b67d25f2ff4cb24801"
+    },
+    "candidate_report": {
+      "bytes": 495550,
+      "path": "Research/translation/results/development-accuracy-v1-candidate-clean-pair.json",
+      "sha256": "fa1287745281accecbba44bf0d14f3a0dfeede55ddf0a7e502bf41a5e1efc760"
+    },
+    "suite": {
+      "bytes": 357062,
+      "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+      "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+    }
+  },
+  "invalid_fallback_segments": [],
+  "long_document_evaluation_required": true,
+  "metrics": {
+    "en-ja": {
+      "BLEU": 9.631440297837006,
+      "cases": 100,
+      "chrFPlusPlus": 28.554313779766044,
+      "deltaFromBundled": {
+        "BLEU": 0.4887742410343474,
+        "chrFPlusPlus": 0.42606139869192816
+      },
+      "deltaFromCandidate": {
+        "BLEU": 0.0027708081290143127,
+        "chrFPlusPlus": 0.1480174697735137
+      }
+    },
+    "ja-en": {
+      "BLEU": 30.620668547248126,
+      "cases": 100,
+      "chrFPlusPlus": 55.19028118139918,
+      "deltaFromBundled": {
+        "BLEU": 4.85080902218904,
+        "chrFPlusPlus": 5.127073773236376
+      },
+      "deltaFromCandidate": {
+        "BLEU": 0.0,
+        "chrFPlusPlus": 0.0
+      }
+    }
+  },
+  "protected_evaluation_authorized": false,
+  "public_screen_passed": true,
+  "public_upload_authorized": false,
+  "runtime_implementation": {
+    "bytes": 46880,
+    "path": "Sources/Mimi/ExperimentalMLXTranslationEngine.swift",
+    "sha256": "e83ef3b9669b29362a19e85a201a68d3217cbc2a0dc3f071a99b2e0335cfe5e3"
+  },
+  "runtime_latency_memory_required": true,
+  "schema_version": 1,
+  "segments": 400,
+  "status": "public-screen-passed"
+}

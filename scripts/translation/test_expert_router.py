@@ -11,6 +11,7 @@ from evaluate_expert_router import (
     bootstrap_interval,
     feature_text,
     group_id,
+    is_legal_domain,
     routed_summary,
     sentence_chrf,
     split_name,
@@ -28,10 +29,18 @@ def run() -> None:
     assert group_id("public:tatoeba:1:en-ja") != group_id(
         "public:tatoeba:2:en-ja"
     )
+    assert group_id(
+        "development-accuracy-v1:document:jlt:law-123:en-ja:segment-01"
+    ) == group_id(
+        "development-accuracy-v1:document:jlt:law-123:en-ja:segment-06"
+    )
     assert split_name("public:jlt:law-123:tu-1:en-ja", "en-ja") == split_name(
         "public:jlt:law-123:tu-99:en-ja", "en-ja"
     )
     assert "__MIMI_LENGTH_BIN_" in feature_text("fixture source")
+    assert is_legal_domain("ministry-published-legal")
+    assert is_legal_domain("long-document-legal")
+    assert not is_legal_domain("human-translated-news")
     assert sentence_chrf("identical fixture", ["identical fixture"]) == 100.0
 
     rows = [

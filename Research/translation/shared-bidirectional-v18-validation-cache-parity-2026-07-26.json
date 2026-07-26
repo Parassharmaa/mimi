@@ -1,0 +1,85 @@
+{
+  "batch_size": 4,
+  "comparison": {
+    "direction_chrf_pp_delta": {
+      "en-ja": 0.0,
+      "ja-en": 0.0
+    },
+    "exact_generated_token_ids": true,
+    "loss_delta": 0.0,
+    "macro_direction_chrf_pp_delta": 0.0
+  },
+  "created_at": "2026-07-26T03:37:14.101034Z",
+  "experiment": "shared-bidirectional-v18-validation-cache-parity",
+  "hardware": "macOS-26.5.1-arm64-arm-64bit",
+  "max_source_tokens": 192,
+  "max_target_tokens": 192,
+  "model": {
+    "path": "Research/translation/work/shared-bidirectional-v18-phase1-init",
+    "weights_sha256": "3bf516afdb544bcc12c1a15a85c470e96125fab0c5e010530d0a2ec955f2c990"
+  },
+  "promotion_evidence": false,
+  "runtime": {
+    "numpy": "2.5.1",
+    "python": "3.12.12",
+    "sacrebleu": "2.6.0",
+    "sacremoses": "0.1.1",
+    "sentencepiece": "0.2.2",
+    "torch": "2.13.0",
+    "transformers": "4.57.6"
+  },
+  "schema_version": 1,
+  "selection": {
+    "path": "Research/translation/selection/shared-bidirectional-v18-phase1.jsonl",
+    "rows": 512,
+    "sha256": "0f7aadfc825b288a000ed6382a53afa18799352057a5cfd8bf91595ddf641382"
+  },
+  "split_cache_policy": {
+    "generated_token_ids_sha256": "794bd494cb58898427f1f0aefdd545483185f8226546dff9bbcc1bcd3b57227f",
+    "metrics": {
+      "directions": {
+        "en-ja": {
+          "cases": 256,
+          "chrf_pp": 30.69065621616379
+        },
+        "ja-en": {
+          "cases": 256,
+          "chrf_pp": 1.1677410964521069
+        }
+      },
+      "loss": 4.80236680759117,
+      "macro_direction_chrf_pp": 15.92919865630795
+    },
+    "policy": {
+      "greedy_generation": true,
+      "loss_forward": false
+    }
+  },
+  "status": "cached-generation-parity-passed",
+  "training_authorized": false,
+  "uncached": {
+    "generated_token_ids_sha256": "794bd494cb58898427f1f0aefdd545483185f8226546dff9bbcc1bcd3b57227f",
+    "metrics": {
+      "directions": {
+        "en-ja": {
+          "cases": 256,
+          "chrf_pp": 30.69065621616379
+        },
+        "ja-en": {
+          "cases": 256,
+          "chrf_pp": 1.1677410964521069
+        }
+      },
+      "loss": 4.80236680759117,
+      "macro_direction_chrf_pp": 15.92919865630795
+    },
+    "policy": {
+      "greedy_generation": false,
+      "loss_forward": false
+    }
+  },
+  "verifier": {
+    "path": "scripts/translation/verify_marian_validation_cache_parity.py",
+    "sha256": "a8c59ece7a756a0666bbdf82f68c46c7be21ceabd1534291d916e910033fd3fb"
+  }
+}

@@ -202,6 +202,19 @@ def main() -> None:
     )
     parser.add_argument("--bits", type=int, choices=(4, 6, 8), default=4)
     parser.add_argument("--group-size", type=int, choices=(32, 64, 128), default=64)
+    parser.add_argument(
+        "--training-manifest",
+        type=Path,
+        help=(
+            "Explicit Mimi training manifest for derived checkpoints whose source "
+            "directory does not contain mimi_training_manifest.json."
+        ),
+    )
+    parser.add_argument(
+        "--checkpoint-averaging-manifest",
+        type=Path,
+        help="Optional authenticated checkpoint-averaging lineage manifest.",
+    )
     args = parser.parse_args()
 
     source_weights = args.source / "model.safetensors"
@@ -232,7 +245,15 @@ def main() -> None:
     write_fast_tokenizer(args.source / "source.spm", args.output / "tokenizer.json")
     write_swift_tokenizer_config(args.output / "tokenizer_config.json")
 
-    training_manifest_path = args.source / "mimi_training_manifest.json"
+    training_manifest_path = (
+        args.training_manifest
+        if args.training_manifest is not None
+        else args.source / "mimi_training_manifest.json"
+    )
+    if args.training_manifest is not None and not training_manifest_path.is_file():
+        raise SystemExit(
+            f"missing explicit training manifest: {training_manifest_path}"
+        )
     training_manifest = (
         json.loads(training_manifest_path.read_text(encoding="utf-8"))
         if training_manifest_path.is_file()
@@ -241,6 +262,38 @@ def main() -> None:
     if training_manifest:
         training_manifest["manifest_sha256"] = digest(training_manifest_path)
     training_data = training_data_provenance(training_manifest)
+    checkpoint_averaging = None
+    if args.checkpoint_averaging_manifest is not None:
+        averaging_path = args.checkpoint_averaging_manifest
+        if not averaging_path.is_file():
+            raise SystemExit(f"missing checkpoint averaging manifest: {averaging_path}")
+        averaging = json.loads(averaging_path.read_text(encoding="utf-8"))
+        output_hash = averaging.get("output", {}).get("model_sha256")
+        source_hash = digest(source_weights)
+        if output_hash != source_hash:
+            raise SystemExit(
+                "checkpoint averaging output digest does not match source weights: "
+                f"declared {output_hash}, found {source_hash}"
+            )
+        identity = averaging.get("identity", {})
+        if (
+            identity.get("direction") != args.direction
+            or identity.get("student_repository") != args.repository
+            or identity.get("student_revision") != args.revision
+        ):
+            raise SystemExit("checkpoint averaging identity disagrees with conversion")
+        checkpoint_averaging = {
+            "manifestSha256": digest(averaging_path),
+            "operation": averaging.get("operation"),
+            "outputWeightsSha256": output_hash,
+            "selectedCheckpoints": [
+                {
+                    "step": checkpoint.get("step"),
+                    "modelSha256": checkpoint.get("model_sha256"),
+                }
+                for checkpoint in averaging.get("selected_checkpoints", [])
+            ],
+        }
     converter_path = Path(__file__).resolve()
     workspace = Path.cwd().resolve()
     try:
@@ -286,6 +339,7 @@ def main() -> None:
                 "sentencepiece": importlib.metadata.version("sentencepiece"),
             },
         },
+        "checkpoint_averaging": checkpoint_averaging,
         "source_prefixes": training_manifest.get("source_prefixes"),
         "training_data": training_data,
         "files": {

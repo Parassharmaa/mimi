@@ -1,0 +1,1008 @@
+{
+  "case_count": 27,
+  "cases": [
+    {
+      "baseline": {
+        "failure_types": [
+          "negation"
+        ],
+        "hypothesis": "(3) The salespersons of advanced management medical devices and others must preserve the account books of paragraph one for six years from the date of the final description."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "negation"
+          ],
+          "hypothesis": "(3) The salespersons of advanced management medical devices and others must preserve the account books of paragraph (1) for six years from the date of the final description.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "negation"
+          ],
+          "hypothesis": "(3) The salespersons of advanced management medical devices and others must preserve the account books of paragraph (1) for six years from the date of the final description.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:critical:jlt:law-3215:tu-2574:ja-en",
+      "reference": "(3) A seller, etc. of specially-controlled medical devices, etc. must maintain books prescribed in paragraph (1) for six years from the date on which the final description therein was made.",
+      "source": "３ 高度管理医療機器等の販売業者等は、第一項の帳簿を、最終の記載の日から六年間、保存しなければならない。",
+      "stratum": "legal:critical"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(iii) Designated second class medications"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(3) Designated second class medications",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "typed"
+          ],
+          "hypothesis": "(iii) Designated second class medications",
+          "registered_new_failure_types": []
+        }
+      },
+      "id": "v12-valid:general:jlt:law-3215:tu-2041:ja-en",
+      "reference": "(iii) designated schedule II pharmaceuticals;",
+      "source": "三 指定第二類医薬品",
+      "stratum": "legal:general"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact",
+          "typed"
+        ],
+        "hypothesis": "Articles 152 and 262 of Article 23"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Article 23-No. 152 and Article 23-No. 222",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Article 23-No. 152 and Article 23-No. 222",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        }
+      },
+      "id": "v12-valid:general:jlt:law-3899:tu-748:ja-en",
+      "reference": "Article 26-15, item (ii) and Article 26-21, item (ii)",
+      "source": "第二十六条の十五第二号及び第二十六条の二十一第二号",
+      "stratum": "legal:general"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact",
+          "typed"
+        ],
+        "hypothesis": "Supplementary Regulation (Order of the Ministry of Trade and Industry dated February 26, 1997)"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Supplementary Regulation (Order of the Ministry of Trade and Industry No. 5 of February 26, 1997)",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Supplementary Regulation (Order of the Ministry of Trade and Industry No. 5 of February 26, 1997)",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        }
+      },
+      "id": "v12-valid:general:jlt:law-4746:tu-183:ja-en",
+      "reference": "Supplementary Provisions (Order of the Ministry of International Trade and Industry No. 5 of February 26, 1997)",
+      "source": "附則（平成九年二月二六日通商産業省令第五号）",
+      "stratum": "legal:general"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact",
+          "typed"
+        ],
+        "hypothesis": "Article 23 (Article 43) Section (1) of the Compensation Sales Act (1941), Article (4)"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Article 23 (1) the Dispensation Sales Act (No. 159 of the Act of 1963) Article 44 (1)",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Article 23 (1) the Dispensation Sales Act (No. 159 of the Act of 1963) Article 44 (1)",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        }
+      },
+      "id": "v12-valid:general:jlt:law-4758:tu-92:ja-en",
+      "reference": "(xxiii) the provisions of Article 44, paragraph (1) of the Installment Sales Act (Act No. 159 of 1961);",
+      "source": "二十三 割賦販売法（昭和三十六年法律第百五十九号）第四十四条第一項",
+      "stratum": "legal:general"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "Chapter VI Certified Public Accountant and Audit Review Board"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "Chapter 6 Certified Public Accountant and Audit Review Board",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "Chapter 6 Certified Public Accountant and Audit Review Board",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:general:jlt:law-4946:tu-807:ja-en",
+      "reference": "Chapter VI Certified Public Accountants and Auditing Oversight Board",
+      "source": "第六章 公認会計士・監査審査会",
+      "stratum": "legal:general"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) Provides information to the person who conducts the office using the personal number, that is, the person wishes or will benefit the person in the office of the person using the personal number."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) Provides information to the person who conducts the office using the personal number, that is, the person wishes or will benefit the person in the office of the person using the personal number.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) Provides information to the person who conducts the office using the personal number, that is, the person wishes or will benefit the person in the office of the person using the personal number.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-2755:tu-325:ja-en",
+      "reference": "(ii) provision of information that the Person wishes or that is found to be beneficial to the Person with regard to Processes Using Individual Numbers, from a Person in Charge of the Processes Using Individual Numbers to the Person; and",
+      "source": "二 個人番号利用事務実施者が、本人に対し、個人番号利用事務に関して本人が希望し、又は本人の利益になると認められる情報を提供すること。",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) the combined effect dose of an external radiation and effective dose of an air-borne radioactive material exceeding one millicieve per week."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) The combined effect dose of an external radiation and effective dose of an air-borne radioactive material may exceed one millicieve per week.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "(2) The work with a potential to exceed the millicie belt per week, the total amount of effective dose by external radiation and the amount of effective dose by radioactive material in air.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-2865:tu-308:ja-en",
+      "reference": "(ii) work in which the total of the effective dose due to external radiation and the effective dose due to Radioactive Materials in the air is likely to exceed 1 mSv per week.",
+      "source": "二 外部放射線による実効線量と空気中の放射性物質による実効線量との合計が一週間につき一ミリシーベルトを超えるおそれのある作業",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [],
+        "hypothesis": "(iv) display appropriately depending on the shape or quality of the product, whether it is used, the method of care taken after use, or the method of preservation."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "(4) When displaying the attentions in the handling, the appropriate display of the method of use, the method of care after use, and the method of preservation, depending on the shape or quality of the product.",
+          "registered_new_failure_types": [
+            "exact",
+            "typed"
+          ]
+        },
+        "50": {
+          "failure_types": [],
+          "hypothesis": "(iv) When displaying the attentions in the handling, the appropriate display of the method of use, the method of care after use, and the method of preservation, depending on the shape or quality of the product.",
+          "registered_new_failure_types": []
+        }
+      },
+      "id": "v12-valid:long:jlt:law-3100:tu-234:ja-en",
+      "reference": "4. when displaying precautions in handling, the labeler must appropriately display usage methods, caring methods after use, and the preservation methods in accordance with the shapes or quality of the goods;",
+      "source": "（四） 取扱い上の注意の表示に際しては、使用方法、使用後の手入れ方法及び保存方法について製品の形状又は品質に応じて適切に表示すること。",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact"
+        ],
+        "hypothesis": "Article 2 The corporations specified by the Order of the Ministry of Internal Affairs as those that have a close relationship with Article 4-1 of the Act are the following:"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "Article 2 (1) As a corporation with a close relationship under Article 4-1 of the Act, the corporations specified by the Order of the Ministry of Internal Affairs shall be the following corporations:",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "Article 2 (1) As a corporation with a close relationship under Article 4-1 of the Act, the corporations specified by the Order of the Ministry of Internal Affairs shall be the following corporations:",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-3943:tu-10:ja-en",
+      "reference": "Article 2 Corporations prescribed by order of the competent ministry as being closely related as set forth in Article 4, paragraph (1) of the Act are as follows:",
+      "source": "第二条 法第四条第一項の密接な関係を有する法人として主務省令で定める法人は、次に掲げる法人とする。",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) if there are more than two heirs, and if the heir is selected as the heir to succeed the position of authorized salesperson by the consent of all of them, then the consent of all of them"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) If there are more than two heirs, and if the heir is selected as the heir to succeed the position of authorized salesperson by the consent of all of them, then the consent of all of them is",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) If there are more than two heirs, and if the heir is selected as the heir to succeed the position of authorized salesperson by the consent of all of them, then the consent of all of them is",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-4281:tu-473:ja-en",
+      "reference": "(ii) for a person selected as the successor to the status of a licensed business person with the consent of all the heirs when there are two or more heirs, the written consent of all those heirs.",
+      "source": "二 相続人が二人以上ある場合において、その全員の同意により許可営業者の地位を承継すべき相続人として選定された者にあつては、その全員の同意書",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact"
+        ],
+        "hypothesis": "Article 7) Animal beasts as defined by the Ordinance of the Ministry of Health, Labour and Welfare as water buffaloes, provided in Article 10 of the Act, paragraph 1."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "Article 7 The animal husbandry specified in Article 10 of the Act, paragraph 1, paragraph 1 of the Ministry of Health, Labour and Welfare, is defined as water buffalo.",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "Article 7 The animal husbandry specified in Article 10 of the Act, paragraph 1, paragraph 1 of the Ministry of Health, Labour and Welfare, is defined as water buffalo.",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-4281:tu-55:ja-en",
+      "reference": "Article 7 (1) The livestock specified by Order of the Ministry of Health, Labour and Welfare as prescribed in Article 10, paragraph (1) of the Act are buffaloes.",
+      "source": "第七条 法第十条第一項に規定する厚生労働省令で定める獣畜は、水牛とする。",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) it has the achievements and guidance system for educational research appropriate to foster people with especially excellent qualities in the field."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) It has the achievement and guidance system for educational research appropriate for nurturing people with especially excellent qualities in the field.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) It has the achievement and guidance system for educational research appropriate for nurturing people with especially excellent qualities in the field.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-4743:tu-262:ja-en",
+      "reference": "(ii) having education and research achievements and a guidance system appropriate for nurturing a person who possess exceptional qualities in the relevant fields.",
+      "source": "二 当該分野における特に優れた資質を有する者の育成を図るのにふさわしい教育研究上の実績及び指導体制を有すること。",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) when a person who is engaged in the business of selling compressed oxygen for medical use or other high-pressure gases as specified by the government order, sells them at a sales center with a storage volume of at least five cubic meters."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "(ii) when a person who is engaged in the business of selling compressed oxygen for medical use or other high-pressure gases as specified by the government order, sells them at a sales center with a storage volume of not more than five cubic meters.",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "(ii) when a person who is engaged in the business of selling compressed oxygen for medical use or other high-pressure gases as specified by the government order, sells them at a sales center with a storage volume of not more than five cubic meters.",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-4754:tu-125:ja-en",
+      "reference": "(ii) a person that is engaged in the sales business of high pressure gases, such as compressed oxygen for medical use, as specified by Cabinet Order at a sales location where the storage capacity is always less than 5 cubic meters.",
+      "source": "二 医療用の圧縮酸素その他の政令で定める高圧ガスの販売の事業を営む者が貯蔵数量が常時容積五立方メートル未満の販売所において販売するとき。",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact"
+        ],
+        "hypothesis": "Article 66, Paragraph 3 of Article 41 of the Act to Replace and Use Reading in Article 1."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "Article 66, paragraph 43-3 of the Act to Replace and Use Reading in Article 1.",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "Article 66, paragraph 43-3 of the Act to Replace and Use Reading in Article 1.",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-4758:tu-245:ja-en",
+      "reference": "Article 41, paragraph (3) of the Act as applied mutatis mutandis pursuant to Article 66, paragraph (1) of the Act following the deemed replacement of terms",
+      "source": "第六十六条第一項において読み替えて準用する法第四十一条第三項",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact"
+        ],
+        "hypothesis": "(11) iron scrap wholesaler (only those that retrieve the substances enclosed in an air conditioner for automobiles or remove the air conditioner for automobiles attached to the car body)."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "typed"
+          ],
+          "hypothesis": "(十一) The iron scrap wholesale business (only the ones that retrieve the substances enclosed in an air conditioner for automobiles or remove the air conditioner for automobiles attached to the car body).",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "typed"
+          ],
+          "hypothesis": "(十一) The iron scrap wholesale business (only the ones that retrieve the substances enclosed in an air conditioner for automobiles or remove the air conditioner for automobiles attached to the car body).",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-4804:tu-21:ja-en",
+      "reference": "(xi) iron scrap wholesale business (limited to the wholesale business of collecting substances enclosed in air conditioners for automobiles, or removing air conditioners for automobiles installed in automobile bodies);",
+      "source": "十一 鉄スクラップ卸売業（自動車用エアコンディショナーに封入された物質を回収し、又は自動車の車体に装着された自動車用エアコンディショナーを取り外すものに限る。）",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact",
+          "typed"
+        ],
+        "hypothesis": "Article 23 Those who violate the provisions of Article 12 and disclosed the provisions provided in the Article shall be punished with fines of less than 350 thousand yen."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Article 23 Those who violate the provisions of Article 12 and disclosed the provisions provided in the Article shall be punished with fines of not more than 350 thousand yen.",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Article 23 Those who violate the provisions of Article 12 and disclosed the provisions provided in the Article shall be punished with fines of not more than 350 thousand yen.",
+          "registered_new_failure_types": [
+            "negation"
+          ]
+        }
+      },
+      "id": "v12-valid:long:jlt:law-5109:tu-124:ja-en",
+      "reference": "Article 22 Any person who has divulged any information provided for in Article 12 in violation of the Article is to be subject to a fine of not more than 300,000 yen.",
+      "source": "第二十二条 第十二条の規定に違反して同条に規定する事項を漏らした者は、三十万円以下の罰金に処する。",
+      "stratum": "legal:long"
+    },
+    {
+      "baseline": {
+        "failure_types": [],
+        "hypothesis": "(iv) when displaying the attentions in the handling, the following items are indicated; however, if the label \"anti-aliasing\" is used for the feces, this is not the case."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "(4) When displaying the attentions in the handling, the following items are indicated; however, if displaying \"anti-aliasing\" for the feces, this is not the case.",
+          "registered_new_failure_types": [
+            "exact",
+            "typed"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "(4) When displaying the attentions in the handling, the following items are indicated; however, if displaying \"anti-aliasing\" for the feces, this is not the case.",
+          "registered_new_failure_types": [
+            "exact",
+            "typed"
+          ]
+        }
+      },
+      "id": "v12-valid:negation:jlt:law-3100:tu-344:ja-en",
+      "reference": "4. when displaying precautions in handling, the labeler must display the following matters. However, with regard to (d), this does not apply in cases where \"耐油性 (meaning \"oil resistance\")\" is displayed;",
+      "source": "（四） 取扱い上の注意の表示に際しては、次に掲げる事項を表示すること。ただし、ニについては、「耐油性」の表示のある場合は、この限りでない。",
+      "stratum": "legal:negation"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) a person who is punished with more than a ban and does not have five years to complete execution or receive the execution."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) A person who is punished with more than a ban and does not have five years to complete execution or receive the execution.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) A person who is punished with more than a ban and does not have five years to complete execution or receive the execution.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:negation:jlt:law-3804:tu-34:ja-en",
+      "reference": "(ii) a person who has been sentenced to imprisonment or severer punishment and for whom five years has not passed since the completion of the sentence or the date on which the person ceased to be subject to the sentence.",
+      "source": "二 禁錮以上の刑に処せられ、その執行を終わり、又はその執行を受けることがなくなった日から五年を経過しない者",
+      "stratum": "legal:negation"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact",
+          "negation"
+        ],
+        "hypothesis": "Article 6 (a case relating to multiple specific arbitration cases involving the same petitioner is subject to the same court separately; the mediation procedures related to these cases must be consolidated as long as possible."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Article 6 (1) When cases related to multiple specific arbitration related to the same petitioner are separately attached to the same court, the mediation procedures related to these cases must be consolidated as long as possible.",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation"
+          ],
+          "hypothesis": "Article 6 (1) When cases related to multiple specific arbitration related to the same petitioner are separately attached to the same court, the mediation procedures related to these cases must be consolidated as long as possible.",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        }
+      },
+      "id": "v12-valid:omission-risk:jlt:law-2722:tu-16:ja-en",
+      "reference": "Article 6 If multiple cases of Special Conciliations pertaining to the same petitioners are pending in the same court separately, conciliation proceedings pertaining to these cases must be consolidated and processed to the extent possible.",
+      "source": "第六条 同一の申立人に係る複数の特定調停に係る事件が同一の裁判所に各別に係属するときは、これらの事件に係る調停手続は、できる限り、併合して行わなければならない。",
+      "stratum": "legal:omission-risk"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) the person who set up the institution (when the person setting up is a corporation, the officer of the corporation in charge of its management (the same in the next issue) has the knowledge or experience necessary to run the specialized school."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) The person who set up the institution (in the case where the person setting up is a corporation, is an officer of the corporation in charge of its management.) has the knowledge or experience necessary to run a specialized school.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) The person who set up the institution (in the case where the person setting up is a corporation, is an officer of the corporation in charge of its management.) the same in the following issue) has the knowledge or experience necessary to run a specialized school.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:omission-risk:jlt:law-4743:tu-388:ja-en",
+      "reference": "(ii) the management having the knowledge or experience necessary to manage a specialized training college (if management is a legal specialist, it is to be the officer of the relevant legal specialist in charge of its management);",
+      "source": "二 設置者（設置者が法人である場合にあつては、その経営を担当する当該法人の役員とする。次号において同じ。）が専修学校を経営するために必要な知識又は経験を有すること。",
+      "stratum": "legal:omission-risk"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact",
+          "typed",
+          "negation"
+        ],
+        "hypothesis": "(2) When the completed inspection is performed, the completed inspection body must use the machinery and other equipment specified in Article 58, paragraph 201, and the completed inspection must be conducted by the person specified in Article (2) of the same Article."
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation",
+            "generation"
+          ],
+          "hypothesis": "(2) When the completed inspection is performed, the completed inspection body must use the machinery and other equipment specified in Article 58, paragraph (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article).",
+          "registered_new_failure_types": [
+            "generation"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed",
+            "negation",
+            "generation"
+          ],
+          "hypothesis": "(2) When the completed inspection is performed, the completed inspection body must use the machinery and other equipment specified in Article 58, paragraph (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article (25) of the Article).",
+          "registered_new_failure_types": [
+            "generation"
+          ]
+        }
+      },
+      "id": "v12-valid:omission-risk:jlt:law-4754:tu-836:ja-en",
+      "reference": "(2) A designated completion inspection body must use the devices and other equipment under Article 58-20, item (i) when conducting the completion inspection and have the inspections performed by the person under item (ii) of the Article.",
+      "source": "２ 指定完成検査機関は、完成検査を行うときは、第五十八条の二十第一号に規定する機械器具その他の設備を使用し、かつ、同条第二号に規定する者に完成検査を実施させなければならない。",
+      "stratum": "legal:omission-risk"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed",
+          "generation"
+        ],
+        "hypothesis": "(xxvii) the alkanes, ichi-amines; and the carbons of the alkanes, octadecah, nz, nz, nz, nz, nz, nz, nz, nz, nz, nz, nz, nz, z, z, z, z, z, z, z, z, z, z, z, z, z, z, z, z, z, z, z,"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "(xxvii) the alkanes, ichi-amines; and the carbons of the alkanes, which are octadecah-9, ii-dien-i-dien-i-amines; and the mixtures of octadecah-9,ii-dien-i-i-amines, ii-dien-i-amines, and ii-dien-i-dien-i-amines; and the mixtures of the alkanes.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "(xxvii) the alkanes, ichi-amines; and the carbons of the alkanes, which are octadecah-9, ii-dien-i-dien-i-amines; and the mixtures of octadecah-9,ii-dien-i-i-amines, ii-dien-i-amines, and ii-dien-i-dien-i-amines; and the mixtures of the alkanes.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:omission-risk:jlt:law-4804:tu-389:ja-en",
+      "reference": "(xxxvii) Alkan-1-amine (limited to those where the alkane is a linear chain with 8,10,12,14,16 or 18 carbon atoms and mixtures of those), (Z)-octadec-9-en-1-amine, (9Z,12Z)-octadeca-9,12-dien-1-amine and mixtures of those",
+      "source": "三十七 アルカン―一―アミン（アルカンの構造が直鎖であり、かつ、当該アルカンの炭素数が八、十、十二、十四、十六又は十八のもの及びその混合物に限る。）、（Ｚ）―オクタデカ―九―エン―一―アミン及び（九Ｚ・一二Ｚ）―オクタデカ―九・一二―ジエン―一―アミン並びにこれらの混合物",
+      "stratum": "legal:omission-risk"
+    },
+    {
+      "baseline": {
+        "failure_types": [],
+        "hypothesis": "(3) The overall plan for promoting ecotourism (lower-mentioned) as stipulated in the first item, generally establishes the following items based on the basic policy:"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(3) The overall plan for promoting ecotourism (lower-mentioned) as prescribed in the preceding paragraph (1) basically establishes the following items based on the basic policy:",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(3) The overall plan for promoting ecotourism (lower-mentioned) as prescribed in the preceding paragraph (1) basically establishes the following items based on the basic policy:",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:terminology-risk:jlt:law-2614:tu-33:ja-en",
+      "reference": "(3) The overall concept for promoting Ecotourism prescribed in the preceding paragraph, item (i) (hereinafter referred to as the \"Overall Concept\") is to contain, in particular, the following matters in line with the Basic Policies:",
+      "source": "３ 前項第一号に規定するエコツーリズム推進全体構想（以下「全体構想」という。）には、基本方針に即して、おおむね次の事項を定めるものとする。",
+      "stratum": "legal:terminology-risk"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) the characters of \"designated regeneration\" inscribed with a black frame and black characters on a white background for products such as regenerative medicine"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) The characters of \"designated regeneration\" inscribed with a black frame and black characters on a white background for products such as regenerative medicine",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) The characters of \"designated regeneration\" inscribed with a black frame and black characters on a white background for products such as regenerative medicine",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:terminology-risk:jlt:law-3215:tu-3075:ja-en",
+      "reference": "(ii) in cases of designated regenerative medicine products, the word \"designated regenerative, etc.\" indicated in black on a white background with a black frame.",
+      "source": "二 指定再生医療等製品にあつては、白地に黒枠、黒字をもつて記載する「指定再生等」の文字",
+      "stratum": "legal:terminology-risk"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "exact"
+        ],
+        "hypothesis": "Article 84 The head of the Juvenile Academy shall specify the matters that the layperson should comply with (articles that are called 'compliance' in the next paragraph and Article 113, paragraph (1)"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "Article 8-4 The head of the juvenile detention center shall set forth the matters that the resident priest should observe (articles of compliance) in the following paragraph and Article 113, paragraph (1):",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact",
+            "typed"
+          ],
+          "hypothesis": "Article 8-4 The head of the juvenile detention center shall set forth the matters that the resident priest should observe (articles of compliance) in the following paragraph and Article 113, paragraph (1):",
+          "registered_new_failure_types": [
+            "typed"
+          ]
+        }
+      },
+      "id": "v12-valid:terminology-risk:jlt:law-3475:tu-363:ja-en",
+      "reference": "Article 84 (1) The superintendent of a juvenile training school is to determine the rules to be observed by inmates (hereinafter referred to as \"rules to be observed\" in the following paragraph and Article 113, paragraph (1)).",
+      "source": "第八十四条 少年院の長は、在院者が遵守すべき事項（次項及び第百十三条第一項において「遵守事項」という。）を定める。",
+      "stratum": "legal:terminology-risk"
+    },
+    {
+      "baseline": {
+        "failure_types": [
+          "typed"
+        ],
+        "hypothesis": "(ii) the types of things (subsequentially, the following (accumulating Documents) jointly produced by the director or executive and the accounting counsel (a)"
+      },
+      "candidates": {
+        "100": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) The types of things (subsequentially, the following are made jointly by the director or executive and the accounting counsel.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        },
+        "50": {
+          "failure_types": [
+            "exact"
+          ],
+          "hypothesis": "(2) The types of things (subsequentially, the following are made jointly by the director or executive and the accounting counsel.",
+          "registered_new_failure_types": [
+            "exact"
+          ]
+        }
+      },
+      "id": "v12-valid:terminology-risk:jlt:law-4948:tu-1012:ja-en",
+      "reference": "(ii) among the following documents (referred to below as \"accounting documents\" in this Section), the types of the documents prepared by accounting advisors jointly with the directors or executive officers:",
+      "source": "二 次に掲げるもの（以下この節において「計算関係書類」という。）のうち、取締役又は執行役と会計参与が共同して作成したものの種類",
+      "stratum": "legal:terminology-risk"
+    }
+  ],
+  "contract": {
+    "bytes": 17186,
+    "path": "Research/translation/canonical-safety-repair-v12-contract-2026-07-26.json",
+    "sha256": "a43ff4695b5838fb100bf1a6615601a4486d44df73f2b66b5a6da55a8275d99c"
+  },
+  "experiment": "canonical-safety-repair-v12-ja-en",
+  "failure_counts": {
+    "100": {
+      "absolute": {
+        "exact": 561,
+        "generation": 9,
+        "negation": 191,
+        "typed": 651
+      },
+      "new": {
+        "exact": 15,
+        "generation": 1,
+        "negation": 5,
+        "typed": 8
+      },
+      "resolved": {
+        "exact": 25,
+        "generation": 6,
+        "negation": 7,
+        "typed": 47
+      }
+    },
+    "50": {
+      "absolute": {
+        "exact": 561,
+        "generation": 10,
+        "negation": 191,
+        "typed": 654
+      },
+      "new": {
+        "exact": 13,
+        "generation": 1,
+        "negation": 5,
+        "typed": 7
+      },
+      "resolved": {
+        "exact": 23,
+        "generation": 5,
+        "negation": 7,
+        "typed": 43
+      }
+    }
+  },
+  "models": {
+    "0": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "100": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-safety-repair-v12-ja-en-checkpoints/step-0000100/model.safetensors",
+      "sha256": "382d935ea123718c90f7d20d08af74e099c7b9697e925796b6d536b1b57981ab"
+    },
+    "50": {
+      "bytes": 242249092,
+      "path": "Research/translation/models/elanmt-canonical-safety-repair-v12-ja-en-checkpoints/step-0000050/model.safetensors",
+      "sha256": "cf67fb44a4e9a0991c95b5e87578a4427610cc8e4110fbd3bb03909356600f2b"
+    }
+  },
+  "new_failure_strata": {
+    "100": {
+      "legal:critical": 1,
+      "legal:general": 5,
+      "legal:long": 12,
+      "legal:negation": 3,
+      "legal:omission-risk": 4,
+      "legal:terminology-risk": 4
+    },
+    "50": {
+      "legal:critical": 1,
+      "legal:general": 4,
+      "legal:long": 10,
+      "legal:negation": 3,
+      "legal:omission-risk": 4,
+      "legal:terminology-risk": 4
+    }
+  },
+  "promotion_authorized": false,
+  "registered_new_failure_case_count_by_step": {
+    "100": 27,
+    "50": 25
+  },
+  "result": {
+    "bytes": 316196,
+    "path": "Research/translation/canonical-safety-repair-v12-result-2026-07-26.json",
+    "sha256": "0db46aee124cb3d9e61898630349e61cfa2a1fcecc5d04f591d3f5c5a2a9dcd1"
+  },
+  "schema_version": 1,
+  "selection_changed": false,
+  "status": "post-result-diagnostic-only"
+}
