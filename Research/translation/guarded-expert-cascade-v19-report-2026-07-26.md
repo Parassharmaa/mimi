@@ -58,6 +58,23 @@ Neither fallback output was empty or repetitive. The document fallback removes
 the known casino-law nontermination. It also slightly improves aggregate
 EN→JA chrF++ and BLEU; JA→EN is unchanged from the stronger specialist.
 
+## Pinned COMET-22
+
+The exact composed report was scored with the existing pinned Apache-2.0
+`Unbabel/wmt22-comet-da` revision and compared case-by-case with both parents
+using 10,000 paired bootstrap samples.
+
+| Direction | Bundled Mimi | Stronger pair | V19 cascade | V19 vs stronger pair |
+|---|---:|---:|---:|---:|
+| EN→JA | 0.8486 | 0.8669 | **0.8702** | +0.00328 `[+0.00000, +0.00888]` |
+| JA→EN | 0.7825 | 0.8192 | **0.8192** | +0.00000 `[0, 0]` |
+
+V19 improves over bundled Mimi by +0.02154 EN→JA, with paired 95% interval
+`[+0.00404, +0.04262]`, and +0.03667 JA→EN, interval
+`[+0.01889, +0.05758]`. The six EN→JA long legal documents improve +0.03871
+COMET over the stronger pair; JA→EN long legal is unchanged. This passes the
+public COMET non-inferiority gate without weakening either direction.
+
 ## Actual Swift/MLX evidence
 
 The runtime change is developer-only and does not alter app resources.
@@ -69,26 +86,37 @@ The runtime change is developer-only and does not alter app resources.
   `I headed for the window.`
 - Exact casino-law failure segment: the expert loop was detected and the
   current bundled local generalist returned a finite translation.
+- A new exact Swift cascade benchmark records per-case routing, deterministic
+  warm outputs, failures, fallback IDs, latency, bundle bytes, and process peak
+  RSS.
+- Its 12-case canary initially found two valid calendar translations rejected
+  by the critical-number guard. Lexical English month names are now normalized
+  to their numeric month only when adjacent to a day. Both valid date
+  translations pass; two wrong-month negative controls still fail.
+- The corrected 12-case canary passes with 12 expert outputs, zero failures,
+  the 146,816,974-byte pack, and 424,853,504 bytes peak process RSS. Its timing
+  is not a promotion result because the V18 Metal evaluator was concurrent.
 - The complete developer pack passed Mimi's authenticated model-pack validator.
 
 ## Remaining gates
 
 V19 is not ready to ship yet:
 
-1. Run COMET-22 on the exact composed report and compare it with both parents.
-2. Run the complete long-document, critical-meaning, negation, typed-token, and
+1. Run the complete long-document, critical-meaning, negation, typed-token, and
    protected suites without changing the guard.
-3. Measure warm p50/p95, fallback-tail latency, preparation time, and peak RSS
+2. Measure warm p50/p95, fallback-tail latency, preparation time, and peak RSS
    using the exact Swift cascade pack.
-4. Resolve the pack's inherited attribution/share-alike distribution status
+3. Resolve the pack's inherited attribution/share-alike distribution status
    against the already-public candidate release sidecars.
-5. Only after all gates pass, copy the authenticated pack into
+4. Only after all gates pass, copy the authenticated pack into
    `App/Resources/TranslationModels`, rebuild the app, and run release parity.
 
 The exact contract is
 `Research/translation/guarded-expert-cascade-v19-contract-2026-07-26.json`;
 the machine-readable public result is
-`Research/translation/guarded-expert-cascade-v19-preliminary-result-2026-07-26.json`.
+`Research/translation/guarded-expert-cascade-v19-preliminary-result-2026-07-26.json`,
+and the pinned learned-metric result is
+`Research/translation/guarded-expert-cascade-v19-comet-result-2026-07-26.json`.
 Rebuild the developer pack without changing app resources:
 
 ```sh
