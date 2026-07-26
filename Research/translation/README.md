@@ -2341,3 +2341,26 @@ The sealed result SHA-256 is
 `fd986b7099b72affd7a9dc3d51c1413911b087c0d7a21a044c95f24f74f646c1`.
 No Sonnet/Opus judging, q4, COMET, protected evaluation, app change, release,
 or upload is authorized. See `active-sequence-risk-v16-report-2026-07-26.md`.
+
+## V17 pre-semantic candidate availability
+
+The on-policy q4/full-precision diagnostic passes its first gate. It selects
+2,048 decontaminated licensed training sources, including 298 long sources,
+generates 14,473 unique safe-parent rollouts, and retains 3,929 near-margin
+hard comparisons: 1,987 EN→JA and 1,942 JA→EN. In 3,475 comparisons the
+full-precision safe parent assigns the generated negative at least as much
+length-normalized likelihood as the licensed reference.
+
+This authorizes pinned COMET candidate scoring and the frozen independent
+Sonnet 5 + Opus 5 primary semantic audit only. It does not authorize training.
+The deterministic tag inventory already exposes an important weakness: only
+6 pairs trigger the repetition-risk heuristic, versus 536 omission-risk and
+898 Japanese-sensitive pairs. The later 15% coverage gates use semantic judge
+labels, so this is a warning rather than a premature rejection, and it may not
+be relabeled away after seeing judgments.
+
+The source manifest SHA-256 is
+`84e50efb820bcdfb73feba4002d8a0186d6a73e0aa58840506639e584ea75e29`.
+The tracked stage-one result keeps training, protected evaluation, app changes,
+release, and upload disabled. See
+`faithful-on-policy-multipair-v17-presemantic-result-2026-07-26.json`.

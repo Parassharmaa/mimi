@@ -1,0 +1,89 @@
+{
+  "app_change_authorized": false,
+  "comet_candidate_scoring_authorized": true,
+  "counts": {
+    "deterministic_risk_tags": {
+      "addition-risk": 293,
+      "exact-critical-mismatch": 801,
+      "japanese-sensitive-audit": 898,
+      "negation-marker-mismatch": 493,
+      "omission-risk": 536,
+      "repetition-risk": 6,
+      "typed-critical-mismatch": 807
+    },
+    "generated_unique_candidates": {
+      "en-ja": 7357,
+      "ja-en": 7116,
+      "total": 14473
+    },
+    "preselected_pairs": {
+      "en-ja": 1987,
+      "ja-en": 1942,
+      "negative_preferred": 3475,
+      "total": 3929
+    },
+    "selected_sources": {
+      "en-ja": 1024,
+      "ja-en": 1024,
+      "long": 298,
+      "total": 2048
+    }
+  },
+  "experiment": "faithful-on-policy-multipair-v17-prediagnostic",
+  "generated_strings_are_positive_targets": false,
+  "next_gate": "pinned COMET plus exact independent Claude Sonnet 5 and Opus 5 primary faithfulness audit; stop before re-audit or gradients unless the frozen semantic gates pass",
+  "outputs": {
+    "candidate_lists": {
+      "bytes": 14917406,
+      "sha256": "746893e5eecfde8a9a340a96dee2c45476e97e6c2b4f628312a59ab13501676d"
+    },
+    "comet_engine_report": {
+      "bytes": 2563843,
+      "sha256": "4f1f60f71679027834981c871ef8df2e9b6e1805b09fce3c78d50b6e54f69f55"
+    },
+    "comet_suite": {
+      "bytes": 1577866,
+      "sha256": "064f8026374d191298e0f52c855254829b02f164d5417dca0a3306d13492f0cb"
+    },
+    "preselected_pairs": {
+      "bytes": 5137789,
+      "sha256": "92b2b0e9586533579eaa55a104e0594a67a1ca9f4b95356a94032f8e727d523c"
+    },
+    "selected_sources": {
+      "bytes": 2230542,
+      "sha256": "e6dd5ad34cb6ee79dfdeab1bb2692614c57f74d2d04c6715f19cd3a63803ce56"
+    }
+  },
+  "positive_target_source": "licensed-human-reference",
+  "private_reasoning_traces_used": false,
+  "public_upload_authorized": false,
+  "reproducibility": {
+    "byte_identical_full_rerun_complete": false,
+    "device_type": "mps",
+    "manifest_sha256": "84e50efb820bcdfb73feba4002d8a0186d6a73e0aa58840506639e584ea75e29",
+    "packages": {
+      "mlx": "0.32.0",
+      "numpy": "2.5.1",
+      "sacrebleu": "2.6.0",
+      "torch": "2.13.0",
+      "transformers": "4.40.2"
+    },
+    "python": "3.12.12",
+    "smoke_rerun_was_byte_identical": true
+  },
+  "risk_coverage_observation": {
+    "deterministic_japanese_sensitive_fraction": 0.2285568847034869,
+    "deterministic_omission_fraction": 0.13642148129294987,
+    "deterministic_repetition_fraction": 0.0015271061338763044,
+    "interpretation": "The later 15% gates use semantic judge labels, so these deterministic tag fractions are not the gate result. The six repetition-risk tags are a preregistered warning and may not be redefined or hidden after judging."
+  },
+  "schema_version": 1,
+  "semantic_audit_authorized": true,
+  "stage_one_gates": {
+    "en_ja_preselected_at_least_600": true,
+    "ja_en_preselected_at_least_600": true,
+    "total_preselected_at_least_1500": true
+  },
+  "status": "presemantic-candidate-availability-passed",
+  "training_authorized": false
+}
