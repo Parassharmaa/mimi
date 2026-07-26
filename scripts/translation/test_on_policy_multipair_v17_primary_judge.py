@@ -22,6 +22,7 @@ from prepare_on_policy_multipair_v17_primary_judge import (
     validate_comet,
 )
 from run_claude_consensus_judge import read_requests, validate_payload
+from score_comet import PINNED_RUNTIME_PACKAGES
 
 
 def must_fail(function, *args, **kwargs) -> None:
@@ -187,8 +188,27 @@ print(json.dumps({
         "modelLicense": "Apache-2.0",
         "packageVersion": COMET_PACKAGE_VERSION,
         "precision": "float32",
+        "hardware": "arm64",
+        "pythonVersion": "3.12.12",
         "suiteSHA256": "suite-sha",
         "engineReportSHA256": "engine-sha",
+        "runtimePackageVersions": PINNED_RUNTIME_PACKAGES,
+        "runtimeEnvironmentSHA256": hashlib.sha256(
+            json.dumps(
+                PINNED_RUNTIME_PACKAGES,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+        ).hexdigest(),
+        "modelCheckpoint": {"bytes": 1, "sha256": "0" * 64},
+        "inferenceConfiguration": {
+            "accelerator": "cpu",
+            "batchSize": 8,
+            "numWorkers": 1,
+            "torchInteropThreads": 1,
+            "torchThreads": 4,
+        },
         "results": [{"caseID": pair_id, "score": 0.75}],
     }
     assert validate_comet(comet, pairs=pairs, manifest=manifest) == {

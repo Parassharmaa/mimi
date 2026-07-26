@@ -10,6 +10,8 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from score_comet import PINNED_RUNTIME_PACKAGES
+
 EXPERIMENT = "faithful-on-policy-multipair-v17-primary-semantic-audit"
 SOURCE_EXPERIMENT = "faithful-on-policy-multipair-v17-prediagnostic"
 MODELS = ("claude-sonnet-5", "claude-opus-5")
@@ -198,6 +200,10 @@ def validate_comet(
 ) -> dict[str, float]:
     expected_ids = {str(pair["pair_id"]) for pair in pairs}
     results = report.get("results")
+    runtime_versions = report.get("runtimePackageVersions")
+    runtime_sha256 = hashlib.sha256(canonical(PINNED_RUNTIME_PACKAGES)).hexdigest()
+    inference = report.get("inferenceConfiguration")
+    checkpoint = report.get("modelCheckpoint")
     if (
         report.get("metric") != "COMET-22"
         or report.get("modelRepository") != COMET_MODEL
@@ -205,10 +211,30 @@ def validate_comet(
         or report.get("modelLicense") != "Apache-2.0"
         or report.get("packageVersion") != COMET_PACKAGE_VERSION
         or report.get("precision") != "float32"
+        or report.get("hardware") != "arm64"
+        or not str(report.get("pythonVersion", "")).startswith("3.12.")
         or report.get("suiteSHA256")
         != manifest["outputs"]["comet_suite"]["sha256"]
         or report.get("engineReportSHA256")
         != manifest["outputs"]["comet_engine_report"]["sha256"]
+        or report.get("runtimePackageVersions") != PINNED_RUNTIME_PACKAGES
+        or report.get("runtimeEnvironmentSHA256") != runtime_sha256
+        or not isinstance(runtime_versions, dict)
+        or not isinstance(inference, dict)
+        or inference.get("accelerator") != "cpu"
+        or inference.get("batchSize") != 8
+        or inference.get("numWorkers") != 1
+        or not isinstance(inference.get("torchThreads"), int)
+        or inference["torchThreads"] < 1
+        or not isinstance(inference.get("torchInteropThreads"), int)
+        or inference["torchInteropThreads"] < 1
+        or not isinstance(checkpoint, dict)
+        or not isinstance(checkpoint.get("bytes"), int)
+        or checkpoint["bytes"] < 1
+        or not isinstance(checkpoint.get("sha256"), str)
+        or len(checkpoint["sha256"]) != 64
+        or not set(checkpoint["sha256"]).issubset(set("0123456789abcdef"))
+        or "createdAt" in report
         or not isinstance(results, list)
     ):
         raise SystemExit("V17 pinned COMET evidence differs")
@@ -395,6 +421,7 @@ def main() -> None:
         root / "scripts/translation/collect_on_policy_multipair_v17_primary_judge.py",
         root / "scripts/translation/run_claude_consensus_judge.py",
         root / "scripts/translation/run_synthetic_batch.py",
+        root / "scripts/translation/score_comet.py",
     ]
     contract = {
         "schema_version": 1,
