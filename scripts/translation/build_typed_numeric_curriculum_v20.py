@@ -90,7 +90,6 @@ def validate_rows(
             "origin",
             "source_license",
             "source_provenance",
-            "attribution",
         ):
             if not str(row.get(field, "")).strip():
                 raise SystemExit(f"parent row lacks {field}: {identifier}")
@@ -99,6 +98,11 @@ def validate_rows(
                 f"parent row has a non-distributable license: "
                 f"{identifier} / {row['source_license']}"
             )
+        if (
+            row["source_license"] != "project-owned"
+            and not str(row.get("attribution", "")).strip()
+        ):
+            raise SystemExit(f"licensed parent row lacks attribution: {identifier}")
 
 
 def benchmark_texts(row: dict[str, Any]) -> list[str]:
