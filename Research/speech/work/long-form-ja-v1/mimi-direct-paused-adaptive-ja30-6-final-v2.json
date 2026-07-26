@@ -1,0 +1,279 @@
+{
+  "format": "mimi-native-live-asr-benchmark-v2",
+  "engine": "Mimi Speech Preview",
+  "runtime": "MLX Audio Swift",
+  "replayMode": "direct-compute",
+  "mode": "bounded-6s-partial-3s-stride-6s-low-energy-boundary-30s-final",
+  "executableSha256": "6a9d817562390e31f0054f869125aeee307a07601d401bb15360795e7dbee78b",
+  "implementationSha256": "9ec57b694e95db72c61b4ef7d120bb0526384ea019496edb69c474b8910bdf29",
+  "executableImplementationSha256": "9ec57b694e95db72c61b4ef7d120bb0526384ea019496edb69c474b8910bdf29",
+  "implementationFiles": [
+    "Package.resolved",
+    "Package.swift",
+    "Sources/Mimi/AppStore.swift",
+    "Sources/Mimi/AppWindowCoordinator.swift",
+    "Sources/Mimi/AppleSpeechEngine.swift",
+    "Sources/Mimi/AppleTranslationBenchmark.swift",
+    "Sources/Mimi/AudioDeviceCatalog.swift",
+    "Sources/Mimi/AutomaticAppleSpeechEngine.swift",
+    "Sources/Mimi/ExperimentalMLXTranslationEngine.swift",
+    "Sources/Mimi/FloatingCaptionPanel.swift",
+    "Sources/Mimi/FollowLatestScrollView.swift",
+    "Sources/Mimi/InlineTranslationView.swift",
+    "Sources/Mimi/LegacyModelStubs.swift",
+    "Sources/Mimi/LocalStorage.swift",
+    "Sources/Mimi/MarianExactTranslationMemory.swift",
+    "Sources/Mimi/MarianMLXTranslationModel.swift",
+    "Sources/Mimi/MarianSourceExpertRouter.swift",
+    "Sources/Mimi/MenuBarView.swift",
+    "Sources/Mimi/MicrophoneCapture.swift",
+    "Sources/Mimi/MimiApp.swift",
+    "Sources/Mimi/MimiDesign.swift",
+    "Sources/Mimi/MimiWhisperMLXLiveEngine.swift",
+    "Sources/Mimi/ModelSetupStatusView.swift",
+    "Sources/Mimi/NemotronMLXAccuracyEngine.swift",
+    "Sources/Mimi/OnboardingView.swift",
+    "Sources/Mimi/OnboardingWindowCoordinator.swift",
+    "Sources/Mimi/OutputAudioCapture.swift",
+    "Sources/Mimi/PlatformServices.swift",
+    "Sources/Mimi/QwenMLXLiveEngine.swift",
+    "Sources/Mimi/RealtimeBenchmark.swift",
+    "Sources/Mimi/ScreenAudioCapture.swift",
+    "Sources/Mimi/ScreenAudioSelectionControl.swift",
+    "Sources/Mimi/SettingsView.swift",
+    "Sources/Mimi/SettingsWindowFocus.swift",
+    "Sources/Mimi/TranscriptContentView.swift",
+    "Sources/Mimi/TranscriptHistoryStore.swift",
+    "Sources/Mimi/TranscriptWindow.swift",
+    "Sources/Mimi/TranslationCascadeBenchmark.swift",
+    "Sources/Mimi/TranslationParityVerification.swift",
+    "Sources/Mimi/UserPreferences.swift",
+    "Sources/Mimi/VoiceTyping.swift",
+    "Sources/Mimi/WhisperKitAccuracyEngine.swift",
+    "Sources/Mimi/WhisperLanguageDetector.swift",
+    "Sources/MimiCore/DeterministicPipeline.swift",
+    "Sources/MimiCore/Domain.swift",
+    "Sources/MimiCore/LiveTextEdit.swift",
+    "Sources/MimiCore/TranslationBenchmark.swift",
+    "Sources/MimiSession/LiveAudioFlowControl.swift",
+    "Sources/MimiSession/LowEnergyAudioBoundary.swift",
+    "Sources/MimiSession/TranscriptionSession.swift",
+    "scripts/speech/evidence_identity.py",
+    "scripts/speech/run_mimi_whisper_live_benchmark.py"
+  ],
+  "feedChunkSeconds": 0.1,
+  "suiteSha256": "929a93507298130f7eea6704c1ceae1d6c3f4bc51bf3a8eaa9e6e54457543ecc",
+  "selectedCaseIDs": [
+    "long-form:fleurs-ja-screen-v1:24:silence-1s"
+  ],
+  "modelWeightsSha256": "45298f6dc48df8c11e0a8d1dc5e0197c688bfa530646fa21f1a0238d2b0ecda3",
+  "effectiveProfile": {
+    "initialPartialStrideSeconds": 3,
+    "partialStrideSeconds": 3,
+    "endpointSilenceSeconds": 0.75,
+    "maximumUtteranceSeconds": 30,
+    "forcedBoundaryLookbackSeconds": 6
+  },
+  "language": "ja",
+  "metric": "cer",
+  "caseCount": 1,
+  "wallSeconds": 168.157070083078,
+  "corpusErrorRate": 0.065738592420727,
+  "meanComputeRealTimeFactor": 0.40488548395161117,
+  "meanPacedWallRealTimeFactor": null,
+  "meanInputDeliveryRealTimeFactor": null,
+  "maximumInputScheduleLatenessSeconds": null,
+  "queueCapacitySeconds": null,
+  "maximumQueuedAudioSeconds": null,
+  "firstTextP50Seconds": 3.874193625,
+  "firstTextP95Seconds": 3.874193625,
+  "firstFinalP50Seconds": 12.460305708,
+  "firstFinalP95Seconds": 12.460305708,
+  "postAudioFinalizationP50Seconds": null,
+  "postAudioFinalizationP95Seconds": null,
+  "totalDroppedAudioSamples": 0,
+  "totalAudioDropEventCount": 0,
+  "totalBackpressureEventCount": 0,
+  "meanHypothesisChurn": 0.06483529655176594,
+  "corpusFirstUpdatePrefixErrorRate": 0.0,
+  "meanFirstUpdateReferenceCoverage": 0.006187161639597835,
+  "peakRSSBytes": 1217118208,
+  "results": [
+    {
+      "caseID": "long-form:fleurs-ja-screen-v1:24:silence-1s",
+      "mode": "bounded-6s-partial-3s-stride-6s-low-energy-boundary-30s-final",
+      "feedChunkSeconds": 0.1,
+      "initialPartialStrideSeconds": 3,
+      "partialStrideSeconds": 3,
+      "endpointSilenceSeconds": 0.75,
+      "maximumUtteranceSeconds": 30,
+      "forcedBoundaryLookbackSeconds": 6,
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう ロスビー数が小さいほど磁気反転に関して星の活性が低下するわけです 残念ながら 運転手の行動を100%の確率で予測することはできないので 交通の流れを研究することは困難です ロランド メンドーサはm16ライフルで観光客に発砲しました 78ある提言うち最初に挙げられているのは 敵対的な介入に対してイラクの国境を確保し 近隣諸国との外交関係を再び確立するために 年内に新たな外交主導権を発揮するべきだというものです ビデオ録画の利用は 数ミリ秒程度続く微表情 つまり顔の動きを解釈するうえで重要な発見につながっています スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています これは 一部の動詞と目的語を区別するうえで重要な方法です 地殻の厚さは 手前側が約70 km 奥側が約100 kmです ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています しかし 結核患者全体に占めるxdr-tbの割合はまだ低いようで こうしている間にも南アフリカでは33万人のうち6,000人が感染している asusのeee pcは コスト面と機能面で世界に先駆けて発売され 2007 taipei it monthで話題となりました msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です 1963年にダムが建設されてからは 川全体に土砂を拡散する季節性洪水が止まりました 文明という言葉は 市民を意味するラテン語の形容詞civilisから来ており 市民を意味するラテン語の名詞civis 都市や都市国家を意味し 何らかの形で社会の規模を定義するcivitasという名詞に関係しています フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています 連邦議会は2005年度から猥褻物取締法への資金提供を開始し fbiはアダルトポルノに10人の捜査員を投入しなければならないと規定しました 日本の原子力庁によれば 原発内で放射性セシウムとヨウ素が特定されています 米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました 原子の中には不安定な原子核を持つものがあり その原子核は ほとんど何もしなくても分裂してしまう傾向があります ph レベルは 検査した化学物質に含まれる水素イオンphのhの量で示されます 交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です 例えば 世界で最も普及している静止画写真のフィルム形式は35 mmで これはアナログフィルム時代の終わり頃には主流のフィルムサイズでした aiはsf的な意味合いが強いものの コンピュータサイエンスにおける非常に重要な分野を形成しており 行動 学習 知的適応を機械で処理します",
+      "hypothesis": "インターネットで敵対的環境コースについて検索すると、おそらく現地企業の住所が出てくるでしょう。ロスB数が小さいほど時期判定に関して星の活性が低下するわけです残念ながら、運転手の行動を100%の確率で予測することはできないので、 交通の流れを研究することは困難です。ロランドメンドーサは、M16ライフルで観光客に発砲しました。78ある提言うち最初に挙げられているのは、敵対的な介入に対してイラクの国境を確保し、近隣諸国との外交関係を再び確立するために、年内に新たな外交主導権を発揮するべきだというものです。ビデオ録画の利用は数ミリ秒程度続く微表情、つまり顔の動きを解釈する上で重要な発見につながっています。スンダルバンスは世界最大の沿岸マングローブ地帯であり、海外からバングラディシとインドの内陸地域まで80km、50mにわたって広がっています。これは一部の動詞と目的語を区別する上で重要な方法です近くの圧は手前側が約70km、奥側が約100kmです。ダンディ大学のパメラ・ファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。しかし、血核患者全体に占めるXDR-TBの割合はまだ低いようで、こうしている間にも南アフリカでは33万人のうち6000人が感染している。ASUSのEPCはコスト面と機能面で世界に先駆けて販売され、2007台北ITマウスで話題となりました。MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です。1963年にダムが建設されてからは、川全体に土砂を拡散する季節性洪水が止まりました。文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞シビス都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名詞に関係していますフォークランドの公式通貨はフォークランド初等ポンド、FKPで1ポンドか1Aポンド、GBPと投下に固定されています。連邦議会は2005年度からYセスブス取締法への資金提供を開始しFBIはアタルズポルドに10人の捜査員を投入しなければならないと規定しました日本の原子力庁によれば、原発内で放射性セシウムと要素が特定されています。米国のプリンストン大学とスウェーデンのオクサラ大学の研究者らは、この新種がわずか2世代で進化したことを報告しましたが、この過程は、古児種のガラパゴスフィンチと移入種のオオサボテンフィンチが荒廃した繁殖であるため、もっと長い時間がかかると考えられていました。原子の中には不安定な原子核を持つものがあり、その原子核はほとんど何もしなくても分裂してしまう傾向があります。PHレールは、検索した化学物質に含まれる水素イオンPHの量で示されます。交通流研究とは、2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です。例えば世界で最も普及している静止画写真のフィルム形式は35mmで、これはアナログフィルム時代の終わり頃には主流のフィルムサイズでした。AYは、SF的な意味合いが強いものの、コンピュータエスサイエンスにおける非常に重要な分野を形成しており、行動、学習、知的適応を機械で処理します。",
+      "audioDurationSeconds": 354.5585625,
+      "nativeWallSeconds": 144.941801792,
+      "computeWallSeconds": 144.941801792,
+      "pacedWallSeconds": null,
+      "modelLoadSeconds": 1.175961917,
+      "computeRealTimeFactor": 0.40488548395161117,
+      "wallRealTimeFactor": 0.4087950965561578,
+      "pacedAudio": false,
+      "inputBufferSeconds": null,
+      "inputDeliverySeconds": null,
+      "inputDeliveryRealTimeFactor": null,
+      "maximumInputScheduleLatenessSeconds": null,
+      "queueCapacitySeconds": null,
+      "maximumQueuedAudioSamples": null,
+      "maximumQueuedAudioSeconds": null,
+      "droppedAudioSamples": 0,
+      "audioDropEventCount": 0,
+      "firstAudioDropAtSeconds": null,
+      "backpressureEventCount": 0,
+      "postAudioFinalizationSeconds": null,
+      "firstTextAtSeconds": 3.874193625,
+      "firstFinalAtSeconds": 12.460305708,
+      "hypothesisChurn": 0.06483529655176594,
+      "updateCount": 132,
+      "firstUpdates": [
+        "インターネットで",
+        "インターネットで敵対的環境コースについて検索すると",
+        "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "インターネットで敵対的環境コースについて検索すると、おそらく現地企業の住所が出てくるでしょう。",
+        "インターネットで敵対的環境コースについて検索すると、おそらく現地企業の住所が出てくるでしょう。はい",
+        "インターネットで敵対的環境コースについて検索すると、おそらく現地企業の住所が出てくるでしょう。ロスb数が小さいほど直判定が高い",
+        "インターネットで敵対的環境コースについて検索すると、おそらく現地企業の住所が出てくるでしょう。ロスb数が小さいほど直判定が高いロスビー数が小さいほど時期判定に関して星の活性が低下するわけです",
+        "インターネットで敵対的環境コースについて検索すると、おそらく現地企業の住所が出てくるでしょう。ロスb数が小さいほど直判定が高いロスビー数が小さいほど時期判定に関して星の活性が低下するわけです星の活性に関して星の活性が低下するわけです"
+      ],
+      "finalizedSegments": [
+        {
+          "audioEndSeconds": 11.3,
+          "reason": "endpoint",
+          "text": "インターネットで敵対的環境コースについて検索すると、おそらく現地企業の住所が出てくるでしょう。"
+        },
+        {
+          "audioEndSeconds": 24.3,
+          "reason": "endpoint",
+          "text": "ロスB数が小さいほど時期判定に関して星の活性が低下するわけです"
+        },
+        {
+          "audioEndSeconds": 37.3,
+          "reason": "endpoint",
+          "text": "残念ながら、運転手の行動を100%の確率で予測することはできないので、 交通の流れを研究することは困難です。"
+        },
+        {
+          "audioEndSeconds": 48.4,
+          "reason": "endpoint",
+          "text": "ロランドメンドーサは、M16ライフルで観光客に発砲しました。"
+        },
+        {
+          "audioEndSeconds": 68,
+          "reason": "endpoint",
+          "text": "78ある提言うち最初に挙げられているのは、敵対的な介入に対してイラクの国境を確保し、近隣諸国との外交関係を再び確立するために、年内に新たな外交主導権を発揮するべきだというものです。"
+        },
+        {
+          "audioEndSeconds": 80.7,
+          "reason": "endpoint",
+          "text": "ビデオ録画の利用は数ミリ秒程度続く微表情、つまり顔の動きを解釈する上で重要な発見につながっています。"
+        },
+        {
+          "audioEndSeconds": 96.7,
+          "reason": "endpoint",
+          "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり、海外からバングラディシとインドの内陸地域まで80km、50mにわたって広がっています。"
+        },
+        {
+          "audioEndSeconds": 106.1,
+          "reason": "endpoint",
+          "text": "これは一部の動詞と目的語を区別する上で重要な方法です"
+        },
+        {
+          "audioEndSeconds": 115.2,
+          "reason": "endpoint",
+          "text": "近くの圧は手前側が約70km、奥側が約100kmです。"
+        },
+        {
+          "audioEndSeconds": 128.1,
+          "reason": "endpoint",
+          "text": "ダンディ大学のパメラ・ファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+        },
+        {
+          "audioEndSeconds": 149.9,
+          "reason": "endpoint",
+          "text": "しかし、血核患者全体に占めるXDR-TBの割合はまだ低いようで、こうしている間にも南アフリカでは33万人のうち6000人が感染している。"
+        },
+        {
+          "audioEndSeconds": 164.4,
+          "reason": "endpoint",
+          "text": "ASUSのEPCはコスト面と機能面で世界に先駆けて販売され、2007台北ITマウスで話題となりました。"
+        },
+        {
+          "audioEndSeconds": 175.1,
+          "reason": "endpoint",
+          "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です。"
+        },
+        {
+          "audioEndSeconds": 191.3,
+          "reason": "endpoint",
+          "text": "1963年にダムが建設されてからは、川全体に土砂を拡散する季節性洪水が止まりました。"
+        },
+        {
+          "audioEndSeconds": 216.7,
+          "reason": "endpoint",
+          "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞シビス都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名詞に関係しています"
+        },
+        {
+          "audioEndSeconds": 229.7,
+          "reason": "endpoint",
+          "text": "フォークランドの公式通貨はフォークランド初等ポンド、FKPで1ポンドか1Aポンド、GBPと投下に固定されています。"
+        },
+        {
+          "audioEndSeconds": 249.1,
+          "reason": "endpoint",
+          "text": "連邦議会は2005年度からYセスブス取締法への資金提供を開始しFBIはアタルズポルドに10人の捜査員を投入しなければならないと規定しました"
+        },
+        {
+          "audioEndSeconds": 259.8,
+          "reason": "endpoint",
+          "text": "日本の原子力庁によれば、原発内で放射性セシウムと要素が特定されています。"
+        },
+        {
+          "audioEndSeconds": 283.4,
+          "reason": "endpoint",
+          "text": "米国のプリンストン大学とスウェーデンのオクサラ大学の研究者らは、この新種がわずか2世代で進化したことを報告しましたが、この過程は、古児種のガラパゴスフィンチと移入種のオオサボテンフィンチが荒廃した繁殖であるため、もっと長い時間がかかると考えられていました。"
+        },
+        {
+          "audioEndSeconds": 296.1,
+          "reason": "endpoint",
+          "text": "原子の中には不安定な原子核を持つものがあり、その原子核はほとんど何もしなくても分裂してしまう傾向があります。"
+        },
+        {
+          "audioEndSeconds": 307.6,
+          "reason": "endpoint",
+          "text": "PHレールは、検索した化学物質に含まれる水素イオンPHの量で示されます。"
+        },
+        {
+          "audioEndSeconds": 319.9,
+          "reason": "endpoint",
+          "text": "交通流研究とは、2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です。"
+        },
+        {
+          "audioEndSeconds": 339.1,
+          "reason": "endpoint",
+          "text": "例えば世界で最も普及している静止画写真のフィルム形式は35mmで、これはアナログフィルム時代の終わり頃には主流のフィルムサイズでした。"
+        },
+        {
+          "audioEndSeconds": 354.5585625,
+          "reason": "stop",
+          "text": "AYは、SF的な意味合いが強いものの、コンピュータエスサイエンスにおける非常に重要な分野を形成しており、行動、学習、知的適応を機械で処理します。"
+        }
+      ],
+      "firstUpdatePrefixEditDistance": 0,
+      "firstUpdateUnits": 8,
+      "firstUpdateReferencePrefixUnits": 8,
+      "firstUpdateReferenceCoverage": 0.006187161639597835,
+      "editDistance": 85,
+      "referenceUnits": 1293,
+      "errorRate": 0.065738592420727
+    }
+  ],
+  "corpusCharacterErrorRate": 0.065738592420727
+}

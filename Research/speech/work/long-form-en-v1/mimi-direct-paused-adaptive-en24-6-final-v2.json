@@ -1,0 +1,279 @@
+{
+  "format": "mimi-native-live-asr-benchmark-v2",
+  "engine": "Mimi Speech Preview",
+  "runtime": "MLX Audio Swift",
+  "replayMode": "direct-compute",
+  "mode": "bounded-6s-partial-2s-initial-3s-stride-6s-low-energy-boundary-24s-maximum-final",
+  "executableSha256": "6a9d817562390e31f0054f869125aeee307a07601d401bb15360795e7dbee78b",
+  "implementationSha256": "9ec57b694e95db72c61b4ef7d120bb0526384ea019496edb69c474b8910bdf29",
+  "executableImplementationSha256": "9ec57b694e95db72c61b4ef7d120bb0526384ea019496edb69c474b8910bdf29",
+  "implementationFiles": [
+    "Package.resolved",
+    "Package.swift",
+    "Sources/Mimi/AppStore.swift",
+    "Sources/Mimi/AppWindowCoordinator.swift",
+    "Sources/Mimi/AppleSpeechEngine.swift",
+    "Sources/Mimi/AppleTranslationBenchmark.swift",
+    "Sources/Mimi/AudioDeviceCatalog.swift",
+    "Sources/Mimi/AutomaticAppleSpeechEngine.swift",
+    "Sources/Mimi/ExperimentalMLXTranslationEngine.swift",
+    "Sources/Mimi/FloatingCaptionPanel.swift",
+    "Sources/Mimi/FollowLatestScrollView.swift",
+    "Sources/Mimi/InlineTranslationView.swift",
+    "Sources/Mimi/LegacyModelStubs.swift",
+    "Sources/Mimi/LocalStorage.swift",
+    "Sources/Mimi/MarianExactTranslationMemory.swift",
+    "Sources/Mimi/MarianMLXTranslationModel.swift",
+    "Sources/Mimi/MarianSourceExpertRouter.swift",
+    "Sources/Mimi/MenuBarView.swift",
+    "Sources/Mimi/MicrophoneCapture.swift",
+    "Sources/Mimi/MimiApp.swift",
+    "Sources/Mimi/MimiDesign.swift",
+    "Sources/Mimi/MimiWhisperMLXLiveEngine.swift",
+    "Sources/Mimi/ModelSetupStatusView.swift",
+    "Sources/Mimi/NemotronMLXAccuracyEngine.swift",
+    "Sources/Mimi/OnboardingView.swift",
+    "Sources/Mimi/OnboardingWindowCoordinator.swift",
+    "Sources/Mimi/OutputAudioCapture.swift",
+    "Sources/Mimi/PlatformServices.swift",
+    "Sources/Mimi/QwenMLXLiveEngine.swift",
+    "Sources/Mimi/RealtimeBenchmark.swift",
+    "Sources/Mimi/ScreenAudioCapture.swift",
+    "Sources/Mimi/ScreenAudioSelectionControl.swift",
+    "Sources/Mimi/SettingsView.swift",
+    "Sources/Mimi/SettingsWindowFocus.swift",
+    "Sources/Mimi/TranscriptContentView.swift",
+    "Sources/Mimi/TranscriptHistoryStore.swift",
+    "Sources/Mimi/TranscriptWindow.swift",
+    "Sources/Mimi/TranslationCascadeBenchmark.swift",
+    "Sources/Mimi/TranslationParityVerification.swift",
+    "Sources/Mimi/UserPreferences.swift",
+    "Sources/Mimi/VoiceTyping.swift",
+    "Sources/Mimi/WhisperKitAccuracyEngine.swift",
+    "Sources/Mimi/WhisperLanguageDetector.swift",
+    "Sources/MimiCore/DeterministicPipeline.swift",
+    "Sources/MimiCore/Domain.swift",
+    "Sources/MimiCore/LiveTextEdit.swift",
+    "Sources/MimiCore/TranslationBenchmark.swift",
+    "Sources/MimiSession/LiveAudioFlowControl.swift",
+    "Sources/MimiSession/LowEnergyAudioBoundary.swift",
+    "Sources/MimiSession/TranscriptionSession.swift",
+    "scripts/speech/evidence_identity.py",
+    "scripts/speech/run_mimi_whisper_live_benchmark.py"
+  ],
+  "feedChunkSeconds": 0.1,
+  "suiteSha256": "cfeb567d25a67921045fb4a409860c18f10df4543d019e2aaec4edbecd832def",
+  "selectedCaseIDs": [
+    "long-form:fleurs-en-screen-v1:24:silence-1s"
+  ],
+  "modelWeightsSha256": "45298f6dc48df8c11e0a8d1dc5e0197c688bfa530646fa21f1a0238d2b0ecda3",
+  "effectiveProfile": {
+    "initialPartialStrideSeconds": 2,
+    "partialStrideSeconds": 3,
+    "endpointSilenceSeconds": 0.75,
+    "maximumUtteranceSeconds": 24,
+    "forcedBoundaryLookbackSeconds": 6
+  },
+  "language": "en",
+  "metric": "wer",
+  "caseCount": 1,
+  "wallSeconds": 198.01112270820886,
+  "corpusErrorRate": 0.05904059040590406,
+  "meanComputeRealTimeFactor": 0.4169036727226913,
+  "meanPacedWallRealTimeFactor": null,
+  "meanInputDeliveryRealTimeFactor": null,
+  "maximumInputScheduleLatenessSeconds": null,
+  "queueCapacitySeconds": null,
+  "maximumQueuedAudioSeconds": null,
+  "firstTextP50Seconds": 2.84014775,
+  "firstTextP95Seconds": 2.84014775,
+  "firstFinalP50Seconds": 12.367077125,
+  "firstFinalP95Seconds": 12.367077125,
+  "postAudioFinalizationP50Seconds": null,
+  "postAudioFinalizationP95Seconds": null,
+  "totalDroppedAudioSamples": 0,
+  "totalAudioDropEventCount": 0,
+  "totalBackpressureEventCount": 0,
+  "meanHypothesisChurn": 0.04913190889359303,
+  "corpusFirstUpdatePrefixErrorRate": 0.0,
+  "meanFirstUpdateReferenceCoverage": 0.0018450184501845018,
+  "peakRSSBytes": 1200947200,
+  "results": [
+    {
+      "caseID": "long-form:fleurs-en-screen-v1:24:silence-1s",
+      "mode": "bounded-6s-partial-2s-initial-3s-stride-6s-low-energy-boundary-24s-maximum-final",
+      "feedChunkSeconds": 0.1,
+      "initialPartialStrideSeconds": 2,
+      "partialStrideSeconds": 3,
+      "endpointSilenceSeconds": 0.75,
+      "maximumUtteranceSeconds": 24,
+      "forcedBoundaryLookbackSeconds": 6,
+      "reference": "however due to the slow communication channels styles in the west could lag behind by 25 to 30 year many people don't think about them as dinosaurs because they have feathers and can fly through the night between 150 and 200 copies were made now known as dunlap broadsides the city is also the base to climb the nyiragongo volcano along with some of the cheapest mountain gorilla tracking in africa for example the most common still image photography format in the world is 35mm which was the dominant film size at the close of the analog film era in some areas boiling water for a minute is enough in others several minutes are needed anyone who's going to drive at high latitudes or over mountain passes should consider the possibility of snow ice or freezing temperatures as a result two fish species have become extinct and two others have become endangered including the humpback chub for example each year students from bennet school in north carolina design a website about their trip to the state capital each year the website gets remodeled but old versions are kept online to serve as a scrapbook the other nominations include best picture director cinematography costume design film-editing original score production design sound editing sound mixing and original screenplay he was subsequently relocated to addenbrooke's hospital in cambridge as knowledge of greek declined the west found itself cut off from its greek philosophical and scientific roots vatican city's population is around 800 it is the smallest independent country in the world and the country with the lowest population the hot chocolate is up to belgian standards fruit juices are pricey but excellent generally speaking two behaviors can emerge as managers begin to lead their former peers. one end of the spectrum is trying to remain  one of the guys” or gals since 1966 the sundarbans have been a wildlife sanctuary and it is estimated that there are now 400 royal bengal tigers and about 30,000 spotted deer in the area this is called a chemical's ph you can make an indicator using red cabbage juice the giza plateau or giza necropolis in the egyptian valley of the dead contains several pyramids of which the great pyramid is the largest several small tombs several temples and the great sphinx usa gymnastics and the usoc have the same goal making the sport of gymnastics and others as safe as possible for athletes to follow their dreams in a safe positive and empowered environment ms is a disease that affects the central nervous system which is made up of the brain the spinal cord and the optic nerve the parade of buildings that make the hong kong skyline has been likened to a glittering bar chart that is made apparent by the presence of the waters of victoria harbour the same month saw another airliner overrun a runway at mashhad and strike a wall killing seventeen unfortunately studying traffic flow is difficult because driver behavior cannot be predicted with one-hundred percent certainty mass car ownership also leads to a higher incidence of accidents on the roads which leads to the invention of new techniques in healthcare for repairing damaged bodies",
+      "hypothesis": "However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 years. Many people don't think about them as dinosaurs because they have feathers and can fly. For the night between 150 and 200 copies were made, now known as Dunlap broadsides. The city is also the base to climb the Nairai Gangou volcano along with some of the cheapest mountain gorilla trafficking in Africa. For example, the most common still image photography format in the world is 35 mm, which was the dominant film size at the close of the analog film era. In some areas, boiling water for a minute is enough and other several minutes are needed. Anyone who's going to drive at hot lightitudes or over mountain passes should consider the possibility of snow, ice, or freezing temperatures. As a result, two fish species have become extinct and two others have become endangered, including the humpback chub. For example, each year students from Bennett School in North Carolina design a website about their trip to the state capitol. Each year the website gets remodeled, but older versions are kept online to serve as a scrapbook. The other nominations include Best Picture, Director, Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sound Editing, Sound Mixing, and Original Screenplay. He was subsequently relocated to Addenbrooke's Hospital in Cambridge. As knowledge of Greek decline, the West found itself cut off from its Greek philosophical and scientific roots. Vatican City population is around 800. It is the smallest independent country in the world and the population. The hot chocolate is up to Belgian standards. Fruit juices are pricey but excellent. Generally speaking, two behaviors can emerge as managers begin to lead their former peers. One end of the spectrum is trying to remain one of the guys, or gals. Since 1966, the Sundar Buns have been a wildlife sanctuary and it is estimated there are now 400 Royal Bengal Tigers and about 30,000 spotted deer in the area. This is called a chemical's pH. You can make an indicator using red cabbage juice. The Giza Plateau or Giza Necropolis in the Egyptian Valley of the Dead contains several pyramids of which the Great Pyramid is the largest, several tombs, several temples, and the Great Sphinx. USA Gymnastics and the USOC have the same goal, making the sport of gymnastics and others as safe as possible for athletes to follow their dreams in a safe, positive, and empowered environment. MS is a disease that affects the central nervous system, which is made up of the brain, the spinal cord, and the optic nerve. The parade of buildings that make the Hong Kong skyline has been likened to a glittering bar chart that is made apparent by the presence of the waters of Victoria Harbor. The same month saw another airliner overrun a runway at Michaud and strike a wall, killing 17. Unfortunately, stunning traffic flow is difficult because driver behavior cannot be predicted with 100% certainty. Mass car ownership also leads to a higher incidence of accidents on the road, which leads to the invention of new techniques in healthcare for repairing damaged bodies.",
+      "audioDurationSeconds": 271.3585625,
+      "nativeWallSeconds": 113.688569709,
+      "computeWallSeconds": 113.688569709,
+      "pacedWallSeconds": null,
+      "modelLoadSeconds": 1.15314725,
+      "computeRealTimeFactor": 0.4169036727226913,
+      "wallRealTimeFactor": 0.41896068678135046,
+      "pacedAudio": false,
+      "inputBufferSeconds": null,
+      "inputDeliverySeconds": null,
+      "inputDeliveryRealTimeFactor": null,
+      "maximumInputScheduleLatenessSeconds": null,
+      "queueCapacitySeconds": null,
+      "maximumQueuedAudioSamples": null,
+      "maximumQueuedAudioSeconds": null,
+      "droppedAudioSamples": 0,
+      "audioDropEventCount": 0,
+      "firstAudioDropAtSeconds": null,
+      "backpressureEventCount": 0,
+      "postAudioFinalizationSeconds": null,
+      "firstTextAtSeconds": 2.84014775,
+      "firstFinalAtSeconds": 12.367077125,
+      "hypothesisChurn": 0.04913190889359303,
+      "updateCount": 106,
+      "firstUpdates": [
+        "However",
+        "However, due to the slow communication channels,",
+        "However, due to the slow communication channels,, styles in the West could lag behind by 25-25%.",
+        "However, due to the slow communication channels,, styles in the West could lag behind by 25-25%. to 30 years.",
+        "However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 years.",
+        "However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 years. Many people don't think about them as dinosaurs.",
+        "However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 years. Many people don't think about them as dinosaurs because they have feathers and can fly.",
+        "However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 years. Many people don't think about them as dinosaurs because they have feathers and can fly. For the night between Wednesday"
+      ],
+      "finalizedSegments": [
+        {
+          "audioEndSeconds": 11.4,
+          "reason": "endpoint",
+          "text": "However, due to the slow communication channels, styles in the west could lag behind by 25 to 30 years."
+        },
+        {
+          "audioEndSeconds": 16,
+          "reason": "endpoint",
+          "text": "Many people don't think about them as dinosaurs because they have feathers and can fly."
+        },
+        {
+          "audioEndSeconds": 21.9,
+          "reason": "endpoint",
+          "text": "For the night between 150 and 200 copies were made, now known as Dunlap broadsides."
+        },
+        {
+          "audioEndSeconds": 33.1,
+          "reason": "endpoint",
+          "text": "The city is also the base to climb the Nairai Gangou volcano along with some of the cheapest mountain gorilla trafficking in Africa."
+        },
+        {
+          "audioEndSeconds": 47.5,
+          "reason": "endpoint",
+          "text": "For example, the most common still image photography format in the world is 35 mm, which was the dominant film size at the close of the analog film era."
+        },
+        {
+          "audioEndSeconds": 55.2,
+          "reason": "endpoint",
+          "text": "In some areas, boiling water for a minute is enough and other several minutes are needed."
+        },
+        {
+          "audioEndSeconds": 64.6,
+          "reason": "endpoint",
+          "text": "Anyone who's going to drive at hot lightitudes or over mountain passes should consider the possibility of snow, ice, or freezing temperatures."
+        },
+        {
+          "audioEndSeconds": 78.3,
+          "reason": "endpoint",
+          "text": "As a result, two fish species have become extinct and two others have become endangered, including the humpback chub."
+        },
+        {
+          "audioEndSeconds": 90.1,
+          "reason": "endpoint",
+          "text": "For example, each year students from Bennett School in North Carolina design a website about their trip to the state capitol. Each year the website gets remodeled, but older versions are kept online to serve as a scrapbook."
+        },
+        {
+          "audioEndSeconds": 106.3,
+          "reason": "endpoint",
+          "text": "The other nominations include Best Picture, Director, Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sound Editing, Sound Mixing, and Original Screenplay."
+        },
+        {
+          "audioEndSeconds": 112.3,
+          "reason": "endpoint",
+          "text": "He was subsequently relocated to Addenbrooke's Hospital in Cambridge."
+        },
+        {
+          "audioEndSeconds": 125.4,
+          "reason": "endpoint",
+          "text": "As knowledge of Greek decline, the West found itself cut off from its Greek philosophical and scientific roots."
+        },
+        {
+          "audioEndSeconds": 133.6,
+          "reason": "endpoint",
+          "text": "Vatican City population is around 800. It is the smallest independent country in the world and the population."
+        },
+        {
+          "audioEndSeconds": 143.9,
+          "reason": "endpoint",
+          "text": "The hot chocolate is up to Belgian standards. Fruit juices are pricey but excellent."
+        },
+        {
+          "audioEndSeconds": 157.6,
+          "reason": "endpoint",
+          "text": "Generally speaking, two behaviors can emerge as managers begin to lead their former peers. One end of the spectrum is trying to remain one of the guys, or gals."
+        },
+        {
+          "audioEndSeconds": 178.2,
+          "reason": "endpoint",
+          "text": "Since 1966, the Sundar Buns have been a wildlife sanctuary and it is estimated there are now 400 Royal Bengal Tigers and about 30,000 spotted deer in the area."
+        },
+        {
+          "audioEndSeconds": 183.7,
+          "reason": "endpoint",
+          "text": "This is called a chemical's pH. You can make an indicator using red cabbage juice."
+        },
+        {
+          "audioEndSeconds": 201.2,
+          "reason": "endpoint",
+          "text": "The Giza Plateau or Giza Necropolis in the Egyptian Valley of the Dead contains several pyramids of which the Great Pyramid is the largest, several tombs, several temples, and the Great Sphinx."
+        },
+        {
+          "audioEndSeconds": 215.6,
+          "reason": "endpoint",
+          "text": "USA Gymnastics and the USOC have the same goal, making the sport of gymnastics and others as safe as possible for athletes to follow their dreams in a safe, positive, and empowered environment."
+        },
+        {
+          "audioEndSeconds": 224.6,
+          "reason": "endpoint",
+          "text": "MS is a disease that affects the central nervous system, which is made up of the brain, the spinal cord, and the optic nerve."
+        },
+        {
+          "audioEndSeconds": 240.7,
+          "reason": "endpoint",
+          "text": "The parade of buildings that make the Hong Kong skyline has been likened to a glittering bar chart that is made apparent by the presence of the waters of Victoria Harbor."
+        },
+        {
+          "audioEndSeconds": 247.5,
+          "reason": "endpoint",
+          "text": "The same month saw another airliner overrun a runway at Michaud and strike a wall, killing 17."
+        },
+        {
+          "audioEndSeconds": 261.8,
+          "reason": "endpoint",
+          "text": "Unfortunately, stunning traffic flow is difficult because driver behavior cannot be predicted with 100% certainty."
+        },
+        {
+          "audioEndSeconds": 271.3585625,
+          "reason": "stop",
+          "text": "Mass car ownership also leads to a higher incidence of accidents on the road, which leads to the invention of new techniques in healthcare for repairing damaged bodies."
+        }
+      ],
+      "firstUpdatePrefixEditDistance": 0,
+      "firstUpdateUnits": 1,
+      "firstUpdateReferencePrefixUnits": 1,
+      "firstUpdateReferenceCoverage": 0.0018450184501845018,
+      "editDistance": 32,
+      "referenceUnits": 542,
+      "errorRate": 0.05904059040590406
+    }
+  ],
+  "corpusWordErrorRate": 0.05904059040590406
+}
