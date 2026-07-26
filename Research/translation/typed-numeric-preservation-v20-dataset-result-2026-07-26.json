@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "experiment": "typed-numeric-preservation-v20-curriculum",
+  "status": "materialized-training-only",
+  "builder": {
+    "path": "scripts/translation/build_typed_numeric_curriculum_v20.py",
+    "sha256": "3d28c4a5982160f0f0cb2929049a6faf58d930200322910b6d90eaa1493d7df5"
+  },
+  "directions": {
+    "en-ja": {
+      "manifest": {
+        "path": "Research/translation/work/typed-numeric-preservation-v20-en-ja/manifest.json",
+        "sha256": "166bb584cbd2a60f285662c1957cb7d073c48bf4f4779fe30010d6e6a60f0be3"
+      },
+      "train_rows": 123011,
+      "validation_rows": 1285,
+      "typed_critical_train_rows": 18174,
+      "bilingual_surface_transformation_train_rows": 7724,
+      "excluded_registered_benchmark_train_rows": 39,
+      "excluded_registered_benchmark_validation_rows": 0,
+      "train_sha256": "e21cffc3a8c94e329b8042a59bc91ac09200506c19f2cf991db2990e893227dc",
+      "validation_sha256": "755b64a2d50a73241a8232cfb3909e52d167fee8f01dad176f5d473d0a9b1a57"
+    },
+    "ja-en": {
+      "manifest": {
+        "path": "Research/translation/work/typed-numeric-preservation-v20-ja-en/manifest.json",
+        "sha256": "f7a9dbc452440863a896310e6e674f29d208d445de73275b639178f79af599d6"
+      },
+      "train_rows": 123012,
+      "validation_rows": 1285,
+      "typed_critical_train_rows": 18122,
+      "bilingual_surface_transformation_train_rows": 7777,
+      "excluded_registered_benchmark_train_rows": 38,
+      "excluded_registered_benchmark_validation_rows": 0,
+      "train_sha256": "edee83bcc85806d040d9fdf8a89318ca72e5a40b3b31363faded86c40b1e21b4",
+      "validation_sha256": "270cec143b71d8c3767e45b3f6e10f7b43c907330f4ddc21f39ec289d504366c"
+    }
+  },
+  "registered_exact_text_screens": [
+    "canary",
+    "development-accuracy-v1",
+    "legal-safety-validation-v1",
+    "legal-safety-test-v1",
+    "automated-claim-v1.sources",
+    "public-stress-v1",
+    "public-stress-v2",
+    "public-stress-v3",
+    "m2m100-418m-feasibility-v1"
+  ],
+  "licenses": [
+    "CC-BY-2.0-FR",
+    "CC-BY-4.0",
+    "CC-BY-SA-3.0",
+    "PDL-1.0-compatible-CC-BY-4.0",
+    "project-owned"
+  ],
+  "target_source": "licensed human parallel references only",
+  "synthetic_rows": 0,
+  "private_reasoning_traces_used": false,
+  "text_changes_from_parent": 0,
+  "promotion_eligible": false,
+  "training_authorized": false,
+  "app_change_authorized": false,
+  "public_upload_authorized": false
+}

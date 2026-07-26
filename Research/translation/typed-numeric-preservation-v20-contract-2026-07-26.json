@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "experiment": "typed-numeric-preservation-v20-bounded-continuation",
+  "status": "frozen-training-authorized",
+  "hypothesis": "A low-rate continuation of each V19 directional expert on contamination-screened licensed human pairs that preserve bilingual typed numeric structure can reduce exact Swift critical-token failures without sacrificing broad translation quality.",
+  "tools": {
+    "trainer": {
+      "path": "scripts/translation/train_marian_distillation.py",
+      "sha256": "728145460776da154062792db3822e338d38fb1045e51ddf28d15db0b32eb2d6"
+    },
+    "curriculum_builder": {
+      "path": "scripts/translation/build_typed_numeric_curriculum_v20.py",
+      "sha256": "3d28c4a5982160f0f0cb2929049a6faf58d930200322910b6d90eaa1493d7df5"
+    },
+    "typed_policy": {
+      "path": "scripts/translation/typed_critical_token_policy.py",
+      "sha256": "ba6e947c24190df46e0346087c077f57f91f018e9df88e096441bc8942c3b82e"
+    }
+  },
+  "runtime": {
+    "hardware": "Apple M3 Pro",
+    "operating_system": "macOS 26.5.1 (25F80)",
+    "device": "mps",
+    "python": "3.12",
+    "packages": {
+      "torch": "2.13.0",
+      "transformers": "4.57.6",
+      "numpy": "2.5.1",
+      "sentencepiece": "0.2.2",
+      "sacremoses": "0.1.1",
+      "sacrebleu": "2.6.0",
+      "huggingface-hub": "0.36.2"
+    }
+  },
+  "directions": {
+    "en-ja": {
+      "dataset_manifest": {
+        "path": "Research/translation/work/typed-numeric-preservation-v20-en-ja/manifest.json",
+        "sha256": "166bb584cbd2a60f285662c1957cb7d073c48bf4f4779fe30010d6e6a60f0be3"
+      },
+      "initial_and_preservation_checkpoint": {
+        "path": "Research/translation/models/elanmt-release-clean-full-depth-en-ja-v1-avg3",
+        "weights_sha256": "d080ce30490e878ab745206220c97bf18d4b2662a35e5fff0bdd2157a7c4dc4b",
+        "lineage_manifest_sha256": "65df5b3a7220c0c524b03b0bfb1d689548a144059ffea4be9cf9b5afa2abf5f4",
+        "repository": "Mitsua/elan-mt-bt-en-ja",
+        "revision": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa"
+      },
+      "output": "Research/translation/work/typed-numeric-preservation-v20-en-ja-model",
+      "checkpoints": "Research/translation/work/typed-numeric-preservation-v20-en-ja-checkpoints"
+    },
+    "ja-en": {
+      "dataset_manifest": {
+        "path": "Research/translation/work/typed-numeric-preservation-v20-ja-en/manifest.json",
+        "sha256": "f7a9dbc452440863a896310e6e674f29d208d445de73275b639178f79af599d6"
+      },
+      "initial_and_preservation_checkpoint": {
+        "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+        "weights_sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71",
+        "lineage_manifest_sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38",
+        "repository": "Mitsua/elan-mt-bt-ja-en",
+        "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97"
+      },
+      "output": "Research/translation/work/typed-numeric-preservation-v20-ja-en-model",
+      "checkpoints": "Research/translation/work/typed-numeric-preservation-v20-ja-en-checkpoints"
+    }
+  },
+  "training": {
+    "seed": 20260726,
+    "batch_size": 8,
+    "gradient_accumulation": 2,
+    "effective_batch_size": 16,
+    "max_steps": 100,
+    "learning_rate": 5e-7,
+    "weight_decay": 0.01,
+    "warmup_steps": 10,
+    "evaluation_steps": 50,
+    "max_source_tokens": 128,
+    "max_target_tokens": 128,
+    "frozen_base_kl_weight": 0.5,
+    "l2_to_base_weight": 1e-5,
+    "domain_loss_weight_start": 2.0,
+    "domain_loss_weight_end": 3.0,
+    "curriculum_ramp_steps": 100,
+    "preservation_origin": "base-preservation-replay",
+    "target_variants": false,
+    "gradient_checkpointing": false,
+    "private_reasoning_traces_used": false
+  },
+  "checkpoint_selection": {
+    "eligible_steps": [
+      50,
+      100
+    ],
+    "primary": "typed-numeric-target validation chrF++",
+    "secondary": "full validation chrF++ then lower step",
+    "minimum_focus_chrf_pp_delta": 0.1,
+    "minimum_full_validation_chrf_pp_delta": -0.1,
+    "maximum_domain_chrf_pp_regression": 0.5,
+    "failure_behavior": "reject direction before q4 conversion"
+  },
+  "post_training_gates": {
+    "q4": "exact MLX affine 4-bit group-64 conversion and inventory authentication",
+    "public_suites": [
+      "canary",
+      "development-accuracy-v1",
+      "legal-safety-validation-v1",
+      "legal-safety-test-v1"
+    ],
+    "critical_behavior": "no new strict, typed, negation, generation-limit, empty, or repetition failures",
+    "v19_recovery_target": "fewer than 71 exact Swift failed-closed segments and no unsafe guard relaxation",
+    "promotion_target": "zero failed-closed segments on the registered 400-segment Swift development screen",
+    "quality": "chrF++, BLEU, COMET, and independent semantic judgment remain noninferior in both directions",
+    "runtime": "isolated warm latency and peak RSS measured on the exact Swift app path",
+    "bundle_bytes_maximum": 150000000,
+    "license_review_required": true
+  },
+  "training_authorized": true,
+  "q4_conversion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false
+}
