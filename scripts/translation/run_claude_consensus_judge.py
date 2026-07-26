@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import hashlib
 import json
 import shutil
@@ -243,8 +244,21 @@ def batch_schema(item_schema: dict, count: int) -> dict:
     }
 
 
-def validate_payload(payload: Any, source: dict) -> dict:
-    if not isinstance(payload, dict) or set(payload) != {"source_id", "assessments"}:
+def validate_payload(payload: Any, source: dict, schema: dict) -> dict:
+    properties = schema.get("properties")
+    required = schema.get("required")
+    if (
+        not isinstance(properties, dict)
+        or not isinstance(required, list)
+        or schema.get("additionalProperties") is not False
+    ):
+        raise ValueError("invalid Claude judge item schema")
+    expected_fields = set(properties)
+    if (
+        not isinstance(payload, dict)
+        or set(payload) != expected_fields
+        or not set(required).issubset(payload)
+    ):
         raise ValueError("invalid Claude judge result fields")
     if payload["source_id"] != source["source_id"]:
         raise ValueError("Claude judge source_id mismatch")
@@ -264,6 +278,14 @@ def validate_payload(payload: Any, source: dict) -> dict:
             "Claude judge candidate coverage mismatch: "
             f"expected={sorted(expected_ids)} found={sorted(str(value) for value in found_ids)}"
         )
+    preferred = payload.get("preferred_candidate_ids")
+    if preferred is not None and (
+        not isinstance(preferred, list)
+        or not preferred
+        or len(preferred) != len(set(preferred))
+        or any(candidate_id not in expected_ids for candidate_id in preferred)
+    ):
+        raise ValueError("Claude judge preferred candidate coverage mismatch")
     return payload
 
 
@@ -417,7 +439,11 @@ def run_shard(
             if source_id in by_source or source_id not in expected_ids:
                 raise ValueError("duplicate or unknown Claude source_id")
             source = by_id[source_id]["source"]
-            by_source[source_id] = validate_payload(value, source)
+            by_source[source_id] = validate_payload(
+                value,
+                source,
+                contract["schema"],
+            )
     except (AttributeError, ValueError) as error:
         raise SystemExit(f"Claude judge shard {index}: {error}") from error
     if set(by_source) != set(expected_ids):
@@ -489,7 +515,12 @@ def main() -> None:
     parser.add_argument("--maximum-characters", type=int, default=16_000)
     parser.add_argument("--claude-executable", default="claude")
     parser.add_argument("--maximum-shards", type=int)
+    parser.add_argument("--parallelism", type=int, default=1)
     args = parser.parse_args()
+    if args.parallelism < 1:
+        raise SystemExit("Claude judge parallelism must be positive")
+    if args.maximum_shards is not None and args.maximum_shards < 1:
+        raise SystemExit("Claude judge maximum shards must be positive")
 
     manifest, request_rows, contract = load_or_create_manifest(
         args.requests,
@@ -498,24 +529,41 @@ def main() -> None:
         args.maximum_characters,
     )
     executable = shutil.which(args.claude_executable) or args.claude_executable
-    completed_now = 0
+    pending = []
     for index in range(manifest["shard_count"]):
-        result = run_shard(
-            manifest,
-            request_rows,
-            contract,
-            args.run_directory,
-            index,
-            executable,
-        )
-        print(json.dumps(result, sort_keys=True), flush=True)
-        if result["status"] == "completed":
-            completed_now += 1
-            if (
-                args.maximum_shards is not None
-                and completed_now >= args.maximum_shards
-            ):
-                break
+        result_path, metadata_path = shard_paths(args.run_directory, index)
+        if result_path.exists() or metadata_path.exists():
+            result = run_shard(
+                manifest,
+                request_rows,
+                contract,
+                args.run_directory,
+                index,
+                executable,
+            )
+            print(json.dumps(result, sort_keys=True), flush=True)
+        else:
+            pending.append(index)
+    if args.maximum_shards is not None:
+        pending = pending[: args.maximum_shards]
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=min(args.parallelism, max(1, len(pending)))
+    ) as executor:
+        futures = {
+            executor.submit(
+                run_shard,
+                manifest,
+                request_rows,
+                contract,
+                args.run_directory,
+                index,
+                executable,
+            ): index
+            for index in pending
+        }
+        for future in concurrent.futures.as_completed(futures):
+            result = future.result()
+            print(json.dumps(result, sort_keys=True), flush=True)
 
     result_rows: dict[str, dict] = {}
     missing = []
