@@ -31,7 +31,14 @@ struct InlineTranslationView: View {
 
     private var renderedTranslation: String {
         if let fixtureTranslation { return fixtureTranslation }
-        return segments.compactMap { model.translations[$0.id] }.joined(separator: "\n")
+        return segments.compactMap { segment in
+            if let translation = model.translations[segment.id] {
+                return translation
+            }
+            return model.failedSegmentIDs.contains(segment.id)
+                ? "not-translated:\(segment.id.uuidString)"
+                : nil
+        }.joined(separator: "\n")
     }
 
     var body: some View {
@@ -69,6 +76,13 @@ struct InlineTranslationView: View {
                             ForEach(segments) { segment in
                                 if let translation = model.translations[segment.id] {
                                     Text(translation)
+                                } else if model.failedSegmentIDs.contains(segment.id) {
+                                    Label(
+                                        "Not translated safely",
+                                        systemImage: "exclamationmark.triangle.fill"
+                                    )
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                                 }
                             }
                         }
@@ -156,6 +170,7 @@ final class SegmentTranslationModel {
     let experimentalConfiguration: ExperimentalMLXTranslationConfiguration?
 
     private(set) var translations: [UUID: String] = [:]
+    private(set) var failedSegmentIDs: Set<UUID> = []
     private(set) var activeLanguage: SpeechLanguage?
     private(set) var errors: [SpeechLanguage: String] = [:]
     private(set) var workGeneration = 0
@@ -179,6 +194,11 @@ final class SegmentTranslationModel {
 
     func store(_ translation: String, for segmentID: UUID) {
         translations[segmentID] = translation
+        failedSegmentIDs.remove(segmentID)
+    }
+
+    func shouldAttempt(_ segmentID: UUID) -> Bool {
+        translations[segmentID] == nil && !failedSegmentIDs.contains(segmentID)
     }
 
     func claim(_ language: SpeechLanguage) -> Bool {
@@ -203,21 +223,31 @@ final class SegmentTranslationModel {
 
     func clearErrors() {
         errors = [:]
+        failedSegmentIDs = []
     }
 
-    func failLocalCandidate(after error: Error, for language: SpeechLanguage) {
-        logger.error("Experimental local translation failed closed without Apple fallback: \(error.localizedDescription, privacy: .public)")
+    func failLocalCandidate(
+        after error: Error,
+        for language: SpeechLanguage,
+        segmentID: UUID
+    ) {
+        logger.error(
+            "Experimental local translation failed closed for segment \(segmentID.uuidString, privacy: .public) without Apple fallback: \(error.localizedDescription, privacy: .public)"
+        )
         activeLanguage = nil
-        errors[language] = "Local translation failed. The source transcript is preserved; try again when ready."
+        failedSegmentIDs.insert(segmentID)
+        errors[language] = "Some sentences could not be translated safely. Their source text is preserved; try them again when ready."
         workGeneration &+= 1
     }
 
     func prune(validIDs: Set<UUID>) {
         translations = translations.filter { validIDs.contains($0.key) }
+        failedSegmentIDs.formIntersection(validIDs)
     }
 
     func reset(for segments: [TranscriptSegment]) {
         translations = [:]
+        failedSegmentIDs = []
         activeLanguage = nil
         errors = [:]
         isUsingExperimentalLocalCandidate = experimentalConfiguration != nil
@@ -237,6 +267,8 @@ struct TranslationFallbackVerificationReport: Codable {
     let candidateFailureDoesNotUseApple: Bool
     let candidateFailurePreservesLocalResults: Bool
     let candidateFailureShowsRetryableError: Bool
+    let candidateFailureIsScopedToSegment: Bool
+    let candidateFailureDoesNotBlockLaterSegment: Bool
     let applePartialsWhenExperimentalDisabled: Bool
     let experimentalPartialsDoNotUseApple: Bool
     let invalidModelPackRejected: Bool
@@ -244,26 +276,34 @@ struct TranslationFallbackVerificationReport: Codable {
 
 @MainActor
 func verifyExperimentalTranslationFallbackContract() -> TranslationFallbackVerificationReport {
-    let disabled = SegmentTranslationModel(environment: [:])
+    let disabledEnvironment = [
+        ExperimentalMLXTranslationConfiguration.enabledEnvironmentKey: "0",
+    ]
+    let disabled = SegmentTranslationModel(environment: disabledEnvironment)
     let environment = [
         ExperimentalMLXTranslationConfiguration.enabledEnvironmentKey: "1",
         ExperimentalMLXTranslationConfiguration.modelDirectoryEnvironmentKey: "/invalid/mimi-model-pack",
     ]
     let candidate = SegmentTranslationModel(environment: environment)
     let segmentID = UUID()
+    let laterSegmentID = UUID()
     candidate.store("candidate output", for: segmentID)
     _ = candidate.claim(.english)
     candidate.failLocalCandidate(
         after: TranslationFallbackVerificationFixtureError.candidateFailure,
-        for: .english
+        for: .english,
+        segmentID: segmentID
     )
     let appleDefault = !disabled.isUsingExperimentalLocalCandidate
     let failureDoesNotUseApple = candidate.isUsingExperimentalLocalCandidate
     let preservesResults = candidate.translations[segmentID] == "candidate output"
         && candidate.activeLanguage == nil
     let showsRetryableError = candidate.errorText != nil
+    let failureIsScoped = candidate.failedSegmentIDs == Set([segmentID])
+        && !candidate.shouldAttempt(segmentID)
+    let laterSegmentIsNotBlocked = candidate.shouldAttempt(laterSegmentID)
     let appleDefaultPartials = FloatingCaptionView.usesAppleTranslationForLivePartials(
-        environment: [:]
+        environment: disabledEnvironment
     )
     let experimentalPartialsDoNotUseApple = !FloatingCaptionView
         .usesAppleTranslationForLivePartials(environment: environment)
@@ -280,6 +320,8 @@ func verifyExperimentalTranslationFallbackContract() -> TranslationFallbackVerif
         && failureDoesNotUseApple
         && preservesResults
         && showsRetryableError
+        && failureIsScoped
+        && laterSegmentIsNotBlocked
         && appleDefaultPartials
         && experimentalPartialsDoNotUseApple
         && invalidPackRejected
@@ -290,6 +332,8 @@ func verifyExperimentalTranslationFallbackContract() -> TranslationFallbackVerif
         candidateFailureDoesNotUseApple: failureDoesNotUseApple,
         candidateFailurePreservesLocalResults: preservesResults,
         candidateFailureShowsRetryableError: showsRetryableError,
+        candidateFailureIsScopedToSegment: failureIsScoped,
+        candidateFailureDoesNotBlockLaterSegment: laterSegmentIsNotBlocked,
         applePartialsWhenExperimentalDisabled: appleDefaultPartials,
         experimentalPartialsDoNotUseApple: experimentalPartialsDoNotUseApple,
         invalidModelPackRejected: invalidPackRejected
@@ -314,7 +358,7 @@ private struct ExperimentalSegmentTranslationLane: View {
         Color.clear
             .task(id: input) {
                 guard input.isEnabled, let configuration = model.experimentalConfiguration else { return }
-                for segment in segments where model.translations[segment.id] == nil {
+                for segment in segments where model.shouldAttempt(segment.id) {
                     guard !Task.isCancelled, model.claim(segment.language) else { return }
                     do {
                         let translated = try await ExperimentalMLXTranslationEngine.shared.translate(
@@ -332,8 +376,11 @@ private struct ExperimentalSegmentTranslationLane: View {
                         model.release(segment.language)
                         return
                     } catch {
-                        model.failLocalCandidate(after: error, for: segment.language)
-                        return
+                        model.failLocalCandidate(
+                            after: error,
+                            for: segment.language,
+                            segmentID: segment.id
+                        )
                     }
                 }
             }
