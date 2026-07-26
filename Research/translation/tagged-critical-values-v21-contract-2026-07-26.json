@@ -1,93 +1,172 @@
 {
-  "schemaVersion": 1,
-  "experiment": "tagged-critical-values-v21",
-  "createdAt": "2026-07-26",
-  "status": "preregistered-not-started",
-  "hypothesis": "Atomic source-bound value tags plus token-specific supervision can reduce V19 numeric and identifier failures without weakening ordinary translation quality or requiring a larger model.",
-  "firstDirection": "ja-en",
-  "architecture": {
-    "parent": "V19 full-precision legal JA-en specialist",
-    "newAtomicTags": 32,
-    "tagRange": [
-      "<v00>",
-      "<v31>"
-    ],
-    "decoder": "cached-greedy-first",
-    "restoration": "deterministic-target-language-value-sidecar",
-    "unchangedGuards": [
-      "critical-token-preservation",
-      "repetition",
-      "plausibility",
-      "fail-closed"
-    ]
+  "schema_version": 1,
+  "experiment": "tagged-critical-values-v21-ja-en",
+  "status": "preregistered-ready-for-one-arm-training",
+  "direction": "ja-en",
+  "hypothesis": "A Marian continuation that learns 32 atomic source-bound value tags with tag-specific cross-entropy and extra-tag unlikelihood can cut JA-EN critical-value failures without relaxing Mimi's strict runtime guard or sacrificing broad translation quality.",
+  "implementation": {
+    "trainer": {
+      "path": "scripts/translation/train_marian_tagged_values_v21.py",
+      "sha256": "50924ed8d6bf1c734da95759b0ba17279e7151324cd0c924abe9c6187ce27bd8"
+    },
+    "trainer_test": {
+      "path": "scripts/translation/test_train_marian_tagged_values_v21.py",
+      "sha256": "9dc058de608b6f155c81b6f1479df924a6f672ccfb4ca3fcdb6293b2a9ab62e9"
+    },
+    "dataset_builder": {
+      "path": "scripts/translation/build_tagged_critical_values_v21.py",
+      "sha256": "d7e2a456843da7acfcaf336067f56598f29300aa9d2b15f5be759c3ea8100310"
+    },
+    "dataset_test": {
+      "path": "scripts/translation/test_tagged_critical_values_v21.py",
+      "sha256": "a72ba5132662ddcc4e5e5f4219b4dbb36c16619d75577295fc43b6772ce19653"
+    }
   },
-  "data": {
-    "source": "authenticated-human-only-v20",
-    "focusRows": {
-      "en-ja": 18174,
-      "ja-en": 18122
+  "dataset": {
+    "manifest": {
+      "path": "Research/translation/work/tagged-critical-values-v21-ja-en/manifest.json",
+      "sha256": "4d9fc6e133ef4dd82e143cb2866135a3b16d81b8d68a1e63d760ec82e1624758"
     },
-    "surfaceTransformations": {
-      "en-ja": 7724,
-      "ja-en": 7777
+    "train": {
+      "path": "Research/translation/work/tagged-critical-values-v21-ja-en/train.jsonl",
+      "sha256": "a8549fe675b8be51df9672cf2e79bd46d946ac13d808f4aba6a1a066060437b0"
     },
-    "firstCellTaggedRows": 4096,
-    "plainReplayRows": 4096,
-    "requiresUnambiguousOneToOneAlignment": true,
-    "registeredSuiteContaminationScreenRequired": true,
-    "syntheticTranslations": false,
-    "teacherOutputs": false,
-    "reasoningTraces": false
+    "tagged_valid": {
+      "path": "Research/translation/work/tagged-critical-values-v21-ja-en/tagged-valid.jsonl",
+      "sha256": "8011352a9abbb59f610670bebfbce525980dee1887ec55c997d9a2936a1d0451"
+    },
+    "plain_valid": {
+      "path": "Research/translation/work/tagged-critical-values-v21-ja-en/plain-valid.jsonl",
+      "sha256": "270cec143b71d8c3767e45b3f6e10f7b43c907330f4ddc21f39ec289d504366c"
+    },
+    "counts": {
+      "train": 8192,
+      "tagged_train": 4096,
+      "plain_train": 4096,
+      "tagged_valid": 148,
+      "plain_valid": 1285
+    },
+    "target_source": "licensed human references from the authenticated V20 parent; tags replace aligned source and target values without changing other text",
+    "effective_licenses": {
+      "train_parent": {
+        "CC-BY-2.0-FR": 31980,
+        "CC-BY-4.0": 27984,
+        "CC-BY-SA-3.0": 49998,
+        "PDL-1.0-compatible-CC-BY-4.0": 10000,
+        "project-owned": 3050
+      },
+      "valid_parent": {
+        "CC-BY-2.0-FR": 151,
+        "CC-BY-4.0": 200,
+        "CC-BY-SA-3.0": 921,
+        "project-owned": 13
+      }
+    },
+    "synthetic_translations": 0,
+    "teacher_outputs": 0,
+    "private_reasoning_traces_used": false
+  },
+  "initial_checkpoint": {
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "model": {
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "training_manifest": {
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    },
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97"
+  },
+  "preservation_checkpoint": {
+    "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1",
+    "model": {
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/model.safetensors",
+      "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+    },
+    "training_manifest": {
+      "path": "Research/translation/models/elanmt-release-clean-legal-specialist-ja-en-v1/mimi_training_manifest.json",
+      "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+    },
+    "repository": "Mitsua/elan-mt-bt-ja-en",
+    "revision": "539f80eb05306e27a166b45e4264c7fa2eb4de97"
+  },
+  "vocabulary": {
+    "base_size": 32001,
+    "tag_count": 32,
+    "expanded_size": 32033,
+    "first_tag": "<v00>",
+    "last_tag": "<v31>",
+    "atomic_contiguous_suffix_required": true,
+    "old_embedding_rows_frozen": true,
+    "shared_embedding_and_output_projection_tied": true
+  },
+  "runtime": {
+    "hardware": "Apple M3 Pro",
+    "operating_system": "macOS 26.5.1 (25F80)",
+    "device": "mps",
+    "python": "3.12.12",
+    "packages": {
+      "torch": "2.13.0",
+      "transformers": "4.57.6",
+      "sentencepiece": "0.2.2",
+      "sacremoses": "0.1.1",
+      "sacrebleu": "2.6.0",
+      "numpy": "2.5.1"
+    }
   },
   "training": {
-    "updates": 100,
-    "checkpoints": [
+    "seed": 20260726,
+    "batch_size": 8,
+    "gradient_accumulation": 2,
+    "effective_batch_size": 16,
+    "balanced_tagged_and_plain_rows_per_batch": true,
+    "max_steps": 100,
+    "base_learning_rate": 5e-7,
+    "new_tag_embedding_learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "warmup_steps": 10,
+    "evaluation_steps": 50,
+    "checkpoint_steps": [
       50,
       100
     ],
-    "correctTagCrossEntropyWeight": 8.0,
-    "extraTagUnlikelihood": true,
-    "plainReplayParentKLWeight": 0.5,
-    "parentL2Weight": 0.00001
+    "evaluation_batch_size": 16,
+    "max_source_tokens": 128,
+    "max_target_tokens": 128,
+    "correct_tag_loss_weight": 8.0,
+    "extra_tag_unlikelihood_weight": 1.0,
+    "frozen_parent_kl_weight": 0.5,
+    "l2_to_parent_weight": 1e-5,
+    "maximum_gradient_norm": 1.0,
+    "private_reasoning_traces_used": false
   },
-  "preQuantizationGates": {
-    "minimumExactTagIdentityAndMultiplicityRate": 0.98,
-    "minimumTypedFailureReduction": 0.5,
-    "maximumFullValidationChrfRegression": 0.1,
-    "maximumDomainChrfRegression": 0.5,
-    "maximumNewCriticalFailures": 0,
-    "maximumNewRepetitionFailures": 0,
-    "maximumNewEmptyFailures": 0,
-    "maximumNewNegationFailures": 0
+  "selection": {
+    "minimum_exact_tag_identity_and_multiplicity": 0.98,
+    "minimum_strict_failure_reduction_fraction": 0.5,
+    "minimum_full_validation_chrf_pp_delta": -0.1,
+    "minimum_domain_chrf_pp_delta": -0.5,
+    "maximum_new_failures": {
+      "exact": 0,
+      "typed": 0,
+      "negation": 0,
+      "generation": 0,
+      "extra_tag": 0
+    },
+    "passing_checkpoint_required_before_q4": true
   },
-  "swiftContinuationGate": {
-    "direction": "ja-en",
-    "segments": 200,
-    "baselineFailures": 42,
-    "maximumCandidateFailures": 21,
-    "maximumNewFailuresAmongPreviouslyAccepted": 0
+  "next_gates_if_full_precision_passes": {
+    "q4": "one exact MLX affine 4-bit group-64 conversion with authenticated inventory",
+    "swift_ja_en_segments": "42 V19 failures to at most 21, with zero new failures among 158 previously accepted segments",
+    "quality": "chrF++, BLEU, COMET-22, and independent semantic-judge non-inferiority",
+    "runtime": "isolated p95 at most 175 ms with no more than 10% latency or RSS regression",
+    "bundle_bytes": "below 150 MB preferred and below 500 MB hard"
   },
-  "finalGates": {
-    "maximumSwiftFailuresAcrossBothDirections": 0,
-    "maximumP95Milliseconds": 175,
-    "maximumLatencyOrRSSRegressionFraction": 0.1,
-    "preferredModelBytes": 150000000,
-    "maximumModelBytes": 500000000,
-    "metrics": [
-      "chrF++",
-      "BLEU",
-      "COMET-22",
-      "independent-semantic-judge"
-    ],
-    "requiresLongDocumentEvaluation": true,
-    "requiresSameItemAppleComparison": true,
-    "requiresAttributionAndShareAlikeReview": true
-  },
-  "authorizations": {
-    "training": false,
-    "protectedEvaluation": false,
-    "appReplacement": false,
-    "release": false,
-    "publicUpload": false
-  }
+  "training_authorized": true,
+  "q4_conversion_authorized": false,
+  "protected_evaluation_authorized": false,
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false
 }

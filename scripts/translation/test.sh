@@ -50,6 +50,12 @@ PYTHONPATH=scripts/translation python3 \
   scripts/translation/test_typed_critical_token_policy.py
 PYTHONPATH=scripts/translation python3 \
   scripts/translation/test_typed_numeric_curriculum_v20.py
+PYTHONPATH=scripts/translation python3 \
+  scripts/translation/test_tagged_critical_values_v21.py
+PYTHONPATH=scripts/translation uv run --python 3.12.12 --with torch==2.13.0 \
+  --with transformers==4.57.6 --with sentencepiece==0.2.2 \
+  --with sacremoses==0.1.1 --with sacrebleu==2.6.0 --with numpy==2.5.1 \
+  scripts/translation/test_train_marian_tagged_values_v21.py
 uv run --python 3.12 --with sacrebleu==2.6.0 \
   scripts/translation/test_exact_translation_memory.py
 uv run --python 3.12 --with sacrebleu==2.6.0 \
