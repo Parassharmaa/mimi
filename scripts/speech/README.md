@@ -123,8 +123,9 @@ uses absolute audio deadlines, so converter work cannot progressively slow the
 fixture below real time. It reports input-delivery RTF, maximum scheduling
 lateness, queue capacity and peak depth, exact dropped samples and drop events,
 backpressure notifications, first/final update latency, and time spent
-finalizing after the input ends. Custom streaming-profile flags are rejected in
-this mode so the evidence cannot silently diverge from the app.
+finalizing after the input ends. Custom partial-stride and endpoint flags are
+rejected in this mode. Explicit maximum-utterance and forced-boundary flags are
+accepted only as labeled benchmark experiments.
 
 Profile experiments must name both cadences explicitly:
 
@@ -145,9 +146,10 @@ peak RSS, first-update prefix error, and first-update reference coverage. The
 direct mode reports compute RTF. The paced mode reports wall-time RTF, queue
 drops, backpressure, delivery timing, and finalization lag. Both record the
 suite hash, selected case IDs, exact executable and model-weights hashes, feed
-cadence, and effective profile. Every input audio hash is verified before
-inference. `--limit` is available for a screening run, but a product decision
-requires the complete registered suite.
+cadence, effective profile, portable source identity, and identity embedded in
+the compiled executable. The runner refuses a stale executable. Every input
+audio hash is verified before inference. `--limit` is available for a screening
+run, but a product decision requires the complete registered suite.
 
 Build a deterministic synthetic-noise condition without changing source text:
 
@@ -205,3 +207,43 @@ Add `--inter-clip-silence 1` to build a long-session fixture with explicit
 utterance boundaries above Mimi's 750 ms endpoint threshold. Report this
 separately from gapless concatenation, which is a continuous-speech stress
 case.
+
+Run the selected adaptive-boundary experiment after building Mimi:
+
+```sh
+python3 scripts/speech/run_mimi_whisper_live_benchmark.py \
+  .build/debug/Mimi \
+  Research/speech/work/development-speech-pack/model \
+  Research/speech/work/long-form-ja-v1/manifest.jsonl \
+  Research/speech/work/long-form-ja-v1/mimi-paced-gapless-adaptive-ja30-6-final-v2.json \
+  --language ja --metric cer --paced-queue \
+  --maximum-utterance 30 --forced-boundary-lookback 6
+
+python3 scripts/speech/run_mimi_whisper_live_benchmark.py \
+  .build/debug/Mimi \
+  Research/speech/work/development-speech-pack/model \
+  Research/speech/work/long-form-en-v1/manifest.jsonl \
+  Research/speech/work/long-form-en-v1/mimi-paced-gapless-adaptive-en24-6-final-v2.json \
+  --language en --metric wer --paced-queue \
+  --maximum-utterance 24 --forced-boundary-lookback 6
+```
+
+Run the same profiles without `--paced-queue` over each
+`manifest-silence-1s.jsonl` control, then verify all four reports:
+
+```sh
+python3 scripts/speech/verify_adaptive_segmentation_evidence.py
+```
+
+The verifier checks source and compiled identities, one shared local executable,
+model and suite hashes, complete segment telemetry, monotonic audio ends, bounded
+carry, exact transcript reconstruction, zero-loss queue behavior, quality gates,
+and exact paused-control parity. The selected reports are ignored by the general
+work-artifact rule, so force-add only these four reviewed JSON files.
+
+`Sources/Mimi/AdaptiveSegmentationBuildIdentity.swift` embeds the portable
+implementation identity. If any Swift source in Mimi, MimiCore, or MimiSession,
+either package manifest, or the benchmark runner changes, compute the new value
+with `adaptive_segmentation_implementation_sha256()`, update the constant,
+rebuild Mimi, and regenerate the evidence. The runner rejects a binary built
+from any other identity.

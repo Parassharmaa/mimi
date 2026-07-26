@@ -51,10 +51,12 @@ packs.
 Accuracy on the current screens is no longer the main blocker. The integrated
 native path delivers incoming audio on time and its bounded final text beats
 Apple on both selected slices. Finalization misses the one-second p95 target,
-peak RSS remains above 1 GB, the 15 dB synthetic-noise screens are too small to
-resolve their observed term-recall losses, and artificial gapless speech
-exposes severe forced-segmentation errors. These failures still block default
-promotion.
+peak RSS remains above 1 GB, and the 15 dB synthetic-noise screens are too small
+to resolve their observed term-recall losses. The product profile also exposes
+severe forced-segmentation errors on artificial gapless speech. A benchmark-only
+adaptive boundary repairs that registered stress case without changing the
+paused controls, but natural speech and soak gates remain open. These failures
+still block default promotion.
 
 ## Native Swift integration probe
 
@@ -235,6 +237,72 @@ experiment is an adaptive low-energy forced boundary with held-out paused and
 continuous controls. Thermal, energy, real-noise, and natural-monologue gates
 also remain open.
 
+### Adaptive low-energy boundary experiment
+
+The follow-up experiment keeps normal 750 ms endpointing unchanged. Only when a
+configured maximum utterance is reached does it search the final six seconds
+for a low-energy boundary. The selector evaluates 80 ms RMS windows every
+20 ms, prefers the latest candidate within 5% of the minimum energy, snaps to a
+nearby zero crossing, finalizes the prefix, and carries the remaining PCM into
+the next utterance. The carried PCM rebuilds the bounded window and VAD state
+without adapting the noise floor a second time.
+
+Japanese uses a 30-second maximum. English uses a 24-second maximum because its
+registered failure was a long mixed-gain region that still passed the normal
+endpoint detector elsewhere. Both use a six-second boundary lookback.
+
+| Artificial gapless stress | Japanese | English |
+| --- | ---: | ---: |
+| Product error | 26.76% CER | 20.66% WER |
+| Adaptive error | **6.03% CER** | **12.36% WER** |
+| Absolute improvement | **20.73 pp** | **8.30 pp** |
+| Relative error reduction | **77.5%** | **40.2%** |
+| Paced wall RTF | 1.0029 | 1.0042 |
+| Input-delivery RTF | 1.000011 | 1.000007 |
+| Peak queued audio | 5.4 / 8.0 s | 2.2 / 8.0 s |
+| Dropped samples / events / backpressure | 0 / 0 / 0 | 0 / 0 / 0 |
+| Finalization lag | 0.98 s | 1.03 s |
+| Peak process RSS | 1,171,308,544 B | 1,170,210,816 B |
+| Finalization trace | 12 adaptive + stop | 18 endpoint + 1 adaptive |
+
+The one-second-pause controls remain exactly unchanged:
+
+| Paused control | Japanese | English |
+| --- | ---: | ---: |
+| Product error | 6.5739% CER | 5.9041% WER |
+| Adaptive error | 6.5739% CER | 5.9041% WER |
+| Full hypothesis equality | Exact | Exact |
+| Adaptive boundaries | 0 | 0 |
+
+The paced reports include every finalization reason, absolute audio end, carry
+duration, and rendered text. The verifier requires monotonic bounded ends,
+bounded adaptive carry, exact reconstruction of the final hypothesis, at least
+one observed adaptive boundary in each gapless case, zero queue loss, shared
+model and executable hashes, and exact paused parity. A model-free E2E test
+also applies repeated partitions and proves that every sample is preserved
+exactly once with strictly increasing absolute ends.
+
+All four selected reports were produced by executable
+`6a9d817562390e31f0054f869125aeee307a07601d401bb15360795e7dbee78b`,
+whose embedded portable implementation identity is
+`9ec57b694e95db72c61b4ef7d120bb0526384ea019496edb69c474b8910bdf29`.
+That identity covers every Swift source compiled into the Mimi, MimiCore, and
+MimiSession targets, both package manifests, and the report runner. The runner
+refuses a stale executable, while the report retains the local binary hash for
+forensic comparison.
+
+Rejected diagnostic variants included an 18-second English maximum, dynamic
+normalization, dynamic noise-floor caps, and gain-ratio boundary triggers.
+They either regressed quality, over-segmented, increased RTF, or changed the
+paused Japanese control.
+
+This is a successful segmentation experiment, not a promotion result. Each
+gapless manifest contains one artificial concatenation of 24 registered
+speakers. It does not establish behavior on natural meetings, overlapping
+speakers, real room noise, variable microphones, long thermal soaks, or the
+product default. Mimi therefore keeps the 30-second, zero-lookback product
+profile while those gates remain open.
+
 ## Reproducible paced evidence
 
 The selected manifests and JSON reports are committed under
@@ -253,6 +321,14 @@ and are recreated by the hash-checking fixture and model-pack scripts.
 * Long paused and gapless controls:
   the `mimi-product-paced-queue-*-8s-corrected-v2.json` reports in
   `long-form-ja-v1` and `long-form-en-v1`.
+* Adaptive gapless candidates:
+  `mimi-paced-gapless-adaptive-ja30-6-final-v2.json` and
+  `mimi-paced-gapless-adaptive-en24-6-final-v2.json`.
+* Adaptive paused controls:
+  `mimi-direct-paused-adaptive-ja30-6-final-v2.json` and
+  `mimi-direct-paused-adaptive-en24-6-final-v2.json`.
+* Adaptive evidence contract:
+  `scripts/speech/verify_adaptive_segmentation_evidence.py`.
 
 ## Why Japanese to English currently fails
 
