@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "experiment": "tagged-critical-values-v21",
+  "createdAt": "2026-07-26",
+  "status": "preregistered-not-started",
+  "hypothesis": "Atomic source-bound value tags plus token-specific supervision can reduce V19 numeric and identifier failures without weakening ordinary translation quality or requiring a larger model.",
+  "firstDirection": "ja-en",
+  "architecture": {
+    "parent": "V19 full-precision legal JA-en specialist",
+    "newAtomicTags": 32,
+    "tagRange": [
+      "<v00>",
+      "<v31>"
+    ],
+    "decoder": "cached-greedy-first",
+    "restoration": "deterministic-target-language-value-sidecar",
+    "unchangedGuards": [
+      "critical-token-preservation",
+      "repetition",
+      "plausibility",
+      "fail-closed"
+    ]
+  },
+  "data": {
+    "source": "authenticated-human-only-v20",
+    "focusRows": {
+      "en-ja": 18174,
+      "ja-en": 18122
+    },
+    "surfaceTransformations": {
+      "en-ja": 7724,
+      "ja-en": 7777
+    },
+    "firstCellTaggedRows": 4096,
+    "plainReplayRows": 4096,
+    "requiresUnambiguousOneToOneAlignment": true,
+    "registeredSuiteContaminationScreenRequired": true,
+    "syntheticTranslations": false,
+    "teacherOutputs": false,
+    "reasoningTraces": false
+  },
+  "training": {
+    "updates": 100,
+    "checkpoints": [
+      50,
+      100
+    ],
+    "correctTagCrossEntropyWeight": 8.0,
+    "extraTagUnlikelihood": true,
+    "plainReplayParentKLWeight": 0.5,
+    "parentL2Weight": 0.00001
+  },
+  "preQuantizationGates": {
+    "minimumExactTagIdentityAndMultiplicityRate": 0.98,
+    "minimumTypedFailureReduction": 0.5,
+    "maximumFullValidationChrfRegression": 0.1,
+    "maximumDomainChrfRegression": 0.5,
+    "maximumNewCriticalFailures": 0,
+    "maximumNewRepetitionFailures": 0,
+    "maximumNewEmptyFailures": 0,
+    "maximumNewNegationFailures": 0
+  },
+  "swiftContinuationGate": {
+    "direction": "ja-en",
+    "segments": 200,
+    "baselineFailures": 42,
+    "maximumCandidateFailures": 21,
+    "maximumNewFailuresAmongPreviouslyAccepted": 0
+  },
+  "finalGates": {
+    "maximumSwiftFailuresAcrossBothDirections": 0,
+    "maximumP95Milliseconds": 175,
+    "maximumLatencyOrRSSRegressionFraction": 0.1,
+    "preferredModelBytes": 150000000,
+    "maximumModelBytes": 500000000,
+    "metrics": [
+      "chrF++",
+      "BLEU",
+      "COMET-22",
+      "independent-semantic-judge"
+    ],
+    "requiresLongDocumentEvaluation": true,
+    "requiresSameItemAppleComparison": true,
+    "requiresAttributionAndShareAlikeReview": true
+  },
+  "authorizations": {
+    "training": false,
+    "protectedEvaluation": false,
+    "appReplacement": false,
+    "release": false,
+    "publicUpload": false
+  }
+}
