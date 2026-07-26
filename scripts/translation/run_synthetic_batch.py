@@ -17,7 +17,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-
 API_ENDPOINT = "/v1/responses"
 MAX_BATCH_BYTES = 200_000_000
 STATE_SCHEMA_VERSION = 1
@@ -178,7 +177,7 @@ def request_contract(path: Path) -> dict[str, Any]:
         if pipeline in {JUDGE_PIPELINE, REFERENCE_JUDGE_PIPELINE}:
             candidates = source.get("candidates")
             allowed_candidate_counts = (
-                {3, 4} if pipeline == JUDGE_PIPELINE else {3}
+                {2, 3, 4} if pipeline == JUDGE_PIPELINE else {3}
             )
             if (
                 not isinstance(candidates, list)

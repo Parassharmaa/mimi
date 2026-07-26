@@ -14,7 +14,6 @@ from typing import Any
 
 from run_synthetic_batch import request_contract
 
-
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_VERSION = 2
 JUDGE_PIPELINE = "mimi-translation-judge-v1"
@@ -100,7 +99,7 @@ def read_requests(path: Path) -> tuple[list[dict], dict]:
         candidates = source["candidates"]
         if (
             not isinstance(candidates, list)
-            or len(candidates) not in {3, 4}
+            or len(candidates) not in {2, 3, 4}
             or len({candidate["candidate_id"] for candidate in candidates})
             != len(candidates)
             or any(set(candidate) != {"candidate_id", "translation"} for candidate in candidates)
