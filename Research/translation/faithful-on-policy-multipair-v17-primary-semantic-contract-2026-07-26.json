@@ -1,0 +1,120 @@
+{
+  "admission_policy": {
+    "at_least_one_judge_error_label_must_explain_rejection": true,
+    "both_judges_must_prefer_reference_without_tie": true,
+    "comet_is_candidate_mining_only": true,
+    "generated_rollout_can_be_positive_target": false,
+    "minimum_fraction_each_required_category": 0.15,
+    "minimum_total_verified_pairs": 1500,
+    "minimum_verified_pairs_per_direction": 600,
+    "reference_must_be_noncritical_complete_and_adequate": true,
+    "required_categories": [
+      "omission",
+      "repetition",
+      "japanese-sensitive"
+    ]
+  },
+  "app_change_authorized": false,
+  "experiment": "faithful-on-policy-multipair-v17-primary-semantic-audit",
+  "implementation": {
+    "collect_on_policy_multipair_v17_primary_judge.py": {
+      "bytes": 16165,
+      "path": "scripts/translation/collect_on_policy_multipair_v17_primary_judge.py",
+      "sha256": "e1513bd9116f182284612531dce11e6a54eb16c3a65c5f82193bc780f038a385"
+    },
+    "prepare_on_policy_multipair_v17_primary_judge.py": {
+      "bytes": 19735,
+      "path": "scripts/translation/prepare_on_policy_multipair_v17_primary_judge.py",
+      "sha256": "e9ff5df037afd4a18bbcb66fd4018816618f0ec73b5026b34590fd6a57f5f56c"
+    },
+    "run_claude_consensus_judge.py": {
+      "bytes": 22848,
+      "path": "scripts/translation/run_claude_consensus_judge.py",
+      "sha256": "c05cbcc3677a5d51bbfc586c0269a94e9acffbb6681a17f1079e36e664a56d71"
+    },
+    "run_synthetic_batch.py": {
+      "bytes": 22876,
+      "path": "scripts/translation/run_synthetic_batch.py",
+      "sha256": "a3c0ce8c929ea50a1eb453455af5fe724b9ff436d8fa04396a2c69ff1276fdf8"
+    },
+    "score_comet.py": {
+      "bytes": 10743,
+      "path": "scripts/translation/score_comet.py",
+      "sha256": "3d6ac4d7839527dbe74ad46c5809868ce74f03f3e717f097aaf916989ac2acc0"
+    }
+  },
+  "inputs": {
+    "comet22": {
+      "bytes": 1043121,
+      "path": "Research/translation/work/faithful-on-policy-multipair-v17-prediagnostic/comet22.json",
+      "sha256": "b00288cd2ece2c4a648bc383518d50355dbbe0a476c9eac26a7f3adbb07025a9"
+    },
+    "prediagnostic_manifest": {
+      "bytes": 8447,
+      "path": "Research/translation/work/faithful-on-policy-multipair-v17-prediagnostic/manifest.json",
+      "sha256": "84e50efb820bcdfb73feba4002d8a0186d6a73e0aa58840506639e584ea75e29"
+    },
+    "preselected_pairs": {
+      "bytes": 5137789,
+      "path": "Research/translation/work/faithful-on-policy-multipair-v17-prediagnostic/preselected-pairs.jsonl",
+      "sha256": "92b2b0e9586533579eaa55a104e0594a67a1ca9f4b95356a94032f8e727d523c"
+    }
+  },
+  "judge_policy": {
+    "actual_canonical_model_usage_required_per_shard": true,
+    "brief_observable_evidence_only": true,
+    "fail_closed_on_judge_disagreement": true,
+    "fallback_model_allowed": false,
+    "human_reviewers_required": false,
+    "reasoning_trace_requested_or_stored": false,
+    "required_exact_models": [
+      "claude-sonnet-5",
+      "claude-opus-5"
+    ],
+    "same_blinded_payload_required": true
+  },
+  "judge_requests": {
+    "claude-opus-5": {
+      "bytes": 13423353,
+      "model": "claude-opus-5",
+      "model_independent_payload_sha256": "10e3244d733cb124067b10a50b317355fd10cc4d79f9caf5368a9a5adde4b227",
+      "path": "Research/translation/work/faithful-on-policy-multipair-v17-primary-judge/claude-opus-5-requests.jsonl",
+      "prompt_sha256": "645948a1242789b2d1b85cd7861150e1a44f3d46376fa86a054db8abb66be6e7",
+      "sha256": "76a2b8979a5c129a093b978f9fcad6bbfa801ddfe0eedd01da69952a3d878baf"
+    },
+    "claude-sonnet-5": {
+      "bytes": 13431211,
+      "model": "claude-sonnet-5",
+      "model_independent_payload_sha256": "10e3244d733cb124067b10a50b317355fd10cc4d79f9caf5368a9a5adde4b227",
+      "path": "Research/translation/work/faithful-on-policy-multipair-v17-primary-judge/claude-sonnet-5-requests.jsonl",
+      "prompt_sha256": "645948a1242789b2d1b85cd7861150e1a44f3d46376fa86a054db8abb66be6e7",
+      "sha256": "5e41d922d8283e30c33a029aa243f661e2d11706c47001a9ad645d38a4e6e7f0"
+    }
+  },
+  "protected_evaluation_authorized": false,
+  "public_upload_authorized": false,
+  "purpose": "primary semantic admission audit for V17 hard pairs; not model evaluation and not training authorization",
+  "queue": {
+    "candidate_origin_exposed_to_judges": false,
+    "candidates_per_pair": 2,
+    "directions": {
+      "en-ja": 1987,
+      "ja-en": 1942
+    },
+    "licensed_reference_origin_exposed_to_judges": false,
+    "mapping": {
+      "bytes": 3412594,
+      "path": "Research/translation/work/faithful-on-policy-multipair-v17-primary-judge/candidate-mapping.jsonl",
+      "sha256": "f43fcef54005819dd6c53b1a256aee77f780498f2f38141deeac00643f5f4a6c"
+    },
+    "pairs": 3929,
+    "review_queue": {
+      "bytes": 4036292,
+      "path": "Research/translation/work/faithful-on-policy-multipair-v17-primary-judge/review-queue.jsonl",
+      "sha256": "48d2d1e9b057cb3f85e1314a97ebebf1c71b7ec24b9037f69e6e3e91f85eb9bf"
+    }
+  },
+  "schema_version": 1,
+  "status": "frozen-before-any-primary-semantic-judgment",
+  "training_authorized": false
+}

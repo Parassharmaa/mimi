@@ -2384,3 +2384,24 @@ its exact checkpoint SHA-256 is
 `e213091cde220f97b89f8bdfa750c458cfea741ad62affb455b59900210ff2af`.
 Training remains disabled. See
 `faithful-on-policy-multipair-v17-comet-candidate-report-2026-07-26.json`.
+
+## V17 primary semantic audit contract
+
+The complete 3,929-pair primary semantic audit is frozen before any judgment.
+Every request contains exactly two anonymous translations and is byte-identical
+between the exact `claude-sonnet-5` and `claude-opus-5` batches except for the
+model field. Candidate origin, licensed-reference identity, COMET, likelihood,
+and risk tags are hidden from the judges.
+
+Admission requires both judges to prefer the licensed reference without a tie,
+both to find it complete, noncritical, and at least adequate, and at least one
+observable error label for the rejected rollout. The hard-pair and 15%
+omission/repetition/Japanese-sensitive coverage gates remain unchanged.
+Generated text cannot become a positive target. Training remains disabled even
+if this primary audit passes; a deterministic stratified re-audit and gradient
+diagnostic would still be required.
+
+The contract SHA-256 is
+`6cd0e02513c9fd012f684fabbf01fb73751bdec65a77f83ba0347fa2d3b73ff9`.
+See
+`faithful-on-policy-multipair-v17-primary-semantic-contract-2026-07-26.json`.
