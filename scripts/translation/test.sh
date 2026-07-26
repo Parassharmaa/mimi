@@ -48,6 +48,8 @@ python3 scripts/translation/test_compare_marian_target_shortlist.py
 python3 scripts/translation/test_marian_negative_space_dataset.py
 PYTHONPATH=scripts/translation python3 \
   scripts/translation/test_typed_critical_token_policy.py
+PYTHONPATH=scripts/translation python3 \
+  scripts/translation/test_typed_numeric_curriculum_v20.py
 uv run --python 3.12 --with sacrebleu==2.6.0 \
   scripts/translation/test_exact_translation_memory.py
 uv run --python 3.12 --with sacrebleu==2.6.0 \
@@ -319,6 +321,7 @@ python3 -m py_compile \
   scripts/translation/compare_source_only_moe_runtime.py \
   scripts/translation/compare_source_only_moe_candidates.py \
   scripts/translation/build_critical_preservation_curriculum.py \
+  scripts/translation/build_typed_numeric_curriculum_v20.py \
   scripts/translation/train_small100_lora.py \
   scripts/translation/deduplicate_marian_moe_tokenizer.py \
   scripts/translation/compare_marian_moe_pack_smokes.py \
