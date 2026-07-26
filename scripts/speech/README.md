@@ -74,3 +74,28 @@ python3 scripts/speech/compare_asr_benchmarks.py \
 Repeat the last two commands with the English directory, `--language en`, and
 `--metric wer`. The comparison uses a deterministic 10,000-sample paired
 clip bootstrap with seed `20260726`.
+
+## Run Mimi Speech's bounded native live path
+
+Place the matching `mlx.metallib` beside `.build/debug/Mimi`, then run:
+
+```sh
+python3 scripts/speech/run_mimi_whisper_live_benchmark.py \
+  .build/debug/Mimi \
+  Research/speech/work/whisper-large-v3-turbo-asr-4bit \
+  Research/speech/work/fleurs-ja-screen-v1/manifest.jsonl \
+  Research/speech/work/fleurs-ja-screen-v1/mimi-whisper-native-live.json \
+  --language ja --metric cer
+
+python3 scripts/speech/run_mimi_whisper_live_benchmark.py \
+  .build/debug/Mimi \
+  Research/speech/work/whisper-large-v3-turbo-asr-4bit \
+  Research/speech/work/fleurs-en-screen-v1/manifest.jsonl \
+  Research/speech/work/fleurs-en-screen-v1/mimi-whisper-native-live.json \
+  --language en --metric wer
+```
+
+This path feeds 500 ms PCM blocks through the same adaptive VAD, bounded queue,
+rolling partial decoder, overlap stabilizer, and final decoder used by the app.
+Its compute RTF is not Apple's paced wall RTF. Time to first text includes the
+nominal audio arrival time plus the corresponding local decode.

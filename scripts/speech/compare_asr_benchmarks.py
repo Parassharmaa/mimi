@@ -209,7 +209,10 @@ def main() -> None:
                 "engine": report["engine"],
                 "metric": report.get("metric", "cer"),
                 "corpusErrorRate": report_error_rate(report),
-                "meanRealTimeFactor": report["meanRealTimeFactor"],
+                "meanRealTimeFactor": report.get(
+                    "meanRealTimeFactor",
+                    report.get("meanComputeRealTimeFactor"),
+                ),
                 "protectedTermsTotal": protected_exact_total,
                 "exactProtectedTermsKept": protected_exact_kept,
                 "exactProtectedTermRecall": protected_exact_kept

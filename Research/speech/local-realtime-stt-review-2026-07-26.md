@@ -4,21 +4,25 @@ Date: 2026-07-26
 
 ## Decision
 
-Whisper Large-v3 Turbo Q4 is the exploratory lead on Mimi's fixed 24-clip
-screens. It is the first candidate whose paired intervals exclude zero against
-Apple in both speech-input languages on these selected slices:
+Mimi Speech Preview, a bounded native MLX path around Whisper Large-v3 Turbo
+Q4, is the development winner on Mimi's fixed 24-clip screens. It is the first
+integrated candidate whose paired error intervals exclude zero against Apple
+in both speech-input languages on these selected slices:
 
-* Japanese CER: 6.73% versus Apple 11.06%.
-* English WER: 4.98% versus Apple 9.23%.
-* Japanese protected-term recall: 73.2% versus Apple 61.0%.
-* English protected-term recall: 90.9% versus Apple 78.8%.
-* Model files: 463 MB.
-* Duration-weighted offline compute RTF: 0.073 Japanese and 0.102 English.
-* Peak process RSS: approximately 669 MB.
+* Native live Japanese CER: 7.35% versus Apple 11.06%.
+* Native live English WER: 5.72% versus Apple 9.23%.
+* Japanese alias-aware protected-term recall: 73.2% versus Apple 61.0%.
+* English alias-aware protected-term recall: 87.9% versus Apple 78.8%.
+* Native live compute RTF: 0.420 Japanese and 0.417 English.
+* Native live first text p50: 4.07 seconds Japanese and 4.04 seconds English.
+* Native live peak process RSS: approximately 1.14 GB.
+* Exact speech model pack: 468,150,715 bytes, including 463,462,815 bytes of
+  weights.
 
 Do not make Parakeet, Nemotron, Qwen3-ASR Q4, or Reazon the default ahead of
-this result. Package Whisper only behind a development gate until its
-provenance and rolling partials pass the public paced benchmark.
+this result. Mimi Speech is packaged only in the development build and remains
+an explicit Preview choice. Apple remains the default and fallback until the
+expanded registered promotion benchmark passes.
 
 The practical near-term architecture is one bilingual model with stabilized
 rolling decoding:
@@ -26,7 +30,7 @@ rolling decoding:
 ```mermaid
 flowchart LR
     A["Microphone and ring buffer"] --> B["VAD and endpointing"]
-    B --> C["One-second overlapping prefixes"]
+    B --> C["Six-second partial window, three-second stride"]
     C --> D["Whisper Large-v3 Turbo Q4"]
     D --> E["Agreement-based stable prefix"]
     E --> F["Final utterance confirmation"]
@@ -34,25 +38,24 @@ flowchart LR
 ```
 
 The speech model itself satisfies the user's 500 MB cap. Together with Mimi's
-roughly 147 MB translation pack, neural weights total about 610 MB, so a 500 MB
-cap for all app models cannot be met without further compression or optional
-asset packs.
+73.4 MB translation pack, neural weights total about 541.6 MB. A 500 MB cap for
+all app models therefore still requires further compression or optional asset
+packs.
 
-Accuracy on the current screens is no longer the main blocker. The Python MLX
-implementation's raw
-AlignAtt streaming path emits unstable Japanese startup fragments and broken
-byte-token surfaces at its default settings. Its high-quality whole-utterance
-path is much faster than real time, but a Swift rolling-prefix implementation
-must still prove stable first text, confirmation latency, and finalization
-latency before promotion.
+Accuracy on the current screens is no longer the main blocker. The integrated
+native path is faster than incoming audio and its bounded final text beats
+Apple on both selected slices. Its roughly four-second first-text latency,
+1.14 GB peak RSS, hypothesis churn, and missing long-session evidence still
+block default promotion.
 
 ## Native Swift integration probe
 
-The exact Q4 checkpoint now loads and transcribes through MLX Audio Swift 0.1.3
-after a minimal experimental loader patch. The patch quantizes the model before
-loading Q4 tensors, maps the tied token-embedding scales and biases, and uses
-the quantized tied embedding for vocabulary projection. It is preserved at
-`Research/speech/patches/mlx-audio-swift-0.1.3-whisper-q4.patch`.
+The exact Q4 checkpoint loads and transcribes through Mimi's pinned public MLX
+Audio Swift fork after a minimal loader patch. The patch quantizes the model
+before loading Q4 tensors, maps the tied token-embedding scales and biases, and
+uses the quantized tied embedding for vocabulary projection. The public fork
+revision is `f2ed44cd00aacae034ce0a2c88febc8072b4ccb4`, with upstream review at
+[MLX Audio Swift PR 235](https://github.com/Blaizzy/mlx-audio-swift/pull/235).
 
 On the first public FLEURS clip in each language, the native Swift final
 transcript matched the Python checkpoint's content. Japanese matched exactly
@@ -72,18 +75,19 @@ is accurate but not real time:
 | 2 s rolling cumulative RTF | 0.75 | Not measured |
 | 2 s first stable text | 7.14 s | Not measured |
 
-This proves checkpoint and native-runtime compatibility, not product
-readiness. The dependency patch has not been released upstream, and a fresh
-SwiftPM checkout does not contain it. Mimi therefore does not yet add the
-dependency or bundle these weights. The next implementation should use bounded
-audio windows, VAD endpointing, encoder-state reuse where possible, and prompt
-carry-over rather than cumulative full-prefix re-decode. A reproducible
-upstream revision or maintained public fork is required before integration.
+The development integration replaces that naive prototype with a bounded
+four-second PCM queue, adaptive no-drop VAD, six-second partial windows,
+three-second decode stride, typo-tolerant overlap alignment, 750 ms silence
+endpointing, and complete final decodes capped at 30 seconds. The exact model
+pack's 13-file inventory, byte sizes, and hashes are checked before packaging
+and loading. No raw source audio is retained. Auto language is disabled for
+the preview until a measured bilingual router exists.
 
-The shipping source currently exposes only Apple's SpeechAnalyzer path. Qwen
-and Nemotron sources are excluded by `Package.swift`, and the compiled path
-uses `LegacyModelStubs.swift`. Keep Apple available as a temporary fallback
-until the expanded paced gate passes, then make Whisper the intended default.
+On the native 24+24 screens, Japanese CER is 7.35% with paired Mimi-minus-Apple
+95% interval [-6.59, -1.25] percentage points. English WER is 5.72% with paired
+interval [-5.82, -1.52]. Mimi wins 14 Japanese clips and 12 English clips;
+Apple wins 5 and 2 respectively. These intervals condition on selected
+term-heavy screens and are not final release claims.
 
 ## Why Japanese to English currently fails
 
@@ -141,7 +145,7 @@ Hardware: Apple M3 Pro, 36 GB RAM, macOS 26.5.1.
 | Engine | Model files | CER | Exact term recall | Alias-aware recall | Mean compute RTF | Peak RSS | Screen result |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | Apple SpeechAnalyzer progressive | System asset | 11.06% | 48.8% | 61.0% | Not comparable | Not captured | Reference |
-| Whisper Large-v3 Turbo MLX Q4 | 463 MB | **6.73%** | **73.2%** | **73.2%** | 0.078 | 669 MB | **Exploratory lead** |
+| Whisper Large-v3 Turbo MLX Q4 | 463 MB weights | **6.73%** | **73.2%** | **73.2%** | 0.078 | 669 MB | **Exploratory lead** |
 | ReazonSpeech K2 v2 INT8 | 160 MB | 11.45% | 36.6% | 68.3% | 0.022 | 722 MB | Statistical tie |
 | Qwen3-ASR 0.6B MLX Q4 | 708 MB | 14.00% | 51.2% | 61.0% | 0.032 | 967 MB | Reject |
 | Reazon Zipformer Base 2025 F32 | 393 MB | 13.30% | 26.8% | 26.8% | 0.060 | 2.50 GB | Reject current artifact |
@@ -200,14 +204,14 @@ Limitations:
 | Candidate | EN and JA | Native streaming | Distributable license status | Practical finding |
 | --- | --- | --- | --- | --- |
 | NVIDIA Parakeet TDT 0.6B v3 | No Japanese | No Mimi-ready bilingual path | CC-BY-4.0 | The standard model covers 25 mostly European languages. It is not an EN and JA model. |
-| NVIDIA Parakeet TDT-CTC 0.6B JA | Japanese only | Not validated as incremental in Mimi | CC-BY-4.0 | Strong official Japanese CER, but requires a second English model and a new optimized Apple runtime. |
+| NVIDIA Parakeet TDT-CTC 0.6B JA Q4 | Japanese only | Swift load validated, no incremental Mimi path | CC-BY-4.0 | Reproducible 681.5 MB artifact: 8.82% CER, 68.3% alias-aware term recall, 0.014 offline RTF, and 824 MB peak RSS. It is larger and less accurate than Mimi Speech and still needs a second English model. |
 | NVIDIA Nemotron 3.5 ASR 0.6B | Yes | Yes, 80 to 1120 ms chunks | Source card says OpenMDW-1.1; MLX card says NVIDIA Open Model License | Best single-model streaming hypothesis, but the 756 MB Q8 MLX conversion failed the local Japanese screen. |
 | Qwen3-ASR 0.6B | Yes | Yes upstream through vLLM | Apache-2.0 | Rejected as Mimi's default. The measured MLX Q4 artifact is about 708 MB and was worse than both Whisper and Apple on Japanese. |
 | ReazonSpeech K2 v2 INT8 | Japanese only | No cached incremental path | Apache-2.0 model | Best compact Japanese fallback measured here. Its 160 MB footprint is attractive, but it tied Apple on the small screen and needs a second English model. |
 | Reazon Zipformer Base 2025 | Japanese only | No, full-context CTC | Apache-2.0 model | Newer and only 98M parameters, but the current F32 artifact regressed CER, terms, and RSS locally. |
 | Moonshine v2 Small Streaming | English only | Yes | MIT for English weights | Strong English specialist candidate with a native Swift library. |
 | Moonshine v2 Base Japanese | Japanese only | Yes | Non-commercial model license | Cannot ship in Mimi. The MIT code and architecture remain useful for training an original student. |
-| Whisper Large-v3 Turbo MLX Q4 | Yes | Rolling window, not native cached streaming | Upstream is MIT; exact hosted conversion provenance is pending | Current exploratory lead. The 463 MB artifact clears both language screens and the speech-only cap. Reproduce the conversion from a pinned upstream revision before redistribution. |
+| Mimi Speech: Whisper Large-v3 Turbo MLX Q4 | Yes | Native bounded rolling path | Canonical OpenAI source is MIT; exact Q4 artifact is pinned, but its publisher omitted the parent SHA | Development winner only. The exact 468.15 MB pack clears both native live language screens and the speech-only cap. Release waits for confirmed lineage or a reproduced conversion. |
 | SenseVoiceSmall | Yes | Low-latency offline path | FunASR model terms need review | Do not bundle until commercial redistribution terms are resolved. |
 
 Primary sources:
@@ -378,13 +382,16 @@ Initial promotion gates:
 * Every model and dataset revision, hash, license, attribution, and notice is
   included and reproducible.
 
-Whisper Q4 passes the current 24-clip accuracy and speech-model-size screens in
-both languages. It has not yet passed the paced partial-stability, long-form,
-thermal, energy, or total-bundle gates.
+Mimi Speech passes the current 24-clip accuracy and speech-model-size screens
+in both languages and keeps up with audio on the M3 Pro. It does not yet pass
+the first-text, RSS, compute-RTF, long-form, thermal, energy, or total-bundle
+promotion gates.
 
-Only after this public gate passes should Mimi expose the engine in
-`selectableCases`. The existing Apple path remains available during the
-experiment even if it is not the intended final product engine.
+Mimi exposes Mimi Speech as an explicit Preview choice, and the development
+bundle includes its exact weights for testing. Apple remains the default and
+the stable fallback. Only after the registered public gate passes should Mimi
+Speech become the release default. A tagged or release-owned native loader and
+confirmed conversion lineage are also required before a signed release.
 
 ## Reproduction
 
