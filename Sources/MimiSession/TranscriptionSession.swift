@@ -150,13 +150,48 @@ public struct ModelDownloadProgress: Equatable, Sendable {
 
 @MainActor
 public protocol WhisperAccuracyTranscribing: AnyObject {
+    var supportsLiveTranscription: Bool { get }
+    var runtimeAvailabilityMessage: String? { get }
     var isDownloaded: Bool { get }
+    var isRemovable: Bool { get }
     func ensureInstalled() throws
     func install(
         onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
     ) async throws
+    func startLive(
+        language: SpeechLanguage,
+        inputFormat: AVAudioFormat,
+        onEvent: @escaping @MainActor (TranscriptEvent) -> Void,
+        onBackpressure: @escaping @MainActor (String) -> Void
+    ) async throws
+    func consumeLive(_ buffer: AVAudioPCMBuffer)
+    func stopLive() async
+    func cancelLive() async
     func transcribe(recordingAt url: URL, language: SpeechLanguage) async throws -> String
     func removeDownloadedModel() async throws
+}
+
+public extension WhisperAccuracyTranscribing {
+    var supportsLiveTranscription: Bool { false }
+    var runtimeAvailabilityMessage: String? { nil }
+    var isRemovable: Bool { isDownloaded }
+
+    func startLive(
+        language: SpeechLanguage,
+        inputFormat: AVAudioFormat,
+        onEvent: @escaping @MainActor (TranscriptEvent) -> Void,
+        onBackpressure: @escaping @MainActor (String) -> Void
+    ) async throws {
+        _ = (language, inputFormat, onEvent, onBackpressure)
+        throw TranscriptionSessionError.whisperLiveUnavailable
+    }
+
+    func consumeLive(_ buffer: AVAudioPCMBuffer) {
+        _ = buffer
+    }
+
+    func stopLive() async {}
+    func cancelLive() async {}
 }
 
 /// Optional Apple-silicon MLX execution of the Nemotron 3.5 model. Unlike the
@@ -342,6 +377,9 @@ public final class TranscriptionSession {
     public var languageMode: TranscriptionLanguageMode = .english {
         didSet {
             guard languageMode != oldValue else { return }
+            if languageMode == .automatic, engineID != .appleSpeechAnalyzer {
+                languageMode = TranscriptionLanguageMode(language: sourceLanguage)
+            }
             if let manualLanguage = languageMode.manualLanguage {
                 sourceLanguage = manualLanguage
                 detectedLanguage = manualLanguage
@@ -360,6 +398,9 @@ public final class TranscriptionSession {
     public var engineID: TranscriptionEngineID {
         didSet {
             guard engineID != oldValue else { return }
+            if engineID != .appleSpeechAnalyzer, languageMode == .automatic {
+                languageMode = TranscriptionLanguageMode(language: sourceLanguage)
+            }
             scheduleSelectedModelReadinessRefresh()
         }
     }
@@ -386,6 +427,7 @@ public final class TranscriptionSession {
     private let storage: any TranscriptPersisting
     @ObservationIgnored private var appleEngine: (any AppleLiveTranscribing)?
     @ObservationIgnored private var automaticAppleEngineActive = false
+    @ObservationIgnored private var whisperLiveSessionActive = false
     @ObservationIgnored private var nemotronLiveSessionActive = false
     @ObservationIgnored private var qwenLiveSessionActive = false
     @ObservationIgnored private var activeSession: SessionConfiguration?
@@ -414,7 +456,7 @@ public final class TranscriptionSession {
         storage = dependencies.storage
         inputDevices = dependencies.inputDevices
         outputDevices = dependencies.outputDevices
-        engineID = initialEngine ?? (dependencies.appleSpeech.isPlatformAvailable ? .appleSpeechAnalyzer : .whisperKitLargeV3Turbo)
+        engineID = initialEngine ?? .appleSpeechAnalyzer
         document = loadPersistedTranscript ? dependencies.storage.loadLatestTranscript() : TranscriptDocument()
         dependencies.storage.removeStaleTemporaryRecordings()
     }
@@ -444,11 +486,17 @@ public final class TranscriptionSession {
         ModelCatalog.pack(for: engineID)
     }
 
+    public var selectableLanguageModes: [TranscriptionLanguageMode] {
+        engineID == .appleSpeechAnalyzer
+            ? TranscriptionLanguageMode.allCases
+            : [.english, .japanese]
+    }
+
     public var canRemoveSelectedModel: Bool {
         _ = modelStorageRevision
         guard !modelSetupState.isActive else { return false }
         return switch engineID {
-        case .whisperKitLargeV3Turbo: whisper.isDownloaded
+        case .whisperKitLargeV3Turbo: whisper.isRemovable
         case .nemotronStreamingExperimental: nemotron.isDownloaded
         case .qwen3StreamingExperimental: qwen.isDownloaded
         case .appleSpeechAnalyzer:
@@ -501,9 +549,12 @@ public final class TranscriptionSession {
             }
             return appleReadiness(for: assetStatus, language: sourceLanguage)
         case .whisperKitLargeV3Turbo:
+            if let runtimeAvailabilityMessage = whisper.runtimeAvailabilityMessage {
+                return .unavailable(runtimeAvailabilityMessage)
+            }
             return whisper.isDownloaded
                 ? .ready
-                : .needsDownload("Download Whisper Large-v3 (626 MB) before starting an accuracy-pass recording.")
+                : .needsDownload("Download Mimi Speech (468 MB) before starting local live transcription.")
         case .nemotronStreamingExperimental:
             if let runtimeAvailabilityMessage = nemotron.runtimeAvailabilityMessage {
                 return .unavailable(runtimeAvailabilityMessage)
@@ -718,6 +769,9 @@ public final class TranscriptionSession {
 
     private func beginModelSetup(removing: Bool = false) -> ModelSetupRequest? {
         guard !controlsLocked, !modelSetupState.isActive else { return nil }
+        if removing, !canRemoveSelectedModel {
+            return nil
+        }
 
         let request = ModelSetupRequest(
             id: UUID(),
@@ -1177,7 +1231,9 @@ public final class TranscriptionSession {
             case .appleSpeechAnalyzer:
                 recordingURL = nil
             case .whisperKitLargeV3Turbo:
-                recordingURL = try storage.makeTemporaryRecordingURL(fileExtension: "caf")
+                recordingURL = whisper.supportsLiveTranscription
+                    ? nil
+                    : try storage.makeTemporaryRecordingURL(fileExtension: "caf")
             case .nemotronStreamingExperimental:
                 // The bounded live MLX session receives selected PCM frames
                 // directly, so it neither writes nor retains raw source audio.
@@ -1232,7 +1288,24 @@ public final class TranscriptionSession {
                 activeAudioFrames = frames
                 audioFrames = frames
             case .whisperKitLargeV3Turbo:
-                audioFrames = nil
+                if whisper.supportsLiveTranscription {
+                    try await whisper.startLive(
+                        language: configuration.language,
+                        inputFormat: inputFormat,
+                        onEvent: { [weak self] event in
+                            self?.receive(event, for: configuration)
+                        },
+                        onBackpressure: { [weak self] message in
+                            self?.receiveLiveWarning(message, for: configuration)
+                        }
+                    )
+                    whisperLiveSessionActive = true
+                    let frames = RealtimeAudioFramePipe(capacity: 32)
+                    activeAudioFrames = frames
+                    audioFrames = frames
+                } else {
+                    audioFrames = nil
+                }
             case .nemotronStreamingExperimental:
                 try await nemotron.startLive(
                     language: configuration.language,
@@ -1268,8 +1341,18 @@ public final class TranscriptionSession {
             let onBuffer: @Sendable (AVAudioPCMBuffer) -> Void
             if let audioFrames {
                 onBuffer = { @Sendable [weak self, configuration, audioFrames] buffer in
-                    guard audioFrames.enqueueCopy(of: buffer) else { return }
-                    Task { @MainActor [weak self, configuration, audioFrames] in
+                    let enqueueResult = audioFrames.enqueueCopy(of: buffer)
+                    guard enqueueResult.shouldScheduleDrain || enqueueResult.droppedOldest else {
+                        return
+                    }
+                    Task { @MainActor [weak self, configuration, audioFrames, enqueueResult] in
+                        if enqueueResult.droppedOldest {
+                            self?.receiveLiveWarning(
+                                "\(configuration.engine.displayName) fell behind this audio source and skipped queued audio to stay bounded.",
+                                for: configuration
+                            )
+                        }
+                        guard enqueueResult.shouldScheduleDrain else { return }
                         self?.drainAudioFrames(audioFrames, for: configuration)
                     }
                 }
@@ -1333,9 +1416,20 @@ public final class TranscriptionSession {
                 document.finalizeLiveText(language: detectedLanguage ?? configuration.language)
                 try persistDocument()
             case .whisperKitLargeV3Turbo:
-                guard let completedURL else { throw TranscriptionSessionError.missingRecording }
-                let text = try await whisper.transcribe(recordingAt: completedURL, language: configuration.language)
-                document.apply(.final(text), language: configuration.language)
+                if whisperLiveSessionActive {
+                    if let activeAudioFrames {
+                        drainAudioFrames(activeAudioFrames, for: configuration)
+                    }
+                    await whisper.stopLive()
+                    whisperLiveSessionActive = false
+                } else {
+                    guard let completedURL else { throw TranscriptionSessionError.missingRecording }
+                    let text = try await whisper.transcribe(
+                        recordingAt: completedURL,
+                        language: configuration.language
+                    )
+                    document.apply(.final(text), language: configuration.language)
+                }
                 try persistDocument()
             case .nemotronStreamingExperimental:
                 if let activeAudioFrames {
@@ -1445,6 +1539,10 @@ public final class TranscriptionSession {
             await automaticAppleSpeech.stop()
             automaticAppleEngineActive = false
         }
+        if whisperLiveSessionActive {
+            await whisper.cancelLive()
+            whisperLiveSessionActive = false
+        }
         if nemotronLiveSessionActive {
             await nemotron.cancelLive()
             nemotronLiveSessionActive = false
@@ -1499,7 +1597,11 @@ public final class TranscriptionSession {
             }
             try? persistDocument()
         case .whisperKitLargeV3Turbo:
-            break
+            if whisperLiveSessionActive {
+                await whisper.stopLive()
+                whisperLiveSessionActive = false
+            }
+            try? persistDocument()
         }
         activeAudioFrames?.discard()
         activeAudioFrames = nil
@@ -1540,8 +1642,12 @@ public final class TranscriptionSession {
             case .qwen3StreamingExperimental:
                 qwen.consumeLive(frame.buffer)
             case .whisperKitLargeV3Turbo:
-                audioFrames.discard()
-                return
+                if whisperLiveSessionActive {
+                    whisper.consumeLive(frame.buffer)
+                } else {
+                    audioFrames.discard()
+                    return
+                }
             }
         }
     }
@@ -1640,21 +1746,31 @@ private final class RealtimeAudioFramePipe: @unchecked Sendable {
         self.capacity = max(1, capacity)
     }
 
-    /// Returns true only when the caller must schedule a main-actor drain.
-    /// Dropping the oldest frame when full keeps live transcription current.
-    func enqueueCopy(of buffer: AVAudioPCMBuffer) -> Bool {
-        guard let frame = SendableAudioBuffer(copying: buffer) else { return false }
+    /// Reports both scheduling and loss so bounded operation never hides gaps.
+    func enqueueCopy(of buffer: AVAudioPCMBuffer) -> RealtimeAudioEnqueueResult {
+        guard let frame = SendableAudioBuffer(copying: buffer) else {
+            return .init(shouldScheduleDrain: false, droppedOldest: false)
+        }
         lock.lock()
         defer { lock.unlock() }
 
+        let droppedOldest = frames.count == capacity
         if frames.count == capacity {
             frames.removeFirst()
         }
         frames.append(frame)
 
-        guard !drainScheduled else { return false }
+        guard !drainScheduled else {
+            return .init(
+                shouldScheduleDrain: false,
+                droppedOldest: droppedOldest
+            )
+        }
         drainScheduled = true
-        return true
+        return .init(
+            shouldScheduleDrain: true,
+            droppedOldest: droppedOldest
+        )
     }
 
     func dequeueForDrain() -> SendableAudioBuffer? {
@@ -1673,6 +1789,11 @@ private final class RealtimeAudioFramePipe: @unchecked Sendable {
         frames.removeAll(keepingCapacity: true)
         lock.unlock()
     }
+}
+
+private struct RealtimeAudioEnqueueResult: Sendable {
+    let shouldScheduleDrain: Bool
+    let droppedOldest: Bool
 }
 
 /// AVAudioEngine owns a tap buffer only for the duration of its callback. This
@@ -1731,6 +1852,7 @@ public enum TranscriptionSessionError: LocalizedError {
     case appleSpeechLanguageUnavailable(SpeechLanguage)
     case automaticLanguageNotPrepared
     case missingRecording
+    case whisperLiveUnavailable
     case screenAudioSelectionRequired(AudioSource)
     case screenAudioStreamStopped(String?)
     case captureSmokeReceivedNoAudio
@@ -1753,6 +1875,8 @@ public enum TranscriptionSessionError: LocalizedError {
             "Finish preparing automatic English and Japanese recognition in Settings, then try again."
         case .missingRecording:
             "Mimi could not find the local audio used for this accuracy pass."
+        case .whisperLiveUnavailable:
+            "This installed speech engine supports only a post-recording accuracy pass."
         case let .screenAudioSelectionRequired(source):
             "Choose a \(source.displayName.lowercased()) source in the macOS picker before recording."
         case let .screenAudioStreamStopped(message):

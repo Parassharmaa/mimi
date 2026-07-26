@@ -137,9 +137,15 @@ struct MimiSelfTest {
     }
 
     private static func testRecommendedPacksCoverBothV1Languages() {
-        expect(ModelCatalog.packs.count == 1, "Mimi presents one simple Apple Speech choice")
+        expect(ModelCatalog.packs.count == 2, "Mimi presents Apple Speech and one explicit Mimi Speech preview")
         expect(ModelCatalog.packs[0].supportedLanguages == [.english, .japanese], "Apple Speech setup covers English and Japanese")
-        expect(TranscriptionEngineID.selectableCases == [.appleSpeechAnalyzer], "Removed experimental models never appear in the UI")
+        expect(ModelCatalog.packs[1].supportedLanguages == [.english, .japanese], "Mimi Speech Preview covers English and Japanese with one model")
+        expect(ModelCatalog.packs[1].ownership == .experimental, "Mimi Speech remains visibly experimental")
+        expect(
+            TranscriptionEngineID.selectableCases == [.appleSpeechAnalyzer, .whisperKitLargeV3Turbo],
+            "Apple remains first while Mimi Speech is available as a preview"
+        )
+        expect(TranscriptionEngineID.whisperKitLargeV3Turbo.isExperimental, "Mimi Speech cannot silently become the stable default")
     }
 
     private static func testTerminalLiveTextDiffDoesNotReplayOldText() {

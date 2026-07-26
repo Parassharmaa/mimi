@@ -30,7 +30,7 @@ final class AppStore {
                 screenAudioCapture: ScreenAudioCapture(),
                 appleSpeech: appleSpeech,
                 automaticAppleSpeech: AutomaticAppleSpeechEngine(appleSpeech: appleSpeech),
-                whisper: WhisperKitAccuracyEngine(),
+                whisper: MimiWhisperMLXLiveEngine(),
                 nemotron: NemotronMLXLiveEngine(),
                 qwen: QwenMLXLiveEngine(),
                 storage: FileTranscriptStore(),
@@ -58,6 +58,7 @@ final class AppStore {
         get { session.languageMode }
         set { session.languageMode = newValue }
     }
+    var selectableLanguageModes: [TranscriptionLanguageMode] { session.selectableLanguageModes }
     var detectedLanguage: SpeechLanguage? { session.detectedLanguage }
     var engineID: TranscriptionEngineID {
         get { session.engineID }

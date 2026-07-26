@@ -109,7 +109,7 @@ struct MenuBarView: View {
 
             MimiControlRow(t("Language", "言語"), symbol: store.sourceLanguage.symbolName) {
                 Picker(t("Language", "言語"), selection: $store.languageMode) {
-                    ForEach(TranscriptionLanguageMode.allCases) { mode in
+                    ForEach(store.selectableLanguageModes) { mode in
                         Text(mode.displayName).tag(mode)
                     }
                 }

@@ -209,7 +209,7 @@ private struct ModelsSettingsPane: View {
                 .disabled(store.controlsLocked || store.isModelSetupActive)
 
                 Picker("Language", selection: $store.languageMode) {
-                    ForEach(TranscriptionLanguageMode.allCases) { mode in
+                    ForEach(store.selectableLanguageModes) { mode in
                         Text(mode.displayName).tag(mode)
                     }
                 }
@@ -345,7 +345,7 @@ private struct ModelsSettingsPane: View {
         let base: String = switch store.engineID {
         case .appleSpeechAnalyzer:
             store.languageMode == .automatic ? "Prepare English and Japanese" : "Prepare \(store.sourceLanguage.displayName)"
-        case .whisperKitLargeV3Turbo: "Download Whisper"
+        case .whisperKitLargeV3Turbo: "Download Mimi Speech"
         case .nemotronStreamingExperimental: "Download Nemotron"
         case .qwen3StreamingExperimental: "Download Qwen3-ASR"
         }
@@ -362,7 +362,7 @@ private struct ModelsSettingsPane: View {
 
     private var removeButtonTitle: String {
         switch store.engineID {
-        case .whisperKitLargeV3Turbo: "Remove Whisper Download"
+        case .whisperKitLargeV3Turbo: "Remove Mimi Speech Download"
         case .nemotronStreamingExperimental: "Remove Nemotron Download"
         case .qwen3StreamingExperimental: "Remove Qwen3-ASR Download"
         case .appleSpeechAnalyzer: "Remove Download"

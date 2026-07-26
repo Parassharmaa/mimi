@@ -10,6 +10,7 @@ struct MimiSessionE2E {
         await automaticAppleSpeechRoutesMixedEnglishAndJapanese()
         await onboardingPreparesBothLanguagesWithoutChangingSelection()
         await whisperJapaneseAccuracySessionFreezesConfigurationAndCleansAudio()
+        await mimiWhisperLiveSessionStreamsWithoutRetainingAudio()
         await nemotronJapaneseLiveSessionStreamsAndFinalizesWithoutAudioFiles()
         await qwenDualPassLiveSessionStreamsAndFinalizesWithoutAudioFiles()
         await selectedOutputAudioFeedsAppleSpeechWithoutMicrophonePermission()
@@ -186,6 +187,52 @@ struct MimiSessionE2E {
         expect(session.document.segments.map(\.language) == [.japanese], "Whisper final text retains Japanese routing")
         expect(storage.removedTemporaryURLs == [temporaryURL], "Whisper source audio is deleted after transcription")
         expect(apple.makeEngineCalls == 0, "A mid-session picker change never swaps the active engine")
+    }
+
+    @MainActor
+    private static func mimiWhisperLiveSessionStreamsWithoutRetainingAudio() async {
+        let capture = FakeCapture()
+        let whisper = FakeWhisper(isDownloaded: true)
+        whisper.supportsLiveTranscription = true
+        whisper.livePartialText = "SARSA uses a Q function"
+        whisper.liveFinalText = "SARSA uses a Q function."
+        let storage = FakeStorage()
+        let session = makeSession(
+            capture: capture,
+            apple: FakeAppleProvider(),
+            whisper: whisper,
+            storage: storage
+        )
+        session.languageMode = .automatic
+        session.engineID = .whisperKitLargeV3Turbo
+        expect(session.languageMode == .english, "Choosing Mimi Speech leaves Auto and preserves the manual language")
+        session.languageMode = .automatic
+        expect(session.languageMode == .english, "Mimi Speech does not expose an unsupported Auto route")
+        session.sourceLanguage = .english
+
+        await session.startRecording()
+        expect(session.recordingState == .recording, "Mimi Speech starts its bounded live session")
+        expect(storage.createdTemporaryURLs.isEmpty, "Mimi Speech retains no source-audio file")
+        expect(whisper.liveStartLanguages == [.english], "Mimi Speech freezes the selected source language at Start")
+
+        capture.lastCallback?(FakeCapture.makeBuffer())
+        await yieldToMainActor()
+        expect(whisper.liveConsumedBufferCount == 1, "Mimi Speech receives selected PCM through the bounded frame pipe")
+        expect(session.document.liveText == whisper.livePartialText, "Mimi Speech publishes replaceable live text")
+
+        for _ in 0..<40 {
+            capture.lastCallback?(FakeCapture.makeBuffer())
+        }
+        await yieldToMainActor()
+        expect(
+            session.lastError?.contains("skipped queued audio") == true,
+            "The outer bounded frame pipe makes dropped audio visible"
+        )
+
+        await session.stopRecording()
+        expect(whisper.liveStopCalls == 1, "Mimi Speech finalizes exactly once at Stop")
+        expect(session.document.segments.last?.text == whisper.liveFinalText, "Mimi Speech persists its final bounded utterance")
+        expect(storage.removedTemporaryURLs.isEmpty, "Mimi Speech creates no temporary audio requiring cleanup")
     }
 
     @MainActor
@@ -606,6 +653,21 @@ struct MimiSessionE2E {
         }
 
         do {
+            let whisper = FakeWhisper(isDownloaded: true, isRemovable: false)
+            let session = makeSession(
+                capture: FakeCapture(),
+                apple: FakeAppleProvider(),
+                whisper: whisper,
+                storage: FakeStorage()
+            )
+            session.engineID = .whisperKitLargeV3Turbo
+
+            expect(!session.canRemoveSelectedModel, "A bundled Mimi Speech pack never presents a remove action")
+            await session.removeSelectedModelNow()
+            expect(whisper.removeCalls == 0, "A bundled Mimi Speech pack also rejects programmatic removal")
+        }
+
+        do {
             let capture = FakeCapture()
             let apple = FakeAppleProvider()
             let whisper = FakeWhisper(isDownloaded: true)
@@ -655,7 +717,10 @@ struct MimiSessionE2E {
             let whisper = FakeWhisper(isDownloaded: true)
             let storage = FakeStorage()
             let session = makeSession(capture: capture, apple: apple, whisper: whisper, storage: storage)
-            session.engineID = .appleSpeechAnalyzer
+            expect(
+                session.engineID == .appleSpeechAnalyzer,
+                "Mimi never silently promotes an experimental model when Apple Speech is unavailable"
+            )
             await session.installSelectedModelNow()
 
             expect(apple.installCalls == 0, "Unavailable Apple Speech does not attempt asset installation")
@@ -1439,20 +1504,32 @@ private enum FakeAppleAssetStatusResponse {
 
 @MainActor
 private final class FakeWhisper: WhisperAccuracyTranscribing {
+    var supportsLiveTranscription = false
+    var runtimeAvailabilityMessage: String?
     var isDownloaded: Bool
+    var isRemovable: Bool
     var ensureError: Error?
     var installError: Error?
     var progressEvents: [ModelDownloadProgress] = []
     var afterProgress: (() -> Void)?
     var transcribeError: Error?
     var transcription = ""
+    var liveStartError: Error?
+    var livePartialText = ""
+    var liveFinalText = ""
     private(set) var ensureCalls = 0
     private(set) var installCalls = 0
     private(set) var removeCalls = 0
     private(set) var transcribeCalls: [(URL, SpeechLanguage)] = []
+    private(set) var liveStartLanguages: [SpeechLanguage] = []
+    private(set) var liveConsumedBufferCount = 0
+    private(set) var liveStopCalls = 0
+    private(set) var liveCancelCalls = 0
+    private var onLiveEvent: (@MainActor (TranscriptEvent) -> Void)?
 
-    init(isDownloaded: Bool) {
+    init(isDownloaded: Bool, isRemovable: Bool? = nil) {
         self.isDownloaded = isDownloaded
+        self.isRemovable = isRemovable ?? isDownloaded
     }
 
     func ensureInstalled() throws {
@@ -1476,6 +1553,7 @@ private final class FakeWhisper: WhisperAccuracyTranscribing {
         }
         if let installError { throw installError }
         isDownloaded = true
+        isRemovable = true
     }
 
     func transcribe(recordingAt url: URL, language: SpeechLanguage) async throws -> String {
@@ -1484,9 +1562,43 @@ private final class FakeWhisper: WhisperAccuracyTranscribing {
         return transcription
     }
 
+    func startLive(
+        language: SpeechLanguage,
+        inputFormat: AVAudioFormat,
+        onEvent: @escaping @MainActor (TranscriptEvent) -> Void,
+        onBackpressure: @escaping @MainActor (String) -> Void
+    ) async throws {
+        _ = (inputFormat, onBackpressure)
+        if let liveStartError { throw liveStartError }
+        liveStartLanguages.append(language)
+        onLiveEvent = onEvent
+        if !livePartialText.isEmpty {
+            onEvent(.partial(livePartialText))
+        }
+    }
+
+    func consumeLive(_ buffer: AVAudioPCMBuffer) {
+        _ = buffer
+        liveConsumedBufferCount += 1
+    }
+
+    func stopLive() async {
+        liveStopCalls += 1
+        if !liveFinalText.isEmpty {
+            onLiveEvent?(.final(liveFinalText))
+        }
+        onLiveEvent = nil
+    }
+
+    func cancelLive() async {
+        liveCancelCalls += 1
+        onLiveEvent = nil
+    }
+
     func removeDownloadedModel() async throws {
         removeCalls += 1
         isDownloaded = false
+        isRemovable = false
     }
 }
 

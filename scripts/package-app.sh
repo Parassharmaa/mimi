@@ -10,6 +10,7 @@ ARCHIVE="$DIST/Mimi-macOS.zip"
 SIGNING_IDENTITY="${MIMI_CODESIGN_IDENTITY:--}"
 MODEL_RESOURCES="$ROOT/App/Resources/TranslationModels"
 LICENSE_RESOURCES="$ROOT/App/Resources/TranslationLicenses"
+SPEECH_LICENSE_RESOURCES="$ROOT/App/Resources/SpeechLicenses"
 
 cd "$ROOT"
 
@@ -30,6 +31,13 @@ python3 "$ROOT/scripts/translation/verify_shipped_translation_pack.py" \
   --license-root "$LICENSE_RESOURCES"
 cp -R "$MODEL_RESOURCES" "$APP/Contents/Resources/TranslationModels"
 cp -R "$LICENSE_RESOURCES" "$APP/Contents/Resources/TranslationLicenses"
+[[ -s "$SPEECH_LICENSE_RESOURCES/OPENAI-WHISPER-MIT.txt" ]]
+[[ -s "$SPEECH_LICENSE_RESOURCES/PROVENANCE.md" ]]
+cp -R "$SPEECH_LICENSE_RESOURCES" "$APP/Contents/Resources/SpeechLicenses"
+cmp "$SPEECH_LICENSE_RESOURCES/OPENAI-WHISPER-MIT.txt" \
+  "$APP/Contents/Resources/SpeechLicenses/OPENAI-WHISPER-MIT.txt"
+cmp "$SPEECH_LICENSE_RESOURCES/PROVENANCE.md" \
+  "$APP/Contents/Resources/SpeechLicenses/PROVENANCE.md"
 "$ROOT/scripts/prepare-mlx-metallib.sh" "$APP/Contents/MacOS" release required
 python3 "$ROOT/scripts/translation/verify_shipped_translation_pack.py" --app "$APP"
 

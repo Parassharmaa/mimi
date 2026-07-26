@@ -248,7 +248,7 @@ private struct TranscriptHistorySidebar: View {
 
             Section("Transcription") {
                 Picker("Language", selection: $store.languageMode) {
-                    ForEach(TranscriptionLanguageMode.allCases) { mode in
+                    ForEach(store.selectableLanguageModes) { mode in
                         Text(mode.displayName).tag(mode)
                     }
                 }

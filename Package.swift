@@ -21,9 +21,14 @@ let package = Package(
         .package(url: "https://github.com/argmaxinc/argmax-oss-swift.git", exact: "0.18.0"),
         // Developer-only local translation candidate. Model assets are loaded
         // from an explicit directory and Apple Translation remains the fallback.
-        .package(url: "https://github.com/ml-explore/mlx-swift-lm.git", exact: "2.30.6"),
-        .package(url: "https://github.com/ml-explore/mlx-swift", exact: "0.30.6"),
-        .package(url: "https://github.com/huggingface/swift-transformers.git", exact: "1.1.9")
+        .package(url: "https://github.com/ml-explore/mlx-swift-lm.git", exact: "3.31.4"),
+        .package(url: "https://github.com/ml-explore/mlx-swift", exact: "0.31.4"),
+        .package(url: "https://github.com/huggingface/swift-transformers.git", exact: "1.1.9"),
+        .package(url: "https://github.com/huggingface/swift-huggingface.git", exact: "0.8.1"),
+        .package(
+            url: "https://github.com/Parassharmaa/mlx-audio-swift.git",
+            revision: "f2ed44cd00aacae034ce0a2c88febc8072b4ccb4"
+        )
     ],
     targets: [
         .target(
@@ -44,6 +49,9 @@ let package = Package(
                 .product(name: "MLXLMCommon", package: "mlx-swift-lm"),
                 .product(name: "MLX", package: "mlx-swift"),
                 .product(name: "MLXNN", package: "mlx-swift"),
+                .product(name: "MLXAudioCore", package: "mlx-audio-swift"),
+                .product(name: "MLXAudioSTT", package: "mlx-audio-swift"),
+                .product(name: "HuggingFace", package: "swift-huggingface"),
                 .product(name: "Hub", package: "swift-transformers"),
                 .product(name: "Tokenizers", package: "swift-transformers")
             ],

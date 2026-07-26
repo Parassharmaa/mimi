@@ -163,14 +163,17 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
 
     public var id: String { rawValue }
 
-    /// Mimi's live product surface is intentionally Apple-only. Legacy cases
-    /// remain decodable while existing installs migrate away from them.
-    public static let selectableCases: [TranscriptionEngineID] = [.appleSpeechAnalyzer]
+    /// Mimi Speech is an explicit preview until its frozen promotion benchmark
+    /// passes. Apple Speech remains the default and the immediate fallback.
+    public static let selectableCases: [TranscriptionEngineID] = [
+        .appleSpeechAnalyzer,
+        .whisperKitLargeV3Turbo
+    ]
 
     public var displayName: String {
         switch self {
         case .appleSpeechAnalyzer: "Apple Speech"
-        case .whisperKitLargeV3Turbo: "Whisper Large-v3 (626 MB)"
+        case .whisperKitLargeV3Turbo: "Mimi Speech Preview (468 MB)"
         case .nemotronStreamingExperimental: "Nemotron 3.5 MLX (756 MB)"
         case .qwen3StreamingExperimental: "Qwen3-ASR 0.6B MLX (713 MB)"
         }
@@ -181,7 +184,7 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
         case .appleSpeechAnalyzer:
             "Native, on-device live transcription. Available on macOS 26 and later."
         case .whisperKitLargeV3Turbo:
-            "Downloadable Core ML accuracy model for English and Japanese."
+            "Development MLX model for bounded-window English and Japanese live transcription."
         case .nemotronStreamingExperimental:
             "Experimental on-device MLX live transcription for English and Japanese. Uses bounded local windows for predictable memory."
         case .qwen3StreamingExperimental:
@@ -191,8 +194,8 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
 
     public var isExperimental: Bool {
         switch self {
-        case .nemotronStreamingExperimental, .qwen3StreamingExperimental: true
-        case .appleSpeechAnalyzer, .whisperKitLargeV3Turbo: false
+        case .whisperKitLargeV3Turbo, .nemotronStreamingExperimental, .qwen3StreamingExperimental: true
+        case .appleSpeechAnalyzer: false
         }
     }
 }
@@ -251,6 +254,14 @@ public enum ModelCatalog {
             ownership: .systemManaged,
             estimatedDownloadMB: nil,
             recommendation: "Best first choice on macOS 26: fast live results and OS-managed language assets."
+        ),
+        .init(
+            id: "mimi-speech-en-ja-preview",
+            engine: .whisperKitLargeV3Turbo,
+            supportedLanguages: [.english, .japanese],
+            ownership: .experimental,
+            estimatedDownloadMB: 468,
+            recommendation: "Preview candidate for higher English and Japanese accuracy. Apple Speech remains the default until the frozen promotion gate passes."
         )
     ]
 

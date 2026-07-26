@@ -1,7 +1,6 @@
 import Foundation
 import Hub
 import MLX
-import MLXLMCommon
 import MLXNN
 import Tokenizers
 
@@ -344,7 +343,7 @@ private final class MarianModel: Module {
 
 struct MarianMLXTranslationRuntime {
     private let model: MarianModel
-    private let tokenizer: any Tokenizer
+    private let tokenizer: any Tokenizers.Tokenizer
 
     static func load(directory: URL, tokenizerDataURL: URL? = nil) async throws -> Self {
         let manifest = try JSONDecoder().decode(
@@ -363,23 +362,17 @@ struct MarianMLXTranslationRuntime {
         let weights = try loadArrays(url: directory.appending(path: "model.safetensors"))
         try model.update(parameters: .unflattened(weights), verify: [.all])
         eval(model)
-        let tokenizer: any Tokenizer
-        if let tokenizerDataURL {
-            let hub = HubApi()
-            let tokenizerConfig = try hub.configuration(
-                fileURL: directory.appending(path: "tokenizer_config.json")
-            )
-            let tokenizerData = try hub.configuration(fileURL: tokenizerDataURL)
-            tokenizer = try PreTrainedTokenizer(
-                tokenizerConfig: tokenizerConfig,
-                tokenizerData: tokenizerData
-            )
-        } else {
-            tokenizer = try await loadTokenizer(
-                configuration: .init(directory: directory),
-                hub: HubApi()
-            )
-        }
+        let tokenizerDataURL = tokenizerDataURL
+            ?? directory.appending(path: "tokenizer.json")
+        let hub = HubApi()
+        let tokenizerConfig = try hub.configuration(
+            fileURL: directory.appending(path: "tokenizer_config.json")
+        )
+        let tokenizerData = try hub.configuration(fileURL: tokenizerDataURL)
+        let tokenizer: any Tokenizers.Tokenizer = try PreTrainedTokenizer(
+            tokenizerConfig: tokenizerConfig,
+            tokenizerData: tokenizerData
+        )
         return .init(model: model, tokenizer: tokenizer)
     }
 

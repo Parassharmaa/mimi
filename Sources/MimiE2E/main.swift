@@ -25,7 +25,10 @@ struct MimiE2E {
 
         precondition(japanese.document.renderedText == "こんにちは、ローカル文字起こしです。")
         precondition(ModelCatalog.pack(for: .appleSpeechAnalyzer)?.supportedLanguages == [.english, .japanese])
-        precondition(TranscriptionEngineID.selectableCases == [.appleSpeechAnalyzer])
+        precondition(TranscriptionEngineID.selectableCases == [
+            .appleSpeechAnalyzer,
+            .whisperKitLargeV3Turbo
+        ])
 
         print("Mimi E2E passed: English and Japanese local-transcription pipelines are deterministic.")
     }

@@ -620,6 +620,11 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                             language: language,
                             stepSeconds: step
                         )
+                    case "mimi-whisper":
+                        report = try await MimiWhisperMLXLiveEngine().runBoundedBenchmark(
+                            recordingAt: audioURL,
+                            language: language
+                        )
                     case "qwen":
                         report = try await RealtimeBenchmarkRunner.runQwen(
                             recordingAt: audioURL,
