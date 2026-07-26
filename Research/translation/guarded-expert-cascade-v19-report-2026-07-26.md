@@ -125,6 +125,15 @@ routing for every integration decision. The stored COMET result remains
 reproducible evidence about those exact stored hypotheses, but it cannot be
 claimed as app-path quality.
 
+### Larger independent fallback probe
+
+The 448,893,412-byte FP16 HPLT v2 pair was tested as an independent third
+fallback. It strictly recovers only 14/71 failures and leaves 57 unresolved.
+The mean sentence chrF++ of those 14 is 22.28, and strict surface matching
+admits at least one lexical-number omission (`one month` disappears). The
+strong expert pair plus HPLT would be 522,319,220 bytes before app overhead.
+HPLT is rejected before MLX conversion or quantization.
+
 ## Remaining gates
 
 V19 is rejected for shipping in its current form:
@@ -146,7 +155,9 @@ the machine-readable public result is
 and the pinned learned-metric result is
 `Research/translation/guarded-expert-cascade-v19-comet-result-2026-07-26.json`.
 The superseding app-path decision is
-`Research/translation/guarded-expert-cascade-v19-swift-runtime-result-2026-07-26.json`.
+`Research/translation/guarded-expert-cascade-v19-swift-runtime-result-2026-07-26.json`;
+the rejected large-fallback probe is
+`Research/translation/guarded-expert-cascade-v19-hplt-fallback-result-2026-07-26.json`.
 Rebuild the developer pack without changing app resources:
 
 ```sh

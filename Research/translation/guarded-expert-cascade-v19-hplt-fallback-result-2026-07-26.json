@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "experiment": "guarded-expert-cascade-v19-hplt-fallback-probe",
+  "status": "rejected-before-conversion",
+  "hypothesis": "Use the independently trained CC-BY-4.0 HPLT v2 Marian pair only after both compact V19 parents fail the critical-token guard.",
+  "inputs": {
+    "v19_runtime_result": {
+      "path": "Research/translation/guarded-expert-cascade-v19-swift-runtime-result-2026-07-26.json",
+      "failed_segments": 71
+    },
+    "hplt_en_ja": {
+      "repository": "HPLT/translate-en-ja-v2.0-hplt_opus",
+      "revision": "0b07a399bf25965dc344fad25e7826c38bec53e6",
+      "license": "CC-BY-4.0",
+      "model_sha256": "183a16c36492257089c993dbeea8b437e3da278130eba97508cbafe14926c416"
+    },
+    "hplt_ja_en": {
+      "repository": "HPLT/translate-ja-en-v2.0-hplt_opus",
+      "revision": "89c256961b845b265d2a1393883375eb47d79600",
+      "license": "CC-BY-4.0",
+      "model_sha256": "d211bf007d845397df972d8b150e2b3c6e86abce4ac618ccfe8711c3cfe3f294"
+    }
+  },
+  "evaluation": {
+    "suite": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+    "cases": 400,
+    "device": "cpu",
+    "warm_runs_per_case": 0,
+    "timing_claim_eligible": false,
+    "report": {
+      "path": "Research/translation/work/guarded-expert-cascade-v19/hplt-v2-cpu-segments.json",
+      "bytes": 270831,
+      "sha256": "a88cd2a019b0c7611c93029d7d6b8394af6c0456b0cba6c24ad6dc152670d3c1"
+    },
+    "runner": {
+      "path": "scripts/translation/run_marian_benchmark.py",
+      "bytes": 7134,
+      "sha256": "3f0ce6aeb7ac03e9db1c6f6b0dccbe5909fcfc482027b30d908df9d33dd5bf23"
+    },
+    "peak_resident_bytes": 1044480000,
+    "preparation_seconds": 2.8224879999179393
+  },
+  "strict_runtime_proxy": {
+    "v19_failed_segments": 71,
+    "hplt_recovered": 14,
+    "still_failed": 57,
+    "recovered_by_direction": {
+      "en-ja": 11,
+      "ja-en": 3
+    },
+    "mean_recovered_sentence_chrf_pp": 22.27667545744014,
+    "warning": "Strict surface equality can admit omission of lexical numbers; one recovered HPLT output drops the source phrase one month."
+  },
+  "offline_typed_ablation": {
+    "does_not_authorize_runtime": true,
+    "typed_signature_matches": 28,
+    "still_failed": 43,
+    "human_reference_signature_disagreements": 7
+  },
+  "size": {
+    "hplt_fp16_pair_bytes": 448893412,
+    "strong_expert_pair_plus_hplt_bytes": 522319220,
+    "v19_pack_plus_hplt_bytes": 595710386,
+    "maximum_bundle_bytes": 500000000,
+    "unquantized_combination_fits": false
+  },
+  "decision": "Reject HPLT as the V19 fallback before MLX conversion or quantization. It leaves most runtime failures unresolved, admits at least one lexical-number omission under the strict proxy, and the useful combined pack exceeds 500 MB in FP16.",
+  "protected_suite_opened": false,
+  "app_resource_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false
+}
