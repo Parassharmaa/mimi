@@ -52,6 +52,23 @@ explicit no-promotion decision are in
 `development-accuracy-v1.results-summary.json` and
 `../development-accuracy-v1-report.md`.
 
+The 2026-07-26 latency refresh runs Base ElanMT, Mimi, and Apple Translation
+over those same 400 segment calls on one Apple M3 Pro. Local runs use MLX
+0.30.6, cached greedy decoding, one warm run per case, a preallocated 192-token
+K/V block, and the first following timed pass. The chart rounds these
+authenticated values:
+
+| System | EN→JA p50 / p95 | JA→EN p50 / p95 |
+|---|---:|---:|
+| Base ElanMT | 39.6 / 92.1 ms | 46.3 / 109.1 ms |
+| Mimi | 41.9 / 88.3 ms | 58.0 / 154.7 ms |
+| Apple Translation | 1,581.2 / 2,924.9 ms | 1,625.7 / 2,557.9 ms |
+
+`development-accuracy-v1.latency-summary.json` binds the suite, raw reports,
+model revisions, runtime source, benchmark script, hardware, and operating
+system by SHA-256. It is explicitly claim-ineligible and does not authorize
+release promotion.
+
 `development-accuracy-v1.direct-under-192.jsonl` is the companion direct-mode
 slice for the GPT-5.6 student futility gate. Its manifest proves that the exact
 runtime tokenizer retained every case at or below 192 source tokens: 197/200

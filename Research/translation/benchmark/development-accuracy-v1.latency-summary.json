@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-07-26T07:18:03Z",
+  "claimEligible": false,
+  "suite": {
+    "path": "Research/translation/benchmark/development-accuracy-v1.segments.jsonl",
+    "sha256": "b464dfbfe128b3e0cbac2652d8db6ddb976536638676a1dca6e07507eb32a58f",
+    "segments": 400,
+    "segmentsPerDirection": 200
+  },
+  "measurement": {
+    "statistic": "linear-interpolated segment latency percentile",
+    "reportedRuns": "first timed single-pass translation per segment",
+    "localWarmRunsPerSegment": 1,
+    "maximumGeneratedTokens": 192,
+    "hardware": "Apple M3 Pro",
+    "operatingSystem": "macOS 26.5.1",
+    "localRuntime": {
+      "engine": "MLX Marian cached greedy",
+      "mlxVersion": "0.30.6",
+      "transformersVersion": "4.57.6",
+      "tokenizersVersion": "0.22.2",
+      "preallocatedKVCacheBlockSize": 192,
+      "precomputedPositionTableSize": 192,
+      "benchmarkScriptSha256": "682f41160bd628414a48775bb7bdcbc470e44c6171a438120968d77315e29f75",
+      "marianRuntimeSha256": "661a1eb2a745c40ecbe6d7e042d60eaccee5527897032a3fbe6880b0d68693b3"
+    },
+    "appleRuntime": {
+      "publicName": "Apple Translation",
+      "internalModelIdentifierExposed": false,
+      "engine": "apple-translation-high-fidelity"
+    }
+  },
+  "systems": {
+    "baseElanMT": {
+      "label": "Base ElanMT",
+      "modelRevision": "pair-manifest-sha256:8e55e8f24eed07e89bdad6db0ca1d65aa791905123f764130ed021bc2380807a",
+      "modelBytes": 73403427,
+      "peakResidentBytes": 210583552,
+      "rawReport": {
+        "path": "Research/translation/results/development-accuracy-v1-latency-v2-base-elanmt-segments.json",
+        "sha256": "837c9269bc03bcf132d52347121e970e19c7236ffd7cf97ab515fdc93c737bad"
+      },
+      "latencyMilliseconds": {
+        "en-ja": {
+          "p50": 39.56585400737822,
+          "p95": 92.10232929326594
+        },
+        "ja-en": {
+          "p50": 46.31022911053151,
+          "p95": 109.1445775469765
+        }
+      }
+    },
+    "mimi": {
+      "label": "Mimi",
+      "modelRevision": "pair-manifest-sha256:824214ae6434ef0abdf06e7b208077ff3014d372144ab905b64127bbe7c1b8f7",
+      "modelBytes": 73426883,
+      "peakResidentBytes": 213729280,
+      "rawReport": {
+        "path": "Research/translation/results/development-accuracy-v1-latency-v2-mimi-segments.json",
+        "sha256": "0ec915e77daaf6e2712701faed42fa9e8d55dbcd858a41752ce1ff5f27a0f6e7"
+      },
+      "latencyMilliseconds": {
+        "en-ja": {
+          "p50": 41.88804200384766,
+          "p95": 88.32191311521453
+        },
+        "ja-en": {
+          "p50": 57.955812430009246,
+          "p95": 154.68267722753802
+        }
+      }
+    },
+    "appleTranslation": {
+      "label": "Apple Translation",
+      "modelRevision": null,
+      "rawReport": {
+        "path": "Research/translation/results/development-accuracy-v1-apple-segments.json",
+        "sha256": "5702f0498b53109727634a5a695937b04d2c53fb96745c5205c0bf9c471ee520"
+      },
+      "latencyMilliseconds": {
+        "en-ja": {
+          "p50": 1581.2302915,
+          "p95": 2924.91838365
+        },
+        "ja-en": {
+          "p50": 1625.6538755,
+          "p95": 2557.85338305
+        }
+      }
+    }
+  },
+  "derived": {
+    "mimiP95SpeedupVersusAppleTranslation": {
+      "en-ja": 33.116565079777786,
+      "ja-en": 16.536133385380715
+    },
+    "mimiP95DeltaVersusBaseElanMTFraction": {
+      "en-ja": -0.04104582595366568,
+      "ja-en": 0.41722732090277503
+    }
+  },
+  "interpretation": "Mimi remains below the 175 ms local p95 gate in both directions. Fine-tuning changes output lengths and therefore end-to-end segment latency: EN-JA p95 is 4.1% lower than Base ElanMT, while JA-EN p95 is 41.7% higher. Mimi is 33.1x and 16.5x faster than Apple Translation at p95 on this machine.",
+  "doesNotAuthorizeReleasePromotion": true
+}

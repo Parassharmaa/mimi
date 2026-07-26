@@ -17,8 +17,8 @@ tags:
 # Mimi EN↔JA MLX development candidate v1
 
 This public repository stores Mimi's openly licensed 73.4 MB two-direction
-Apple-Silicon translation candidate. It is a development model release, not the
-model currently integrated into the app.
+Apple-Silicon translation candidate. It is bundled in Mimi's development build,
+but it has not been promoted to the signed stable release.
 
 ## Architecture
 
@@ -30,7 +30,7 @@ bidirectional interface:
 - `ja-en`: the same architecture.
 - Quantization: MLX affine 4-bit, group size 64, float16 compute.
 - Minimal package: 73,425,808 bytes.
-- Peak benchmark RSS: 210,812,928 bytes on Apple M3 Pro.
+- Peak benchmark RSS: 213,729,280 bytes on Apple M3 Pro.
 
 ## Checkpoints
 
@@ -49,10 +49,15 @@ It used no synthetic targets and no reasoning traces.
 The 200-case public development suite has 100 cases per direction, including 40
 six-segment documents total. It is not promotion evidence.
 
-| Direction | chrF++ | BLEU | COMET-22 | Warm segment p95 |
+| Direction | chrF++ | BLEU | COMET-22 | First timed segment p95 |
 |---|---:|---:|---:|---:|
-| EN→JA | 28.41 | 9.63 | 0.8669 | 165.4 ms |
-| JA→EN | 55.19 | 30.62 | 0.8192 | 159.5 ms |
+| EN→JA | 28.41 | 9.63 | 0.8669 | 88.3 ms |
+| JA→EN | 55.19 | 30.62 | 0.8192 | 154.7 ms |
+
+On the same 400 segment calls, Mimi's p95 is 33.1× faster EN→JA and
+16.5× faster JA→EN than Apple Translation. The latency summary binds the raw
+reports, runtime implementation, benchmark suite, and model revisions by
+SHA-256.
 
 Against Mimi's shipped pair, COMET-22 changes by +0.0183 EN→JA (95% paired
 interval -0.00003 to +0.0398) and +0.0367 JA→EN (+0.0189 to +0.0576).

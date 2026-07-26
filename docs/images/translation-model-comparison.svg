@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="850" viewBox="0 0 1200 850" role="img" aria-labelledby="title description">
   <title id="title">Mimi local translation development benchmark</title>
   <desc id="description">Quality, model size, and latency comparison for base ElanMT, fine-tuned Mimi, and Apple Translation.</desc>
   <defs>
@@ -27,7 +27,7 @@
     </style>
   </defs>
 
-  <rect width="1200" height="820" rx="28" fill="url(#background)"/>
+  <rect width="1200" height="850" rx="28" fill="url(#background)"/>
   <text x="54" y="62" class="title">Local translation development benchmark</text>
   <text x="54" y="92" class="subtitle">200 public cases, 100 per direction, including 40 six-segment documents</text>
 
@@ -121,16 +121,49 @@
   <text x="638" y="566" class="small">Higher quality score is better</text>
 
   <g filter="url(#shadow)">
-    <rect x="42" y="620" width="548" height="150" rx="22" class="card"/>
-    <rect x="610" y="620" width="548" height="150" rx="22" class="card"/>
+    <rect x="42" y="620" width="280" height="200" rx="22" class="card"/>
+    <rect x="342" y="620" width="816" height="200" rx="22" class="card"/>
   </g>
   <text x="70" y="660" class="direction">Size and architecture</text>
-  <text x="70" y="696" class="note">73.43 MB total, below the 150 MB target</text>
-  <text x="70" y="725" class="small">Two Marian 6+6 specialists, 4-bit MLX, one app interface</text>
-  <text x="70" y="750" class="small">Peak benchmark RSS: 210.8 MB on Apple M3 Pro</text>
+  <text x="70" y="696" class="note">73.43 MB total</text>
+  <text x="70" y="723" class="small">Below the 150 MB target</text>
+  <text x="70" y="750" class="small">Two Marian 6+6 specialists</text>
+  <text x="70" y="777" class="small">4-bit MLX, one app interface</text>
+  <text x="70" y="804" class="small">Mimi peak RSS: 213.7 MB</text>
 
-  <text x="638" y="660" class="direction">Single-pass segment p95</text>
-  <text x="638" y="696" class="note">EN→JA: 171 ms Mimi vs 2,922 ms Apple Translation</text>
-  <text x="638" y="725" class="note">JA→EN: 153 ms Mimi vs 2,558 ms Apple Translation</text>
-  <text x="638" y="750" class="small">Same 400 segment calls; lower latency is better</text>
+  <text x="370" y="658" class="direction">Single-pass segment latency</text>
+  <text x="370" y="681" class="small">p95 bars use a shared log scale from 1 to 3,000 ms; labels show p50 / p95</text>
+  <line x1="750" y1="693" x2="750" y2="787" stroke="#263653" stroke-width="1"/>
+
+  <text x="370" y="707" class="metric">English → Japanese</text>
+  <text x="615" y="707" class="label">p50 / p95</text>
+  <text x="370" y="730" class="label">Base</text>
+  <rect x="440" y="719" width="165" height="10" rx="5" class="track"/>
+  <rect x="440" y="719" width="93" height="10" rx="5" class="base"/>
+  <text x="615" y="730" class="value">40 / 92 ms</text>
+  <text x="370" y="754" class="label">Mimi</text>
+  <rect x="440" y="743" width="165" height="10" rx="5" class="track"/>
+  <rect x="440" y="743" width="92" height="10" rx="5" class="mimi"/>
+  <text x="615" y="754" class="value">42 / 88 ms</text>
+  <text x="370" y="778" class="label">Apple</text>
+  <rect x="440" y="767" width="165" height="10" rx="5" class="track"/>
+  <rect x="440" y="767" width="165" height="10" rx="5" class="apple"/>
+  <text x="615" y="778" class="value">1,581 / 2,925 ms</text>
+
+  <text x="770" y="707" class="metric">Japanese → English</text>
+  <text x="1015" y="707" class="label">p50 / p95</text>
+  <text x="770" y="730" class="label">Base</text>
+  <rect x="840" y="719" width="165" height="10" rx="5" class="track"/>
+  <rect x="840" y="719" width="97" height="10" rx="5" class="base"/>
+  <text x="1015" y="730" class="value">46 / 109 ms</text>
+  <text x="770" y="754" class="label">Mimi</text>
+  <rect x="840" y="743" width="165" height="10" rx="5" class="track"/>
+  <rect x="840" y="743" width="104" height="10" rx="5" class="mimi"/>
+  <text x="1015" y="754" class="value">58 / 155 ms</text>
+  <text x="770" y="778" class="label">Apple</text>
+  <rect x="840" y="767" width="165" height="10" rx="5" class="track"/>
+  <rect x="840" y="767" width="162" height="10" rx="5" class="apple"/>
+  <text x="1015" y="778" class="value">1,626 / 2,558 ms</text>
+
+  <text x="370" y="806" class="note">Mimi p95 speedup vs Apple Translation: 33.1× EN→JA, 16.5× JA→EN</text>
 </svg>

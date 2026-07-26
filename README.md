@@ -51,9 +51,11 @@ checkpoint. Both are quantized to 4-bit MLX weights.
 
 On the public 200-case benchmark, Mimi scores 28.41 and 55.19 chrF++, 9.63 and
 30.62 BLEU, and 0.8669 and 0.8192 COMET-22 for EN→JA and JA→EN. It stays below
-171 ms segment p95 on the benchmark Mac. The signed release package keeps the
-previous stable model because a known long legal document can trigger
-repetition and the public suite is not a promotion test.
+155 ms segment p95 on the benchmark Mac. On the same 400 segment calls, Mimi is
+33.1× and 16.5× faster at p95 than Apple Translation for EN→JA and JA→EN. The
+signed release package keeps the previous stable model because a known long
+legal document can trigger repetition and the public suite is not a promotion
+test.
 
 ## Requirements
 
