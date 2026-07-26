@@ -91,9 +91,25 @@ def main() -> None:
     parser.add_argument("--initial-partial-stride", type=float)
     parser.add_argument("--partial-stride", type=float, default=3.0)
     parser.add_argument("--endpoint-silence", type=float, default=0.75)
+    parser.add_argument(
+        "--paced-queue",
+        action="store_true",
+        help="replay at wall-clock speed through Mimi's production live queue",
+    )
     parser.add_argument("--limit", type=int)
     args = parser.parse_args()
 
+    if args.paced_queue and args.initial_partial_stride is not None:
+        raise SystemExit(
+            "--initial-partial-stride is a direct-runtime experiment and cannot "
+            "be combined with --paced-queue"
+        )
+    if args.paced_queue and (
+        args.partial_stride != 3.0 or args.endpoint_silence != 0.75
+    ):
+        raise SystemExit(
+            "--paced-queue always uses Mimi's compiled product profile"
+        )
     if not args.app.is_file():
         raise SystemExit(f"Mimi executable does not exist: {args.app}")
     if not args.model.is_dir():
@@ -152,17 +168,24 @@ def main() -> None:
             "-l",
             str(args.app.resolve()),
             "--benchmark-realtime",
-            "mimi-whisper",
+            "mimi-whisper-paced-queue"
+            if args.paced_queue
+            else "mimi-whisper",
             "--audio",
             str(audio_path),
             "--language",
             args.language,
-            "--partial-stride",
-            str(args.partial_stride),
-            "--endpoint-silence",
-            str(args.endpoint_silence),
         ]
-        if args.initial_partial_stride is not None:
+        if not args.paced_queue:
+            command.extend(
+                [
+                    "--partial-stride",
+                    str(args.partial_stride),
+                    "--endpoint-silence",
+                    str(args.endpoint_silence),
+                ]
+            )
+        if not args.paced_queue and args.initial_partial_stride is not None:
             command.extend(
                 [
                     "--initial-partial-stride",
@@ -183,7 +206,14 @@ def main() -> None:
             env=environment,
         )
         if completed.returncode != 0:
-            details = completed.stderr.strip() or completed.stdout.strip()
+            details = "\n".join(
+                part
+                for part in (
+                    completed.stdout.strip(),
+                    completed.stderr.strip(),
+                )
+                if part
+            )
             raise SystemExit(
                 f"{row['caseID']} benchmark failed with exit "
                 f"{completed.returncode}: {details[-2_000:]}"
@@ -222,6 +252,11 @@ def main() -> None:
         )
         if (peak_rss := parse_peak_rss(completed.stderr)) is not None:
             peak_rss_values.append(peak_rss)
+        wall_real_time_factor = (
+            raw["wallSeconds"] / raw["audioDurationSeconds"]
+            if raw["audioDurationSeconds"] > 0
+            else None
+        )
         result = {
             "caseID": row["caseID"],
             "mode": raw["mode"],
@@ -234,9 +269,44 @@ def main() -> None:
             "reference": row["reference"],
             "hypothesis": hypothesis,
             "audioDurationSeconds": raw["audioDurationSeconds"],
-            "computeWallSeconds": raw["wallSeconds"],
+            "nativeWallSeconds": raw["wallSeconds"],
+            "computeWallSeconds": (
+                None if args.paced_queue else raw["wallSeconds"]
+            ),
+            "pacedWallSeconds": (
+                raw["wallSeconds"] if args.paced_queue else None
+            ),
             "modelLoadSeconds": raw["modelLoadSeconds"],
             "computeRealTimeFactor": raw.get("realTimeFactor"),
+            "wallRealTimeFactor": wall_real_time_factor,
+            "pacedAudio": raw.get("pacedAudio", False),
+            "inputBufferSeconds": raw.get("inputBufferSeconds"),
+            "inputDeliverySeconds": raw.get("inputDeliverySeconds"),
+            "inputDeliveryRealTimeFactor": (
+                raw["inputDeliverySeconds"] / raw["audioDurationSeconds"]
+                if raw.get("inputDeliverySeconds") is not None
+                and raw["audioDurationSeconds"] > 0
+                else None
+            ),
+            "maximumInputScheduleLatenessSeconds": raw.get(
+                "maximumInputScheduleLatenessSeconds"
+            ),
+            "queueCapacitySeconds": raw.get("queueCapacitySeconds"),
+            "maximumQueuedAudioSamples": raw.get(
+                "maximumQueuedAudioSamples"
+            ),
+            "maximumQueuedAudioSeconds": (
+                raw["maximumQueuedAudioSamples"] / 16_000
+                if raw.get("maximumQueuedAudioSamples") is not None
+                else None
+            ),
+            "droppedAudioSamples": raw.get("droppedAudioSamples", 0),
+            "audioDropEventCount": raw.get("audioDropEventCount", 0),
+            "firstAudioDropAtSeconds": raw.get("firstAudioDropAtSeconds"),
+            "backpressureEventCount": raw.get("backpressureEventCount", 0),
+            "postAudioFinalizationSeconds": raw.get(
+                "postAudioFinalizationSeconds"
+            ),
             "firstTextAtSeconds": raw.get("firstTextAtSeconds"),
             "firstFinalAtSeconds": raw.get("firstFinalAtSeconds"),
             "hypothesisChurn": raw["hypothesisChurn"],
@@ -251,10 +321,13 @@ def main() -> None:
             "errorRate": edits / max(1, len(reference_units)),
         }
         results.append(result)
+        displayed_rtf = result["computeRealTimeFactor"]
+        if displayed_rtf is None:
+            displayed_rtf = result["wallRealTimeFactor"]
         print(
             f"[{index:02d}/{len(suite):02d}] {row['caseID']} "
             f"{args.metric.upper()}={result['errorRate']:.3f} "
-            f"RTF={raw.get('realTimeFactor', float('nan')):.3f}",
+            f"RTF={displayed_rtf:.3f}",
             flush=True,
         )
 
@@ -263,10 +336,48 @@ def main() -> None:
         for row in results
         if row["firstTextAtSeconds"] is not None
     ]
+    first_final = [
+        row["firstFinalAtSeconds"]
+        for row in results
+        if row["firstFinalAtSeconds"] is not None
+    ]
+    compute_real_time_factors = [
+        row["computeRealTimeFactor"]
+        for row in results
+        if row["computeRealTimeFactor"] is not None
+    ]
+    paced_wall_real_time_factors = [
+        row["wallRealTimeFactor"]
+        for row in results
+        if row["pacedAudio"] and row["wallRealTimeFactor"] is not None
+    ]
+    post_audio_finalization = [
+        row["postAudioFinalizationSeconds"]
+        for row in results
+        if row["postAudioFinalizationSeconds"] is not None
+    ]
+    input_delivery_real_time_factors = [
+        row["inputDeliveryRealTimeFactor"]
+        for row in results
+        if row["inputDeliveryRealTimeFactor"] is not None
+    ]
+    input_schedule_lateness = [
+        row["maximumInputScheduleLatenessSeconds"]
+        for row in results
+        if row["maximumInputScheduleLatenessSeconds"] is not None
+    ]
+    maximum_queued_audio_seconds = [
+        row["maximumQueuedAudioSeconds"]
+        for row in results
+        if row["maximumQueuedAudioSeconds"] is not None
+    ]
     report = {
-        "format": "mimi-native-live-asr-benchmark-v1",
+        "format": "mimi-native-live-asr-benchmark-v2",
         "engine": "Mimi Speech Preview",
         "runtime": "MLX Audio Swift",
+        "replayMode": (
+            "paced-production-queue" if args.paced_queue else "direct-compute"
+        ),
         "mode": results[0]["mode"],
         "executableSha256": executable_sha256,
         "feedChunkSeconds": results[0]["feedChunkSeconds"],
@@ -285,11 +396,57 @@ def main() -> None:
         "caseCount": len(results),
         "wallSeconds": time.perf_counter() - benchmark_started,
         "corpusErrorRate": total_edits / max(1, total_reference_units),
-        "meanComputeRealTimeFactor": statistics.fmean(
-            row["computeRealTimeFactor"] for row in results
+        "meanComputeRealTimeFactor": (
+            statistics.fmean(compute_real_time_factors)
+            if compute_real_time_factors
+            else None
+        ),
+        "meanPacedWallRealTimeFactor": (
+            statistics.fmean(paced_wall_real_time_factors)
+            if paced_wall_real_time_factors
+            else None
+        ),
+        "meanInputDeliveryRealTimeFactor": (
+            statistics.fmean(input_delivery_real_time_factors)
+            if input_delivery_real_time_factors
+            else None
+        ),
+        "maximumInputScheduleLatenessSeconds": (
+            max(input_schedule_lateness) if input_schedule_lateness else None
+        ),
+        "queueCapacitySeconds": results[0]["queueCapacitySeconds"],
+        "maximumQueuedAudioSeconds": (
+            max(maximum_queued_audio_seconds)
+            if maximum_queued_audio_seconds
+            else None
         ),
         "firstTextP50Seconds": percentile(first_text, 0.50),
         "firstTextP95Seconds": percentile(first_text, 0.95),
+        "firstFinalP50Seconds": (
+            percentile(first_final, 0.50) if first_final else None
+        ),
+        "firstFinalP95Seconds": (
+            percentile(first_final, 0.95) if first_final else None
+        ),
+        "postAudioFinalizationP50Seconds": (
+            percentile(post_audio_finalization, 0.50)
+            if post_audio_finalization
+            else None
+        ),
+        "postAudioFinalizationP95Seconds": (
+            percentile(post_audio_finalization, 0.95)
+            if post_audio_finalization
+            else None
+        ),
+        "totalDroppedAudioSamples": sum(
+            row["droppedAudioSamples"] for row in results
+        ),
+        "totalAudioDropEventCount": sum(
+            row["audioDropEventCount"] for row in results
+        ),
+        "totalBackpressureEventCount": sum(
+            row["backpressureEventCount"] for row in results
+        ),
         "meanHypothesisChurn": statistics.fmean(
             row["hypothesisChurn"] for row in results
         ),

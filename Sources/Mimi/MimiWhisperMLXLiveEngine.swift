@@ -80,7 +80,11 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
     // 500 ms blocks, an unaligned one-second pause can contain only one fully
     // silent block and fail to end the utterance.
     private static let feedChunkSamples = 16_000 / 10
-    private static let maximumPendingSamples = 16_000 * 4
+    // A paced six-minute Japanese soak made the prior four-second bound discard
+    // a cumulative two seconds during transient final-decode backlog even though
+    // aggregate compute remained faster than real time. Eight seconds gives the
+    // burst room to drain while keeping Stop latency and retained PCM bounded.
+    private static let maximumPendingSamples = 16_000 * 8
 
     private let fileManager: FileManager
     private let rootURL: URL
@@ -97,6 +101,12 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
     private var liveDrainTask: Task<Void, Never>?
     private var isStopping = false
     private var hasReportedBackpressure = false
+    private var liveInputSampleCount = 0
+    private var liveMaximumQueuedAudioSamples = 0
+    private var liveDroppedSampleCount = 0
+    private var liveAudioDropEventCount = 0
+    private var liveFirstAudioDropAtInputSample: Int?
+    private var liveBackpressureEventCount = 0
 
     init(fileManager: FileManager = .default, rootURL: URL? = nil) {
         self.fileManager = fileManager
@@ -216,6 +226,12 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
         liveSessionID = UUID()
         isStopping = false
         hasReportedBackpressure = false
+        liveInputSampleCount = 0
+        liveMaximumQueuedAudioSamples = 0
+        liveDroppedSampleCount = 0
+        liveAudioDropEventCount = 0
+        liveFirstAudioDropAtInputSample = nil
+        liveBackpressureEventCount = 0
     }
 
     func consumeLive(_ buffer: AVAudioPCMBuffer) {
@@ -225,7 +241,18 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
               !samples.isEmpty else {
             return
         }
-        if pendingSamples.append(samples) > 0 {
+        liveInputSampleCount += samples.count
+        let droppedSamples = pendingSamples.append(samples)
+        liveMaximumQueuedAudioSamples = max(
+            liveMaximumQueuedAudioSamples,
+            pendingSamples.count
+        )
+        liveDroppedSampleCount += droppedSamples
+        if droppedSamples > 0 {
+            liveAudioDropEventCount += 1
+            if liveFirstAudioDropAtInputSample == nil {
+                liveFirstAudioDropAtInputSample = liveInputSampleCount
+            }
             reportBackpressureIfNeeded()
         }
         scheduleDrain(for: sessionID)
@@ -315,6 +342,164 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
             partialStrideSeconds: profile.partialStrideSeconds,
             endpointSilenceSeconds: profile.endpointSilenceSeconds
         )
+    }
+
+    /// Replays a recording at wall-clock speed through the same converter,
+    /// bounded queue, drain task, actor, and stop flush used by live capture.
+    /// This complements `runBoundedBenchmark`, which intentionally measures the
+    /// actor runtime directly as a compute-only control.
+    func runPacedQueueBenchmark(
+        recordingAt url: URL,
+        language: SpeechLanguage
+    ) async throws -> RealtimeBenchmarkReport {
+        try ensureRuntimeAvailable()
+        let audioFile = try AVAudioFile(forReading: url)
+        let inputFormat = audioFile.processingFormat
+        let audioDurationSeconds = Double(audioFile.length) / inputFormat.sampleRate
+        let inputBufferSeconds = Double(Self.feedChunkSamples) / 16_000
+        let inputFrameCount = AVAudioFrameCount(
+            max(1, (inputFormat.sampleRate * inputBufferSeconds).rounded())
+        )
+        let profile = MimiWhisperStreamingProfile.product(for: language)
+        let separator = language == .japanese ? "" : " "
+
+        var replayStartedAt: ContinuousClock.Instant?
+        var firstTextAtSeconds: Double?
+        var firstFinalAtSeconds: Double?
+        var lastFinalAtSeconds: Double?
+        var updates: [String] = []
+        var finalizedSegments: [String] = []
+        var backpressureMessages: [String] = []
+
+        let loadStartedAt = ContinuousClock.now
+        try await startLive(
+            language: language,
+            inputFormat: inputFormat,
+            onEvent: { event in
+                guard let replayStartedAt else { return }
+                let elapsed = replayStartedAt.duration(to: .now).seconds
+                let normalized: String
+                let rendered: String
+                switch event {
+                case let .partial(text):
+                    normalized = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !normalized.isEmpty else { return }
+                    rendered = (finalizedSegments + [normalized]).joined(
+                        separator: separator
+                    )
+                case let .final(text):
+                    normalized = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard !normalized.isEmpty else { return }
+                    finalizedSegments.append(normalized)
+                    rendered = finalizedSegments.joined(separator: separator)
+                    if firstFinalAtSeconds == nil {
+                        firstFinalAtSeconds = elapsed
+                    }
+                    lastFinalAtSeconds = elapsed
+                }
+                if firstTextAtSeconds == nil {
+                    firstTextAtSeconds = elapsed
+                }
+                updates.append(rendered)
+            },
+            onBackpressure: { message in
+                backpressureMessages.append(message)
+            }
+        )
+        let modelLoadSeconds = loadStartedAt.duration(to: .now).seconds
+        let pacingClock = ContinuousClock()
+        let startedAt = ContinuousClock.now
+        replayStartedAt = startedAt
+        var deliveredAudioSeconds = 0.0
+        var maximumInputScheduleLatenessSeconds = 0.0
+
+        do {
+            while audioFile.framePosition < audioFile.length {
+                let remaining = AVAudioFrameCount(
+                    audioFile.length - audioFile.framePosition
+                )
+                let frameCount = min(inputFrameCount, remaining)
+                guard let buffer = AVAudioPCMBuffer(
+                    pcmFormat: inputFormat,
+                    frameCapacity: frameCount
+                ) else {
+                    throw RealtimeBenchmarkError.couldNotAllocateAudioBuffer
+                }
+                try audioFile.read(into: buffer, frameCount: frameCount)
+                deliveredAudioSeconds += (
+                    Double(buffer.frameLength) / inputFormat.sampleRate
+                )
+                let deadline = startedAt.advanced(
+                    by: .seconds(deliveredAudioSeconds)
+                )
+                try await pacingClock.sleep(until: deadline)
+                maximumInputScheduleLatenessSeconds = max(
+                    maximumInputScheduleLatenessSeconds,
+                    deadline.duration(to: .now).seconds
+                )
+                consumeLive(buffer)
+            }
+
+            let inputDeliverySeconds = startedAt.duration(to: .now).seconds
+            let maximumQueuedAudioSamples = liveMaximumQueuedAudioSamples
+            let droppedAudioSamples = liveDroppedSampleCount
+            let audioDropEventCount = liveAudioDropEventCount
+            let firstAudioDropAtSeconds = liveFirstAudioDropAtInputSample.map {
+                Double($0) / 16_000
+            }
+            let backpressureEventCount = liveBackpressureEventCount
+            await stopLive()
+            let wallSeconds = startedAt.duration(to: .now).seconds
+            let finalText = finalizedSegments.isEmpty
+                ? (updates.last ?? "")
+                : finalizedSegments.joined(separator: separator)
+            let postAudioFinalizationSeconds = lastFinalAtSeconds.map {
+                max(0, $0 - audioDurationSeconds)
+            }
+
+            return RealtimeBenchmarkReport(
+                engine: "mimi-whisper-mlx-q4",
+                mode: "paced-live-queue-\(profile.mode)",
+                language: language.rawValue,
+                audioDurationSeconds: audioDurationSeconds,
+                wallSeconds: wallSeconds,
+                modelLoadSeconds: modelLoadSeconds,
+                firstTextAtSeconds: firstTextAtSeconds,
+                firstFinalAtSeconds: firstFinalAtSeconds,
+                updateCount: updates.count,
+                meanDecodeSeconds: nil,
+                maxDecodeSeconds: nil,
+                realTimeFactor: nil,
+                hypothesisChurn: RealtimeBenchmarkReport.hypothesisChurn(updates),
+                finalText: finalText,
+                firstUpdates: Array(updates.prefix(8)),
+                feedChunkSeconds: inputBufferSeconds,
+                initialPartialStrideSeconds: profile.initialPartialStrideSeconds,
+                partialStrideSeconds: profile.partialStrideSeconds,
+                endpointSilenceSeconds: profile.endpointSilenceSeconds,
+                pacedAudio: true,
+                inputBufferSeconds: inputBufferSeconds,
+                inputDeliverySeconds: inputDeliverySeconds,
+                maximumInputScheduleLatenessSeconds: (
+                    maximumInputScheduleLatenessSeconds
+                ),
+                queueCapacitySeconds: (
+                    Double(Self.maximumPendingSamples) / 16_000
+                ),
+                maximumQueuedAudioSamples: maximumQueuedAudioSamples,
+                droppedAudioSamples: droppedAudioSamples,
+                audioDropEventCount: audioDropEventCount,
+                firstAudioDropAtSeconds: firstAudioDropAtSeconds,
+                backpressureEventCount: max(
+                    backpressureEventCount,
+                    backpressureMessages.count
+                ),
+                postAudioFinalizationSeconds: postAudioFinalizationSeconds
+            )
+        } catch {
+            await cancelLive()
+            throw error
+        }
     }
 
     func runOfflineBenchmark(
@@ -555,6 +740,7 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
     private func reportBackpressureIfNeeded() {
         guard !hasReportedBackpressure else { return }
         hasReportedBackpressure = true
+        liveBackpressureEventCount += 1
         liveBackpressure?(
             "Mimi Speech fell behind this audio source and skipped queued audio to stay bounded. Apple Speech remains available for the lowest latency."
         )
@@ -570,6 +756,12 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
         liveDrainTask = nil
         isStopping = false
         hasReportedBackpressure = false
+        liveInputSampleCount = 0
+        liveMaximumQueuedAudioSamples = 0
+        liveDroppedSampleCount = 0
+        liveAudioDropEventCount = 0
+        liveFirstAudioDropAtInputSample = nil
+        liveBackpressureEventCount = 0
     }
 }
 

@@ -1114,6 +1114,33 @@ struct MimiSessionE2E {
         expect(queue.dequeue(upTo: 40).allSatisfy { $0 == 0.1 }, "Backpressure preserves newest queued audio after discarding the oldest chunk")
         expect(queue.dequeue(upTo: 200).count == 120 && queue.isEmpty, "A bounded live queue flushes deterministically at Stop")
 
+        var mimiSpeechQueue = BoundedAudioSampleQueue(
+            maximumSampleCount: 16_000 * 8,
+            preferredChunkSize: 1_600
+        )
+        expect(
+            mimiSpeechQueue.append(
+                Array(repeating: 0.1, count: 16_000 * 51 / 10)
+            ) == 0,
+            "Mimi Speech's measured 5.1-second decode burst fits its eight-second product queue"
+        )
+        expect(
+            mimiSpeechQueue.dequeue(upTo: 16_000 * 8).count
+                == 16_000 * 51 / 10
+                && mimiSpeechQueue.isEmpty,
+            "Stop drains a full measured Mimi Speech backlog without discarding PCM"
+        )
+        expect(
+            mimiSpeechQueue.append(
+                Array(repeating: 0.2, count: 16_000 * 81 / 10)
+            ) == 1_600,
+            "The eight-second product queue still drops only one oldest 100 ms chunk when its bound is exceeded"
+        )
+        expect(
+            mimiSpeechQueue.count == 16_000 * 8,
+            "The enlarged Mimi Speech queue remains strictly memory bounded"
+        )
+
         var policy = BoundedLiveWindowPolicy(
             minimumWindowSampleCount: 30,
             maximumWindowSampleCount: 300,

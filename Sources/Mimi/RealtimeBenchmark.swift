@@ -22,6 +22,17 @@ struct RealtimeBenchmarkReport: Codable, Sendable {
     var initialPartialStrideSeconds: Double? = nil
     var partialStrideSeconds: Double? = nil
     var endpointSilenceSeconds: Double? = nil
+    var pacedAudio: Bool? = nil
+    var inputBufferSeconds: Double? = nil
+    var inputDeliverySeconds: Double? = nil
+    var maximumInputScheduleLatenessSeconds: Double? = nil
+    var queueCapacitySeconds: Double? = nil
+    var maximumQueuedAudioSamples: Int? = nil
+    var droppedAudioSamples: Int? = nil
+    var audioDropEventCount: Int? = nil
+    var firstAudioDropAtSeconds: Double? = nil
+    var backpressureEventCount: Int? = nil
+    var postAudioFinalizationSeconds: Double? = nil
     var referenceText: String? = nil
     var errorMetric: String? = nil
     var errorRate: Double? = nil
@@ -191,7 +202,7 @@ enum RealtimeBenchmarkRunner {
 
 }
 
-private enum RealtimeBenchmarkError: LocalizedError {
+enum RealtimeBenchmarkError: LocalizedError {
     case couldNotAllocateAudioBuffer
     case couldNotEncodeReport
     case removedModel

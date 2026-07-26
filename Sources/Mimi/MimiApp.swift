@@ -639,6 +639,12 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                             partialStrideSeconds: partialStride,
                             endpointSilenceSeconds: endpointSilence
                         )
+                    case "mimi-whisper-paced-queue":
+                        report = try await MimiWhisperMLXLiveEngine()
+                            .runPacedQueueBenchmark(
+                                recordingAt: audioURL,
+                                language: language
+                            )
                     case "mimi-whisper-offline":
                         report = try await MimiWhisperMLXLiveEngine()
                             .runOfflineBenchmark(
