@@ -319,13 +319,15 @@ and OS. Score both exact reports with the pinned Apache-2.0 COMET-22 model; the
 runner uses float32 and averages scores across each case's references:
 
 ```sh
-uv run --python 3.12 --with unbabel-comet==2.2.7 --with setuptools==80.9.0 \
+uv run --python 3.12 \
+  --with-requirements Research/translation/comet-runtime-v1-requirements.txt \
   scripts/translation/score_comet.py \
   Research/translation/benchmark/heldout.jsonl \
   Research/translation/results/candidate-heldout.json \
   Research/translation/results/candidate-heldout-comet.json
 
-uv run --python 3.12 --with unbabel-comet==2.2.7 --with setuptools==80.9.0 \
+uv run --python 3.12 \
+  --with-requirements Research/translation/comet-runtime-v1-requirements.txt \
   scripts/translation/score_comet.py \
   Research/translation/benchmark/heldout.jsonl \
   Research/translation/results/apple-heldout.json \

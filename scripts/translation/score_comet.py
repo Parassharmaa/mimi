@@ -17,6 +17,20 @@ DEFAULT_REVISION = "371e9839ca4e213dde891b066cf3080f75ec7e72"
 DEFAULT_PACKAGE_VERSION = "2.2.7"
 DEFAULT_SETUPTOOLS_VERSION = "80.9.0"
 MODEL_LICENSE = "Apache-2.0"
+PINNED_RUNTIME_PACKAGES = {
+    "huggingface-hub": "0.36.2",
+    "numpy": "1.26.4",
+    "pandas": "3.0.5",
+    "pytorch-lightning": "2.6.5",
+    "scipy": "1.17.1",
+    "sentencepiece": "0.2.2",
+    "setuptools": DEFAULT_SETUPTOOLS_VERSION,
+    "tokenizers": "0.22.2",
+    "torch": "2.13.0",
+    "torchmetrics": "0.10.3",
+    "transformers": "4.57.6",
+    "unbabel-comet": DEFAULT_PACKAGE_VERSION,
+}
 
 
 def load_jsonl(path: Path) -> list[dict]:
@@ -81,6 +95,7 @@ def build_report(
     package_version: str,
     setuptools_version: str,
     torch_version: str,
+    runtime_package_versions: dict[str, str],
 ) -> dict:
     expected_scores = sum(len(row["references"]) for row in rows)
     if len(scores) != expected_scores or not all(
@@ -125,6 +140,13 @@ def build_report(
     signature = hashlib.sha256(
         json.dumps(signature_value, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
+    runtime_environment_sha256 = hashlib.sha256(
+        json.dumps(
+            runtime_package_versions,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode()
+    ).hexdigest()
     return {
         "schemaVersion": 1,
         "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
@@ -135,6 +157,8 @@ def build_report(
         "engineReportSHA256": sha256(engine_report_path),
         "hardware": platform.machine(),
         "torchVersion": torch_version,
+        "runtimePackageVersions": dict(sorted(runtime_package_versions.items())),
+        "runtimeEnvironmentSHA256": runtime_environment_sha256,
         "emptyHypothesisCases": sum(not row["hypothesis"] for row in rows),
         "directions": {
             key: {"cases": len(values), "meanScore": mean(values)}
@@ -183,6 +207,23 @@ def main() -> None:
             "setuptools version mismatch: "
             f"installed={installed_setuptools} required={args.setuptools_version}"
         )
+    runtime_package_versions = {
+        package: importlib.metadata.version(package)
+        for package in PINNED_RUNTIME_PACKAGES
+    }
+    mismatches = {
+        package: {
+            "installed": runtime_package_versions[package],
+            "required": required,
+        }
+        for package, required in PINNED_RUNTIME_PACKAGES.items()
+        if runtime_package_versions[package] != required
+    }
+    if mismatches:
+        raise SystemExit(
+            "pinned COMET runtime package mismatch: "
+            + json.dumps(mismatches, sort_keys=True)
+        )
 
     import torch
     from comet import load_from_checkpoint
@@ -227,6 +268,7 @@ def main() -> None:
         package_version=installed,
         setuptools_version=installed_setuptools,
         torch_version=torch.__version__,
+        runtime_package_versions=runtime_package_versions,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(

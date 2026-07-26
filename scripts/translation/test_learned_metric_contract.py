@@ -16,6 +16,17 @@ SPEC.loader.exec_module(SCORER)
 
 
 def main() -> None:
+    requirements = (
+        SCRIPT.parents[2]
+        / "Research/translation/comet-runtime-v1-requirements.txt"
+    )
+    pinned = dict(
+        line.strip().split("==", 1)
+        for line in requirements.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    )
+    assert pinned == SCORER.PINNED_RUNTIME_PACKAGES
+
     with tempfile.TemporaryDirectory(prefix="mimi-comet-contract-") as temporary:
         work = Path(temporary)
         suite = work / "suite.jsonl"
@@ -61,12 +72,15 @@ def main() -> None:
             package_version=SCORER.DEFAULT_PACKAGE_VERSION,
             setuptools_version=SCORER.DEFAULT_SETUPTOOLS_VERSION,
             torch_version="fixture",
+            runtime_package_versions={"fixture": "1.0"},
         )
         assert report["results"][0]["score"] == 0.7
         assert report["results"][1]["score"] == 0.9
         assert report["precision"] == "float32"
         assert report["modelLicense"] == "Apache-2.0"
         assert report["emptyHypothesisCases"] == 0
+        assert report["runtimePackageVersions"] == {"fixture": "1.0"}
+        assert len(report["runtimeEnvironmentSHA256"]) == 64
         assert len(report["signatureSHA256"]) == 64
 
         empty_rows = [{**rows[0], "hypothesis": ""}]
@@ -80,6 +94,7 @@ def main() -> None:
             package_version=SCORER.DEFAULT_PACKAGE_VERSION,
             setuptools_version=SCORER.DEFAULT_SETUPTOOLS_VERSION,
             torch_version="fixture",
+            runtime_package_versions={"fixture": "1.0"},
         )
         assert empty_report["emptyHypothesisCases"] == 1
     print("Mimi pinned learned-metric report contract passed.")

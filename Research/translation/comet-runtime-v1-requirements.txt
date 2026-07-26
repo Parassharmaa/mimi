@@ -1,0 +1,12 @@
+huggingface-hub==0.36.2
+numpy==1.26.4
+pandas==3.0.5
+pytorch-lightning==2.6.5
+scipy==1.17.1
+sentencepiece==0.2.2
+setuptools==80.9.0
+tokenizers==0.22.2
+torch==2.13.0
+torchmetrics==0.10.3
+transformers==4.57.6
+unbabel-comet==2.2.7

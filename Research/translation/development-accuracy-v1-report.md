@@ -384,8 +384,9 @@ python3 scripts/translation/compose_segmented_document_benchmark.py \
 uv run --python 3.12 --with sacrebleu==2.6.0 \
   scripts/translation/score_translation.py COMPOSED.json
 
-uv run --python 3.12 --with unbabel-comet==2.2.7 \
-  --with setuptools==80.9.0 scripts/translation/score_comet.py \
+uv run --python 3.12 \
+  --with-requirements Research/translation/comet-runtime-v1-requirements.txt \
+  scripts/translation/score_comet.py \
   Research/translation/benchmark/development-accuracy-v1.jsonl \
   COMPOSED.json COMET.json
 
