@@ -99,10 +99,32 @@ python3 scripts/speech/run_mimi_whisper_live_benchmark.py \
   --language en --metric wer
 ```
 
-This path feeds 100 ms PCM blocks directly through the same adaptive VAD,
-rolling partial decoder, overlap stabilizer, and final decoder used by the app.
-Its compute RTF is not Apple's paced wall RTF. Time to first text includes the
-nominal audio arrival time plus the corresponding local decode.
+This direct path feeds 100 ms PCM blocks into the actor runtime without sleeping.
+It exercises the same adaptive VAD, rolling partial decoder, overlap stabilizer,
+and final decoder used by the app, but intentionally bypasses the converter,
+bounded queue, drain task, and MainActor scheduling. Its compute RTF is not
+Apple's paced wall RTF. Time to first text includes the nominal audio arrival
+time plus the corresponding local decode.
+
+Run the complementary production-queue benchmark at wall-clock speed:
+
+```sh
+python3 scripts/speech/run_mimi_whisper_live_benchmark.py \
+  .build/debug/Mimi \
+  Research/speech/work/development-speech-pack/model \
+  Research/speech/work/fleurs-ja-screen-v1/manifest.jsonl \
+  Research/speech/work/fleurs-ja-screen-v1/mimi-whisper-paced-queue.json \
+  --language ja --metric cer --paced-queue
+```
+
+The paced mode uses the compiled language-aware product profile and the exact
+`startLive` → `consumeLive` → bounded queue → actor → `stopLive` path. It
+uses absolute audio deadlines, so converter work cannot progressively slow the
+fixture below real time. It reports input-delivery RTF, maximum scheduling
+lateness, queue capacity and peak depth, exact dropped samples and drop events,
+backpressure notifications, first/final update latency, and time spent
+finalizing after the input ends. Custom streaming-profile flags are rejected in
+this mode so the evidence cannot silently diverge from the app.
 
 Profile experiments must name both cadences explicitly:
 
@@ -118,12 +140,50 @@ python3 scripts/speech/run_mimi_whisper_live_benchmark.py \
   --endpoint-silence 0.75
 ```
 
-The report includes final error rate, first text p50 and p95, compute RTF,
-hypothesis churn, peak RSS, first-update prefix error, and first-update
-reference coverage. It also records the suite hash, selected case IDs, exact
-executable and model-weights hashes, feed cadence, and effective profile. Every
-input audio hash is verified before inference. `--limit` is available for a
-screening run, but a product decision requires the complete registered suite.
+Both reports include final error rate, first text p50 and p95, hypothesis churn,
+peak RSS, first-update prefix error, and first-update reference coverage. The
+direct mode reports compute RTF. The paced mode reports wall-time RTF, queue
+drops, backpressure, delivery timing, and finalization lag. Both record the
+suite hash, selected case IDs, exact executable and model-weights hashes, feed
+cadence, and effective profile. Every input audio hash is verified before
+inference. `--limit` is available for a screening run, but a product decision
+requires the complete registered suite.
+
+Build a deterministic synthetic-noise condition without changing source text:
+
+```sh
+python3 scripts/speech/build_noisy_speech_fixture.py \
+  Research/speech/work/fleurs-ja-screen-v1/manifest.jsonl \
+  Research/speech/work/noisy-ja-pink-15db-v2 \
+  --noise-color pink --snr-db 15
+```
+
+The builder verifies every source hash, derives a per-case noise seed, preserves
+the source level unless minimal clipping headroom is required, and records the
+exact FFmpeg and FFprobe versions and executable hashes, gains, expected SNR,
+output levels, and generated hashes. Repeated runs under that exact toolchain
+produce byte-identical manifests and WAV files. This is a controlled
+additive-noise diagnostic, not evidence about real rooms, microphones,
+reverberation, or competing speakers.
+
+Compare clean and derived conditions with paired case alignment:
+
+```sh
+python3 scripts/speech/compare_asr_benchmarks.py \
+  Research/speech/work/noisy-ja-pink-15db-v2/manifest.jsonl \
+  Research/speech/work/streaming-profile-sweep-v1/ja-product-paced-queue-8s-corrected-v2.json \
+  Research/speech/work/noisy-ja-pink-15db-v2/mimi-paced-queue-8s-corrected-v2.json \
+  Research/speech/work/noisy-ja-pink-15db-v2/clean-vs-noisy-8s-corrected-v2.json \
+  --left-label "Mimi clean" \
+  --right-label "Mimi pink noise 15 dB SNR"
+```
+
+Verify every selected report hash, same-executable direct/paced parity, noise
+toolchain provenance, real-time delivery, and zero-loss queue telemetry:
+
+```sh
+python3 scripts/speech/verify_paced_speech_evidence.py
+```
 
 Build one long-form case from the same pinned and licensed clips:
 
@@ -133,9 +193,10 @@ python3 scripts/speech/build_long_form_fixture.py \
   Research/speech/work/long-form-ja-v1
 ```
 
-Run the resulting `manifest.jsonl` with the same benchmark command. The
-generated audio, manifest, and reports remain under the ignored work directory.
-The builder refuses missing or hash-mismatched registered audio.
+Run the resulting `manifest.jsonl` with the same benchmark command. Generated
+audio remains ignored; selected manifests and reports may be force-added as
+reviewable evidence. The builder refuses missing or hash-mismatched registered
+audio.
 Add `--dynamic-normalize` to generate a second fixture with bounded dynamic
 gain normalization. Report raw and normalized fixtures separately. The raw
 concatenation is an abrupt multi-speaker gain-shift stress test, while the

@@ -163,16 +163,28 @@ def main() -> None:
     parser.add_argument("left", type=Path)
     parser.add_argument("right", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--left-label")
+    parser.add_argument("--right-label")
     args = parser.parse_args()
 
-    suite = {
-        row["caseID"]: row
-        for row in (
-            json.loads(line)
-            for line in args.suite.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        )
-    }
+    suite_rows = [
+        json.loads(line)
+        for line in args.suite.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    suite: dict[str, dict] = {}
+    case_aliases: dict[str, str] = {}
+    for row in suite_rows:
+        comparison_id = row.get("derivedFromCaseID", row["caseID"])
+        if comparison_id in suite:
+            raise SystemExit(
+                f"suite repeats comparison case ID: {comparison_id}"
+            )
+        suite[comparison_id] = row
+        for alias in {comparison_id, row["caseID"]}:
+            prior = case_aliases.setdefault(alias, comparison_id)
+            if prior != comparison_id:
+                raise SystemExit(f"suite case alias is ambiguous: {alias}")
     reports = [
         json.loads(args.left.read_text(encoding="utf-8")),
         json.loads(args.right.read_text(encoding="utf-8")),
@@ -180,13 +192,27 @@ def main() -> None:
     metrics = [report.get("metric", "cer") for report in reports]
     if metrics[0] != metrics[1]:
         raise SystemExit("benchmark reports use different error metrics")
-    results = [{row["caseID"]: row for row in report["results"]} for report in reports]
+    results: list[dict[str, dict]] = []
+    for report in reports:
+        keyed: dict[str, dict] = {}
+        for row in report["results"]:
+            comparison_id = case_aliases.get(row["caseID"], row["caseID"])
+            if comparison_id in keyed:
+                raise SystemExit(
+                    f"benchmark repeats comparison case ID: {comparison_id}"
+                )
+            keyed[comparison_id] = row
+        results.append(keyed)
     expected_ids = set(suite)
     if any(set(result) != expected_ids for result in results):
         raise SystemExit("benchmark reports do not cover the exact suite")
 
+    labels = [
+        args.left_label or reports[0]["engine"],
+        args.right_label or reports[1]["engine"],
+    ]
     engines: list[dict] = []
-    for report, result in zip(reports, results, strict=True):
+    for report, result, label in zip(reports, results, labels, strict=True):
         protected_exact_total = 0
         protected_exact_kept = 0
         protected_alias_kept = 0
@@ -206,12 +232,14 @@ def main() -> None:
             protected_alias_kept += alias_kept
         engines.append(
             {
-                "engine": report["engine"],
+                "engine": label,
+                "rawEngine": report["engine"],
                 "metric": report.get("metric", "cer"),
                 "corpusErrorRate": report_error_rate(report),
-                "meanRealTimeFactor": report.get(
-                    "meanRealTimeFactor",
-                    report.get("meanComputeRealTimeFactor"),
+                "meanRealTimeFactor": (
+                    report.get("meanRealTimeFactor")
+                    or report.get("meanComputeRealTimeFactor")
+                    or report.get("meanPacedWallRealTimeFactor")
                 ),
                 "protectedTermsTotal": protected_exact_total,
                 "exactProtectedTermsKept": protected_exact_kept,
@@ -240,11 +268,16 @@ def main() -> None:
         "format": "mimi-asr-comparison-v2",
         "metric": metrics[0],
         "caseCount": len(suite),
+        "conditionAlignment": (
+            "derived-source"
+            if any("derivedFromCaseID" in row for row in suite_rows)
+            else "exact-case-id"
+        ),
         "engines": engines,
         "pairwise": {
-            "leftEngine": reports[0]["engine"],
+            "leftEngine": labels[0],
             "leftWins": left_wins,
-            "rightEngine": reports[1]["engine"],
+            "rightEngine": labels[1],
             "rightWins": right_wins,
             "ties": ties,
             "corpusErrorRateDifferenceRightMinusLeft": engines[1]["corpusErrorRate"]

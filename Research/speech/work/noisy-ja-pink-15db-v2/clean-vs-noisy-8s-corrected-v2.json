@@ -1,0 +1,53 @@
+{
+  "format": "mimi-asr-comparison-v2",
+  "metric": "cer",
+  "caseCount": 24,
+  "conditionAlignment": "derived-source",
+  "engines": [
+    {
+      "engine": "Mimi clean",
+      "rawEngine": "Mimi Speech Preview",
+      "metric": "cer",
+      "corpusErrorRate": 0.065738592420727,
+      "meanRealTimeFactor": 1.1125280225361258,
+      "protectedTermsTotal": 41,
+      "exactProtectedTermsKept": 30,
+      "exactProtectedTermRecall": 0.7317073170731707,
+      "aliasAwareProtectedTermsKept": 30,
+      "aliasAwareProtectedTermRecall": 0.7317073170731707
+    },
+    {
+      "engine": "Mimi pink noise 15 dB SNR",
+      "rawEngine": "Mimi Speech Preview",
+      "metric": "cer",
+      "corpusErrorRate": 0.0711523588553751,
+      "meanRealTimeFactor": 1.1121696461387185,
+      "protectedTermsTotal": 41,
+      "exactProtectedTermsKept": 28,
+      "exactProtectedTermRecall": 0.6829268292682927,
+      "aliasAwareProtectedTermsKept": 28,
+      "aliasAwareProtectedTermRecall": 0.6829268292682927
+    }
+  ],
+  "pairwise": {
+    "leftEngine": "Mimi clean",
+    "leftWins": 3,
+    "rightEngine": "Mimi pink noise 15 dB SNR",
+    "rightWins": 2,
+    "ties": 19,
+    "corpusErrorRateDifferenceRightMinusLeft": 0.00541376643464811,
+    "aliasAwareProtectedTermRecallDifferenceRightMinusLeft": -0.04878048780487798,
+    "pairedClipBootstrap": {
+      "iterations": 10000,
+      "seed": 20260726,
+      "errorRateDifferenceRightMinusLeft95CI": [
+        -0.002149112838033804,
+        0.01687141222654015
+      ],
+      "aliasAwareProtectedTermRecallDifferenceRightMinusLeft95CI": [
+        -0.11904761904761904,
+        0.0
+      ]
+    }
+  }
+}

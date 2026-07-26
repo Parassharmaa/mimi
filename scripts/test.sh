@@ -6,6 +6,8 @@ cd "$ROOT"
 
 swift build --product MimiSelfTest
 swift build --product Mimi
+python3 scripts/speech/test_speech_benchmark_tools.py
+python3 scripts/speech/verify_paced_speech_evidence.py
 python3 scripts/translation/verify_shipped_translation_pack.py \
   --model-root App/Resources/TranslationModels \
   --license-root App/Resources/TranslationLicenses
