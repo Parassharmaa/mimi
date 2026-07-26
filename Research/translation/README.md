@@ -2364,3 +2364,23 @@ The source manifest SHA-256 is
 The tracked stage-one result keeps training, protected evaluation, app changes,
 release, and upload disabled. See
 `faithful-on-policy-multipair-v17-presemantic-result-2026-07-26.json`.
+
+## V17 pinned COMET candidate scoring
+
+All 3,929 hard comparisons now have COMET-22 scores from the exact Apache-2.0
+checkpoint revision and a fully frozen CPU runtime. Mean candidate scores are
+`0.88285` for EN→JA and `0.83529` for JA→EN. The overall mean is `0.85934`.
+
+The scores support the diagnosis but do not certify translations. The 3,475
+generated negatives preferred by safe-parent likelihood average `0.85221`
+COMET, versus `0.91390` for the 454 reference-preferred cases. Omission-risk
+candidates average `0.78879`; the six repetition-risk candidates average
+`0.57914`. COMET remains only a mining feature because learned metrics can
+miss fluent partial omissions and can be gamed.
+
+The deterministic report SHA-256 is
+`b00288cd2ece2c4a648bc383518d50355dbbe0a476c9eac26a7f3adbb07025a9`;
+its exact checkpoint SHA-256 is
+`e213091cde220f97b89f8bdfa750c458cfea741ad62affb455b59900210ff2af`.
+Training remains disabled. See
+`faithful-on-policy-multipair-v17-comet-candidate-report-2026-07-26.json`.

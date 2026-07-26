@@ -1,0 +1,92 @@
+{
+  "app_change_authorized": false,
+  "comet_report": {
+    "bytes": 1043121,
+    "checkpoint": {
+      "bytes": 2323649073,
+      "sha256": "e213091cde220f97b89f8bdfa750c458cfea741ad62affb455b59900210ff2af"
+    },
+    "inference_configuration": {
+      "accelerator": "cpu",
+      "batch_size": 8,
+      "num_workers": 1,
+      "torch_interop_threads": 11,
+      "torch_threads": 5
+    },
+    "model_repository": "Unbabel/wmt22-comet-da",
+    "model_revision": "371e9839ca4e213dde891b066cf3080f75ec7e72",
+    "report_sha256": "b00288cd2ece2c4a648bc383518d50355dbbe0a476c9eac26a7f3adbb07025a9",
+    "runtime_environment_sha256": "ce51fa7f84cd583bda0925833d2fc81a968bef2dffa3e37c14adadba0013cc02",
+    "signature_sha256": "0ad95e732054805a015b87dcabc019cdf03a89f64648c19d43ac593c686eb97a"
+  },
+  "experiment": "faithful-on-policy-multipair-v17-comet-candidate-scoring",
+  "interpretation": [
+    "COMET-22 is a candidate-mining feature, not a final quality claim or a replacement for exact dual-Claude semantic admission.",
+    "The safe parent preferred 3475 generated negatives by length-normalized likelihood even though their mean COMET score was lower than the 454 reference-preferred candidates.",
+    "Only six deterministic repetition-risk pairs exist; their COMET distribution cannot satisfy or substitute for the later semantic repetition-coverage gate."
+  ],
+  "metric": {
+    "license": "Apache-2.0",
+    "name": "COMET-22",
+    "package": "unbabel-comet",
+    "package_version": "2.2.7",
+    "precision": "float32"
+  },
+  "private_reasoning_traces_used": false,
+  "public_upload_authorized": false,
+  "schema_version": 1,
+  "score_slices": {
+    "all": {
+      "cases": 3929,
+      "mean": 0.8593421443011142,
+      "median": 0.883881688117981,
+      "p10": 0.7230657339096069,
+      "p90": 0.9618921279907227
+    },
+    "confidence_negative_preferred": {
+      "cases": 3475,
+      "mean": 0.8522138543351949,
+      "median": 0.8767650127410889,
+      "p10": 0.7137832641601562,
+      "p90": 0.9554169178009033
+    },
+    "confidence_reference_preferred": {
+      "cases": 454,
+      "mean": 0.9139033945909155,
+      "median": 0.9446985721588135,
+      "p10": 0.7717435956001282,
+      "p90": 0.9764997959136963
+    },
+    "en-ja": {
+      "cases": 1987,
+      "mean": 0.8828468750965434,
+      "median": 0.9106895923614502,
+      "p10": 0.759302020072937,
+      "p90": 0.9708009362220764
+    },
+    "ja-en": {
+      "cases": 1942,
+      "mean": 0.8352927621741741,
+      "median": 0.8550861477851868,
+      "p10": 0.6964172124862671,
+      "p90": 0.9462368488311768
+    },
+    "omission_risk": {
+      "cases": 536,
+      "mean": 0.7887864264645683,
+      "median": 0.8147265911102295,
+      "p10": 0.6086132526397705,
+      "p90": 0.933773934841156
+    },
+    "repetition_risk": {
+      "cases": 6,
+      "mean": 0.5791352540254593,
+      "median": 0.6717515587806702,
+      "p10": 0.301669180393219,
+      "p90": 0.7494755983352661
+    }
+  },
+  "semantic_audit_authorized": true,
+  "status": "pinned-comet-candidate-scoring-complete",
+  "training_authorized": false
+}
