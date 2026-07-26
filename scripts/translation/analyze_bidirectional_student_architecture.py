@@ -51,7 +51,7 @@ ARCHITECTURES = (
         encoder_ffn=4_608,
         decoder_ffn=4_608,
         initialization=(
-            "output-preserving FFN widening from one directional parent; "
+            "mathematically output-preserving FFN widening from one directional parent; "
             "dual-teacher distillation is still required for the other direction"
         ),
         role="recommended first shared-capacity control",
@@ -230,7 +230,7 @@ def analyze() -> dict[str, Any]:
             "recommended_first_control": "shared-wide-6e6d-ffn4608",
             "reason": (
                 "It is the smallest fully shared 90M-class option, preserves one "
-                "directional parent's exact function at initialization, keeps the "
+                "directional parent's mathematical function at initialization, keeps the "
                 "already-supported 512-wide/6e6d topology, and has a flatter "
                 "compute increase across long inputs than the deep alternatives."
             ),
@@ -241,6 +241,7 @@ def analyze() -> dict[str, Any]:
             "Projected bytes are architecture estimates, not a converted bundle claim.",
             "MAC ratios are shape-based compute estimates, not measured Apple-Silicon latency.",
             "Output-preserving widening protects only the initialization direction; the shared model must still pass independent retention gates in both directions.",
+            "Wider matrix kernels may change floating-point logits slightly even though added fc2 columns are zero; exact generated-token parity is a separate gate.",
             "The current Swift Marian loader hard-codes six layers and FFN width 2048; no Swift change is justified before a trained candidate passes Python/MLX quality gates.",
         ],
     }

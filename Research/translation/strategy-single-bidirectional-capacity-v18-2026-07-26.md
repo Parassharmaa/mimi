@@ -21,7 +21,7 @@ Mimi's measured evidence:
 - a purpose-trained 6e/4d student recovered to 27.18 development chrF++ but
   still lost 4-bit quality;
 - appended post-norm encoder blocks were not function-preserving;
-- widening Marian FFNs is exactly output-preserving when copied active
+- widening Marian FFNs is mathematically output-preserving when copied active
   features sit behind zero-initialized new `fc2` columns; and
 - the earlier shared 60.6M bidirectional pilot learned the missing direction
   but had insufficient training/capacity and severe negative transfer.
@@ -37,6 +37,7 @@ Run:
 ```sh
 python3 scripts/translation/analyze_bidirectional_student_architecture.py --pretty
 python3 scripts/translation/test_bidirectional_student_architecture.py
+python3 scripts/translation/test_widen_marian_checkpoint_ffn.py
 ```
 
 | Fully shared shape | Dense parameters | Projected q4 model | Projected one-model pack | Approximate MAC ratio short / sentence / long |
@@ -63,8 +64,9 @@ No training contract is frozen here. If a later immutable contract authorizes
 this architecture, the single arm should:
 
 1. start from the stronger directional parent selected without protected data;
-2. expand every encoder and decoder FFN to 4,608 with an exact
-   output-preserving transform;
+2. expand every encoder and decoder FFN to 4,608 with a zero-output-column,
+   mathematically preserving transform, then verify floating-logit tolerance
+   and exact greedy-token parity;
 3. use balanced licensed EN→JA and JA→EN sources with existing `<2ja>` and
    `<2en>` source prefixes;
 4. distill final sequences and token distributions from the two authenticated
@@ -83,6 +85,24 @@ this architecture, the single arm should:
 
 Final translations and compact score/error labels are sufficient. No teacher
 or judge reasoning trace is requested or retained.
+
+`widen_marian_checkpoint_ffn.py` implements the authenticated transform for
+both stacks. Its contract test proves the original and widened FFN outputs
+match within a pinned `1e-6` floating tolerance for every fixture layer while
+all non-FFN weights remain unchanged. A real checkpoint must additionally pass
+exact greedy-token parity because wider matrix kernels can change floating
+summation order. The emitted manifest still forbids training and promotion; a
+later immutable experiment contract must bind the real source model and
+widened artifact before any update.
+
+The authenticated EN→JA parent has now passed that real-checkpoint smoke. The
+6e/6d FFN-4,608 transform produced a reproducible 368,201,220-byte temporary
+full-precision checkpoint. On Apple M3 Pro MPS, all six EN→JA canary cases
+matched the parent for 20 generated steps: token sequences and finite-logit
+masks were identical, and the maximum absolute finite-logit delta was `0.0`.
+The temporary checkpoint was deleted after hashing because it is reproducible
+and does not authorize training or distribution. The tracked evidence is
+`shared-bidirectional-v18-wide-parent-parity-smoke-2026-07-26.json`.
 
 ## Why not MoE first
 

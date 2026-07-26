@@ -36,7 +36,11 @@ widened to 4,608 as the first single-physical-model capacity control. Its
 projected one-model pack is 54.46 MB and its approximate compute ratio is
 1.68–1.71× the incumbent shape. This is a reproducible architecture estimate,
 not a converted bundle or training authorization. The dense control precedes
-any capacity-matched routed/MoE ablation.
+any capacity-matched routed/MoE ablation. The authenticated EN→JA parent has
+also passed a real MPS FFN-widening smoke with exact six-case greedy-token
+parity and maximum finite-logit delta `0.0`; the reproducible temporary
+full-precision checkpoint was deleted after hashing, and training remains
+unauthorized.
 
 The reviewer-free promotion route is now preregistered separately from the
 legacy human contract. `benchmark/automated-claim-v1.manifest.json` fixes 400
