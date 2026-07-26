@@ -58,3 +58,25 @@ latency/RSS, bundle size, and license review. The strict runtime guard remains
 unchanged. Mimi's current bundled resources remain byte-pinned unless the
 exact Swift screen reaches zero failed-closed segments without a new safety or
 quality regression.
+
+## Result
+
+Both directions are rejected before q4 conversion.
+
+| Direction | Step | Full validation Δ chrF++ | Typed-number Δ chrF++ | Decision |
+|---|---:|---:|---:|---|
+| EN→JA | 50 | +0.0258 | −0.0102 | reject |
+| EN→JA | 100 | +0.0054 | −0.0102 | reject |
+| JA→EN | 50 | −0.0328 | −0.1253 | reject |
+| JA→EN | 100 | −0.0548 | −0.1798 | reject |
+
+No checkpoint reaches the frozen `+0.10` focus-slice threshold. EN→JA changes
+too little and JA→EN moves in the wrong direction. Continuing the same
+weighted-MLE objective is not justified. No q4 conversion, public/protected
+suite evaluation, app change, bundle replacement, or upload is authorized.
+
+The machine-readable result is
+`typed-numeric-preservation-v20-result-2026-07-26.json`. The next credible arm
+must supervise critical-value retention directly—through a token-level
+auxiliary objective or source-conditioned constrained decoding—rather than
+merely increasing the weight of otherwise ordinary sequence likelihood.
