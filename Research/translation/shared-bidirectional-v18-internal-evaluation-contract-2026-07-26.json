@@ -1,0 +1,197 @@
+{
+  "app_change_authorized": false,
+  "checkpoint_steps": [
+    250,
+    500,
+    750,
+    1000
+  ],
+  "experiment": "shared-bidirectional-v18-full-precision-internal-eval",
+  "implementation": {
+    "path": "scripts/translation/evaluate_shared_bidirectional_v18_internal.py",
+    "sha256": "7cc2916b051146282dd2e7daf8e8d8769c54766886c97dd4c5481352ea53d8bb"
+  },
+  "observed_before_evaluation_freeze": {
+    "disclosure": "The step-250 balanced-selector checkpoint metric was observed before this evaluator was frozen. The evaluator implements the already frozen phase-one thresholds without weakening or checkpoint-specific adjustment. No step-500, step-750, step-1000, regression-suite, teacher-baseline, or semantic output was available.",
+    "maximum_observed_step": 250,
+    "step_250_checkpoint_manifest_sha256": "35caeb43ecded0a7eed7fa011b7f76d52dcf70652a9b31ee9485b0d2e17c13ec",
+    "step_250_selector_metrics": {
+      "directions": {
+        "en-ja": {
+          "cases": 256,
+          "chrf_pp": 34.944392569466025
+        },
+        "ja-en": {
+          "cases": 256,
+          "chrf_pp": 13.929796576084888
+        }
+      },
+      "loss": 2.8671672370983288,
+      "macro_direction_chrf_pp": 24.437094572775457
+    }
+  },
+  "candidate_tokenizer_assets": {
+    "source.spm": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff",
+    "special_tokens_map.json": "80f4c6c5cf3867d7669ff8aa8f6aebb8a7499322e62d7faae06262d6014edd61",
+    "target.spm": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff",
+    "tokenizer_config.json": "14857780440c0c98aaf30abbbc73d2ab03b17f96738535e10eec854ed232f842",
+    "vocab.json": "98f1903df87693f20efcdbe0151158b0b6a22d34993247df7d7bca0d6a350d30"
+  },
+  "private_reasoning_traces_used": false,
+  "prefix_token_ids": {
+    "en-ja": [
+      8000,
+      58,
+      1451,
+      3039
+    ],
+    "ja-en": [
+      8000,
+      58,
+      241,
+      3039
+    ]
+  },
+  "q4_conversion_authorized": false,
+  "required_regression_suites": [
+    "canary",
+    "development-accuracy-v1",
+    "legal-safety-validation-v1",
+    "legal-safety-test-v1"
+  ],
+  "runtime": {
+    "batch_size": 4,
+    "device": "mps",
+    "greedy_num_beams": 1,
+    "hardware": "Apple M3 Pro",
+    "operating_system": "macOS-26.5.1-arm64-arm-64bit",
+    "packages": {
+      "numpy": "2.5.1",
+      "python": "3.12.12",
+      "sacrebleu": "2.6.0",
+      "sacremoses": "0.1.1",
+      "sentencepiece": "0.2.2",
+      "torch": "2.13.0",
+      "transformers": "4.57.6"
+    },
+    "use_cache": true
+  },
+  "schema_version": 1,
+  "selection_after_mechanical_gate": "highest-selector-macro-then-lowest-independent-selector-loss-then-lowest-step",
+  "semantic_audit_required_before_q4": true,
+  "semantic_failure_behavior": "stop-experiment-without-falling-through-to-another-checkpoint",
+  "status": "frozen-full-precision-evaluation-only",
+  "suites": {
+    "canary": {
+      "cases": 12,
+      "path": "Research/translation/benchmark/canary.jsonl",
+      "sha256": "957a6feffea2542e9ea5d5f345db6bfde4228226f40884244b8226d991fbeb70"
+    },
+    "development-accuracy-v1": {
+      "cases": 200,
+      "path": "Research/translation/benchmark/development-accuracy-v1.jsonl",
+      "sha256": "0684350a4c941a7fc87801444c027e0f5c02ba6f77418c792428d4200b521605"
+    },
+    "legal-safety-test-v1": {
+      "cases": 800,
+      "path": "Research/translation/benchmark/legal-safety-test-v1.jsonl",
+      "sha256": "ea27ac27bb23e99dd3d4fe29b70bab7ebb660fcac9309b3d06f08e9124ca91ca"
+    },
+    "legal-safety-validation-v1": {
+      "cases": 800,
+      "path": "Research/translation/benchmark/legal-safety-validation-v1.jsonl",
+      "sha256": "352b04c12a17480ffd3e41ea89afef6caf00f0b0aae640050398898a3e81bc91"
+    },
+    "selector": {
+      "cases": 512,
+      "path": "Research/translation/selection/shared-bidirectional-v18-phase1.jsonl",
+      "sha256": "0f7aadfc825b288a000ed6382a53afa18799352057a5cfd8bf91595ddf641382"
+    }
+  },
+  "teachers": {
+    "en-ja": {
+      "files": {
+        "config.json": {
+          "bytes": 979,
+          "sha256": "93d1fefca902bf0209d015fb45435899fe428f3554bda21e92fc8c967123fd88"
+        },
+        "generation_config.json": {
+          "bytes": 288,
+          "sha256": "d66a78c639f71be4ada80c06324eb090bbbaf51fd9fa78a69619d628df46cb7e"
+        },
+        "mimi_checkpoint_averaging_manifest.json": {
+          "bytes": 6048,
+          "sha256": "65df5b3a7220c0c524b03b0bfb1d689548a144059ffea4be9cf9b5afa2abf5f4"
+        },
+        "model.safetensors": {
+          "bytes": 242249092,
+          "sha256": "d080ce30490e878ab745206220c97bf18d4b2662a35e5fff0bdd2157a7c4dc4b"
+        },
+        "source.spm": {
+          "bytes": 792751,
+          "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+        },
+        "special_tokens_map.json": {
+          "bytes": 416,
+          "sha256": "80f4c6c5cf3867d7669ff8aa8f6aebb8a7499322e62d7faae06262d6014edd61"
+        },
+        "target.spm": {
+          "bytes": 792751,
+          "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+        },
+        "tokenizer_config.json": {
+          "bytes": 846,
+          "sha256": "14857780440c0c98aaf30abbbc73d2ab03b17f96738535e10eec854ed232f842"
+        },
+        "vocab.json": {
+          "bytes": 849909,
+          "sha256": "98f1903df87693f20efcdbe0151158b0b6a22d34993247df7d7bca0d6a350d30"
+        }
+      }
+    },
+    "ja-en": {
+      "files": {
+        "config.json": {
+          "bytes": 979,
+          "sha256": "93d1fefca902bf0209d015fb45435899fe428f3554bda21e92fc8c967123fd88"
+        },
+        "generation_config.json": {
+          "bytes": 288,
+          "sha256": "d66a78c639f71be4ada80c06324eb090bbbaf51fd9fa78a69619d628df46cb7e"
+        },
+        "mimi_training_manifest.json": {
+          "bytes": 18003,
+          "sha256": "0d195dc163250a9fa9312fb7ad8ba3341ab65167b90926d46f0a65d76047bd38"
+        },
+        "model.safetensors": {
+          "bytes": 242249092,
+          "sha256": "8e7f7eff76d74b343884fe9a170b6dbad55d42f20ac5f526b6e8ec71e6c94f71"
+        },
+        "source.spm": {
+          "bytes": 792751,
+          "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+        },
+        "special_tokens_map.json": {
+          "bytes": 416,
+          "sha256": "80f4c6c5cf3867d7669ff8aa8f6aebb8a7499322e62d7faae06262d6014edd61"
+        },
+        "target.spm": {
+          "bytes": 792751,
+          "sha256": "a6824c2996a4877cae8a0240f11a112ab0e4ea1f22e54cd42179376fe558f4ff"
+        },
+        "tokenizer_config.json": {
+          "bytes": 846,
+          "sha256": "c7f15cbe2c7fa0cdbb8a2d6fbde4e3eb1546bbeafd1e618c1472548b3d12ecf2"
+        },
+        "vocab.json": {
+          "bytes": 849909,
+          "sha256": "98f1903df87693f20efcdbe0151158b0b6a22d34993247df7d7bca0d6a350d30"
+        }
+      }
+    }
+  },
+  "training_contract": {
+    "path": "Research/translation/shared-bidirectional-v18-phase1-contract-2026-07-26.json",
+    "sha256": "5ca6b1062429ca0165af0930a147c441645e4816fc14e06b8337f110c094fe65"
+  }
+}

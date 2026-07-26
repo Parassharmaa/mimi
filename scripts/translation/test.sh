@@ -112,6 +112,10 @@ uv run --python 3.12 --with torch --with safetensors --with numpy \
   scripts/translation/test_widen_marian_checkpoint_ffn.py
 python3 scripts/translation/test_shared_bidirectional_v18_dataset.py
 python3 scripts/translation/test_shared_bidirectional_v18_contract.py
+PYTHONPATH=scripts/translation uv run --python 3.12.12 --with torch==2.13.0 \
+  --with transformers==4.57.6 --with sentencepiece==0.2.2 \
+  --with sacremoses==0.1.1 --with sacrebleu==2.6.0 --with numpy==2.5.1 \
+  scripts/translation/test_evaluate_shared_bidirectional_v18_internal.py
 uv run --python 3.12 --with torch --with transformers==4.57.6 \
   --with sentencepiece --with sacremoses --with sacrebleu==2.6.0 --with numpy \
   --with mlx==0.30.6 scripts/translation/test_mlx_affine_qat.py
