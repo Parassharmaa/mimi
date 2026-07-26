@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title description">
   <title id="title">Mimi local translation development benchmark</title>
-  <desc id="description">Quality, model size, and latency comparison for Mimi's development model and Apple Translation.</desc>
+  <desc id="description">Quality, model size, and latency comparison for base ElanMT, fine-tuned Mimi, and Apple Translation.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#09111f"/>
@@ -20,7 +20,8 @@
       .value { fill: #e2e8f0; font-size: 13px; font-weight: 650; }
       .note { fill: #cbd5e1; font-size: 15px; }
       .small { fill: #94a3b8; font-size: 13px; }
-      .candidate { fill: #2dd4bf; }
+      .base { fill: #64748b; }
+      .mimi { fill: #2dd4bf; }
       .apple { fill: #a78bfa; }
       .track { fill: #1e293b; }
     </style>
@@ -30,10 +31,12 @@
   <text x="54" y="62" class="title">Local translation development benchmark</text>
   <text x="54" y="92" class="subtitle">200 public cases, 100 per direction, including 40 six-segment documents</text>
 
-  <circle cx="960" cy="60" r="7" class="candidate"/>
-  <text x="974" y="65" class="label">Mimi</text>
-  <circle cx="1068" cy="60" r="7" class="apple"/>
-  <text x="1082" y="65" class="label">Apple</text>
+  <circle cx="748" cy="60" r="7" class="base"/>
+  <text x="762" y="65" class="label">Base ElanMT</text>
+  <circle cx="894" cy="60" r="7" class="mimi"/>
+  <text x="908" y="65" class="label">Mimi</text>
+  <circle cx="982" cy="60" r="7" class="apple"/>
+  <text x="996" y="65" class="label">Apple Translation</text>
 
   <g filter="url(#shadow)">
     <rect x="42" y="125" width="548" height="470" rx="22" class="card"/>
@@ -45,58 +48,76 @@
 
   <text x="70" y="205" class="metric">chrF++</text>
   <rect x="150" y="187" width="300" height="14" rx="7" class="track"/>
-  <rect x="150" y="187" width="142" height="14" rx="7" class="candidate"/>
-  <text x="462" y="199" class="value">28.41</text>
-  <rect x="150" y="216" width="300" height="14" rx="7" class="track"/>
-  <rect x="150" y="216" width="126" height="14" rx="7" class="apple"/>
-  <text x="462" y="228" class="value">25.28</text>
+  <rect x="150" y="187" width="141" height="14" rx="7" class="base"/>
+  <text x="462" y="199" class="value">28.13</text>
+  <rect x="150" y="211" width="300" height="14" rx="7" class="track"/>
+  <rect x="150" y="211" width="142" height="14" rx="7" class="mimi"/>
+  <text x="462" y="223" class="value">28.41</text>
+  <rect x="150" y="235" width="300" height="14" rx="7" class="track"/>
+  <rect x="150" y="235" width="126" height="14" rx="7" class="apple"/>
+  <text x="462" y="247" class="value">25.28</text>
 
   <text x="70" y="305" class="metric">BLEU</text>
   <rect x="150" y="287" width="300" height="14" rx="7" class="track"/>
-  <rect x="150" y="287" width="83" height="14" rx="7" class="candidate"/>
-  <text x="462" y="299" class="value">9.63</text>
-  <rect x="150" y="316" width="300" height="14" rx="7" class="track"/>
-  <rect x="150" y="316" width="55" height="14" rx="7" class="apple"/>
-  <text x="462" y="328" class="value">6.40</text>
+  <rect x="150" y="287" width="78" height="14" rx="7" class="base"/>
+  <text x="462" y="299" class="value">9.14</text>
+  <rect x="150" y="311" width="300" height="14" rx="7" class="track"/>
+  <rect x="150" y="311" width="83" height="14" rx="7" class="mimi"/>
+  <text x="462" y="323" class="value">9.63</text>
+  <rect x="150" y="335" width="300" height="14" rx="7" class="track"/>
+  <rect x="150" y="335" width="55" height="14" rx="7" class="apple"/>
+  <text x="462" y="347" class="value">6.40</text>
 
   <text x="70" y="405" class="metric">COMET-22</text>
   <rect x="150" y="387" width="300" height="14" rx="7" class="track"/>
-  <rect x="150" y="387" width="250" height="14" rx="7" class="candidate"/>
-  <text x="462" y="399" class="value">0.8669</text>
-  <rect x="150" y="416" width="300" height="14" rx="7" class="track"/>
-  <rect x="150" y="416" width="259" height="14" rx="7" class="apple"/>
-  <text x="462" y="428" class="value">0.8728</text>
+  <rect x="150" y="387" width="223" height="14" rx="7" class="base"/>
+  <text x="462" y="399" class="value">0.8486</text>
+  <rect x="150" y="411" width="300" height="14" rx="7" class="track"/>
+  <rect x="150" y="411" width="250" height="14" rx="7" class="mimi"/>
+  <text x="462" y="423" class="value">0.8669</text>
+  <rect x="150" y="435" width="300" height="14" rx="7" class="track"/>
+  <rect x="150" y="435" width="259" height="14" rx="7" class="apple"/>
+  <text x="462" y="447" class="value">0.8728</text>
 
-  <text x="70" y="505" class="note">Mimi vs Apple COMET: -0.0060</text>
-  <text x="70" y="535" class="small">95% paired interval crosses zero</text>
+  <text x="70" y="505" class="note">Mimi vs base ElanMT COMET: +0.0183</text>
+  <text x="70" y="535" class="small">Mimi vs Apple Translation: -0.0060, interval crosses zero</text>
   <text x="70" y="566" class="small">Higher quality score is better</text>
 
   <text x="638" y="205" class="metric">chrF++</text>
   <rect x="718" y="187" width="300" height="14" rx="7" class="track"/>
-  <rect x="718" y="187" width="276" height="14" rx="7" class="candidate"/>
-  <text x="1030" y="199" class="value">55.19</text>
-  <rect x="718" y="216" width="300" height="14" rx="7" class="track"/>
-  <rect x="718" y="216" width="271" height="14" rx="7" class="apple"/>
-  <text x="1030" y="228" class="value">54.29</text>
+  <rect x="718" y="187" width="250" height="14" rx="7" class="base"/>
+  <text x="1030" y="199" class="value">50.06</text>
+  <rect x="718" y="211" width="300" height="14" rx="7" class="track"/>
+  <rect x="718" y="211" width="276" height="14" rx="7" class="mimi"/>
+  <text x="1030" y="223" class="value">55.19</text>
+  <rect x="718" y="235" width="300" height="14" rx="7" class="track"/>
+  <rect x="718" y="235" width="271" height="14" rx="7" class="apple"/>
+  <text x="1030" y="247" class="value">54.29</text>
 
   <text x="638" y="305" class="metric">BLEU</text>
   <rect x="718" y="287" width="300" height="14" rx="7" class="track"/>
-  <rect x="718" y="287" width="262" height="14" rx="7" class="candidate"/>
-  <text x="1030" y="299" class="value">30.62</text>
-  <rect x="718" y="316" width="300" height="14" rx="7" class="track"/>
-  <rect x="718" y="316" width="257" height="14" rx="7" class="apple"/>
-  <text x="1030" y="328" class="value">29.97</text>
+  <rect x="718" y="287" width="221" height="14" rx="7" class="base"/>
+  <text x="1030" y="299" class="value">25.77</text>
+  <rect x="718" y="311" width="300" height="14" rx="7" class="track"/>
+  <rect x="718" y="311" width="262" height="14" rx="7" class="mimi"/>
+  <text x="1030" y="323" class="value">30.62</text>
+  <rect x="718" y="335" width="300" height="14" rx="7" class="track"/>
+  <rect x="718" y="335" width="257" height="14" rx="7" class="apple"/>
+  <text x="1030" y="347" class="value">29.97</text>
 
   <text x="638" y="405" class="metric">COMET-22</text>
   <rect x="718" y="387" width="300" height="14" rx="7" class="track"/>
-  <rect x="718" y="387" width="179" height="14" rx="7" class="candidate"/>
-  <text x="1030" y="399" class="value">0.8192</text>
-  <rect x="718" y="416" width="300" height="14" rx="7" class="track"/>
-  <rect x="718" y="416" width="181" height="14" rx="7" class="apple"/>
-  <text x="1030" y="428" class="value">0.8208</text>
+  <rect x="718" y="387" width="124" height="14" rx="7" class="base"/>
+  <text x="1030" y="399" class="value">0.7825</text>
+  <rect x="718" y="411" width="300" height="14" rx="7" class="track"/>
+  <rect x="718" y="411" width="179" height="14" rx="7" class="mimi"/>
+  <text x="1030" y="423" class="value">0.8192</text>
+  <rect x="718" y="435" width="300" height="14" rx="7" class="track"/>
+  <rect x="718" y="435" width="181" height="14" rx="7" class="apple"/>
+  <text x="1030" y="447" class="value">0.8208</text>
 
-  <text x="638" y="505" class="note">Mimi vs Apple COMET: -0.0016</text>
-  <text x="638" y="535" class="small">95% paired interval crosses zero</text>
+  <text x="638" y="505" class="note">Mimi vs base ElanMT COMET: +0.0367</text>
+  <text x="638" y="535" class="small">Mimi vs Apple Translation: -0.0016, interval crosses zero</text>
   <text x="638" y="566" class="small">Higher quality score is better</text>
 
   <g filter="url(#shadow)">
@@ -109,7 +130,7 @@
   <text x="70" y="750" class="small">Peak benchmark RSS: 210.8 MB on Apple M3 Pro</text>
 
   <text x="638" y="660" class="direction">Single-pass segment p95</text>
-  <text x="638" y="696" class="note">EN→JA: 171 ms local vs 2,922 ms Apple</text>
-  <text x="638" y="725" class="note">JA→EN: 153 ms local vs 2,558 ms Apple</text>
+  <text x="638" y="696" class="note">EN→JA: 171 ms Mimi vs 2,922 ms Apple Translation</text>
+  <text x="638" y="725" class="note">JA→EN: 153 ms Mimi vs 2,558 ms Apple Translation</text>
   <text x="638" y="750" class="small">Same 400 segment calls; lower latency is better</text>
 </svg>
