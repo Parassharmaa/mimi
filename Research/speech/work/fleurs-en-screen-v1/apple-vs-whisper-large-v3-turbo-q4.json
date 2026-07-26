@@ -1,0 +1,50 @@
+{
+  "format": "mimi-asr-comparison-v2",
+  "metric": "wer",
+  "caseCount": 24,
+  "engines": [
+    {
+      "engine": "Apple SpeechAnalyzer progressive",
+      "metric": "wer",
+      "corpusErrorRate": 0.09225092250922509,
+      "meanRealTimeFactor": 1.0816938877214772,
+      "protectedTermsTotal": 33,
+      "exactProtectedTermsKept": 26,
+      "exactProtectedTermRecall": 0.7878787878787878,
+      "aliasAwareProtectedTermsKept": 26,
+      "aliasAwareProtectedTermRecall": 0.7878787878787878
+    },
+    {
+      "engine": "mlx-community/whisper-large-v3-turbo-asr-4bit",
+      "metric": "wer",
+      "corpusErrorRate": 0.04981549815498155,
+      "meanRealTimeFactor": 0.11838508411621297,
+      "protectedTermsTotal": 33,
+      "exactProtectedTermsKept": 30,
+      "exactProtectedTermRecall": 0.9090909090909091,
+      "aliasAwareProtectedTermsKept": 30,
+      "aliasAwareProtectedTermRecall": 0.9090909090909091
+    }
+  ],
+  "pairwise": {
+    "leftEngine": "Apple SpeechAnalyzer progressive",
+    "leftWins": 3,
+    "rightEngine": "mlx-community/whisper-large-v3-turbo-asr-4bit",
+    "rightWins": 14,
+    "ties": 7,
+    "corpusErrorRateDifferenceRightMinusLeft": -0.042435424354243544,
+    "aliasAwareProtectedTermRecallDifferenceRightMinusLeft": 0.12121212121212122,
+    "pairedClipBootstrap": {
+      "iterations": 10000,
+      "seed": 20260726,
+      "errorRateDifferenceRightMinusLeft95CI": [
+        -0.06652806652806653,
+        -0.02040643375994468
+      ],
+      "aliasAwareProtectedTermRecallDifferenceRightMinusLeft95CI": [
+        0.02702702702702703,
+        0.25925925925925924
+      ]
+    }
+  }
+}
