@@ -18,6 +18,10 @@ struct RealtimeBenchmarkReport: Codable, Sendable {
     let hypothesisChurn: Double
     let finalText: String
     let firstUpdates: [String]
+    var feedChunkSeconds: Double? = nil
+    var initialPartialStrideSeconds: Double? = nil
+    var partialStrideSeconds: Double? = nil
+    var endpointSilenceSeconds: Double? = nil
     var referenceText: String? = nil
     var errorMetric: String? = nil
     var errorRate: Double? = nil

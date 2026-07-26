@@ -621,10 +621,30 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                             stepSeconds: step
                         )
                     case "mimi-whisper":
+                        let partialStride = Double(
+                            argument(after: "--partial-stride", in: arguments) ?? "3"
+                        ) ?? .nan
+                        let initialPartialStride = argument(
+                            after: "--initial-partial-stride",
+                            in: arguments
+                        ).map { Double($0) ?? .nan }
+                        let endpointSilence = Double(
+                            argument(after: "--endpoint-silence", in: arguments)
+                                ?? "0.75"
+                        ) ?? .nan
                         report = try await MimiWhisperMLXLiveEngine().runBoundedBenchmark(
                             recordingAt: audioURL,
-                            language: language
+                            language: language,
+                            initialPartialStrideSeconds: initialPartialStride,
+                            partialStrideSeconds: partialStride,
+                            endpointSilenceSeconds: endpointSilence
                         )
+                    case "mimi-whisper-offline":
+                        report = try await MimiWhisperMLXLiveEngine()
+                            .runOfflineBenchmark(
+                                recordingAt: audioURL,
+                                language: language
+                            )
                     case "qwen":
                         report = try await RealtimeBenchmarkRunner.runQwen(
                             recordingAt: audioURL,

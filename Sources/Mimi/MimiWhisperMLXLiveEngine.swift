@@ -76,7 +76,10 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
     private static let downloadedFiles = [
         "*.safetensors", "*.json", "*.txt", "README.md"
     ]
-    private static let feedChunkSamples = 16_000 / 2
+    // Keep endpoint detection finer than the 750 ms silence threshold. With
+    // 500 ms blocks, an unaligned one-second pause can contain only one fully
+    // silent block and fail to end the utterance.
+    private static let feedChunkSamples = 16_000 / 10
     private static let maximumPendingSamples = 16_000 * 4
 
     private let fileManager: FileManager
@@ -261,9 +264,19 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
 
     func runBoundedBenchmark(
         recordingAt url: URL,
-        language: SpeechLanguage
+        language: SpeechLanguage,
+        initialPartialStrideSeconds: Double? = nil,
+        partialStrideSeconds: Double = MimiWhisperStreamingProfile.product.partialStrideSeconds,
+        endpointSilenceSeconds: Double = MimiWhisperStreamingProfile.product.endpointSilenceSeconds
     ) async throws -> RealtimeBenchmarkReport {
         try ensureRuntimeAvailable()
+        let productProfile = MimiWhisperStreamingProfile.product(for: language)
+        let profile = try MimiWhisperStreamingProfile(
+            initialPartialStrideSeconds: initialPartialStrideSeconds
+                ?? productProfile.initialPartialStrideSeconds,
+            partialStrideSeconds: partialStrideSeconds,
+            endpointSilenceSeconds: endpointSilenceSeconds
+        )
         let directory = try installedModelDirectory()
         let loadStartedAt = ContinuousClock.now
         try await runtime.load(modelDirectory: directory)
@@ -274,11 +287,12 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
         let result = await runtime.runBoundedBenchmark(
             samples: samples,
             language: language,
-            feedChunkSamples: Self.feedChunkSamples
+            feedChunkSamples: Self.feedChunkSamples,
+            profile: profile
         )
         return RealtimeBenchmarkReport(
             engine: "mimi-whisper-mlx-q4",
-            mode: "bounded-6s-partial-3s-stride-30s-final",
+            mode: profile.mode,
             language: language.rawValue,
             audioDurationSeconds: result.audioDurationSeconds,
             wallSeconds: result.wallSeconds,
@@ -295,7 +309,50 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
                 : nil,
             hypothesisChurn: RealtimeBenchmarkReport.hypothesisChurn(result.updates),
             finalText: result.finalText,
-            firstUpdates: Array(result.updates.prefix(8))
+            firstUpdates: Array(result.updates.prefix(8)),
+            feedChunkSeconds: Double(Self.feedChunkSamples) / 16_000,
+            initialPartialStrideSeconds: profile.initialPartialStrideSeconds,
+            partialStrideSeconds: profile.partialStrideSeconds,
+            endpointSilenceSeconds: profile.endpointSilenceSeconds
+        )
+    }
+
+    func runOfflineBenchmark(
+        recordingAt url: URL,
+        language: SpeechLanguage
+    ) async throws -> RealtimeBenchmarkReport {
+        try ensureRuntimeAvailable()
+        let directory = try installedModelDirectory()
+        let loadStartedAt = ContinuousClock.now
+        try await runtime.load(modelDirectory: directory)
+        let modelLoadSeconds = loadStartedAt.duration(to: .now).seconds
+
+        let (_, audio) = try loadAudioArray(from: url, sampleRate: 16_000)
+        let audioDurationSeconds = Double(audio.size) / 16_000
+        let decodeStartedAt = ContinuousClock.now
+        let text = try await runtime.transcribe(
+            recordingAt: url,
+            language: language
+        )
+        let decodeSeconds = decodeStartedAt.duration(to: .now).seconds
+        return RealtimeBenchmarkReport(
+            engine: "mimi-whisper-mlx-q4",
+            mode: "record-then-decode-30s-model-chunks-no-vad",
+            language: language.rawValue,
+            audioDurationSeconds: audioDurationSeconds,
+            wallSeconds: decodeSeconds,
+            modelLoadSeconds: modelLoadSeconds,
+            firstTextAtSeconds: nil,
+            firstFinalAtSeconds: decodeSeconds,
+            updateCount: text.isEmpty ? 0 : 1,
+            meanDecodeSeconds: decodeSeconds,
+            maxDecodeSeconds: decodeSeconds,
+            realTimeFactor: audioDurationSeconds > 0
+                ? decodeSeconds / audioDurationSeconds
+                : nil,
+            hypothesisChurn: 0,
+            finalText: text,
+            firstUpdates: text.isEmpty ? [] : [text]
         )
     }
 
@@ -516,15 +573,112 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
     }
 }
 
+private struct MimiWhisperStreamingProfile: Sendable {
+    static let product = MimiWhisperStreamingProfile(
+        initialPartialStrideSeconds: 3,
+        initialPartialStrideSamples: 48_000,
+        partialStrideSeconds: 3,
+        partialStrideSamples: 48_000,
+        endpointSilenceSeconds: 0.75,
+        endpointSilenceSamples: 12_000
+    )
+    static let englishProduct = MimiWhisperStreamingProfile(
+        initialPartialStrideSeconds: 2,
+        initialPartialStrideSamples: 32_000,
+        partialStrideSeconds: 3,
+        partialStrideSamples: 48_000,
+        endpointSilenceSeconds: 0.75,
+        endpointSilenceSamples: 12_000
+    )
+
+    static func product(for language: SpeechLanguage) -> Self {
+        language == .english ? englishProduct : product
+    }
+
+    let initialPartialStrideSeconds: Double
+    let initialPartialStrideSamples: Int
+    let partialStrideSeconds: Double
+    let partialStrideSamples: Int
+    let endpointSilenceSeconds: Double
+    let endpointSilenceSamples: Int
+
+    init(
+        initialPartialStrideSeconds: Double,
+        partialStrideSeconds: Double,
+        endpointSilenceSeconds: Double
+    ) throws {
+        for seconds in [initialPartialStrideSeconds, partialStrideSeconds] {
+            guard seconds.isFinite, seconds >= 0.5, seconds <= 6 else {
+                throw MimiWhisperMLXError.invalidPartialStride(seconds)
+            }
+        }
+        self.initialPartialStrideSeconds = initialPartialStrideSeconds
+        initialPartialStrideSamples = Int(
+            (initialPartialStrideSeconds * 16_000).rounded()
+        )
+        self.partialStrideSeconds = partialStrideSeconds
+        partialStrideSamples = Int(
+            (partialStrideSeconds * 16_000).rounded()
+        )
+        guard endpointSilenceSeconds.isFinite,
+              endpointSilenceSeconds >= 0.25,
+              endpointSilenceSeconds <= 3 else {
+            throw MimiWhisperMLXError.invalidEndpointSilence(
+                endpointSilenceSeconds
+            )
+        }
+        self.endpointSilenceSeconds = endpointSilenceSeconds
+        endpointSilenceSamples = Int(
+            (endpointSilenceSeconds * 16_000).rounded()
+        )
+    }
+
+    private init(
+        initialPartialStrideSeconds: Double,
+        initialPartialStrideSamples: Int,
+        partialStrideSeconds: Double,
+        partialStrideSamples: Int,
+        endpointSilenceSeconds: Double,
+        endpointSilenceSamples: Int
+    ) {
+        self.initialPartialStrideSeconds = initialPartialStrideSeconds
+        self.initialPartialStrideSamples = initialPartialStrideSamples
+        self.partialStrideSeconds = partialStrideSeconds
+        self.partialStrideSamples = partialStrideSamples
+        self.endpointSilenceSeconds = endpointSilenceSeconds
+        self.endpointSilenceSamples = endpointSilenceSamples
+    }
+
+    var mode: String {
+        let initialStride = formatted(initialPartialStrideSeconds)
+        let stride = formatted(partialStrideSeconds)
+        let endpoint = endpointSilenceSamples
+            == MimiWhisperStreamingProfile.product.endpointSilenceSamples
+            ? ""
+            : "-\(formatted(endpointSilenceSeconds))s-endpoint"
+        if initialPartialStrideSamples != partialStrideSamples {
+            return "bounded-6s-partial-\(initialStride)s-initial-\(stride)s-stride\(endpoint)-30s-final"
+        }
+        return "bounded-6s-partial-\(stride)s-stride\(endpoint)-30s-final"
+    }
+
+    private func formatted(_ seconds: Double) -> String {
+        seconds.rounded() == seconds
+            ? String(Int(seconds))
+            : String(seconds)
+    }
+}
+
 private actor NativeMimiWhisperRuntime {
     private static let sampleRate = 16_000
-    private static let decodeStrideSamples = sampleRate * 3
     private static let maximumWindowSamples = sampleRate * 6
     private static let maximumUtteranceSamples = sampleRate * 30
-    private static let endpointSilenceSamples = sampleRate * 3 / 4
     private static let minimumSpeechSamples = sampleRate
     private static let vadCalibrationSamples = sampleRate
     private static let minimumSpeechRMSThreshold: Float = 0.0003
+    // 0.0102 per 100 ms preserves the previous 0.05 per 500 ms noise-floor
+    // adaptation time constant: 1 - pow(0.95, 0.1 / 0.5).
+    private static let noiseFloorUpdateWeight: Float = 0.0102062
 
     private var model: WhisperModel?
     private var loadedDirectory: URL?
@@ -541,6 +695,7 @@ private actor NativeMimiWhisperRuntime {
     private var noiseFloorRMS: Float = 0.0001
     private var displayText = ""
     private var lastDecodedWindowStart: Int?
+    private var profile = MimiWhisperStreamingProfile.product
 
     func load(modelDirectory: URL) async throws {
         let standardized = modelDirectory.standardizedFileURL
@@ -561,6 +716,7 @@ private actor NativeMimiWhisperRuntime {
 
     func startLive(language: SpeechLanguage) {
         self.language = language
+        profile = .product(for: language)
         resetLive()
     }
 
@@ -570,11 +726,14 @@ private actor NativeMimiWhisperRuntime {
         updateSpeechState(samples)
 
         let reachedEndpoint = speechSamples >= Self.minimumSpeechSamples
-            && trailingSilenceSamples >= Self.endpointSilenceSamples
+            && trailingSilenceSamples >= profile.endpointSilenceSamples
         let reachedMaximumDuration =
             utteranceSamples.count >= Self.maximumUtteranceSamples
+        let requiredStrideSamples = lastDecodedWindowStart == nil
+            ? profile.initialPartialStrideSamples
+            : profile.partialStrideSamples
         let shouldDecodePartial = speechSamples >= Self.minimumSpeechSamples
-            && samplesSinceDecode >= Self.decodeStrideSamples
+            && samplesSinceDecode >= requiredStrideSamples
 
         if reachedMaximumDuration, speechSamples < Self.minimumSpeechSamples {
             resetUtterance()
@@ -617,9 +776,15 @@ private actor NativeMimiWhisperRuntime {
     func runBoundedBenchmark(
         samples: [Float],
         language: SpeechLanguage,
-        feedChunkSamples: Int
+        feedChunkSamples: Int,
+        profile: MimiWhisperStreamingProfile
     ) -> NativeMimiWhisperBenchmarkResult {
         self.language = language
+        self.profile = profile
+        defer {
+            self.profile = .product
+            resetLive()
+        }
         resetLive()
         let startedAt = ContinuousClock.now
         var updates: [String] = []
@@ -632,6 +797,7 @@ private actor NativeMimiWhisperRuntime {
         while start < samples.count {
             let end = min(samples.count, start + feedChunkSamples)
             if let update = appendLive(samples: Array(samples[start..<end])) {
+                decodeDurations.append(update.decodeSeconds)
                 if let finalText = update.finalText {
                     finalizedSegments.append(finalText)
                 }
@@ -641,7 +807,6 @@ private actor NativeMimiWhisperRuntime {
                     language: language
                 ) {
                     updates.append(text)
-                    decodeDurations.append(update.decodeSeconds)
                     if firstTextAt == nil {
                         firstTextAt = Double(end) / Double(Self.sampleRate)
                             + update.decodeSeconds
@@ -758,7 +923,9 @@ private actor NativeMimiWhisperRuntime {
             trailingSilenceSamples = 0
         } else {
             trailingSilenceSamples += samples.count
-            noiseFloorRMS = noiseFloorRMS * 0.95 + rms * 0.05
+            noiseFloorRMS =
+                noiseFloorRMS * (1 - Self.noiseFloorUpdateWeight)
+                + rms * Self.noiseFloorUpdateWeight
         }
     }
 
@@ -807,18 +974,19 @@ private actor NativeMimiWhisperRuntime {
         audio: [Float],
         language: SpeechLanguage
     ) -> String {
+        let parameters = STTGenerateParameters(
+            maxTokens: 448,
+            temperature: 0,
+            topP: 1,
+            topK: 0,
+            verbose: false,
+            language: language.whisperLanguageCode,
+            chunkDuration: 30,
+            minChunkDuration: 0.1
+        )
         let output = model.generate(
             audio: MLXArray(audio),
-            generationParameters: .init(
-                maxTokens: 448,
-                temperature: 0,
-                topP: 1,
-                topK: 0,
-                verbose: false,
-                language: language.whisperLanguageCode,
-                chunkDuration: 30,
-                minChunkDuration: 0.1
-            )
+            generationParameters: parameters
         )
         return output.text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -1032,6 +1200,8 @@ private enum MimiWhisperMLXError: LocalizedError {
     case runtimeUnavailable(String)
     case noCompatibleLiveAudioFormat
     case bundledModelCannotBeRemoved
+    case invalidPartialStride(Double)
+    case invalidEndpointSilence(Double)
 
     var errorDescription: String? {
         switch self {
@@ -1053,6 +1223,10 @@ private enum MimiWhisperMLXError: LocalizedError {
             "Mimi Speech could not convert this audio source to its local 16 kHz format."
         case .bundledModelCannotBeRemoved:
             "This development build bundles Mimi Speech, so it is removed only when the app is replaced."
+        case let .invalidPartialStride(seconds):
+            "Mimi Speech partial stride must be between 0.5 and 6 seconds, got \(seconds)."
+        case let .invalidEndpointSilence(seconds):
+            "Mimi Speech endpoint silence must be between 0.25 and 3 seconds, got \(seconds)."
         }
     }
 }
