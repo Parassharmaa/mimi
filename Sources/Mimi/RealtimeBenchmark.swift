@@ -18,10 +18,13 @@ struct RealtimeBenchmarkReport: Codable, Sendable {
     let hypothesisChurn: Double
     let finalText: String
     let firstUpdates: [String]
+    var finalizedSegments: [RealtimeBenchmarkSegment]? = nil
     var feedChunkSeconds: Double? = nil
     var initialPartialStrideSeconds: Double? = nil
     var partialStrideSeconds: Double? = nil
     var endpointSilenceSeconds: Double? = nil
+    var maximumUtteranceSeconds: Double? = nil
+    var forcedBoundaryLookbackSeconds: Double? = nil
     var pacedAudio: Bool? = nil
     var inputBufferSeconds: Double? = nil
     var inputDeliverySeconds: Double? = nil
@@ -107,6 +110,13 @@ struct RealtimeBenchmarkReport: Codable, Sendable {
         }
         return previous[right.count]
     }
+}
+
+struct RealtimeBenchmarkSegment: Codable, Sendable {
+    let reason: String
+    let audioEndSeconds: Double
+    let forcedBoundaryLookbackSeconds: Double?
+    let text: String
 }
 
 extension Duration {

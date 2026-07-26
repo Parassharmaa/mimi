@@ -14,6 +14,12 @@ import time
 import unicodedata
 from pathlib import Path
 
+from evidence_identity import (
+    ADAPTIVE_SEGMENTATION_IMPLEMENTATION_FILES,
+    adaptive_segmentation_implementation_sha256,
+    executable_adaptive_segmentation_identity,
+)
+
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
@@ -91,6 +97,16 @@ def main() -> None:
     parser.add_argument("--initial-partial-stride", type=float)
     parser.add_argument("--partial-stride", type=float, default=3.0)
     parser.add_argument("--endpoint-silence", type=float, default=0.75)
+    parser.add_argument("--maximum-utterance", type=float, default=30.0)
+    parser.add_argument(
+        "--forced-boundary-lookback",
+        type=float,
+        default=0.0,
+        help=(
+            "benchmark experiment: finalize a forced maximum-length segment "
+            "at the lowest-energy boundary in this lookback window"
+        ),
+    )
     parser.add_argument(
         "--paced-queue",
         action="store_true",
@@ -105,10 +121,11 @@ def main() -> None:
             "be combined with --paced-queue"
         )
     if args.paced_queue and (
-        args.partial_stride != 3.0 or args.endpoint_silence != 0.75
+        args.partial_stride != 3.0
+        or args.endpoint_silence != 0.75
     ):
         raise SystemExit(
-            "--paced-queue always uses Mimi's compiled product profile"
+            "--paced-queue uses Mimi's compiled partial and endpoint profile"
         )
     if not args.app.is_file():
         raise SystemExit(f"Mimi executable does not exist: {args.app}")
@@ -148,6 +165,15 @@ def main() -> None:
         raise SystemExit(f"Mimi Speech weights do not exist: {model_weights}")
     executable_sha256 = sha256_file(args.app)
     model_weights_sha256 = sha256_file(model_weights)
+    implementation_sha256 = adaptive_segmentation_implementation_sha256()
+    executable_implementation_sha256 = (
+        executable_adaptive_segmentation_identity(args.app)
+    )
+    if executable_implementation_sha256 != implementation_sha256:
+        raise SystemExit(
+            "Mimi executable is stale: its embedded adaptive implementation "
+            "identity does not match this checkout"
+        )
     environment = os.environ.copy()
     environment["MIMI_WHISPER_MLX_MODEL_DIR"] = str(args.model.resolve())
 
@@ -183,6 +209,22 @@ def main() -> None:
                     str(args.partial_stride),
                     "--endpoint-silence",
                     str(args.endpoint_silence),
+                    "--maximum-utterance",
+                    str(args.maximum_utterance),
+                    "--forced-boundary-lookback",
+                    str(args.forced_boundary_lookback),
+                ]
+            )
+        elif (
+            args.maximum_utterance != 30.0
+            or args.forced_boundary_lookback != 0.0
+        ):
+            command.extend(
+                [
+                    "--maximum-utterance",
+                    str(args.maximum_utterance),
+                    "--forced-boundary-lookback",
+                    str(args.forced_boundary_lookback),
                 ]
             )
         if not args.paced_queue and args.initial_partial_stride is not None:
@@ -266,6 +308,12 @@ def main() -> None:
             ],
             "partialStrideSeconds": raw["partialStrideSeconds"],
             "endpointSilenceSeconds": raw["endpointSilenceSeconds"],
+            "maximumUtteranceSeconds": raw.get(
+                "maximumUtteranceSeconds"
+            ),
+            "forcedBoundaryLookbackSeconds": raw.get(
+                "forcedBoundaryLookbackSeconds"
+            ),
             "reference": row["reference"],
             "hypothesis": hypothesis,
             "audioDurationSeconds": raw["audioDurationSeconds"],
@@ -312,6 +360,7 @@ def main() -> None:
             "hypothesisChurn": raw["hypothesisChurn"],
             "updateCount": raw["updateCount"],
             "firstUpdates": raw["firstUpdates"],
+            "finalizedSegments": raw.get("finalizedSegments"),
             "firstUpdatePrefixEditDistance": first_update_edits,
             "firstUpdateUnits": len(first_update_units),
             "firstUpdateReferencePrefixUnits": reference_prefix_units,
@@ -380,6 +429,13 @@ def main() -> None:
         ),
         "mode": results[0]["mode"],
         "executableSha256": executable_sha256,
+        "implementationSha256": implementation_sha256,
+        "executableImplementationSha256": (
+            executable_implementation_sha256
+        ),
+        "implementationFiles": list(
+            ADAPTIVE_SEGMENTATION_IMPLEMENTATION_FILES
+        ),
         "feedChunkSeconds": results[0]["feedChunkSeconds"],
         "suiteSha256": suite_sha256,
         "selectedCaseIDs": [row["caseID"] for row in suite],
@@ -390,6 +446,12 @@ def main() -> None:
             ],
             "partialStrideSeconds": results[0]["partialStrideSeconds"],
             "endpointSilenceSeconds": results[0]["endpointSilenceSeconds"],
+            "maximumUtteranceSeconds": results[0][
+                "maximumUtteranceSeconds"
+            ],
+            "forcedBoundaryLookbackSeconds": results[0][
+                "forcedBoundaryLookbackSeconds"
+            ],
         },
         "language": args.language,
         "metric": args.metric,

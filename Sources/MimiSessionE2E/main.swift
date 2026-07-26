@@ -24,6 +24,7 @@ struct MimiSessionE2E {
         await appleStartBoundaryRejectsFreshMissingAssetDespiteStaleReadyCache()
         await appleStartBoundaryAbandonsSupersededSelectionAfterAssetLookup()
         liveFlowControlStaysBoundedAndFinalizesAtSafeBoundaries()
+        lowEnergyBoundarySelectionIsBoundedAndDeterministic()
         transcriptAndTranslationRoutingEdgeCases()
         print("Mimi session E2E passed: model setup states, capture lifecycle, EN/JA routing, cleanup, persistence, and realtime queue edges.")
     }
@@ -1153,6 +1154,162 @@ struct MimiSessionE2E {
         expect(policy.append(Array(repeating: 0.1, count: 300)) == .maximumDuration, "Continuous speech finalizes at the hard live-window cap")
         policy.reset()
         expect(policy.append(Array(repeating: 0.1, count: 1)) == .none, "A reset starts a fresh live window after finalization")
+    }
+
+    private static func lowEnergyBoundarySelectionIsBoundedAndDeterministic() {
+        var samples = Array(repeating: Float(0.5), count: 2_000)
+        for index in 1_370..<1_450 {
+            samples[index] = index.isMultiple(of: 2) ? 0.001 : -0.001
+        }
+        for index in 1_580..<1_660 {
+            samples[index] = index.isMultiple(of: 2) ? 0.00104 : -0.00104
+        }
+
+        let selected = LowEnergyAudioBoundarySelector.sampleIndex(
+            in: samples,
+            lookbackSamples: 800,
+            minimumSegmentSamples: 1_000,
+            minimumCarrySamples: 200,
+            energyWindowSamples: 80,
+            searchStrideSamples: 20,
+            zeroCrossingRadiusSamples: 10
+        )
+        let repeated = LowEnergyAudioBoundarySelector.sampleIndex(
+            in: samples,
+            lookbackSamples: 800,
+            minimumSegmentSamples: 1_000,
+            minimumCarrySamples: 200,
+            energyWindowSamples: 80,
+            searchStrideSamples: 20,
+            zeroCrossingRadiusSamples: 10
+        )
+        expect(
+            selected == repeated,
+            "Adaptive audio boundary selection is deterministic"
+        )
+        expect(
+            (1_570..<1_670).contains(selected),
+            "Adaptive audio boundary prefers the later near-minimum valley"
+        )
+        expect(
+            samples[selected - 1] * samples[selected] <= 0,
+            "Adaptive audio boundary lands on a nearby zero crossing"
+        )
+        expect(
+            selected >= 1_000 && selected <= 1_800,
+            "Adaptive audio boundary preserves segment and carry bounds"
+        )
+
+        let fallback = LowEnergyAudioBoundarySelector.sampleIndex(
+            in: Array(repeating: Float(0.1), count: 100),
+            lookbackSamples: 20,
+            minimumSegmentSamples: 90,
+            minimumCarrySamples: 20,
+            energyWindowSamples: 40,
+            searchStrideSamples: 10,
+            zeroCrossingRadiusSamples: 5
+        )
+        expect(
+            fallback == 100,
+            "Adaptive audio boundary falls back to the hard end when no search window fits"
+        )
+
+        let invalidLookback = LowEnergyAudioBoundarySelector.sampleIndex(
+            in: samples,
+            lookbackSamples: .min,
+            minimumSegmentSamples: 1_000,
+            minimumCarrySamples: 200,
+            energyWindowSamples: 80,
+            searchStrideSamples: 20,
+            zeroCrossingRadiusSamples: 10
+        )
+        expect(
+            invalidLookback == samples.count,
+            "Adaptive audio boundary rejects an invalid extreme lookback without trapping"
+        )
+        let invalidCarry = LowEnergyAudioBoundarySelector.sampleIndex(
+            in: samples,
+            lookbackSamples: .max,
+            minimumSegmentSamples: 1_000,
+            minimumCarrySamples: .max,
+            energyWindowSamples: 80,
+            searchStrideSamples: 20,
+            zeroCrossingRadiusSamples: 10
+        )
+        expect(
+            invalidCarry == samples.count,
+            "Adaptive audio boundary rejects an impossible extreme carry without trapping"
+        )
+        let extremeRadius = LowEnergyAudioBoundarySelector.sampleIndex(
+            in: samples,
+            lookbackSamples: 800,
+            minimumSegmentSamples: 1_000,
+            minimumCarrySamples: 200,
+            energyWindowSamples: 80,
+            searchStrideSamples: .max,
+            zeroCrossingRadiusSamples: .max
+        )
+        expect(
+            (1_000...1_800).contains(extremeRadius),
+            "Adaptive audio boundary clamps extreme stride and radius arithmetic"
+        )
+
+        var stream = (0..<7_000).map { index -> Float in
+            let valleyOffset = index % 1_700
+            let amplitude: Float = (1_350..<1_430).contains(valleyOffset)
+                ? 0.000_8
+                : 0.2 + Float(index % 101) / 10_000
+            return index.isMultiple(of: 2) ? amplitude : -amplitude
+        }
+        var pending: [Float] = []
+        var reconstructed: [Float] = []
+        var absoluteEnds: [Int] = []
+        var receivedSampleCount = 0
+        while !stream.isEmpty {
+            let count = min(500, stream.count)
+            let chunk = Array(stream.prefix(count))
+            stream.removeFirst(count)
+            pending.append(contentsOf: chunk)
+            receivedSampleCount += count
+            if pending.count >= 2_000 {
+                let partition = LowEnergyAudioBoundarySelector.partition(
+                    pending,
+                    lookbackSamples: 800,
+                    minimumSegmentSamples: 1_000,
+                    minimumCarrySamples: 200,
+                    energyWindowSamples: 80,
+                    searchStrideSamples: 20,
+                    zeroCrossingRadiusSamples: 10
+                )
+                reconstructed.append(
+                    contentsOf: partition.finalizedSamples
+                )
+                pending = partition.carriedSamples
+                absoluteEnds.append(
+                    receivedSampleCount - pending.count
+                )
+            }
+        }
+        reconstructed.append(contentsOf: pending)
+        let original = (0..<7_000).map { index -> Float in
+            let valleyOffset = index % 1_700
+            let amplitude: Float = (1_350..<1_430).contains(valleyOffset)
+                ? 0.000_8
+                : 0.2 + Float(index % 101) / 10_000
+            return index.isMultiple(of: 2) ? amplitude : -amplitude
+        }
+        expect(
+            reconstructed == original,
+            "Repeated adaptive partitions preserve every sample exactly once"
+        )
+        expect(
+            absoluteEnds.count >= 2
+                && zip(
+                    absoluteEnds,
+                    absoluteEnds.dropFirst()
+                ).allSatisfy { $0.0 < $0.1 },
+            "Repeated adaptive partitions publish strictly increasing absolute ends"
+        )
     }
 
     @MainActor

@@ -12,6 +12,16 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains(
+            "--print-adaptive-segmentation-build-identity"
+        ) {
+            print(
+                "mimi-adaptive-segmentation-build-identity:"
+                    + MimiAdaptiveSegmentationBuildIdentity.sha256
+            )
+            fflush(stdout)
+            Darwin.exit(0)
+        }
         if let outputPath = argument(after: "--verify-translation-runtime-cache", in: arguments) {
             let report = verifyExperimentalTranslationRuntimeCacheContract()
             do {
@@ -632,18 +642,48 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                             argument(after: "--endpoint-silence", in: arguments)
                                 ?? "0.75"
                         ) ?? .nan
+                        let forcedBoundaryLookback = Double(
+                            argument(
+                                after: "--forced-boundary-lookback",
+                                in: arguments
+                            ) ?? "0"
+                        ) ?? .nan
+                        let maximumUtterance = Double(
+                            argument(
+                                after: "--maximum-utterance",
+                                in: arguments
+                            ) ?? "30"
+                        ) ?? .nan
                         report = try await MimiWhisperMLXLiveEngine().runBoundedBenchmark(
                             recordingAt: audioURL,
                             language: language,
                             initialPartialStrideSeconds: initialPartialStride,
                             partialStrideSeconds: partialStride,
-                            endpointSilenceSeconds: endpointSilence
+                            endpointSilenceSeconds: endpointSilence,
+                            maximumUtteranceSeconds: maximumUtterance,
+                            forcedBoundaryLookbackSeconds: forcedBoundaryLookback
                         )
                     case "mimi-whisper-paced-queue":
+                        let maximumUtterance = Double(
+                            argument(
+                                after: "--maximum-utterance",
+                                in: arguments
+                            ) ?? "30"
+                        ) ?? .nan
+                        let forcedBoundaryLookback = Double(
+                            argument(
+                                after: "--forced-boundary-lookback",
+                                in: arguments
+                            ) ?? "0"
+                        ) ?? .nan
                         report = try await MimiWhisperMLXLiveEngine()
                             .runPacedQueueBenchmark(
                                 recordingAt: audioURL,
-                                language: language
+                                language: language,
+                                maximumUtteranceSeconds: maximumUtterance,
+                                forcedBoundaryLookbackSeconds: (
+                                    forcedBoundaryLookback
+                                )
                             )
                     case "mimi-whisper-offline":
                         report = try await MimiWhisperMLXLiveEngine()
