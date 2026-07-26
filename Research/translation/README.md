@@ -28,6 +28,16 @@ dense encoder-aware-distillation student as the next capacity experiment.
 Small MoE remains a later, capacity-matched ablation rather than the assumed
 next architecture.
 
+The parallel architecture-only capacity scope is documented in
+[`strategy-single-bidirectional-capacity-v18-2026-07-26.md`](strategy-single-bidirectional-capacity-v18-2026-07-26.md).
+Exact parameter, MLX q4 storage, and representative cached-greedy compute
+analysis selects a fully shared 92.04M-parameter 6e/6d Marian with both FFNs
+widened to 4,608 as the first single-physical-model capacity control. Its
+projected one-model pack is 54.46 MB and its approximate compute ratio is
+1.68–1.71× the incumbent shape. This is a reproducible architecture estimate,
+not a converted bundle or training authorization. The dense control precedes
+any capacity-matched routed/MoE ablation.
+
 The reviewer-free promotion route is now preregistered separately from the
 legacy human contract. `benchmark/automated-claim-v1.manifest.json` fixes 400
 new sealed product-domain cases per direction, strong absolute chrF++/COMET
