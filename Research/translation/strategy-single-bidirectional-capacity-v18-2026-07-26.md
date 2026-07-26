@@ -104,6 +104,25 @@ The temporary checkpoint was deleted after hashing because it is reproducible
 and does not authorize training or distribution. The tracked evidence is
 `shared-bidirectional-v18-wide-parent-parity-smoke-2026-07-26.json`.
 
+The release-eligible data pass then removes every source row explicitly marked
+training-only or promotion-ineligible and re-screens both sides against ten
+historical/protected suites. It retains 12,066 balanced licensed-human training
+rows and 2,370 unrepeated validation rows. A real one-update MPS smoke confirms
+that the widened student can jointly optimize human-reference cross-entropy,
+direction-specific token KL, and projection-free encoder-state alignment
+against the two stronger directional teachers. Both temporary 368 MB
+checkpoints were deleted after hashing. The compact evidence is in
+`shared-bidirectional-v18-dataset-result-2026-07-26.json` and
+`shared-bidirectional-v18-training-path-smoke-2026-07-26.json`.
+
+The immutable phase-one contract now authorizes exactly one 1,000-update dense
+capacity control, with checkpoints at 250/500/750/1,000. It does not admit V17
+generated candidates, teacher reasoning, or source-only teacher sequences as
+positive targets. Full-precision, q4, safety, long-document, learned-metric,
+latency, RSS, Swift-parity, held-out, and licensing gates remain independent;
+phase-one training alone cannot authorize app work, promotion, or upload. See
+`shared-bidirectional-v18-phase1-contract-2026-07-26.json`.
+
 ## Why not MoE first
 
 This control spends the same total parameter budget densely and activates all

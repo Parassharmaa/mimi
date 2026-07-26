@@ -40,7 +40,13 @@ any capacity-matched routed/MoE ablation. The authenticated EN→JA parent has
 also passed a real MPS FFN-widening smoke with exact six-case greedy-token
 parity and maximum finite-logit delta `0.0`; the reproducible temporary
 full-precision checkpoint was deleted after hashing, and training remains
-unauthorized.
+unauthorized. A subsequent release-eligible data pass retained 12,066 balanced
+licensed-human training rows and 2,370 validation rows after excluding 6,400
+policy-blocked rows and two protected overlaps. The real widened two-teacher
+MPS training path passed one update with finite cross-entropy, token-KL, and
+projection-free encoder-alignment losses. The frozen V18 contract now
+authorizes one 1,000-update dense capacity control only; app, q4, promotion,
+release, and upload remain separately gated.
 
 The reviewer-free promotion route is now preregistered separately from the
 legacy human contract. `benchmark/automated-claim-v1.manifest.json` fixes 400

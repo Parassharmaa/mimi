@@ -24,6 +24,22 @@ from transformers import MarianMTModel, MarianTokenizer, get_linear_schedule_wit
 DIRECTIONS = {"en-ja": 0, "ja-en": 1}
 SOURCE_PREFIXES = {"en-ja": "<2ja> ", "ja-en": "<2en> "}
 TOKENIZER_ASSETS = ("source.spm", "target.spm", "vocab.json")
+STUDENT_TEACHER_COMPATIBILITY_KEYS = (
+    "activation_function",
+    "d_model",
+    "decoder_attention_heads",
+    "decoder_layers",
+    "encoder_attention_heads",
+    "encoder_layers",
+    "max_position_embeddings",
+    "model_type",
+    "normalize_before",
+    "normalize_embedding",
+    "scale_embedding",
+    "share_encoder_decoder_embeddings",
+    "static_position_embeddings",
+    "vocab_size",
+)
 
 
 def sha256(path: Path) -> str:
@@ -58,21 +74,74 @@ def load_rows(path: Path) -> list[dict]:
     return rows
 
 
-def validate_model_compatibility(paths: list[Path]) -> None:
+def load_model_configuration(path: Path) -> dict:
+    return json.loads((path / "config.json").read_text(encoding="utf-8"))
+
+
+def validate_model_compatibility(
+    en_ja_teacher: Path,
+    ja_en_teacher: Path,
+    student: Path,
+) -> dict:
+    paths = [en_ja_teacher, ja_en_teacher, student]
     for path in paths:
         if not (path / "model.safetensors").is_file():
             raise SystemExit(f"model checkpoint is incomplete: {path}")
-    reference_config = json.loads((paths[0] / "config.json").read_text(encoding="utf-8"))
-    reference_config.pop("_name_or_path", None)
-    for path in paths[1:]:
-        config = json.loads((path / "config.json").read_text(encoding="utf-8"))
-        config.pop("_name_or_path", None)
-        if config != reference_config:
-            raise SystemExit(f"model architecture differs: {path}")
+
+    teacher_configurations = [
+        load_model_configuration(en_ja_teacher),
+        load_model_configuration(ja_en_teacher),
+    ]
+    normalized_teachers = []
+    for configuration in teacher_configurations:
+        normalized = dict(configuration)
+        normalized.pop("_name_or_path", None)
+        normalized_teachers.append(normalized)
+    if normalized_teachers[0] != normalized_teachers[1]:
+        raise SystemExit("directional teacher architectures differ")
+
+    teacher_configuration = teacher_configurations[0]
+    student_configuration = load_model_configuration(student)
+    mismatches = {
+        key: {
+            "teacher": teacher_configuration.get(key),
+            "student": student_configuration.get(key),
+        }
+        for key in STUDENT_TEACHER_COMPATIBILITY_KEYS
+        if teacher_configuration.get(key) != student_configuration.get(key)
+    }
+    if mismatches:
+        raise SystemExit(
+            "student/teacher architecture is incompatible: "
+            + json.dumps(mismatches, sort_keys=True)
+        )
+    dimensions = {}
+    for key in ("encoder_ffn_dim", "decoder_ffn_dim"):
+        teacher_dimension = int(teacher_configuration.get(key, -1))
+        student_dimension = int(student_configuration.get(key, -1))
+        if teacher_dimension <= 0 or student_dimension < teacher_dimension:
+            raise SystemExit(
+                f"student {key} must be at least the teacher width "
+                f"{teacher_dimension}: {student_dimension}"
+            )
+        dimensions[key] = {
+            "teacher": teacher_dimension,
+            "student": student_dimension,
+        }
     for name in TOKENIZER_ASSETS:
         digests = {sha256(path / name) for path in paths}
         if len(digests) != 1:
             raise SystemExit(f"model tokenizer asset differs: {name}")
+    return {
+        "shared_architecture": {
+            key: teacher_configuration.get(key)
+            for key in STUDENT_TEACHER_COMPATIBILITY_KEYS
+        },
+        "ffn_dimensions": dimensions,
+        "tokenizer_assets": {
+            name: sha256(en_ja_teacher / name) for name in TOKENIZER_ASSETS
+        },
+    }
 
 
 class Rows(Dataset):
@@ -146,15 +215,33 @@ def teacher_student_kl(
     return (divergences * token_mask).sum(), token_mask.sum()
 
 
-def directional_teacher_kl(
+def masked_encoder_mse(
+    student_states: torch.Tensor,
+    teacher_states: torch.Tensor,
+    attention_mask: torch.Tensor,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    if student_states.shape != teacher_states.shape:
+        raise ValueError(
+            f"student/teacher encoder states differ: "
+            f"{tuple(student_states.shape)} != {tuple(teacher_states.shape)}"
+        )
+    token_mask = attention_mask.to(dtype=student_states.dtype).unsqueeze(-1)
+    squared = (student_states.float() - teacher_states.float()).square()
+    return (squared * token_mask).sum(), token_mask.sum() * student_states.shape[-1]
+
+
+def directional_teacher_losses(
     student_logits: torch.Tensor,
     teacher_batch: dict[str, torch.Tensor],
     direction_ids: torch.Tensor,
     teachers: dict[int, MarianMTModel],
     temperature: float,
-) -> torch.Tensor:
-    total = student_logits.new_zeros((), dtype=torch.float32)
-    tokens = student_logits.new_zeros((), dtype=torch.long)
+    student_encoder_states: torch.Tensor | None = None,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    kl_total = student_logits.new_zeros((), dtype=torch.float32)
+    kl_tokens = student_logits.new_zeros((), dtype=torch.long)
+    encoder_total = student_logits.new_zeros((), dtype=torch.float32)
+    encoder_values = student_logits.new_zeros((), dtype=torch.long)
     for direction_id, teacher in teachers.items():
         indices = torch.nonzero(direction_ids == direction_id, as_tuple=False).flatten()
         if not len(indices):
@@ -164,16 +251,27 @@ def directional_teacher_kl(
             for key, value in teacher_batch.items()
         }
         with torch.inference_mode():
-            teacher_logits = teacher(**subset).logits
+            teacher_outputs = teacher(**subset, return_dict=True)
         subtotal, count = teacher_student_kl(
             student_logits.index_select(0, indices),
-            teacher_logits,
+            teacher_outputs.logits,
             subset["labels"],
             temperature,
         )
-        total = total + subtotal
-        tokens = tokens + count
-    return total / tokens.clamp_min(1)
+        kl_total = kl_total + subtotal
+        kl_tokens = kl_tokens + count
+        if student_encoder_states is not None:
+            encoder_subtotal, value_count = masked_encoder_mse(
+                student_encoder_states.index_select(0, indices),
+                teacher_outputs.encoder_last_hidden_state,
+                subset["attention_mask"],
+            )
+            encoder_total = encoder_total + encoder_subtotal
+            encoder_values = encoder_values + value_count
+    return (
+        kl_total / kl_tokens.clamp_min(1),
+        encoder_total / encoder_values.clamp_min(1),
+    )
 
 
 def validation_subset(rows: list[dict], limit_per_direction: int, seed: int) -> list[dict]:
@@ -273,6 +371,7 @@ def main() -> None:
     parser.add_argument("--max-target-tokens", type=int, default=192)
     parser.add_argument("--teacher-kl-weight", type=float, default=1.0)
     parser.add_argument("--teacher-temperature", type=float, default=1.0)
+    parser.add_argument("--encoder-alignment-weight", type=float, default=0.0)
     parser.add_argument("--teacher-float16", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--gradient-checkpointing", action="store_true")
     args = parser.parse_args()
@@ -287,8 +386,14 @@ def main() -> None:
         args.teacher_temperature,
     ) <= 0:
         raise SystemExit("batch, steps, intervals, and temperature must be positive")
-    if args.teacher_kl_weight < 0 or args.validation_limit_per_direction < 0:
-        raise SystemExit("KL weight and validation limit must be non-negative")
+    if (
+        args.teacher_kl_weight < 0
+        or args.encoder_alignment_weight < 0
+        or args.validation_limit_per_direction < 0
+    ):
+        raise SystemExit(
+            "KL, encoder-alignment weight, and validation limit must be non-negative"
+        )
     if args.device == "mps" and not torch.backends.mps.is_available():
         raise SystemExit("MPS is unavailable")
     if args.device == "cuda" and not torch.cuda.is_available():
@@ -298,8 +403,11 @@ def main() -> None:
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     device = torch.device(args.device)
-    model_paths = [args.en_ja_teacher, args.ja_en_teacher, args.initial_checkpoint]
-    validate_model_compatibility(model_paths)
+    compatibility = validate_model_compatibility(
+        args.en_ja_teacher,
+        args.ja_en_teacher,
+        args.initial_checkpoint,
+    )
     tokenizer = MarianTokenizer.from_pretrained(args.en_ja_teacher)
 
     train_path = args.dataset_directory / "train.jsonl"
@@ -413,12 +521,20 @@ def main() -> None:
             "max_target_tokens": args.max_target_tokens,
             "teacher_kl_weight": args.teacher_kl_weight,
             "teacher_temperature": args.teacher_temperature,
+            "encoder_alignment_weight": args.encoder_alignment_weight,
             "teacher_float16": args.teacher_float16,
             "gradient_checkpointing": args.gradient_checkpointing,
         },
         "selection": (
             "maximum unweighted macro-average direction chrF++ on deterministic licensed "
             "development subsets; tie-break minimum aggregate development loss"
+        ),
+        "student_teacher_compatibility": compatibility,
+        "encoder_alignment": (
+            "projection-free token-state MSE on a separate unprefixed student encoder "
+            "pass with the exact teacher input IDs and attention mask"
+            if args.encoder_alignment_weight
+            else "disabled"
         ),
         "private_chain_of_thought_stored": False,
     }
@@ -455,14 +571,26 @@ def main() -> None:
             }
             outputs = student(**batch)
             ce_loss = outputs.loss
-            kl_loss = directional_teacher_kl(
+            student_encoder_states = None
+            if args.encoder_alignment_weight:
+                student_encoder_states = student.model.encoder(
+                    input_ids=teacher_batch["input_ids"],
+                    attention_mask=teacher_batch["attention_mask"],
+                    return_dict=True,
+                ).last_hidden_state
+            kl_loss, encoder_alignment_loss = directional_teacher_losses(
                 outputs.logits,
                 teacher_batch,
                 direction_ids,
                 teachers,
                 args.teacher_temperature,
+                student_encoder_states,
             )
-            combined = ce_loss + args.teacher_kl_weight * kl_loss
+            combined = (
+                ce_loss
+                + args.teacher_kl_weight * kl_loss
+                + args.encoder_alignment_weight * encoder_alignment_loss
+            )
             (combined / args.gradient_accumulation).backward()
             micro_step += 1
             if micro_step % args.gradient_accumulation:
@@ -487,6 +615,9 @@ def main() -> None:
                     "training_objective": {
                         "cross_entropy": float(ce_loss.detach().cpu()),
                         "teacher_kl": float(kl_loss.detach().cpu()),
+                        "encoder_alignment": float(
+                            encoder_alignment_loss.detach().cpu()
+                        ),
                     },
                 }
                 history.append(record)
