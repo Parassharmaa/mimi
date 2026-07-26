@@ -214,6 +214,53 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             }
             return
         }
+        if let suitePath = argument(after: "--benchmark-translation-mlx-cascade", in: arguments),
+           let modelRoot = argument(after: "--model-root", in: arguments),
+           let outputPath = argument(after: "--output", in: arguments) {
+            Task { @MainActor in
+                let status: Int32
+                do {
+                    let warmRuns: Int
+                    if let value = argument(
+                        after: "--translation-mlx-warm-runs",
+                        in: arguments
+                    ) {
+                        guard let parsed = Int(value), parsed >= 0 else {
+                            throw TranslationCascadeBenchmarkError.invalidWarmRuns(value)
+                        }
+                        warmRuns = parsed
+                    } else {
+                        warmRuns = 1
+                    }
+                    let report = try await benchmarkExperimentalMLXTranslationCascade(
+                        modelRoot: URL(filePath: modelRoot, directoryHint: .isDirectory),
+                        suiteURL: URL(filePath: suitePath),
+                        warmRuns: warmRuns
+                    )
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [
+                        .prettyPrinted,
+                        .sortedKeys,
+                        .withoutEscapingSlashes,
+                    ]
+                    encoder.dateEncodingStrategy = .iso8601
+                    try encoder.encode(report).write(
+                        to: URL(filePath: outputPath),
+                        options: .atomic
+                    )
+                    print(
+                        "Mimi guarded translation cascade benchmark \(report.status): \(outputPath)"
+                    )
+                    status = report.status == "passed" ? 0 : 1
+                } catch {
+                    print("Mimi guarded translation cascade benchmark failed: \(error.localizedDescription)")
+                    status = 1
+                }
+                fflush(stdout)
+                Darwin.exit(status)
+            }
+            return
+        }
         if let modelRoot = argument(after: "--smoke-translation-mlx", in: arguments),
            let text = argument(after: "--text", in: arguments) {
             let direction = argument(after: "--direction", in: arguments) == "ja-en"
