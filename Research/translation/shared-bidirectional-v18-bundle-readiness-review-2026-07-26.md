@@ -7,10 +7,17 @@ release authorization**
 
 ## Verdict
 
-The V18 shared Marian candidate cannot be bundled or loaded by the current
-native runtime. Mimi's shipped two-model q4 pack remains the production
-translator and must stay byte-pinned until a trained full-precision checkpoint,
-its exact q4 conversion, and the complete promotion surface pass.
+The completed full-precision evaluation rejected all four V18 checkpoints
+before q4 conversion. The best checkpoint reached only 19.8471 JA→EN selector
+chrF++ against the frozen 50.0 floor, and every checkpoint introduced
+held-out critical-meaning or generation regressions. The authenticated compact
+result is recorded in
+`shared-bidirectional-v18-internal-evaluation-result-2026-07-26.json`.
+
+Independently, the V18 shared Marian candidate cannot be bundled or loaded by
+the current native runtime. Mimi's shipped two-model q4 pack remains the
+production translator and stays byte-pinned. V18 is retired; no q4 conversion,
+runtime implementation, app change, or public upload is authorized.
 
 An independent read-only review confirmed that the current shipped pack,
 license verifier, native pack validation, cache/fallback CLI contracts, pair
@@ -148,4 +155,3 @@ The implementation remains gated in this order:
 8. complete structured data/model attribution and distribution review;
 9. freeze a hash-bound release contract; and only then
 10. replace Mimi's bundled resources in a separate atomic change.
-

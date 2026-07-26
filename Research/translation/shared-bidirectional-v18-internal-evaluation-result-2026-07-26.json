@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "experiment": "shared-bidirectional-v18-full-precision-internal-eval",
+  "status": "mechanical-gate-rejected",
+  "source_result": {
+    "path": "Research/translation/work/shared-bidirectional-v18-internal-evaluation/result.json",
+    "bytes": 1133225,
+    "sha256": "26f225a1822a00d5b25e16a787f815088436eefa741637f3827a156b4d7a9e29"
+  },
+  "evaluation_surface": {
+    "device": "mps",
+    "checkpoint_steps": [
+      250,
+      500,
+      750,
+      1000
+    ],
+    "required_suites": [
+      "canary",
+      "development-accuracy-v1",
+      "legal-safety-validation-v1",
+      "legal-safety-test-v1"
+    ],
+    "selector_cases": 512,
+    "regression_cases": 1812
+  },
+  "candidate_summary": [
+    {
+      "step": 250,
+      "checkpoint_sha256": "fdf06e38b3d417335c2f2d024b597d703259fe3d8df01542a6aa7189a13dbe8a",
+      "selector_chrf_pp": {
+        "en_ja": 34.944392569466025,
+        "ja_en": 13.929796576084888,
+        "macro_direction": 24.437094572775457
+      },
+      "mechanical_gates": {
+        "passed": 12,
+        "failed": 35
+      },
+      "eligible_for_q4": false
+    },
+    {
+      "step": 500,
+      "checkpoint_sha256": "ab67e13e2fe2250855051bf55ec7b34e788378e1a62926550bfe2d9dcf1b72d6",
+      "selector_chrf_pp": {
+        "en_ja": 35.90294054200654,
+        "ja_en": 16.85044510701346,
+        "macro_direction": 26.376692824510002
+      },
+      "mechanical_gates": {
+        "passed": 13,
+        "failed": 34
+      },
+      "eligible_for_q4": false
+    },
+    {
+      "step": 750,
+      "checkpoint_sha256": "84698eec4b83591d35da2c745d11a94eef9e44aaacf1f5c2d07c1c5e98a1d61a",
+      "selector_chrf_pp": {
+        "en_ja": 36.186333530758986,
+        "ja_en": 19.070915542105137,
+        "macro_direction": 27.628624536432064
+      },
+      "mechanical_gates": {
+        "passed": 12,
+        "failed": 35
+      },
+      "eligible_for_q4": false
+    },
+    {
+      "step": 1000,
+      "checkpoint_sha256": "2a7d9eb04343dd0ac47f6827e1092da81f8c3b2c67f52e54aff0f9070c87826d",
+      "selector_chrf_pp": {
+        "en_ja": 36.02145194035551,
+        "ja_en": 19.84712061404707,
+        "macro_direction": 27.93428627720129
+      },
+      "development_chrf_pp": {
+        "en_ja": 26.581138982564966,
+        "ja_en": 20.21545941401895
+      },
+      "legal_safety_validation_chrf_pp": {
+        "en_ja": 15.593346269762499,
+        "ja_en": 14.589254773082885
+      },
+      "legal_safety_test_chrf_pp": {
+        "en_ja": 17.3500856697547,
+        "ja_en": 15.267455629818302
+      },
+      "mechanical_gates": {
+        "passed": 12,
+        "failed": 35
+      },
+      "eligible_for_q4": false
+    }
+  ],
+  "frozen_selector_minimums": {
+    "en_ja_chrf_pp": 30.0,
+    "ja_en_chrf_pp": 50.0,
+    "macro_direction_chrf_pp": 40.0
+  },
+  "blocking_result": "No checkpoint passed. The best JA-to-EN selector result was 19.8471 chrF++, below the frozen 50.0 floor, and every checkpoint introduced held-out critical-meaning or generation regressions.",
+  "semantic_audit_complete": false,
+  "critical_meaning_gate_passed": false,
+  "q4_conversion_authorized": false,
+  "app_change_authorized": false,
+  "bundle_replacement_authorized": false,
+  "public_upload_authorized": false,
+  "private_reasoning_traces_used": false,
+  "decision": "Retire V18. Keep Mimi's current bundled directional q4 translator unchanged."
+}
