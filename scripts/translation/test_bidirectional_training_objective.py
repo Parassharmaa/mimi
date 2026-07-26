@@ -25,6 +25,10 @@ def load(name: str, relative: str):
 TRAIN = load("train_bidirectional_marian", "scripts/translation/train_bidirectional_marian.py")
 BUILD = load("build_bidirectional_dataset", "scripts/translation/build_bidirectional_dataset.py")
 
+assert TRAIN.VALIDATION_CACHE_POLICY == {
+    "loss_forward": False,
+    "greedy_generation": True,
+}
 
 teacher = torch.tensor([[[3.0, 1.0], [1.0, 3.0]]])
 identical_sum, identical_tokens = TRAIN.teacher_student_kl(

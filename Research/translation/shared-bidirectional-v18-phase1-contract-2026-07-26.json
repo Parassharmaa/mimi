@@ -1,5 +1,21 @@
 {
   "app_change_authorized": false,
+  "amendments": [
+    {
+      "change": "force use_cache=true only for greedy validation generation while retaining use_cache=false for loss evaluation and gradient-checkpointed training",
+      "contract_or_training_recipe_changed": false,
+      "new_trainer_sha256": "22f31a09111715ceec42a6954734a5bd038c6c86d38dd08a1cf1d0afd0eb4b51",
+      "old_trainer_sha256": "a9d8642948819a58cba4942ce833508d0b422469fd6c03cb08dcaea364f68afb",
+      "pre_amendment_persisted_checkpoint": {
+        "step": 0,
+        "training_manifest_sha256": "eaba1b562cb61e3337e9e7be80eb2d88812d8b5898f1ae92a35301550621ec93",
+        "weights_sha256": "3bf516afdb544bcc12c1a15a85c470e96125fab0c5e010530d0a2ec955f2c990"
+      },
+      "reason": "gradient checkpointing correctly disabled cache for training, but validation generation inherited the setting and performed unnecessarily slow full-prefix decoding",
+      "restart_authorized": true,
+      "selection_evidence_inspected_before_change": "step-0 baseline only; no post-update checkpoint was serialized or inspected"
+    }
+  ],
   "architecture": {
     "d_model": 512,
     "decoder_ffn_dim": 4608,
@@ -166,7 +182,7 @@
     },
     "trainer": {
       "path": "scripts/translation/train_bidirectional_marian.py",
-      "sha256": "a9d8642948819a58cba4942ce833508d0b422469fd6c03cb08dcaea364f68afb"
+      "sha256": "22f31a09111715ceec42a6954734a5bd038c6c86d38dd08a1cf1d0afd0eb4b51"
     },
     "widening": {
       "path": "scripts/translation/widen_marian_checkpoint_ffn.py",

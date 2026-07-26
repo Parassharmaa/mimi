@@ -24,6 +24,10 @@ from transformers import MarianMTModel, MarianTokenizer, get_linear_schedule_wit
 DIRECTIONS = {"en-ja": 0, "ja-en": 1}
 SOURCE_PREFIXES = {"en-ja": "<2ja> ", "ja-en": "<2en> "}
 TOKENIZER_ASSETS = ("source.spm", "target.spm", "vocab.json")
+VALIDATION_CACHE_POLICY = {
+    "loss_forward": False,
+    "greedy_generation": True,
+}
 STUDENT_TEACHER_COMPATIBILITY_KEYS = (
     "activation_function",
     "d_model",
@@ -302,7 +306,10 @@ def evaluate(
         batch.pop("direction_ids")
         batch.pop("teacher_input_ids")
         batch.pop("teacher_attention_mask")
-        outputs = model(**batch)
+        outputs = model(
+            **batch,
+            use_cache=VALIDATION_CACHE_POLICY["loss_forward"],
+        )
         batch_size = int(batch["input_ids"].shape[0])
         losses.append((float(outputs.loss), batch_size))
         generated = model.generate(
@@ -311,6 +318,7 @@ def evaluate(
             do_sample=False,
             num_beams=1,
             max_new_tokens=max_new_tokens,
+            use_cache=VALIDATION_CACHE_POLICY["greedy_generation"],
         )
         hypotheses.extend(tokenizer.batch_decode(generated, skip_special_tokens=True))
     by_direction: dict[str, dict] = {}

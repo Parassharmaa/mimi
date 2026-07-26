@@ -123,6 +123,14 @@ latency, RSS, Swift-parity, held-out, and licensing gates remain independent;
 phase-one training alone cannot authorize app work, promotion, or upload. See
 `shared-bidirectional-v18-phase1-contract-2026-07-26.json`.
 
+The first launch serialized only the exact step-zero initializer before an
+evaluation-only cache defect was found: gradient checkpointing correctly
+disabled the cache for training, but greedy validation inherited that setting.
+The contract records the untouched weight and manifest hashes, the old and new
+trainer hashes, and the restart authorization. Training hyperparameters,
+dataset, selection, and gates are unchanged; no post-update checkpoint or
+selection metric was available before the amendment.
+
 ## Why not MoE first
 
 This control spends the same total parameter budget densely and activates all
