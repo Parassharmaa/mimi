@@ -91,6 +91,8 @@ PYTHONPATH=scripts/translation uv run --python 3.12 --with torch \
   scripts/translation/test_active_sequence_risk_v16_contract.py
 python3 scripts/translation/test_active_sequence_risk_v16_result.py
 python3 scripts/translation/test_on_policy_multipair_v17.py
+PYTHONPATH=scripts/translation python3 \
+  scripts/translation/test_on_policy_multipair_v17_primary_judge.py
 uv run --python 3.12 --with torch --with transformers==4.57.6 \
   --with sentencepiece --with sacremoses --with sacrebleu==2.6.0 --with numpy \
   --with huggingface-hub scripts/translation/test_marian_negative_space_objective.py
@@ -253,6 +255,9 @@ python3 -m py_compile \
   scripts/translation/collect_claude5_canonical_consensus.py \
   scripts/translation/run_claude_consensus_judge.py \
   scripts/translation/test_claude_consensus_judge.py \
+  scripts/translation/prepare_on_policy_multipair_v17_primary_judge.py \
+  scripts/translation/collect_on_policy_multipair_v17_primary_judge.py \
+  scripts/translation/test_on_policy_multipair_v17_primary_judge.py \
   scripts/translation/test_claude_judgment_evidence.py \
   scripts/translation/run_local_consensus_judge.py \
   scripts/translation/test_local_consensus_judge.py \
