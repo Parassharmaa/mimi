@@ -242,7 +242,7 @@ private struct ModelsSettingsPane: View {
                 LabeledContent(preferences.text("Model", "モデル")) {
                     Label(
                         translationModelAvailable
-                            ? preferences.text("ElanMT ready", "ElanMT 準備完了")
+                            ? preferences.text("Mimi ready", "Mimi 準備完了")
                             : preferences.text("Model missing", "モデルが見つかりません"),
                         systemImage: translationModelAvailable
                             ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
@@ -258,8 +258,8 @@ private struct ModelsSettingsPane: View {
                         .foregroundStyle(.secondary)
                 }
                 Text(preferences.text(
-                    "Translations run entirely on this Mac with Mimi's 4-bit Marian/MLX model. No text is sent to Apple or a cloud translation service.",
-                    "翻訳はMimiの4ビットMarian/MLXモデルを使い、このMac上だけで実行されます。テキストはAppleやクラウド翻訳サービスには送信されません。"
+                    "Translations run entirely on this Mac with the Mimi model. No text is sent to Apple or a cloud translation service.",
+                    "翻訳はMimiモデルを使い、このMac上だけで実行されます。テキストはAppleやクラウド翻訳サービスには送信されません。"
                 ))
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -468,8 +468,8 @@ private struct PrivacySettingsPane: View {
                 privacyRow(
                     preferences.text("Translation", "翻訳"),
                     detail: preferences.text(
-                        "Mimi's bundled Marian/MLX model translates English and Japanese on this Mac.",
-                        "Mimiに同梱されたMarian/MLXモデルが、このMac上で英語と日本語を翻訳します。"
+                        "The bundled Mimi model translates English and Japanese on this Mac.",
+                        "同梱されたMimiモデルが、このMac上で英語と日本語を翻訳します。"
                     ),
                     symbol: "translate"
                 )
