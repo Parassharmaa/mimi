@@ -166,7 +166,19 @@ actor ExperimentalMLXTranslationEngine {
         var outputTokenIDs = runtime.translateTokenIDs(text)
         var output = Self.clean(runtime.decode(tokens: outputTokenIDs))
         var selectedExpert = useExpert
-        if !Self.preservesCriticalTokens(source: text, output: output) {
+        let primaryPreservesCriticalTokens = Self.preservesCriticalTokens(
+            source: text,
+            output: output
+        )
+        let primaryIsPlausible = Self.isPlausible(
+            output,
+            source: text,
+            sourceLanguage: sourceLanguage
+        )
+        let primaryHasRepeatedTokenLoop = Self.hasRepeatedTokenLoop(outputTokenIDs)
+        if !primaryPreservesCriticalTokens
+            || !primaryIsPlausible
+            || primaryHasRepeatedTokenLoop {
             if useExpert {
                 let generalist = try await loadRuntime(
                     sourceLanguage: sourceLanguage,
@@ -178,15 +190,21 @@ actor ExperimentalMLXTranslationEngine {
                 guard Self.preservesCriticalTokens(source: text, output: fallback) else {
                     throw ExperimentalMLXTranslationError.criticalTokenMismatch
                 }
+                guard Self.isPlausible(
+                    fallback,
+                    source: text,
+                    sourceLanguage: sourceLanguage
+                ), !Self.hasRepeatedTokenLoop(fallbackTokenIDs) else {
+                    throw ExperimentalMLXTranslationError.implausibleOutput
+                }
                 output = fallback
                 outputTokenIDs = fallbackTokenIDs
                 selectedExpert = false
-            } else {
+            } else if !primaryPreservesCriticalTokens {
                 throw ExperimentalMLXTranslationError.criticalTokenMismatch
+            } else {
+                throw ExperimentalMLXTranslationError.implausibleOutput
             }
-        }
-        guard Self.isPlausible(output, source: text, sourceLanguage: sourceLanguage) else {
-            throw ExperimentalMLXTranslationError.implausibleOutput
         }
         return .init(
             output: output,
@@ -618,6 +636,22 @@ actor ExperimentalMLXTranslationEngine {
         }
     }
 
+    static func hasRepeatedTokenLoop(_ tokenIDs: [Int]) -> Bool {
+        guard tokenIDs.count >= 9 else { return false }
+        for width in 3...min(16, tokenIDs.count / 3) {
+            for start in 0...(tokenIDs.count - width * 3) {
+                let phrase = tokenIDs[start..<(start + width)]
+                if tokenIDs[(start + width)..<(start + width * 2)]
+                    .elementsEqual(phrase),
+                   tokenIDs[(start + width * 2)..<(start + width * 3)]
+                    .elementsEqual(phrase) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     static func preservesCriticalTokens(source: String, output: String) -> Bool {
         if criticalTokens(source) == criticalTokens(output) {
             return true
@@ -775,6 +809,7 @@ struct TranslationRuntimeCacheVerificationReport: Codable {
     let configurationChangeClearsBothDirections: Bool
     let newConfigurationCanCacheBothDirections: Bool
     let criticalTokenGuardPasses: Bool
+    let repeatedTokenLoopGuardPasses: Bool
     let translationMemoryNormalizationPasses: Bool
 }
 
@@ -862,6 +897,14 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
         source: "Keep 25% at https://example.com.",
         output: "https://example.netで20%を維持します。"
     )
+    let repeatedTokenLoopGuardPasses =
+        ExperimentalMLXTranslationEngine.hasRepeatedTokenLoop(
+            [7, 8, 9, 7, 8, 9, 7, 8, 9]
+        )
+        && !ExperimentalMLXTranslationEngine.hasRepeatedTokenLoop(
+            [7, 8, 9, 7, 8, 10, 7, 8, 9]
+        )
+        && !ExperimentalMLXTranslationEngine.hasRepeatedTokenLoop([])
     let translationMemoryNormalizationPasses = MarianExactTranslationMemory.normalize(
         "  Ａ\t\nＢ　Ｃ  "
     ) == "A B C"
@@ -872,6 +915,7 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
         && configurationChangeClearsBothDirections
         && newConfigurationCanCacheBothDirections
         && criticalTokenGuardPasses
+        && repeatedTokenLoopGuardPasses
         && translationMemoryNormalizationPasses
     return .init(
         schemaVersion: 1,
@@ -883,6 +927,7 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
         configurationChangeClearsBothDirections: configurationChangeClearsBothDirections,
         newConfigurationCanCacheBothDirections: newConfigurationCanCacheBothDirections,
         criticalTokenGuardPasses: criticalTokenGuardPasses,
+        repeatedTokenLoopGuardPasses: repeatedTokenLoopGuardPasses,
         translationMemoryNormalizationPasses: translationMemoryNormalizationPasses
     )
 }
