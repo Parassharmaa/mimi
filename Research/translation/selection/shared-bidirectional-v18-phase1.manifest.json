@@ -1,0 +1,65 @@
+{
+  "builder": {
+    "path": "scripts/translation/build_shared_bidirectional_v18_selection.py",
+    "sha256": "88989e814b67bd3a2dd3021afb2c76d795efb353085dd7c730fc1ccdc0659373"
+  },
+  "cases_per_direction": {
+    "en-ja": 256,
+    "ja-en": 256
+  },
+  "counts": {
+    "en-ja": {
+      "conversational": 128,
+      "mimi-product-ui": 13,
+      "wikipedia-long-pair": 24,
+      "wikipedia-short-pair": 91
+    },
+    "ja-en": {
+      "conversational": 64,
+      "human-translated-news": 64,
+      "mimi-product-ui": 13,
+      "wikipedia-long-pair": 24,
+      "wikipedia-short-pair": 91
+    }
+  },
+  "experiment": "shared-bidirectional-v18-phase1-selection",
+  "known_selection_limits": [
+    "the licensed source validation set has no EN-JA news rows",
+    "the licensed source validation set has no legal rows",
+    "the licensed source validation set has no JA-EN source at or above 100 characters",
+    "legal and true long-input evaluation therefore remain mandatory external gates for every saved checkpoint"
+  ],
+  "long_pair_definition": "max Unicode code-point length of source or target is at least 200",
+  "operation": "deterministic-direction-domain-length-stratified-selection",
+  "output": {
+    "path": "Research/translation/selection/shared-bidirectional-v18-phase1.jsonl",
+    "rows": 512,
+    "sha256": "0f7aadfc825b288a000ed6382a53afa18799352057a5cfd8bf91595ddf641382"
+  },
+  "private_reasoning_traces_used": false,
+  "promotion_evidence": false,
+  "quotas": {
+    "en-ja": {
+      "conversational": 128,
+      "mimi-product-ui": 13,
+      "wikipedia-long-pair": 24,
+      "wikipedia-short-pair": 91
+    },
+    "ja-en": {
+      "conversational": 64,
+      "human-translated-news": 64,
+      "mimi-product-ui": 13,
+      "wikipedia-long-pair": 24,
+      "wikipedia-short-pair": 91
+    }
+  },
+  "schema_version": 1,
+  "seed": 20260726,
+  "selection_evidence_only": true,
+  "source": {
+    "path": "Research/translation/work/shared-bidirectional-v18-licensed-human/valid.jsonl",
+    "rows": 2370,
+    "sha256": "f85a82ae367a8af075c52f366f91ce0ae94c4a86c751e0f234dc2b0ce88f0142"
+  },
+  "training_rows_used": false
+}

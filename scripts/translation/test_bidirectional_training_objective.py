@@ -9,6 +9,7 @@ import tempfile
 from pathlib import Path
 
 import torch
+from torch.utils.data import DataLoader
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -28,6 +29,39 @@ BUILD = load("build_bidirectional_dataset", "scripts/translation/build_bidirecti
 assert TRAIN.VALIDATION_CACHE_POLICY == {
     "loss_forward": False,
     "greedy_generation": True,
+}
+
+exact_loader = DataLoader(
+    list(range(12_066)),
+    batch_size=4,
+    shuffle=False,
+    drop_last=True,
+)
+assert len(exact_loader) == 3_016
+assert len(exact_loader) % 8 == 0
+assert 12_066 - len(exact_loader) * 4 == 2
+
+objective_mean = TRAIN.mean_objectives(
+    [
+        {
+            "cross_entropy": 2.0,
+            "teacher_kl": 4.0,
+            "encoder_alignment": 6.0,
+            "combined": 8.0,
+        },
+        {
+            "cross_entropy": 4.0,
+            "teacher_kl": 6.0,
+            "encoder_alignment": 8.0,
+            "combined": 10.0,
+        },
+    ]
+)
+assert objective_mean == {
+    "cross_entropy": 3.0,
+    "teacher_kl": 5.0,
+    "encoder_alignment": 7.0,
+    "combined": 9.0,
 }
 
 teacher = torch.tensor([[[3.0, 1.0], [1.0, 3.0]]])
@@ -114,6 +148,104 @@ with tempfile.TemporaryDirectory(prefix="mimi-bidirectional-compatibility-") as 
         assert "d_model" in str(error)
     else:
         raise AssertionError("incompatible student dimensions must be rejected")
+
+
+class FakeConfiguration:
+    def __init__(self) -> None:
+        self.use_cache = False
+
+
+class FakeModel:
+    def __init__(self) -> None:
+        self.config = FakeConfiguration()
+
+    def save_pretrained(self, path: Path, *, safe_serialization: bool) -> None:
+        assert safe_serialization is True
+        assert self.config.use_cache is True
+        (path / "model.safetensors").write_bytes(b"immutable-weights")
+        (path / "config.json").write_text(
+            json.dumps({"use_cache": self.config.use_cache}) + "\n",
+            encoding="utf-8",
+        )
+
+
+class FakeTokenizer:
+    def save_pretrained(self, path: Path) -> None:
+        (path / "tokenizer_config.json").write_text("{}\n", encoding="utf-8")
+
+
+with tempfile.TemporaryDirectory(prefix="mimi-bidirectional-checkpoint-") as temporary:
+    output = Path(temporary) / "output"
+    model = FakeModel()
+    tokenizer = FakeTokenizer()
+    checkpoint, checkpoint_manifest = TRAIN.save_immutable_checkpoint(
+        model,
+        tokenizer,
+        output,
+        step=250,
+        metrics={"macro_direction_chrf_pp": 40.0},
+        objective={"updates_in_interval": 250},
+        contract_sha256="contract-sha",
+    )
+    assert model.config.use_cache is False
+    assert checkpoint.name == "step-0000250"
+    assert checkpoint_manifest["immutable_scheduled_checkpoint"] is True
+    assert TRAIN.authenticate_checkpoint(checkpoint, "contract-sha")["step"] == 250
+    try:
+        TRAIN.save_immutable_checkpoint(
+            model,
+            tokenizer,
+            output,
+            step=250,
+            metrics={},
+            objective={},
+            contract_sha256="contract-sha",
+        )
+    except SystemExit as error:
+        assert "overwrite immutable checkpoint" in str(error)
+    else:
+        raise AssertionError("an immutable scheduled checkpoint was overwritten")
+
+    parameter = torch.nn.Parameter(torch.tensor([1.0]))
+    optimizer = torch.optim.AdamW([parameter], lr=0.01)
+    (parameter.square().sum()).backward()
+    optimizer.step()
+    scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lambda _: 1.0)
+    generator = torch.Generator().manual_seed(7)
+    epoch_start = generator.get_state().clone()
+    torch.randperm(8, generator=generator)
+    post_iterator = generator.get_state().clone()
+    latest = TRAIN.save_rolling_resume_state(
+        output,
+        checkpoint=checkpoint,
+        checkpoint_manifest=checkpoint_manifest,
+        optimizer=optimizer,
+        scheduler=scheduler,
+        train_generator=generator,
+        epoch_start_generator_state=epoch_start,
+        post_iterator_generator_state=post_iterator,
+        progress={
+            "update_step": 250,
+            "micro_step": 2_000,
+            "epoch": 0,
+            "next_batch_index": 2_000,
+        },
+        history=[{"step": 0}, {"step": 250}],
+        best={
+            "metrics": {"step": 250},
+            "artifact": {"path": str(checkpoint)},
+            "checkpoints": [{"step": 250}],
+        },
+        contract_sha256="contract-sha",
+    )
+    assert latest["step"] == 250
+    restored, authenticated_latest = TRAIN.load_authenticated_resume_state(
+        output,
+        checkpoint,
+        "contract-sha",
+    )
+    assert restored["progress"]["update_step"] == 250
+    assert authenticated_latest["state"]["sha256"] == latest["state"]["sha256"]
 
 rows = [
     {"id": "a", "direction": "ja-en"},

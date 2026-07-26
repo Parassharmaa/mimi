@@ -56,4 +56,45 @@ except SystemExit as error:
 else:
     raise AssertionError("missing phase-one authorization must fail")
 
+distribution_misclaimed = copy.deepcopy(contract)
+distribution_misclaimed["dataset"]["distribution_eligible"] = True
+try:
+    MODULE.validate(
+        distribution_misclaimed,
+        require_materialized_dataset=False,
+        require_local_model_artifacts=False,
+    )
+except SystemExit as error:
+    assert "dataset" in str(error)
+else:
+    raise AssertionError("unaudited distribution eligibility must fail")
+
+non_immutable = copy.deepcopy(contract)
+non_immutable["phase1_training"]["checkpoint_policy"][
+    "immutable_model_and_tokenizer_at_every_scheduled_step"
+] = False
+try:
+    MODULE.validate(
+        non_immutable,
+        require_materialized_dataset=False,
+        require_local_model_artifacts=False,
+    )
+except SystemExit as error:
+    assert "recipe" in str(error)
+else:
+    raise AssertionError("non-immutable scheduled checkpoints must fail")
+
+wrong_selection = copy.deepcopy(contract)
+wrong_selection["phase1_training"]["selection_artifact"]["sha256"] = "0" * 64
+try:
+    MODULE.validate(
+        wrong_selection,
+        require_materialized_dataset=False,
+        require_local_model_artifacts=False,
+    )
+except SystemExit as error:
+    assert "selection" in str(error)
+else:
+    raise AssertionError("unauthenticated selection must fail")
+
 print("V18 shared-bidirectional contract checks passed")

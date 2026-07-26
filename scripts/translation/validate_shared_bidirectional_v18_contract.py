@@ -77,6 +77,8 @@ def validate(
     if (
         dataset.get("licensed_human_targets_only") is not True
         or dataset.get("promotion_eligible") is not True
+        or dataset.get("candidate_training_eligible") is not True
+        or dataset.get("distribution_eligible") is not False
         or dataset.get("v17_generated_candidates_used") is not False
         or int(dataset["train_rows"]) != 12_066
         or int(dataset["valid_rows"]) != 2_370
@@ -126,6 +128,24 @@ def validate(
         != initialization["widening_manifest_sha256"]
     ):
         raise SystemExit("V18 initialization parity evidence differs")
+    cache_parity = authenticated_file(
+        initialization["cache_parity_report"], "validation cache parity report"
+    )
+    if (
+        cache_parity.get("status") != "cached-generation-parity-passed"
+        or cache_parity.get("comparison", {}).get("exact_generated_token_ids")
+        is not True
+        or float(cache_parity.get("comparison", {}).get("loss_delta", 1.0)) != 0.0
+        or float(
+            cache_parity.get("comparison", {}).get(
+                "macro_direction_chrf_pp_delta", 1.0
+            )
+        )
+        != 0.0
+        or cache_parity.get("verifier", {}).get("sha256")
+        != contract["tools"]["cache_parity_verifier"]["sha256"]
+    ):
+        raise SystemExit("V18 cached validation parity evidence differs")
 
     for direction in ("en-ja", "ja-en"):
         teacher = contract["teachers"][direction]
@@ -155,16 +175,73 @@ def validate(
 
     phase = contract["phase1_training"]
     parameters = phase["hyperparameters"]
+    checkpoint_policy = phase["checkpoint_policy"]
     if (
         int(phase["authorized_updates"]) != 1_000
         or phase["checkpoint_steps"] != [250, 500, 750, 1000]
+        or parameters.get("drop_last") is not True
+        or int(parameters["max_steps"]) != 1_000
         or int(parameters["batch_size"]) * int(parameters["gradient_accumulation"])
         != int(parameters["effective_batch_size"])
         or float(parameters["teacher_kl_weight"]) != 0.25
         or float(parameters["encoder_alignment_weight"]) != 0.05
         or phase.get("source_only_teacher_sequences_as_positive_targets") is not False
+        or checkpoint_policy.get(
+            "immutable_model_and_tokenizer_at_every_scheduled_step"
+        )
+        is not True
+        or checkpoint_policy.get("best_is_manifest_pointer_only") is not True
+        or checkpoint_policy.get("rolling_full_resume_state_retained") != 1
     ):
         raise SystemExit("V18 phase-one recipe differs")
+    selection = phase["selection_artifact"]
+    selection_path = resolve(selection["path"])
+    selection_manifest_path = resolve(selection["manifest_path"])
+    if (
+        not selection_path.is_file()
+        or sha256(selection_path) != selection["sha256"]
+        or not selection_manifest_path.is_file()
+        or sha256(selection_manifest_path) != selection["manifest_sha256"]
+    ):
+        raise SystemExit("V18 frozen selection artifact differs")
+    selection_manifest = json.loads(
+        selection_manifest_path.read_text(encoding="utf-8")
+    )
+    if (
+        selection_manifest.get("output", {}).get("sha256") != selection["sha256"]
+        or selection_manifest.get("cases_per_direction")
+        != {"en-ja": 256, "ja-en": 256}
+        or selection_manifest.get("promotion_evidence") is not False
+        or selection_manifest.get("builder", {}).get("sha256")
+        != contract["tools"]["selection_builder"]["sha256"]
+    ):
+        raise SystemExit("V18 selection manifest differs")
+
+    if contract.get("runtime", {}).get("packages") != {
+        "numpy": "2.5.1",
+        "python": "3.12.12",
+        "sacrebleu": "2.6.0",
+        "sacremoses": "0.1.1",
+        "sentencepiece": "0.2.2",
+        "torch": "2.13.0",
+        "transformers": "4.57.6",
+    }:
+        raise SystemExit("V18 runtime package pins differ")
+
+    amendments = contract.get("amendments", [])
+    if (
+        len(amendments) != 2
+        or amendments[0].get("evaluation_implementation_changed") is not True
+        or amendments[0].get("optimization_recipe_changed") is not False
+        or amendments[1].get("replacement_run_authorized") is not True
+        or amendments[1].get("abandoned_run", {}).get(
+            "post_update_metrics_printed_or_serialized"
+        )
+        is not False
+        or amendments[1].get("abandoned_run", {}).get("persisted_history_steps")
+        != [0]
+    ):
+        raise SystemExit("V18 restart amendment differs")
 
     gates = contract["evaluation_gates"]
     if (

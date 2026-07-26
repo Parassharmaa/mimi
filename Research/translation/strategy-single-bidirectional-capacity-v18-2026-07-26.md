@@ -131,6 +131,24 @@ trainer hashes, and the restart authorization. Training hyperparameters,
 dataset, selection, and gates are unchanged; no post-update checkpoint or
 selection metric was available before the amendment.
 
+An independent process review then found that the amended trainer still did not
+implement the contract's checkpoint semantics: it overwrote only the best
+checkpoint, retained no resume state, and allowed two 30-example optimizer
+updates because the final two-row microbatch crossed an accumulation boundary.
+It also selected on a KFTT-heavy random subset. The replacement launch was
+stopped while step-250 evaluation was still running; no trained metric or
+checkpoint returned, printed, or serialized, and the remaining output is still
+the exact step-zero initializer.
+
+The second pre-result amendment now freezes `drop_last=true`, immutable
+250/500/750/1,000 model checkpoints, one rolling authenticated full resume
+state, eight-microbatch/250-update objective aggregation, exact contract/runtime
+binding, and a tracked 512-case direction/domain/length-stratified selector.
+The complete cached-versus-uncached selector audit has exact token, loss, and
+chrF++ parity. See
+`shared-bidirectional-v18-process-review-2026-07-26.md` and
+`shared-bidirectional-v18-validation-cache-parity-2026-07-26.json`.
+
 ## Why not MoE first
 
 This control spends the same total parameter budget densely and activates all
