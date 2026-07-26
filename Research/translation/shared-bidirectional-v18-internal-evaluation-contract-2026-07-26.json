@@ -9,11 +9,11 @@
   "experiment": "shared-bidirectional-v18-full-precision-internal-eval",
   "implementation": {
     "path": "scripts/translation/evaluate_shared_bidirectional_v18_internal.py",
-    "sha256": "7cc2916b051146282dd2e7daf8e8d8769c54766886c97dd4c5481352ea53d8bb"
+    "sha256": "e766133e8ea26fbce7270aac658fd1dbfbd268c3508b93c080e81b6c2792e25b"
   },
   "observed_before_evaluation_freeze": {
-    "disclosure": "The step-250 balanced-selector checkpoint metric was observed before this evaluator was frozen. The evaluator implements the already frozen phase-one thresholds without weakening or checkpoint-specific adjustment. No step-500, step-750, step-1000, regression-suite, teacher-baseline, or semantic output was available.",
-    "maximum_observed_step": 250,
+    "disclosure": "All four balanced-selector checkpoint metrics were observed before this evaluator was re-frozen because its first post-training invocation stopped before model loading: the trainer serializes selection_validation_per_direction as validation_limit_per_direction in its completed manifest. The only implementation change accepts that exact authenticated alias. No threshold, suite, checkpoint, generation, regression, semantic, selection, q4, app, or publication behavior changed, and no regression-suite, teacher-baseline, or semantic output was available.",
+    "maximum_observed_step": 1000,
     "step_250_checkpoint_manifest_sha256": "35caeb43ecded0a7eed7fa011b7f76d52dcf70652a9b31ee9485b0d2e17c13ec",
     "step_250_selector_metrics": {
       "directions": {
@@ -28,6 +28,51 @@
       },
       "loss": 2.8671672370983288,
       "macro_direction_chrf_pp": 24.437094572775457
+    },
+    "step_500_checkpoint_manifest_sha256": "9e4130db38f5feb44d54a14cb497a003c69156a516d0965f68e986f64a651417",
+    "step_500_selector_metrics": {
+      "directions": {
+        "en-ja": {
+          "cases": 256,
+          "chrf_pp": 35.90294054200654
+        },
+        "ja-en": {
+          "cases": 256,
+          "chrf_pp": 16.85044510701346
+        }
+      },
+      "loss": 2.696746915113181,
+      "macro_direction_chrf_pp": 26.376692824510002
+    },
+    "step_750_checkpoint_manifest_sha256": "3dacfe1caecb49941abd2ca94c0088489f102617da69a509127c5f6fa9a44668",
+    "step_750_selector_metrics": {
+      "directions": {
+        "en-ja": {
+          "cases": 256,
+          "chrf_pp": 36.186333530758986
+        },
+        "ja-en": {
+          "cases": 256,
+          "chrf_pp": 19.070915542105137
+        }
+      },
+      "loss": 2.628768577123992,
+      "macro_direction_chrf_pp": 27.628624536432064
+    },
+    "step_1000_checkpoint_manifest_sha256": "ff6b4f12420f7b6de7f8569e02aeba05e03e5766034db03ff8ffe84fdf80b55c",
+    "step_1000_selector_metrics": {
+      "directions": {
+        "en-ja": {
+          "cases": 256,
+          "chrf_pp": 36.02145194035551
+        },
+        "ja-en": {
+          "cases": 256,
+          "chrf_pp": 19.84712061404707
+        }
+      },
+      "loss": 2.611906120320782,
+      "macro_direction_chrf_pp": 27.93428627720129
     }
   },
   "candidate_tokenizer_assets": {

@@ -17,6 +17,7 @@ from evaluate_shared_bidirectional_v18_internal import (
     computed_failures,
     direction,
     normalized_row,
+    validate_completed_hyperparameters,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -45,6 +46,20 @@ normalized = normalized_row(
 assert normalized["references"] == ["{FILE}を開きます。"]
 assert normalized["segments"] == ["Open {FILE}."]
 assert normalized["sourceLanguage"] == "en-US"
+
+validate_completed_hyperparameters(
+    {"batch_size": 4, "selection_validation_per_direction": 256},
+    {"batch_size": 4, "validation_limit_per_direction": 256},
+)
+try:
+    validate_completed_hyperparameters(
+        {"selection_validation_per_direction": 256},
+        {"validation_limit_per_direction": 255},
+    )
+except SystemExit:
+    pass
+else:
+    raise AssertionError("mismatched aliased hyperparameter unexpectedly passed")
 
 generated = {
     "c": {
@@ -205,7 +220,7 @@ assert evaluation_contract["training_contract"]["sha256"] == digest(
 )
 assert evaluation_contract["observed_before_evaluation_freeze"][
     "maximum_observed_step"
-] == 250
+] == 1000
 assert evaluation_contract["required_regression_suites"] == regression_suites
 assert evaluation_contract["runtime"]["batch_size"] == 4
 assert evaluation_contract["semantic_failure_behavior"].startswith(

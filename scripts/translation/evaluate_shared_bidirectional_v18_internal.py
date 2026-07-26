@@ -84,6 +84,19 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return values
 
 
+def validate_completed_hyperparameters(
+    expected: dict[str, Any],
+    actual: dict[str, Any],
+) -> None:
+    manifest_aliases = {
+        "selection_validation_per_direction": "validation_limit_per_direction",
+    }
+    for key, value in expected.items():
+        actual_key = manifest_aliases.get(key, key)
+        if actual.get(actual_key) != value:
+            raise SystemExit(f"completed run hyperparameter differs: {key}")
+
+
 def display_path(path: Path, root: Path) -> str:
     resolved = path.resolve()
     try:
@@ -308,9 +321,10 @@ def validate_training_summary(
     phase = training_contract["phase1_training"]
     expected_hyperparameters = phase["hyperparameters"]
     actual_hyperparameters = summary.get("hyperparameters", {})
-    for key, value in expected_hyperparameters.items():
-        if actual_hyperparameters.get(key) != value:
-            raise SystemExit(f"completed run hyperparameter differs: {key}")
+    validate_completed_hyperparameters(
+        expected_hyperparameters,
+        actual_hyperparameters,
+    )
     expected_checkpoint_records = {
         int(item.get("step", -1)): item
         for item in summary.get("checkpoints", [])
