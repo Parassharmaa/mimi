@@ -748,10 +748,46 @@ actor ExperimentalMLXTranslationEngine {
         let pattern = #"https?://[A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-]+|\{[^{}]+\}|%[A-Za-z]|<[A-Za-z][^<>]*>|%|(?<![\d.])(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)*(?!\d|\.\d)"#
         guard let expression = try? NSRegularExpression(pattern: pattern) else { return [] }
         let range = NSRange(normalized.startIndex..., in: normalized)
-        return expression.matches(in: normalized, range: range).compactMap { match in
+        var tokens: [String] = expression.matches(in: normalized, range: range).compactMap { match in
             guard let swiftRange = Range(match.range, in: normalized) else { return nil }
             return normalized[swiftRange].replacingOccurrences(of: ",", with: "")
-        }.sorted()
+        }
+        let monthNames = [
+            "january": "1",
+            "february": "2",
+            "march": "3",
+            "april": "4",
+            "may": "5",
+            "june": "6",
+            "july": "7",
+            "august": "8",
+            "september": "9",
+            "october": "10",
+            "november": "11",
+            "december": "12",
+        ]
+        let monthAlternation = monthNames.keys.sorted().joined(separator: "|")
+        let monthPattern =
+            #"\b("# + monthAlternation + #")\s+\d{1,2}\b|\b\d{1,2}\s+("#
+            + monthAlternation + #")\b"#
+        if let monthExpression = try? NSRegularExpression(
+            pattern: monthPattern,
+            options: [.caseInsensitive]
+        ) {
+            for match in monthExpression.matches(in: normalized, range: range) {
+                for captureIndex in 1...2 where match.range(at: captureIndex).location != NSNotFound {
+                    guard let captureRange = Range(
+                        match.range(at: captureIndex),
+                        in: normalized
+                    ) else { continue }
+                    let month = normalized[captureRange].lowercased()
+                    if let number = monthNames[month] {
+                        tokens.append(number)
+                    }
+                }
+            }
+        }
+        return tokens.sorted()
     }
 }
 
@@ -870,6 +906,12 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
         source: "Open https://example.com at 14:30 with {name}.",
         output: "{name}を使って14:30にhttps://example.comを開きます。"
     ) && ExperimentalMLXTranslationEngine.preservesCriticalTokens(
+        source: "The train leaves at 18:42 from platform 7 on October 3.",
+        output: "列車は10月3日の7番ホームから18時42分に出発します。"
+    ) && ExperimentalMLXTranslationEngine.preservesCriticalTokens(
+        source: "請求額は12,480円で、支払期限は7月31日です。",
+        output: "The bill is 12,480 yen, and the deadline is July 31."
+    ) && ExperimentalMLXTranslationEngine.preservesCriticalTokens(
         source: "Version １２ costs 1,200 yen.",
         output: "バージョン12は1200円です。"
     ) && ExperimentalMLXTranslationEngine.preservesCriticalTokens(
@@ -896,6 +938,12 @@ func verifyExperimentalTranslationRuntimeCacheContract() -> TranslationRuntimeCa
     ) && !ExperimentalMLXTranslationEngine.preservesCriticalTokens(
         source: "Keep 25% at https://example.com.",
         output: "https://example.netで20%を維持します。"
+    ) && !ExperimentalMLXTranslationEngine.preservesCriticalTokens(
+        source: "The train leaves on October 3.",
+        output: "列車は11月3日に出発します。"
+    ) && !ExperimentalMLXTranslationEngine.preservesCriticalTokens(
+        source: "支払期限は7月31日です。",
+        output: "The payment deadline is August 31."
     )
     let repeatedTokenLoopGuardPasses =
         ExperimentalMLXTranslationEngine.hasRepeatedTokenLoop(
