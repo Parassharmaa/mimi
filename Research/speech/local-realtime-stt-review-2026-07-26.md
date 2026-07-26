@@ -9,13 +9,13 @@ Q4, is the development winner on Mimi's fixed 24-clip screens. It is the first
 integrated candidate whose paired error intervals exclude zero against Apple
 in both speech-input languages on these selected slices:
 
-* Native live Japanese CER: 7.35% versus Apple 11.06%.
-* Native live English WER: 5.72% versus Apple 9.23%.
+* Native live Japanese CER: 6.57% versus Apple 11.06%.
+* Native live English WER: 5.54% versus Apple 9.23%.
 * Japanese alias-aware protected-term recall: 73.2% versus Apple 61.0%.
 * English alias-aware protected-term recall: 87.9% versus Apple 78.8%.
-* Native live compute RTF: 0.420 Japanese and 0.417 English.
-* Native live first text p50: 4.07 seconds Japanese and 4.04 seconds English.
-* Native live peak process RSS: approximately 1.14 GB.
+* Native live compute RTF: 0.385 Japanese and 0.387 English.
+* Native live first text p50: 3.90 seconds Japanese and 2.88 seconds English.
+* Native live peak process RSS: approximately 1.15 GB.
 * Exact speech model pack: 468,150,715 bytes, including 463,462,815 bytes of
   weights.
 
@@ -30,9 +30,9 @@ rolling decoding:
 ```mermaid
 flowchart LR
     A["Microphone and ring buffer"] --> B["VAD and endpointing"]
-    B --> C["Six-second partial window, three-second stride"]
+    B --> C["Six-second window, language-aware first stride"]
     C --> D["Whisper Large-v3 Turbo Q4"]
-    D --> E["Agreement-based stable prefix"]
+    D --> E["Japanese filler rejection and bounded retry"]
     E --> F["Final utterance confirmation"]
     F --> G["Mimi EN to JA or JA to EN translator"]
 ```
@@ -44,9 +44,9 @@ packs.
 
 Accuracy on the current screens is no longer the main blocker. The integrated
 native path is faster than incoming audio and its bounded final text beats
-Apple on both selected slices. Its roughly four-second first-text latency,
-1.14 GB peak RSS, hypothesis churn, and missing long-session evidence still
-block default promotion.
+Apple on both selected slices. Japanese first-partial quality, 1.15 GB peak
+RSS, hypothesis churn, and missing noisy-session evidence still block default
+promotion.
 
 ## Native Swift integration probe
 
@@ -83,11 +83,75 @@ pack's 13-file inventory, byte sizes, and hashes are checked before packaging
 and loading. No raw source audio is retained. Auto language is disabled for
 the preview until a measured bilingual router exists.
 
-On the native 24+24 screens, Japanese CER is 7.35% with paired Mimi-minus-Apple
-95% interval [-6.59, -1.25] percentage points. English WER is 5.72% with paired
-interval [-5.82, -1.52]. Mimi wins 14 Japanese clips and 12 English clips;
-Apple wins 5 and 2 respectively. These intervals condition on selected
+On the native 24+24 screens, Japanese CER is 6.57% with paired Mimi-minus-Apple
+95% interval [-7.34, -2.16] percentage points. English WER is 5.54% with paired
+interval [-6.02, -1.70]. Mimi wins 15 Japanese clips and 13 English clips;
+Apple wins 4 and 2 respectively. These intervals condition on selected
 term-heavy screens and are not final release claims.
+
+## Streaming-profile audit
+
+The product profile uses one bilingual model with language-aware scheduling:
+
+* English first partial at 2 seconds, then a 3-second stride.
+* Japanese first partial at 3 seconds, then a 3-second stride.
+* Both languages use 100 ms VAD blocks, a six-second rolling window, 750 ms
+  endpoint silence, and a complete final decode capped at 30 seconds.
+* No text is hidden or rewritten by an evaluation-derived filler list.
+
+The profile decision uses first-partial correctness as well as latency. Prefix
+error compares the first visible hypothesis with the same-length reference
+prefix. Coverage is the fraction of reference units visible in that update.
+
+| Profile | Final error | First p50 | First p95 | Prefix error | Coverage | Compute RTF | Decision |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| English 2 s initial, 3 s steady | 5.54% WER | 2.88 s | 3.15 s | 10.10% | 21.01% | 0.387 | Product |
+| Japanese 2 s initial with retry | 6.57% CER | 3.37 s | 5.36 s | 45.12% | 7.60% | 0.481 | Rejected |
+| Japanese 3 s initial, no text filter | 6.57% CER | 3.90 s | 3.96 s | 29.66% | 13.20% | 0.385 | Product |
+| Japanese 3 s initial with retry | 6.57% CER | 3.98 s | 5.41 s | 24.16% | 13.59% | 0.421 | Rejected |
+
+The 2-second Japanese profile is rejected even though its median is faster.
+It emitted short-context hallucinations including `はい`, `じゃあ`, `おわり`,
+and `ご視聴ありがとうございました`. A text-based filler retry improved the
+aggregate prefix score, but it could also hide a legitimate short utterance and
+repeat work without a safe acoustic discriminator. It is therefore retired
+rather than shipped.
+
+The loader's token callback was also tested and retired. It improved English
+first text by only about 60 ms, within run variation, and made Japanese about
+140 ms slower because repeated tokenizer decoding added work. It produced
+4 to 12 UI updates per short clip without changing final WER or CER. Mimi keeps
+one completed hypothesis per bounded decode instead.
+
+## Long-session audit
+
+The long-session builder concatenates all 24 registered clips in suite order,
+verifies every source hash, and records the generated audio hash and source case
+IDs. Two fixtures answer different questions:
+
+* A one-second inter-utterance pause tests whether bounded runtime state remains
+  stable across a multi-minute session.
+* Gapless concatenation is an artificial multi-speaker continuous-speech stress
+  test. It is not equivalent to a naturally paused meeting.
+
+The first one-second-gap Japanese run exposed a real endpoint bug. The 750 ms
+silence threshold was evaluated only after 500 ms audio blocks, so an unaligned
+one-second gap could contain just one fully silent block. Only 1 of 23 intended
+boundaries fired and CER rose to 21.89%. A 1.5-second control fired all 23
+boundaries and scored 5.88% CER. Mimi now evaluates 100 ms blocks while
+preserving the prior noise-floor adaptation time constant.
+
+| Language | Current one-second-gap duration | Error | Compute RTF | Short-screen error |
+| --- | ---: | ---: | ---: | ---: |
+| English | 271.36 s | 5.90% WER | 0.392 | 5.54% WER |
+| Japanese | 354.56 s | 6.57% CER | 0.402 | 6.57% CER |
+
+Both current reports record the exact executable, model, suite, audio, cadence,
+and effective-profile hashes or values. The result supports bounded
+multi-minute sessions with detectable utterance boundaries. It does not yet
+promote Mimi Speech to the default: the live queue still needs a paced soak,
+and noisy speech, thermal behavior, and genuinely continuous monologues remain
+separate gates.
 
 ## Why Japanese to English currently fails
 
