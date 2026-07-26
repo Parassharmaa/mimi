@@ -36,9 +36,9 @@ Translation.
 
 ![Mimi translation model comparison](docs/images/translation-model-comparison.svg)
 
-Mimi ships a 73.4 MB bidirectional translator made from two small Marian
-specialists, one for each direction. A stronger 73.4 MB development candidate
-is also available:
+Mimi's development build bundles a 73.4 MB bidirectional translator made from
+two small Marian specialists, one for each direction. The exact model and
+benchmark are public:
 
 - [Model and weights on Hugging Face](https://huggingface.co/blazeofchi/mimi-en-ja-mlx-development-v1)
 - [Benchmark data on Hugging Face](https://huggingface.co/datasets/blazeofchi/mimi-en-ja-development-v1)
@@ -49,11 +49,11 @@ scratch and uses no synthetic targets or reasoning traces. The EN→JA model
 averages three checkpoints; the JA→EN model uses the strongest legal-specialist
 checkpoint. Both are quantized to 4-bit MLX weights.
 
-On the public 200-case benchmark, the candidate scores 28.41 and 55.19 chrF++,
-9.63 and 30.62 BLEU, and 0.8669 and 0.8192 COMET-22 for EN→JA and JA→EN. It
-stays below 171 ms segment p95 on the benchmark Mac. It is not the release
-default because a known long legal document can trigger repetition and the
-public suite is not a promotion test.
+On the public 200-case benchmark, Mimi scores 28.41 and 55.19 chrF++, 9.63 and
+30.62 BLEU, and 0.8669 and 0.8192 COMET-22 for EN→JA and JA→EN. It stays below
+171 ms segment p95 on the benchmark Mac. The signed release package keeps the
+previous stable model because a known long legal document can trigger
+repetition and the public suite is not a promotion test.
 
 ## Requirements
 
@@ -68,13 +68,6 @@ public suite is not a promotion test.
 swift build
 scripts/build-app.sh debug
 open .build/Mimi.app
-```
-
-To build the development app with the pinned public candidate:
-
-```sh
-scripts/build-development-app.sh debug
-open .build/Mimi-development.app
 ```
 
 macOS asks for microphone or system-audio access only when the selected source
