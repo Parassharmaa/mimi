@@ -51,6 +51,23 @@
     "known_en_ja_loop_fallback_smoke_passed": true
   },
   "bundle": {
+    "packager": {
+      "path": "scripts/translation/package_guarded_expert_cascade_v19.sh",
+      "bytes": 617,
+      "sha256": "c3eea01fe5e444f7c4d3998c7aeb6c7c275d5577b3d286d946c2d556084f6b80"
+    },
+    "routers": {
+      "en-ja": {
+        "path": "Research/translation/routers/guarded-expert-cascade-v19-en-ja.json",
+        "bytes": 654,
+        "sha256": "b233b97072d999ece67a568240e62177970659316799591f3df2ff3f10ee0fd8"
+      },
+      "ja-en": {
+        "path": "Research/translation/routers/guarded-expert-cascade-v19-ja-en.json",
+        "bytes": 654,
+        "sha256": "e668f21015c96c8e02a8e653796eb69913c1216a4094ef7546c018dfc6a29817"
+      }
+    },
     "developer_pack_manifest": {
       "path": "Research/translation/work/guarded-expert-cascade-v19/bundle/manifest.json",
       "bytes": 11007,

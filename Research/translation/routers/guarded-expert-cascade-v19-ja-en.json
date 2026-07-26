@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "format": "mimi-source-expert-router-v1",
+  "direction": "ja-en",
+  "features": {
+    "analyzer": "unicode-codepoint-character",
+    "ngramRange": [
+      2,
+      5
+    ],
+    "lowercase": true,
+    "minimumDocumentFrequency": 2,
+    "sublinearTermFrequency": true,
+    "inverseDocumentFrequency": "smooth-idf",
+    "normalization": "l2",
+    "sourceLengthBin": "append newline then __MIMI_LENGTH_BIN_{min(chars//20,20)}__"
+  },
+  "vocabulary": {},
+  "inverseDocumentFrequency": [],
+  "ridge": {
+    "coefficients": [],
+    "intercept": 1.0
+  },
+  "routing": {
+    "minimumSourceCharacters": 0,
+    "scoreThreshold": 0.0
+  }
+}

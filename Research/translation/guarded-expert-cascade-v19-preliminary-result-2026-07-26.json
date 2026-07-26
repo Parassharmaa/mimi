@@ -44,9 +44,9 @@
     "sha256": "646e9fe2d80b83900f205977838b0fcc3b7a73689fbbf26d41f2d22f0c90d72a"
   },
   "contract": {
-    "bytes": 3863,
+    "bytes": 4527,
     "path": "Research/translation/guarded-expert-cascade-v19-contract-2026-07-26.json",
-    "sha256": "37c665b43dc50c4c76af6037392b6a2d9a148089147bc1ac61d43e70bb4d6e75"
+    "sha256": "dfde09991709ab7aca7342e411045e08fd1776da8a724959d6388411d08a10fc"
   },
   "experiment": "guarded-expert-cascade-v19",
   "fallback_segment_count": 2,

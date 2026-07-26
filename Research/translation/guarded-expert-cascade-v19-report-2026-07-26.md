@@ -89,3 +89,9 @@ The exact contract is
 `Research/translation/guarded-expert-cascade-v19-contract-2026-07-26.json`;
 the machine-readable public result is
 `Research/translation/guarded-expert-cascade-v19-preliminary-result-2026-07-26.json`.
+Rebuild the developer pack without changing app resources:
+
+```sh
+scripts/translation/package_guarded_expert_cascade_v19.sh \
+  Research/translation/work/guarded-expert-cascade-v19/bundle
+```
