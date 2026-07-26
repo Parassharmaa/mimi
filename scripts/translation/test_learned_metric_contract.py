@@ -73,6 +73,14 @@ def main() -> None:
             setuptools_version=SCORER.DEFAULT_SETUPTOOLS_VERSION,
             torch_version="fixture",
             runtime_package_versions={"fixture": "1.0"},
+            model_checkpoint={"bytes": 123, "sha256": "checkpoint"},
+            inference_configuration={
+                "accelerator": "cpu",
+                "batchSize": 8,
+                "numWorkers": 1,
+                "torchInteropThreads": 1,
+                "torchThreads": 4,
+            },
         )
         assert report["results"][0]["score"] == 0.7
         assert report["results"][1]["score"] == 0.9
@@ -80,6 +88,8 @@ def main() -> None:
         assert report["modelLicense"] == "Apache-2.0"
         assert report["emptyHypothesisCases"] == 0
         assert report["runtimePackageVersions"] == {"fixture": "1.0"}
+        assert report["modelCheckpoint"]["sha256"] == "checkpoint"
+        assert report["inferenceConfiguration"]["batchSize"] == 8
         assert len(report["runtimeEnvironmentSHA256"]) == 64
         assert len(report["signatureSHA256"]) == 64
 
@@ -95,6 +105,14 @@ def main() -> None:
             setuptools_version=SCORER.DEFAULT_SETUPTOOLS_VERSION,
             torch_version="fixture",
             runtime_package_versions={"fixture": "1.0"},
+            model_checkpoint={"bytes": 123, "sha256": "checkpoint"},
+            inference_configuration={
+                "accelerator": "cpu",
+                "batchSize": 8,
+                "numWorkers": 1,
+                "torchInteropThreads": 1,
+                "torchThreads": 4,
+            },
         )
         assert empty_report["emptyHypothesisCases"] == 1
     print("Mimi pinned learned-metric report contract passed.")

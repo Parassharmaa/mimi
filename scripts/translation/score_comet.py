@@ -96,6 +96,8 @@ def build_report(
     setuptools_version: str,
     torch_version: str,
     runtime_package_versions: dict[str, str],
+    model_checkpoint: dict[str, int | str],
+    inference_configuration: dict[str, int | str],
 ) -> dict:
     expected_scores = sum(len(row["references"]) for row in rows)
     if len(scores) != expected_scores or not all(
@@ -156,7 +158,10 @@ def build_report(
         "suiteSHA256": sha256(suite_path),
         "engineReportSHA256": sha256(engine_report_path),
         "hardware": platform.machine(),
+        "pythonVersion": platform.python_version(),
         "torchVersion": torch_version,
+        "modelCheckpoint": model_checkpoint,
+        "inferenceConfiguration": inference_configuration,
         "runtimePackageVersions": dict(sorted(runtime_package_versions.items())),
         "runtimeEnvironmentSHA256": runtime_environment_sha256,
         "emptyHypothesisCases": sum(not row["hypothesis"] for row in rows),
@@ -258,6 +263,18 @@ def main() -> None:
         num_workers=args.num_workers,
     )
     scores = [float(value) for value in prediction.scores]
+    checkpoint = checkpoints[0]
+    model_checkpoint = {
+        "bytes": checkpoint.stat().st_size,
+        "sha256": sha256(checkpoint),
+    }
+    inference_configuration = {
+        "accelerator": "cpu",
+        "batchSize": args.batch_size,
+        "numWorkers": args.num_workers,
+        "torchInteropThreads": torch.get_num_interop_threads(),
+        "torchThreads": torch.get_num_threads(),
+    }
     report = build_report(
         args.suite,
         args.engine_report,
@@ -269,6 +286,8 @@ def main() -> None:
         setuptools_version=installed_setuptools,
         torch_version=torch.__version__,
         runtime_package_versions=runtime_package_versions,
+        model_checkpoint=model_checkpoint,
+        inference_configuration=inference_configuration,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
