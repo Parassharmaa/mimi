@@ -1,0 +1,319 @@
+{
+  "format": "mimi-native-live-asr-benchmark-v2",
+  "engine": "Mimi Speech Preview",
+  "runtime": "MLX Audio Swift",
+  "replayMode": "paced-production-queue",
+  "mode": "paced-live-queue-bounded-6s-partial-3s-stride-6s-low-energy-boundary-30s-final",
+  "executableSha256": "6a9d817562390e31f0054f869125aeee307a07601d401bb15360795e7dbee78b",
+  "implementationSha256": "9ec57b694e95db72c61b4ef7d120bb0526384ea019496edb69c474b8910bdf29",
+  "executableImplementationSha256": "9ec57b694e95db72c61b4ef7d120bb0526384ea019496edb69c474b8910bdf29",
+  "implementationFiles": [
+    "Package.resolved",
+    "Package.swift",
+    "Sources/Mimi/AppStore.swift",
+    "Sources/Mimi/AppWindowCoordinator.swift",
+    "Sources/Mimi/AppleSpeechEngine.swift",
+    "Sources/Mimi/AppleTranslationBenchmark.swift",
+    "Sources/Mimi/AudioDeviceCatalog.swift",
+    "Sources/Mimi/AutomaticAppleSpeechEngine.swift",
+    "Sources/Mimi/ExperimentalMLXTranslationEngine.swift",
+    "Sources/Mimi/FloatingCaptionPanel.swift",
+    "Sources/Mimi/FollowLatestScrollView.swift",
+    "Sources/Mimi/InlineTranslationView.swift",
+    "Sources/Mimi/LegacyModelStubs.swift",
+    "Sources/Mimi/LocalStorage.swift",
+    "Sources/Mimi/MarianExactTranslationMemory.swift",
+    "Sources/Mimi/MarianMLXTranslationModel.swift",
+    "Sources/Mimi/MarianSourceExpertRouter.swift",
+    "Sources/Mimi/MenuBarView.swift",
+    "Sources/Mimi/MicrophoneCapture.swift",
+    "Sources/Mimi/MimiApp.swift",
+    "Sources/Mimi/MimiDesign.swift",
+    "Sources/Mimi/MimiWhisperMLXLiveEngine.swift",
+    "Sources/Mimi/ModelSetupStatusView.swift",
+    "Sources/Mimi/NemotronMLXAccuracyEngine.swift",
+    "Sources/Mimi/OnboardingView.swift",
+    "Sources/Mimi/OnboardingWindowCoordinator.swift",
+    "Sources/Mimi/OutputAudioCapture.swift",
+    "Sources/Mimi/PlatformServices.swift",
+    "Sources/Mimi/QwenMLXLiveEngine.swift",
+    "Sources/Mimi/RealtimeBenchmark.swift",
+    "Sources/Mimi/ScreenAudioCapture.swift",
+    "Sources/Mimi/ScreenAudioSelectionControl.swift",
+    "Sources/Mimi/SettingsView.swift",
+    "Sources/Mimi/SettingsWindowFocus.swift",
+    "Sources/Mimi/TranscriptContentView.swift",
+    "Sources/Mimi/TranscriptHistoryStore.swift",
+    "Sources/Mimi/TranscriptWindow.swift",
+    "Sources/Mimi/TranslationCascadeBenchmark.swift",
+    "Sources/Mimi/TranslationParityVerification.swift",
+    "Sources/Mimi/UserPreferences.swift",
+    "Sources/Mimi/VoiceTyping.swift",
+    "Sources/Mimi/WhisperKitAccuracyEngine.swift",
+    "Sources/Mimi/WhisperLanguageDetector.swift",
+    "Sources/MimiCore/DeterministicPipeline.swift",
+    "Sources/MimiCore/Domain.swift",
+    "Sources/MimiCore/LiveTextEdit.swift",
+    "Sources/MimiCore/TranslationBenchmark.swift",
+    "Sources/MimiSession/LiveAudioFlowControl.swift",
+    "Sources/MimiSession/LowEnergyAudioBoundary.swift",
+    "Sources/MimiSession/TranscriptionSession.swift",
+    "scripts/speech/evidence_identity.py",
+    "scripts/speech/run_mimi_whisper_live_benchmark.py"
+  ],
+  "feedChunkSeconds": 0.1,
+  "suiteSha256": "880808e96ee01f564643ee0d03020f9f503e59490251d6c11ca7208f4a721830",
+  "selectedCaseIDs": [
+    "natural-ja-v1:kokoro:gongitsune:chapter-01-body"
+  ],
+  "modelWeightsSha256": "45298f6dc48df8c11e0a8d1dc5e0197c688bfa530646fa21f1a0238d2b0ecda3",
+  "effectiveProfile": {
+    "initialPartialStrideSeconds": 3,
+    "partialStrideSeconds": 3,
+    "endpointSilenceSeconds": 0.75,
+    "maximumUtteranceSeconds": 30,
+    "forcedBoundaryLookbackSeconds": 6
+  },
+  "language": "ja",
+  "metric": "cer",
+  "caseCount": 1,
+  "wallSeconds": 310.60485308337957,
+  "corpusErrorRate": 0.2401129943502825,
+  "meanComputeRealTimeFactor": null,
+  "meanPacedWallRealTimeFactor": 1.0024780892005742,
+  "meanInputDeliveryRealTimeFactor": 1.0000073807420515,
+  "maximumInputScheduleLatenessSeconds": 0.013251292006042496,
+  "queueCapacitySeconds": 8,
+  "maximumQueuedAudioSeconds": 2.1,
+  "firstTextP50Seconds": 4.039973375,
+  "firstTextP95Seconds": 4.039973375,
+  "firstFinalP50Seconds": 11.243726292,
+  "firstFinalP95Seconds": 11.243726292,
+  "postAudioFinalizationP50Seconds": 0.7145684170000095,
+  "postAudioFinalizationP95Seconds": 0.7145684170000095,
+  "totalDroppedAudioSamples": 0,
+  "totalAudioDropEventCount": 0,
+  "totalBackpressureEventCount": 0,
+  "meanHypothesisChurn": 0.05134255702293556,
+  "corpusFirstUpdatePrefixErrorRate": 1.0,
+  "meanFirstUpdateReferenceCoverage": 0.0007062146892655367,
+  "peakRSSBytes": 1168670720,
+  "results": [
+    {
+      "caseID": "natural-ja-v1:kokoro:gongitsune:chapter-01-body",
+      "mode": "paced-live-queue-bounded-6s-partial-3s-stride-6s-low-energy-boundary-30s-final",
+      "feedChunkSeconds": 0.1,
+      "initialPartialStrideSeconds": 3,
+      "partialStrideSeconds": 3,
+      "endpointSilenceSeconds": 0.75,
+      "maximumUtteranceSeconds": 30,
+      "forcedBoundaryLookbackSeconds": 6,
+      "reference": "一 これ は 、 わたし が 小さい とき に 、 村 の も へい と いう お じい さん から きい た お 話 です 。 むかし は 、 私 たち の 村 の ちかく の 、 なか やま と いう ところ に 小さな お 城 が あっ て 、 中山 さま と いう おと の さま が 、 おら れ た そう です 。 その 中山 から 、 少し はなれ た 山 の 中 に 、 「 ごん ぎつね 」 と いう 狐 が い まし た 。 ごん は 、 ひとりぼっち の 小 狐 で 、 しだ の 一ぱい しげっ た 森 の 中 に 穴 を ほっ て 住ん で い まし た 。 そして 、 夜 で も 昼 で も 、 あたり の 村 へ 出 て き て 、 いたずら ばかり し まし た 。 はたけ へ 入っ て 芋 を ほり ちらし たり 、 なたね がら の 、 ほし て ある の へ 火 を つけ たり 、 ひゃくしょう や の 裏手 に つるし て ある とんがらし を むしりとっ て 、 いっ たり 、 いろんな こと を し まし た 。 ある あき の こと でし た 。 二 、 三 日 雨 が ふり つづい た その あいだ 、 ごん は 、 外 へ も 出 られ なく て 穴 の 中 に しゃがん で い まし た 。 雨 が あがる と 、 ごん は 、 ほっと し て 穴 から はい出 まし た 。 空 は からっ と 晴れ て い て 、 もず の 声 が きんきん 、 ひびい て い まし た 。 ごん は 、 村 の おがわ の つつみ まで 出 て 来 まし た 。 あたり の 、 すすき の 穂 に は 、 まだ 雨 の しずく が 光っ て い まし た 。 川 は 、 いつ も は 水 が すくない の です が 、 三 日 も の 雨 で 、 水 が 、 どっと ま し て い まし た 。 ただ の とき は 水 に つかる こと の ない 、 川べり の すすき や 、 はぎ の 株 が 、 黄いろく にごっ た 水 に 横だおし に なっ て 、 もま れ て い ます 。 ごん は かわし もの 方 へ と 、 ぬかるみ みち を 歩い て いき まし た 。 ふと 見る と 、 川 の 中 に 人 が い て 、 何 か やっ て い ます 。 ごん は 、 見つから ない よう に 、 そうっと 草 の 深い ところ へ 歩きよっ て 、 そこ から じっと のぞい て み まし た 。 「 ひょう じゅう だ な 」 と 、 ごん は 思い まし た 。 兵十 は ぼろぼろ の 黒い きもの を まくし上げ て 、 腰 の ところ まで 水 に ひたり ながら 、 魚 を とる 、 はりきり と いう 、 網 を ゆすぶっ て い まし た 。 はちまき を し た 顔 の 横っちょう に 、 まるい 萩 の 葉 が 一 まい 、 大きな ほくろ みたい に へばりつい て い まし た 。 しばらく する と 、 兵十 は 、 はりきり 網 の 一ばん うしろ の 、 袋 の よう に なっ た ところ を 、 水 の 中 から もちあげ まし た 。 その 中 に は 、 芝 の 根 や 、 草 の 葉 や 、 くさっ た 木ぎれ など が 、 ごちゃごちゃ はいっ て い まし た が 、 で も ところどころ 、 白い もの が きらきら 光っ て い ます 。 それ は 、 ふとい うなぎ の 腹 や 、 大きな きす の 腹 でし た 。 兵十 は 、 びく の 中 へ 、 その うなぎ や きす を 、 ごみ と 一しょ に ぶちこみ まし た 。 そして 、 また 、 袋 の 口 を しばっ て 、 水 の 中 へ 入れ まし た 。 兵十 は それ から 、 びく を もっ て 川 から あがり びく を どて におい とい て 、 何 を さがし に か 、 かわ かみ の 方 へ かけ て いき まし た 。 兵十 が い なく なる と 、 ごん は 、 ぴょい と 草 の 中 から とび出し て 、 びく の そば へ かけつけ まし た 。 ちょいと 、 いたずら が し たく なっ た の です 。 ごん は びく の 中 の 魚 を つかみ出し て は 、 はりきり 網 の かかっ て いる ところ より しもて の 川 の 中 を 目がけ て 、 ぽんぽん なげこみ まし た 。 どの 魚 も 、 「 とぼん 」 と 音 を 立て ながら 、 にごっ た 水 の 中 へ もぐりこみ まし た 。 一ばん しまい に 、 太い うなぎ を つかみ に かかり まし た が 、 何しろ ぬるぬる と すべりぬける の で 、 手 で は つかめ ませ ん 。 ごん は じれったく なっ て 、 頭 を びく の 中 につ ッ こん で 、 うなぎ の 頭 を 口 に くわえ まし た 。 うなぎ は 、 キュッ と 言っ て ごん の 首 へ まきつき まし た 。 その とたん に 兵十 が 、 向う から 、 「 うわ ア ぬ す と 狐 め 」 と 、 どなりたて まし た 。 ごん は 、 びっくり し て とびあがり まし た 。 うなぎ を ふりすて て にげよう と し まし た が 、 うなぎ は 、 ごん の 首 に まきつい た まま は なれ ませ ん 。 ごん は その まま 横っとび に とび出し て 一しょ う けんめい に 、 にげ て いき まし た 。 ほら穴 の 近く の 、 はんの木 の 下 で ふりかえっ て 見 まし た が 、 兵十 は 追っかけ て は 来 ませ ん でし た 。 ごん は 、 ほっと し て 、 うなぎ の 頭 を かみくだき 、 やっと はずし て 穴 の そと の 、 草 の 葉 の 上 に のせ て おき まし た 。 章 おわり",
+      "hypothesis": "これは、私が小さい時に、村のモヘイというおじいさんから聞いたお話です。昔は、私たちの村の近くの中山というところに小さなお城があって、中山様というお殿様がおられたそうです。その中山から少し離れた山の中に、ゴギツネという狐がいました。ゴンはひとりぼっちの子狙で、舌のいっぱい茂った森の中に、穴を掘って棲んでいました。そして夜でも昼でも辺りの村へ出て来ていたずらばかりしました畑へ入って芋を掘り散らしたり菜種殻の干してあるのへ火をつけたり百姓屋の裏手につるしてある唐辛子をむしり取って行ったりいろんなことをしましたある秋のことでした。二三日雨は降り続いたその間、ゴンは外へも出られなくて、穴の中にしゃがんでいました。雨が上がると、ゴンはほっとして穴からはい出ました。空はカラッと晴れていてモズの声がキンキン響いていました権は村の側の堤まで出てきましたあたりのツツキのほうには、まだ雨のしずくが光っていました。川はいつもは水が少ないのですが、三日もの雨で水がどっと増していました。ただの時は水につかることのないカーベリのすすきやハギのカブが黄色く濁った水に横倒しになって揉まれています権は川下の方へとぬかるみ道を歩いていきましたふと見ると、川の中に人がいて、何かやっています。ゴンは見つからないように、そっと草の深いところへ歩き寄って、そこからじっと覗いてみました。標柱だな、とゴンは思いました。標柱は、ぼろぼろの黒い肝をまくしあげて、腰のところまで水に浸りながら、魚をとるハレキリという網をゆすぶっていました。鉢巻きをした顔の横帳に、丸いハギの葉が一枚、大きなほくろみたいにへばれついていました。しばらくすると標柱は、張り切り網の一番後ろの袋のようになったところを水の中から持ち上げました。その中には、芝の根や、草の葉や、腐った木切れなどが、ごちゃごちゃ入っていましたが、でも、ところどころ、白いものは、キラキラ光っています。それは、太いウナギの腹や、大きなキスの腹でした。標柱は、鼻腹の中へ、そのうなぎやキスを、ゴミと一緒にぶち込みました。そしてまた袋の口を縛って水の中へ入れました兵十はそれから鼻腹を持って川から上がり鼻腹を土手に置いといて何を探しにか川上の方へかけていきました標柱がいなくなると、ゴンはぴょいと草の中から飛び出して、びくのそばへ駆けつけました。ちょいと、いたずらがしたくなったのです。ゴンは、びくの中の魚をつかみ出しては、はりきり網のかかっているところより、しもての皮の中をめがけて、ぽんぽん投げ込みました。どの魚も、ドボンッと音を立てながら、濁った水の中へ潜り込みました。一番しまいに太いウナギをつかみにかかりましたが何しろぬるぬるとすばり抜けるので手ではつかめませんゴンはじれったくなって頭を鼻腹の中に突っ込んでウナギの頭を口にくわえましたウナギはキュッと言ってゴンの首へ巻きつきました。その途端に、兵十が向こうから、わぁ、盗戸妃姿め、とどんなり立てました。ゴンはびっくりして飛びあがりました。ウナギをふり捨てて逃げようとしましたが、ウナギはゴンの首に巻きついたまま離れません。ゴンはそのまま横飛びに飛び出して一生懸命に逃えていきましたホラーなの近くのハンノキの下で振り返ってみましたが標柱は追っかけてはきませんでしたゴンは、ほっとして、うなぎの頭をかみくだき、やっとはずして、穴の外の、草の葉の上にのせておきました。章終わり",
+      "audioDurationSeconds": 288.521125,
+      "nativeWallSeconds": 289.236106084,
+      "computeWallSeconds": null,
+      "pacedWallSeconds": 289.236106084,
+      "modelLoadSeconds": 1.440393,
+      "computeRealTimeFactor": null,
+      "wallRealTimeFactor": 1.0024780892005742,
+      "pacedAudio": true,
+      "inputBufferSeconds": 0.1,
+      "inputDeliverySeconds": 288.5232545,
+      "inputDeliveryRealTimeFactor": 1.0000073807420515,
+      "maximumInputScheduleLatenessSeconds": 0.013251292006042496,
+      "queueCapacitySeconds": 8,
+      "maximumQueuedAudioSamples": 33600,
+      "maximumQueuedAudioSeconds": 2.1,
+      "droppedAudioSamples": 0,
+      "audioDropEventCount": 0,
+      "firstAudioDropAtSeconds": null,
+      "backpressureEventCount": 0,
+      "postAudioFinalizationSeconds": 0.7145684170000095,
+      "firstTextAtSeconds": 4.039973375,
+      "firstFinalAtSeconds": 11.243726292,
+      "hypothesisChurn": 0.05134255702293556,
+      "updateCount": 110,
+      "firstUpdates": [
+        "1",
+        "1これは私が小さい時に村の",
+        "1これは私が小さい時に村のモヘイというおじいさんから聞いたお話です",
+        "これは、私が小さい時に、村のモヘイというおじいさんから聞いたお話です。",
+        "これは、私が小さい時に、村のモヘイというおじいさんから聞いたお話です。昔は私たちの村の近くの",
+        "これは、私が小さい時に、村のモヘイというおじいさんから聞いたお話です。昔は、私たちの村の近くの中山というところに小さなお城があった。",
+        "これは、私が小さい時に、村のモヘイというおじいさんから聞いたお話です。昔は、私たちの村の近くの中山というところに小さなお城があった。て、中山様というお殿様がお城に",
+        "これは、私が小さい時に、村のモヘイというおじいさんから聞いたお話です。昔は、私たちの村の近くの中山というところに小さなお城があって、中山様というお殿様がおられたそうです。"
+      ],
+      "finalizedSegments": [
+        {
+          "audioEndSeconds": 9.8,
+          "reason": "endpoint",
+          "text": "これは、私が小さい時に、村のモヘイというおじいさんから聞いたお話です。"
+        },
+        {
+          "audioEndSeconds": 20.8,
+          "reason": "endpoint",
+          "text": "昔は、私たちの村の近くの中山というところに小さなお城があって、中山様というお殿様がおられたそうです。"
+        },
+        {
+          "audioEndSeconds": 28.1,
+          "reason": "endpoint",
+          "text": "その中山から少し離れた山の中に、ゴギツネという狐がいました。"
+        },
+        {
+          "audioEndSeconds": 36,
+          "reason": "endpoint",
+          "text": "ゴンはひとりぼっちの子狙で、舌のいっぱい茂った森の中に、穴を掘って棲んでいました。"
+        },
+        {
+          "audioEndSeconds": 42.9,
+          "reason": "endpoint",
+          "text": "そして夜でも昼でも辺りの村へ出て来ていたずらばかりしました"
+        },
+        {
+          "audioEndSeconds": 56.6,
+          "reason": "endpoint",
+          "text": "畑へ入って芋を掘り散らしたり菜種殻の干してあるのへ火をつけたり百姓屋の裏手につるしてある唐辛子をむしり取って行ったりいろんなことをしました"
+        },
+        {
+          "audioEndSeconds": 67.8,
+          "reason": "endpoint",
+          "text": "ある秋のことでした。二三日雨は降り続いたその間、ゴンは外へも出られなくて、穴の中にしゃがんでいました。"
+        },
+        {
+          "audioEndSeconds": 73.2,
+          "reason": "endpoint",
+          "text": "雨が上がると、ゴンはほっとして穴からはい出ました。"
+        },
+        {
+          "audioEndSeconds": 79.8,
+          "reason": "endpoint",
+          "text": "空はカラッと晴れていてモズの声がキンキン響いていました"
+        },
+        {
+          "audioEndSeconds": 84.7,
+          "reason": "endpoint",
+          "text": "権は村の側の堤まで出てきました"
+        },
+        {
+          "audioEndSeconds": 90.1,
+          "reason": "endpoint",
+          "text": "あたりのツツキのほうには、まだ雨のしずくが光っていました。"
+        },
+        {
+          "audioEndSeconds": 97.4,
+          "reason": "endpoint",
+          "text": "川はいつもは水が少ないのですが、三日もの雨で水がどっと増していました。"
+        },
+        {
+          "audioEndSeconds": 112.7,
+          "reason": "endpoint",
+          "text": "ただの時は水につかることのないカーベリのすすきやハギのカブが黄色く濁った水に横倒しになって揉まれています権は川下の方へとぬかるみ道を歩いていきました"
+        },
+        {
+          "audioEndSeconds": 118,
+          "reason": "endpoint",
+          "text": "ふと見ると、川の中に人がいて、何かやっています。"
+        },
+        {
+          "audioEndSeconds": 129.5,
+          "reason": "endpoint",
+          "text": "ゴンは見つからないように、そっと草の深いところへ歩き寄って、そこからじっと覗いてみました。標柱だな、とゴンは思いました。"
+        },
+        {
+          "audioEndSeconds": 140.3,
+          "reason": "endpoint",
+          "text": "標柱は、ぼろぼろの黒い肝をまくしあげて、腰のところまで水に浸りながら、魚をとるハレキリという網をゆすぶっていました。"
+        },
+        {
+          "audioEndSeconds": 148.1,
+          "reason": "endpoint",
+          "text": "鉢巻きをした顔の横帳に、丸いハギの葉が一枚、大きなほくろみたいにへばれついていました。"
+        },
+        {
+          "audioEndSeconds": 157,
+          "reason": "endpoint",
+          "text": "しばらくすると標柱は、張り切り網の一番後ろの袋のようになったところを水の中から持ち上げました。"
+        },
+        {
+          "audioEndSeconds": 174.6,
+          "reason": "endpoint",
+          "text": "その中には、芝の根や、草の葉や、腐った木切れなどが、ごちゃごちゃ入っていましたが、でも、ところどころ、白いものは、キラキラ光っています。それは、太いウナギの腹や、大きなキスの腹でした。"
+        },
+        {
+          "audioEndSeconds": 181,
+          "reason": "endpoint",
+          "text": "標柱は、鼻腹の中へ、そのうなぎやキスを、ゴミと一緒にぶち込みました。"
+        },
+        {
+          "audioEndSeconds": 197.4,
+          "reason": "endpoint",
+          "text": "そしてまた袋の口を縛って水の中へ入れました兵十はそれから鼻腹を持って川から上がり鼻腹を土手に置いといて何を探しにか川上の方へかけていきました"
+        },
+        {
+          "audioEndSeconds": 218.3,
+          "reason": "endpoint",
+          "text": "標柱がいなくなると、ゴンはぴょいと草の中から飛び出して、びくのそばへ駆けつけました。ちょいと、いたずらがしたくなったのです。ゴンは、びくの中の魚をつかみ出しては、はりきり網のかかっているところより、しもての皮の中をめがけて、ぽんぽん投げ込みました。"
+        },
+        {
+          "audioEndSeconds": 225.3,
+          "reason": "endpoint",
+          "text": "どの魚も、ドボンッと音を立てながら、濁った水の中へ潜り込みました。"
+        },
+        {
+          "audioEndSeconds": 242.2,
+          "reason": "endpoint",
+          "text": "一番しまいに太いウナギをつかみにかかりましたが何しろぬるぬるとすばり抜けるので手ではつかめませんゴンはじれったくなって頭を鼻腹の中に突っ込んでウナギの頭を口にくわえました"
+        },
+        {
+          "audioEndSeconds": 246.4,
+          "reason": "endpoint",
+          "text": "ウナギはキュッと言ってゴンの首へ巻きつきました。"
+        },
+        {
+          "audioEndSeconds": 253.8,
+          "reason": "endpoint",
+          "text": "その途端に、兵十が向こうから、わぁ、盗戸妃姿め、とどんなり立てました。"
+        },
+        {
+          "audioEndSeconds": 256.7,
+          "reason": "endpoint",
+          "text": "ゴンはびっくりして飛びあがりました。"
+        },
+        {
+          "audioEndSeconds": 263.7,
+          "reason": "endpoint",
+          "text": "ウナギをふり捨てて逃げようとしましたが、ウナギはゴンの首に巻きついたまま離れません。"
+        },
+        {
+          "audioEndSeconds": 269.3,
+          "reason": "endpoint",
+          "text": "ゴンはそのまま横飛びに飛び出して一生懸命に逃えていきました"
+        },
+        {
+          "audioEndSeconds": 276.7,
+          "reason": "endpoint",
+          "text": "ホラーなの近くのハンノキの下で振り返ってみましたが標柱は追っかけてはきませんでした"
+        },
+        {
+          "audioEndSeconds": 285.8,
+          "reason": "endpoint",
+          "text": "ゴンは、ほっとして、うなぎの頭をかみくだき、やっとはずして、穴の外の、草の葉の上にのせておきました。"
+        },
+        {
+          "audioEndSeconds": 288.4,
+          "reason": "endpoint",
+          "text": "章終わり"
+        }
+      ],
+      "firstUpdatePrefixEditDistance": 1,
+      "firstUpdateUnits": 1,
+      "firstUpdateReferencePrefixUnits": 1,
+      "firstUpdateReferenceCoverage": 0.0007062146892655367,
+      "editDistance": 340,
+      "referenceUnits": 1416,
+      "errorRate": 0.2401129943502825
+    }
+  ],
+  "corpusCharacterErrorRate": 0.2401129943502825
+}

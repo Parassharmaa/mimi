@@ -1,0 +1,237 @@
+{
+  "diagnosticDependencies": {
+    "fugashi": "1.5.2",
+    "unidic-lite": "1.0.8"
+  },
+  "english": {
+    "array1-01": {
+      "adaptive": {
+        "operational": {
+          "audioDropEvents": 0,
+          "backpressureEvents": 0,
+          "droppedAudioSamples": 0,
+          "firstTextSeconds": 2.846861209,
+          "inputDeliveryRTF": 1.000010088300228,
+          "maximumQueuedAudioSeconds": 2.8,
+          "pacedWallRTF": 1.0045647745447335,
+          "peakRSSBytes": 1176764416,
+          "postAudioFinalizationSeconds": 1.38112725000002,
+          "segmentCount": 14
+        },
+        "wordError": {
+          "deletions": 247,
+          "edits": 308,
+          "errorRate": 0.3133265513733469,
+          "hypothesisUnits": 739,
+          "insertions": 3,
+          "matches": 678,
+          "referenceUnits": 983,
+          "substitutions": 58
+        }
+      },
+      "hard24": {
+        "operational": {
+          "audioDropEvents": 0,
+          "backpressureEvents": 0,
+          "droppedAudioSamples": 0,
+          "firstTextSeconds": 2.8523657079999998,
+          "inputDeliveryRTF": 1.0000145272168424,
+          "maximumQueuedAudioSeconds": 5.1,
+          "pacedWallRTF": 1.0037685010906567,
+          "peakRSSBytes": 1169752064,
+          "postAudioFinalizationSeconds": 1.140202041000009,
+          "segmentCount": 14
+        },
+        "wordError": {
+          "deletions": 335,
+          "edits": 393,
+          "errorRate": 0.3997965412004069,
+          "hypothesisUnits": 652,
+          "insertions": 4,
+          "matches": 594,
+          "referenceUnits": 983,
+          "substitutions": 54
+        }
+      },
+      "product": {
+        "operational": {
+          "audioDropEvents": 0,
+          "backpressureEvents": 0,
+          "droppedAudioSamples": 0,
+          "firstTextSeconds": 2.8499855419999998,
+          "inputDeliveryRTF": 1.000013820494431,
+          "maximumQueuedAudioSeconds": 1.8,
+          "pacedWallRTF": 1.0041938960405856,
+          "peakRSSBytes": 1163345920,
+          "postAudioFinalizationSeconds": 1.268917292000026,
+          "segmentCount": 11
+        },
+        "wordError": {
+          "deletions": 370,
+          "edits": 436,
+          "errorRate": 0.44354018311291965,
+          "hypothesisUnits": 620,
+          "insertions": 7,
+          "matches": 554,
+          "referenceUnits": 983,
+          "substitutions": 59
+        }
+      }
+    },
+    "headset": {
+      "adaptive": {
+        "operational": {
+          "audioDropEvents": 0,
+          "backpressureEvents": 0,
+          "droppedAudioSamples": 0,
+          "firstTextSeconds": 2.8502713330000002,
+          "inputDeliveryRTF": 1.0000060174769476,
+          "maximumQueuedAudioSeconds": 2.2,
+          "pacedWallRTF": 1.003667603090194,
+          "peakRSSBytes": 1175928832,
+          "postAudioFinalizationSeconds": 1.1094474999999875,
+          "segmentCount": 20
+        },
+        "wordError": {
+          "deletions": 181,
+          "edits": 223,
+          "errorRate": 0.2268565615462869,
+          "hypothesisUnits": 808,
+          "insertions": 6,
+          "matches": 766,
+          "referenceUnits": 983,
+          "substitutions": 36
+        }
+      },
+      "hard24": {
+        "operational": {
+          "audioDropEvents": 0,
+          "backpressureEvents": 0,
+          "droppedAudioSamples": 0,
+          "firstTextSeconds": 2.854947875,
+          "inputDeliveryRTF": 1.0000061408632712,
+          "maximumQueuedAudioSeconds": 1.8,
+          "pacedWallRTF": 1.0036270192286083,
+          "peakRSSBytes": 1168982016,
+          "postAudioFinalizationSeconds": 1.097170833000007,
+          "segmentCount": 19
+        },
+        "wordError": {
+          "deletions": 258,
+          "edits": 293,
+          "errorRate": 0.2980671414038657,
+          "hypothesisUnits": 728,
+          "insertions": 3,
+          "matches": 693,
+          "referenceUnits": 983,
+          "substitutions": 32
+        }
+      },
+      "product": {
+        "operational": {
+          "audioDropEvents": 0,
+          "backpressureEvents": 0,
+          "droppedAudioSamples": 0,
+          "firstTextSeconds": 2.855713542,
+          "inputDeliveryRTF": 1.0000069488052352,
+          "maximumQueuedAudioSeconds": 1.8,
+          "pacedWallRTF": 1.0036798256039925,
+          "peakRSSBytes": 1171783680,
+          "postAudioFinalizationSeconds": 1.1131536249999954,
+          "segmentCount": 18
+        },
+        "wordError": {
+          "deletions": 291,
+          "edits": 331,
+          "errorRate": 0.3367243133265514,
+          "hypothesisUnits": 697,
+          "insertions": 5,
+          "matches": 657,
+          "referenceUnits": 983,
+          "substitutions": 35
+        }
+      }
+    }
+  },
+  "format": "mimi-natural-speech-summary-v1",
+  "japanese": {
+    "adaptive": {
+      "operational": {
+        "audioDropEvents": 0,
+        "backpressureEvents": 0,
+        "droppedAudioSamples": 0,
+        "firstTextSeconds": 4.039973375,
+        "inputDeliveryRTF": 1.0000073807420515,
+        "maximumQueuedAudioSeconds": 2.1,
+        "pacedWallRTF": 1.0024780892005742,
+        "peakRSSBytes": 1168670720,
+        "postAudioFinalizationSeconds": 0.7145684170000095,
+        "segmentCount": 32
+      },
+      "rawCharacterError": {
+        "deletions": 82,
+        "edits": 340,
+        "errorRate": 0.2401129943502825,
+        "hypothesisUnits": 1341,
+        "insertions": 7,
+        "matches": 1083,
+        "referenceUnits": 1416,
+        "substitutions": 251
+      },
+      "readingCharacterError": {
+        "deletions": 9,
+        "edits": 80,
+        "errorRate": 0.05082592121982211,
+        "hypothesisUnits": 1582,
+        "insertions": 17,
+        "matches": 1511,
+        "referenceUnits": 1574,
+        "substitutions": 54
+      }
+    },
+    "product": {
+      "operational": {
+        "audioDropEvents": 0,
+        "backpressureEvents": 0,
+        "droppedAudioSamples": 0,
+        "firstTextSeconds": 4.053846291,
+        "inputDeliveryRTF": 1.0000025570051414,
+        "maximumQueuedAudioSeconds": 2.1,
+        "pacedWallRTF": 1.0025171308201437,
+        "peakRSSBytes": 1168932864,
+        "postAudioFinalizationSeconds": 0.7258452500000203,
+        "segmentCount": 32
+      },
+      "rawCharacterError": {
+        "deletions": 82,
+        "edits": 340,
+        "errorRate": 0.2401129943502825,
+        "hypothesisUnits": 1341,
+        "insertions": 7,
+        "matches": 1083,
+        "referenceUnits": 1416,
+        "substitutions": 251
+      },
+      "readingCharacterError": {
+        "deletions": 9,
+        "edits": 80,
+        "errorRate": 0.05082592121982211,
+        "hypothesisUnits": 1582,
+        "insertions": 17,
+        "matches": 1511,
+        "referenceUnits": 1574,
+        "substitutions": 54
+      }
+    }
+  },
+  "sourceReports": {
+    "Research/speech/work/natural-en-ami-v1/mimi-adaptive-en24-6-array1-01-paced-v1.json": "e3478e6966f383557f327cc2f88b460e08403e683f85fb4a35834d6024f25b6d",
+    "Research/speech/work/natural-en-ami-v1/mimi-adaptive-en24-6-headset-paced-v1.json": "738a90b565921d5dc3462ce660243b4282bfb6d28947e60ed0679707af318bcf",
+    "Research/speech/work/natural-en-ami-v1/mimi-hard24-array1-01-paced-v1.json": "53bb617a7f498512c42f21fc1df04f3ce9b4160aaf5f7a316cce7a822509ad72",
+    "Research/speech/work/natural-en-ami-v1/mimi-hard24-headset-paced-v1.json": "88a9e91e8c4c054689cad2c243187b23f307173f4be0ab79db1852746183bbcc",
+    "Research/speech/work/natural-en-ami-v1/mimi-product-array1-01-paced-v1.json": "560b77842924aea15c4df821bbadf1f36d2995e0fe9446c951775486683b1ac6",
+    "Research/speech/work/natural-en-ami-v1/mimi-product-headset-paced-v1.json": "b50deec0101df79eecb5f847c1d7fa734b55eadc114973caaf8340ad4c45880d",
+    "Research/speech/work/natural-ja-kokoro-v1/mimi-adaptive-ja30-6-paced-v1.json": "1a041834585e0eaed955cc894167b134fca906bc725eaa67336d7c94cc1cb94d",
+    "Research/speech/work/natural-ja-kokoro-v1/mimi-product-paced-v1.json": "9bce4ae1093a7618340d7a92a4a9114f6fbd38e9fbc1c78fd3f893825ccb9718"
+  }
+}
