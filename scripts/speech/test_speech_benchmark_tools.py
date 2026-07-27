@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import math
 import struct
@@ -18,6 +19,27 @@ from pathlib import Path
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 NOISE_BUILDER = REPOSITORY_ROOT / "scripts/speech/build_noisy_speech_fixture.py"
 COMPARATOR = REPOSITORY_ROOT / "scripts/speech/compare_asr_benchmarks.py"
+KOKORO_BUILDER = (
+    REPOSITORY_ROOT
+    / "scripts/speech/prepare_kokoro_natural_long_form_v1.py"
+)
+AMI_BUILDER = (
+    REPOSITORY_ROOT / "scripts/speech/prepare_ami_natural_meeting_v1.py"
+)
+NATURAL_SUMMARIZER = (
+    REPOSITORY_ROOT
+    / "scripts/speech/summarize_natural_speech_evidence.py"
+)
+
+
+def load_module(name: str, path: Path):
+    specification = importlib.util.spec_from_file_location(name, path)
+    if specification is None or specification.loader is None:
+        raise RuntimeError(f"could not load {path}")
+    module = importlib.util.module_from_spec(specification)
+    sys.modules[name] = module
+    specification.loader.exec_module(module)
+    return module
 
 
 def sha256_file(path: Path) -> str:
@@ -51,6 +73,109 @@ def write_json(path: Path, value: object) -> None:
 
 
 class SpeechBenchmarkToolTests(unittest.TestCase):
+    def test_natural_summary_edit_breakdown_is_exact(self) -> None:
+        module = load_module(
+            "mimi_natural_summary",
+            NATURAL_SUMMARIZER,
+        )
+
+        result = module.edit_breakdown(
+            ["a", "b", "c"],
+            ["a", "x", "c", "e"],
+        )
+
+        self.assertEqual(result["matches"], 2)
+        self.assertEqual(result["substitutions"], 1)
+        self.assertEqual(result["deletions"], 0)
+        self.assertEqual(result["insertions"], 1)
+        self.assertEqual(result["edits"], 2)
+        self.assertEqual(result["errorRate"], 2 / 3)
+
+    def test_ami_natural_fixture_parses_nonscenario_overlap(
+        self,
+    ) -> None:
+        module = load_module("mimi_ami_fixture", AMI_BUILDER)
+        meeting = module.parse_meeting_metadata(
+            b"""<?xml version="1.0"?>
+<nite:root xmlns:nite="http://nite.sourceforge.net/">
+  <meeting observation="EN2001a" type="nonscenario"
+    name="Natural meeting" topic="A topic" duration="5250.251">
+    <speaker nxt_agent="A"/>
+    <speaker nxt_agent="B"/>
+  </meeting>
+</nite:root>"""
+        )
+        first = module.parse_word_member(
+            b"""<?xml version="1.0"?>
+<nite:root xmlns:nite="http://nite.sourceforge.net/">
+  <w nite:id="a0" starttime="10.0" endtime="11.0">hello</w>
+  <w nite:id="a1" starttime="11.0" endtime="11.0" punc="true">.</w>
+</nite:root>""",
+            "A",
+        )
+        second = module.parse_word_member(
+            b"""<?xml version="1.0"?>
+<nite:root xmlns:nite="http://nite.sourceforge.net/">
+  <w nite:id="b0" starttime="10.5" endtime="11.2">there</w>
+</nite:root>""",
+            "B",
+        )
+
+        self.assertEqual(meeting["type"], "nonscenario")
+        self.assertEqual(meeting["speakers"], ["A", "B"])
+        self.assertEqual([word.text for word in first], ["hello"])
+        self.assertEqual(module.count_overlapping_words(first + second), 2)
+        self.assertEqual(
+            module.SIGNALS["headset"]["description"],
+            "close-talking headset microphone mix",
+        )
+        for signal in module.SIGNALS.values():
+            self.assertRegex(str(signal["sha256"]), r"^[0-9a-f]{64}$")
+
+    def test_kokoro_natural_fixture_selection_is_pinned_and_ordered(
+        self,
+    ) -> None:
+        module = load_module("mimi_kokoro_fixture", KOKORO_BUILDER)
+        payload = "\n".join(
+            [
+                (
+                    "gongitsune-by-nankichi-niimi-00001|"
+                    "gongitsune_01_niimi_64kb.mp3|0|100|title|reading"
+                ),
+                (
+                    f"{module.FIRST_CASE_ID}|{module.SOURCE_AUDIO_MEMBER}|"
+                    "200|300|first words|reading"
+                ),
+                (
+                    f"{module.LAST_CASE_ID}|{module.SOURCE_AUDIO_MEMBER}|"
+                    "350|500|last words|reading"
+                ),
+                (
+                    "gongitsune-by-nankichi-niimi-00064|"
+                    "gongitsune_02_niimi_64kb.mp3|0|100|next|reading"
+                ),
+            ]
+        ).encode()
+
+        selected = module.select_registered_rows(
+            module.parse_metadata(payload)
+        )
+
+        self.assertEqual(
+            [row.case_id for row in selected],
+            [module.FIRST_CASE_ID, module.LAST_CASE_ID],
+        )
+        self.assertEqual(
+            module.DATASET_REVISION,
+            "88377525a85728c79cf78f6bfcb81396f9c23827",
+        )
+        for digest in (
+            module.METADATA_SHA256,
+            module.SOURCE_ARCHIVE_SHA256,
+            module.SOURCE_AUDIO_SHA256,
+        ):
+            self.assertRegex(digest, r"^[0-9a-f]{64}$")
+
     def test_noise_fixture_is_hash_bound_collision_safe_and_deterministic(
         self,
     ) -> None:
