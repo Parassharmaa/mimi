@@ -26,7 +26,8 @@ FALLBACK_ASSERTIONS = (
     "appleDefaultWhenExperimentalDisabled",
     "candidateFailureDoesNotUseApple",
     "candidateFailurePreservesLocalResults",
-    "candidateFailureShowsRetryableError",
+    "candidateFailureIsSilent",
+    "availabilityFailureShowsRetryableError",
     "applePartialsWhenExperimentalDisabled",
     "experimentalPartialsDoNotUseApple",
 )

@@ -31,14 +31,7 @@ struct InlineTranslationView: View {
 
     private var renderedTranslation: String {
         if let fixtureTranslation { return fixtureTranslation }
-        return segments.compactMap { segment in
-            if let translation = model.translations[segment.id] {
-                return translation
-            }
-            return model.failedSegmentIDs.contains(segment.id)
-                ? "not-translated:\(segment.id.uuidString)"
-                : nil
-        }.joined(separator: "\n")
+        return segments.compactMap { model.translations[$0.id] }.joined(separator: "\n")
     }
 
     var body: some View {
@@ -76,13 +69,6 @@ struct InlineTranslationView: View {
                             ForEach(segments) { segment in
                                 if let translation = model.translations[segment.id] {
                                     Text(translation)
-                                } else if model.failedSegmentIDs.contains(segment.id) {
-                                    Label(
-                                        "Not translated safely",
-                                        systemImage: "exclamationmark.triangle.fill"
-                                    )
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
                                 }
                             }
                         }
@@ -232,11 +218,10 @@ final class SegmentTranslationModel {
         segmentID: UUID
     ) {
         logger.error(
-            "Experimental local translation failed closed for segment \(segmentID.uuidString, privacy: .public) without Apple fallback: \(error.localizedDescription, privacy: .public)"
+            "Experimental local translation failed closed for \(language.rawValue, privacy: .public) segment \(segmentID.uuidString, privacy: .public) without Apple fallback: \(error.localizedDescription, privacy: .public)"
         )
         activeLanguage = nil
         failedSegmentIDs.insert(segmentID)
-        errors[language] = "Some sentences could not be translated safely. Their source text is preserved; try them again when ready."
         workGeneration &+= 1
     }
 
@@ -266,7 +251,8 @@ struct TranslationFallbackVerificationReport: Codable {
     let appleDefaultWhenExperimentalDisabled: Bool
     let candidateFailureDoesNotUseApple: Bool
     let candidateFailurePreservesLocalResults: Bool
-    let candidateFailureShowsRetryableError: Bool
+    let candidateFailureIsSilent: Bool
+    let availabilityFailureShowsRetryableError: Bool
     let candidateFailureIsScopedToSegment: Bool
     let candidateFailureDoesNotBlockLaterSegment: Bool
     let applePartialsWhenExperimentalDisabled: Bool
@@ -298,7 +284,10 @@ func verifyExperimentalTranslationFallbackContract() -> TranslationFallbackVerif
     let failureDoesNotUseApple = candidate.isUsingExperimentalLocalCandidate
     let preservesResults = candidate.translations[segmentID] == "candidate output"
         && candidate.activeLanguage == nil
-    let showsRetryableError = candidate.errorText != nil
+    let candidateFailureIsSilent = candidate.errorText == nil
+    let unavailable = SegmentTranslationModel(environment: disabledEnvironment)
+    unavailable.setError(for: .english)
+    let availabilityFailureShowsRetryableError = unavailable.errorText != nil
     let failureIsScoped = candidate.failedSegmentIDs == Set([segmentID])
         && !candidate.shouldAttempt(segmentID)
     let laterSegmentIsNotBlocked = candidate.shouldAttempt(laterSegmentID)
@@ -319,7 +308,8 @@ func verifyExperimentalTranslationFallbackContract() -> TranslationFallbackVerif
     let passed = appleDefault
         && failureDoesNotUseApple
         && preservesResults
-        && showsRetryableError
+        && candidateFailureIsSilent
+        && availabilityFailureShowsRetryableError
         && failureIsScoped
         && laterSegmentIsNotBlocked
         && appleDefaultPartials
@@ -331,7 +321,8 @@ func verifyExperimentalTranslationFallbackContract() -> TranslationFallbackVerif
         appleDefaultWhenExperimentalDisabled: appleDefault,
         candidateFailureDoesNotUseApple: failureDoesNotUseApple,
         candidateFailurePreservesLocalResults: preservesResults,
-        candidateFailureShowsRetryableError: showsRetryableError,
+        candidateFailureIsSilent: candidateFailureIsSilent,
+        availabilityFailureShowsRetryableError: availabilityFailureShowsRetryableError,
         candidateFailureIsScopedToSegment: failureIsScoped,
         candidateFailureDoesNotBlockLaterSegment: laterSegmentIsNotBlocked,
         applePartialsWhenExperimentalDisabled: appleDefaultPartials,
