@@ -298,10 +298,95 @@ paused Japanese control.
 
 This is a successful segmentation experiment, not a promotion result. Each
 gapless manifest contains one artificial concatenation of 24 registered
-speakers. It does not establish behavior on natural meetings, overlapping
-speakers, real room noise, variable microphones, long thermal soaks, or the
-product default. Mimi therefore keeps the 30-second, zero-lookback product
-profile while those gates remain open.
+speakers. That synthetic evidence does not by itself establish behavior on
+natural meetings, overlapping speakers, real room noise, variable microphones,
+long thermal soaks, or the product default. The natural addendum below closes
+part of that gap, but Mimi keeps the 30-second, zero-lookback product profile
+while the remaining gates stay open.
+
+## Natural long-form addendum
+
+Two pinned natural sources now exercise the same paced production queue:
+
+* Japanese uses 288.52 seconds from chapter one of the Kokoro Speech Dataset's
+  `ごん狐` reconstruction. The source author describes the dataset as public
+  domain in the United States and likely elsewhere, rather than supplying a
+  worldwide CC0 dedication. Mimi therefore keeps the generated audio local and
+  uncommitted pending jurisdiction review.
+* English uses 302.57 seconds from AMI `EN2001a`, a five-speaker non-scenario
+  project meeting. The same transcript window is evaluated through the
+  close-talking headset mix and far-field table-array channel 01. AMI signals
+  and manual transcripts are CC BY 4.0.
+
+Both sources were registered as held-out evaluation data before later
+speech-model training. Both are public and could have appeared in unknown
+pretraining corpora, so this addendum is natural-speech stress evidence rather
+than a contamination-free model-quality claim. The builders verify the source
+archives, individual source audio, annotations, and derived audio by SHA-256.
+Generated audio remains ignored.
+
+![Natural long-form segmentation experiment](../../docs/images/speech-natural-segmentation-experiment.svg)
+
+Japanese contains ordinary pauses throughout. Both the product 30/0 profile
+and adaptive 30/6 profile produce the same 32 endpoint segments and exactly the
+same final hypothesis:
+
+| Japanese audiobook | Product 30/0 | Adaptive 30/6 |
+| --- | ---: | ---: |
+| Raw CER | 24.01% | 24.01% |
+| Reading-normalized CER | 5.08% | 5.08% |
+| Segment reasons | 32 endpoint | 32 endpoint |
+| Peak queued audio | 2.1 s | 2.1 s |
+| Paced wall RTF | 1.0025 | 1.0025 |
+| Post-audio finalization | 0.73 s | 0.71 s |
+| Peak RSS | 1,168,932,864 B | 1,168,670,720 B |
+
+Raw CER remains the primary metric. The supplemental reading CER applies
+fugashi 1.5.2 and UniDic Lite 1.0.8 symmetrically to the reference and
+hypothesis. The 18.93-point gap shows that this literary fixture is dominated
+by kana, kanji, and lexical-form differences. It does not authorize replacing
+raw CER or making a broader Japanese quality claim.
+
+The English meeting contains 926 lexical transcript tokens before benchmark
+normalization, 135 of which overlap another speaker. Absolute WER is therefore
+a hard meeting stress score and is not directly comparable with clean
+single-speaker FLEURS WER.
+
+| English profile | Headset WER | Far-field WER |
+| --- | ---: | ---: |
+| Product 30/0 | 33.67% | 44.35% |
+| Hard 24/0 ablation | 29.81% | 39.98% |
+| Adaptive 24/6 | **22.69%** | **31.33%** |
+| Adaptive gain over product | **10.99 pp** | **13.02 pp** |
+| Adaptive gain over hard 24 | **7.12 pp** | **8.65 pp** |
+
+The ablation matters. Shortening the hard maximum from 30 to 24 seconds
+recovers some words, while low-energy placement recovers substantially more.
+Deletion counts fall from 291 to 258 to 181 on the headset mix and from 370 to
+335 to 247 far-field. The adaptive profile replaces every hard maximum with
+six adaptive cuts on the headset mix and twelve far-field.
+
+| Paced operation | Headset product | Headset adaptive | Array product | Array adaptive |
+| --- | ---: | ---: | ---: | ---: |
+| First text | 2.86 s | 2.85 s | 2.85 s | 2.85 s |
+| Paced wall RTF | 1.0037 | 1.0037 | 1.0042 | 1.0046 |
+| Peak queued audio | 1.8 s | 2.2 s | 1.8 s | 2.8 s |
+| Post-audio finalization | 1.11 s | 1.11 s | 1.27 s | 1.38 s |
+| Peak RSS | 1,171,783,680 B | 1,175,928,832 B | 1,163,345,920 B | 1,176,764,416 B |
+| Dropped samples / events / backpressure | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 |
+
+All eight natural reports use model weights
+`45298f6dc48df8c11e0a8d1dc5e0197c688bfa530646fa21f1a0238d2b0ecda3`
+and executable
+`6a9d817562390e31f0054f869125aeee307a07601d401bb15360795e7dbee78b`.
+The natural verifier binds them to the current portable implementation
+identity, exact manifests, profile values, complete segment reconstruction,
+real-time input delivery, queue bounds, and zero-loss telemetry.
+
+This is strong evidence for the English adaptive strategy, but it is still one
+meeting observed through two microphones, not two independent sessions. The
+product default remains unchanged until the registered multi-session meeting,
+Japanese conversational, thermal-soak, and real microphone gates pass.
 
 ## Reproducible paced evidence
 
@@ -329,6 +414,10 @@ and are recreated by the hash-checking fixture and model-pack scripts.
   `mimi-direct-paused-adaptive-en24-6-final-v2.json`.
 * Adaptive evidence contract:
   `scripts/speech/verify_adaptive_segmentation_evidence.py`.
+* Natural audiobook and meeting manifests, six English profile reports, two
+  Japanese parity reports, and the generated diagnostic summary.
+* Natural evidence contract:
+  `scripts/speech/verify_natural_speech_evidence.py`.
 
 ## Why Japanese to English currently fails
 
