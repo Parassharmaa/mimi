@@ -42,6 +42,20 @@ enum VoiceTypingShortcut: String, CaseIterable, Identifiable {
     }
 }
 
+enum VoiceTypingModel: String, CaseIterable, Identifiable {
+    case mimiWhisper
+    case appleSpeech
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .mimiWhisper: "Mimi (Whisper Large v3 Turbo)"
+        case .appleSpeech: "Apple Speech"
+        }
+    }
+}
+
 @MainActor
 @Observable
 final class UserPreferences {
@@ -57,6 +71,7 @@ final class UserPreferences {
         static let floatingCaptionOriginY = "floatingCaptionOriginY"
         static let voiceTypingEnabled = "voiceTypingEnabled"
         static let voiceTypingShortcut = "voiceTypingShortcut"
+        static let voiceTypingModel = "voiceTypingModel"
         static let voiceTypingLanguage = "voiceTypingLanguage"
     }
 
@@ -89,6 +104,9 @@ final class UserPreferences {
     }
     var voiceTypingShortcut: VoiceTypingShortcut {
         didSet { defaults.set(voiceTypingShortcut.rawValue, forKey: Key.voiceTypingShortcut) }
+    }
+    var voiceTypingModel: VoiceTypingModel {
+        didSet { defaults.set(voiceTypingModel.rawValue, forKey: Key.voiceTypingModel) }
     }
     var voiceTypingLanguage: SpeechLanguage {
         didSet { defaults.set(voiceTypingLanguage.rawValue, forKey: Key.voiceTypingLanguage) }
@@ -134,6 +152,9 @@ final class UserPreferences {
         voiceTypingShortcut = VoiceTypingShortcut(
             rawValue: defaults.string(forKey: Key.voiceTypingShortcut) ?? ""
         ) ?? .optionSpace
+        voiceTypingModel = VoiceTypingModel(
+            rawValue: defaults.string(forKey: Key.voiceTypingModel) ?? ""
+        ) ?? .mimiWhisper
         voiceTypingLanguage = SpeechLanguage(
             rawValue: defaults.string(forKey: Key.voiceTypingLanguage) ?? ""
         ) ?? .english

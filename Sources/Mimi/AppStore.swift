@@ -16,13 +16,18 @@ final class AppStore {
     var historyRecords: [TranscriptSessionRecord]
     var selectedHistoryID: UUID?
 
-    init(loadPersistedTranscript: Bool = true) {
+    init(
+        loadPersistedTranscript: Bool = true,
+        appleSpeech: (any AppleSpeechProviding)? = nil,
+        whisper: (any WhisperAccuracyTranscribing)? = nil
+    ) {
         let historyStore = TranscriptHistoryStore()
         self.historyStore = historyStore
         historyRecords = loadPersistedTranscript ? historyStore.load() : []
         inputDevicesProvider = AudioDeviceCatalog.inputDevices
         outputDevicesProvider = AudioDeviceCatalog.outputDevices
-        let appleSpeech = SystemAppleSpeechProvider()
+        let appleSpeech = appleSpeech ?? SystemAppleSpeechProvider()
+        let whisper = whisper ?? MimiWhisperMLXLiveEngine()
         let createdSession = TranscriptionSession(
             dependencies: .init(
                 microphoneCapture: MicrophoneCapture(),
@@ -30,7 +35,7 @@ final class AppStore {
                 screenAudioCapture: ScreenAudioCapture(),
                 appleSpeech: appleSpeech,
                 automaticAppleSpeech: AutomaticAppleSpeechEngine(appleSpeech: appleSpeech),
-                whisper: MimiWhisperMLXLiveEngine(),
+                whisper: whisper,
                 nemotron: NemotronMLXLiveEngine(),
                 qwen: QwenMLXLiveEngine(),
                 storage: FileTranscriptStore(),

@@ -4,6 +4,7 @@ import Carbon.HIToolbox
 import MimiCore
 import MimiSession
 import Observation
+import OSLog
 import SwiftUI
 
 enum VoiceTypingState: Equatable {
@@ -337,7 +338,8 @@ final class FocusedTextTarget {
 
 private enum VoiceTypingError: LocalizedError {
     case accessibilityPermission, noTextField, secureTextField, microphonePermission
-    case assetsUnavailable(SpeechLanguage), shortcutUnavailable, sessionRecording, focusChanged, insertionFailed
+    case appleAssetsUnavailable(SpeechLanguage), mimiUnavailable(String)
+    case shortcutUnavailable, sessionRecording, focusChanged, insertionFailed
 
     var errorDescription: String? {
         switch self {
@@ -345,13 +347,266 @@ private enum VoiceTypingError: LocalizedError {
         case .noTextField: "Place the cursor in a text field, then try again."
         case .secureTextField: "Voice Type is unavailable in password fields."
         case .microphonePermission: "Allow microphone access to use Voice Type."
-        case let .assetsUnavailable(language): "Prepare Apple Speech for \(language.displayName) in Language settings."
+        case let .appleAssetsUnavailable(language):
+            "Prepare Apple Speech for \(language.displayName) in Models, then try again."
+        case let .mimiUnavailable(message):
+            "Mimi Speech isn’t ready. \(message)"
         case .shortcutUnavailable: "That shortcut is already used by another app. Choose another one in Settings."
         case .sessionRecording: "Stop the current transcription session before using Voice Type."
         case .focusChanged: "Voice Type stopped because focus moved to another app."
         case .insertionFailed: "Mimi couldn’t update this field. No success was reported."
         }
     }
+}
+
+@MainActor
+private enum ActiveVoiceTypingEngine {
+    case mimi(any WhisperAccuracyTranscribing)
+    case apple(any AppleLiveTranscribing)
+
+    var model: VoiceTypingModel {
+        switch self {
+        case .mimi: .mimiWhisper
+        case .apple: .appleSpeech
+        }
+    }
+
+    func start(
+        language: SpeechLanguage,
+        inputFormat: AVAudioFormat,
+        onEvent: @escaping @MainActor (TranscriptEvent) -> Void,
+        onBackpressure: @escaping @MainActor (String) -> Void
+    ) async throws {
+        switch self {
+        case let .mimi(engine):
+            try await engine.startLive(
+                language: language,
+                inputFormat: inputFormat,
+                onEvent: onEvent,
+                onBackpressure: onBackpressure
+            )
+        case let .apple(engine):
+            try await engine.start(
+                language: language,
+                inputFormat: inputFormat,
+                onEvent: onEvent
+            )
+        }
+    }
+
+    func consume(_ buffer: AVAudioPCMBuffer) {
+        switch self {
+        case let .mimi(engine): engine.consumeLive(buffer)
+        case let .apple(engine): engine.consume(buffer)
+        }
+    }
+
+    func finish() async {
+        switch self {
+        case let .mimi(engine): await engine.stopLive()
+        case let .apple(engine): await engine.stop()
+        }
+    }
+
+    func cancel() async {
+        switch self {
+        case let .mimi(engine): await engine.cancelLive()
+        case let .apple(engine): await engine.stop()
+        }
+    }
+}
+
+@MainActor
+private struct VoiceTypingEngineFactory {
+    let appleSpeech: any AppleSpeechProviding
+    let mimiWhisper: any WhisperAccuracyTranscribing
+
+    func make(
+        model: VoiceTypingModel,
+        language: SpeechLanguage
+    ) async throws -> ActiveVoiceTypingEngine {
+        switch model {
+        case .mimiWhisper:
+            guard mimiWhisper.supportsLiveTranscription else {
+                throw VoiceTypingError.mimiUnavailable(
+                    "This model does not support live dictation."
+                )
+            }
+            if let message = mimiWhisper.runtimeAvailabilityMessage {
+                throw VoiceTypingError.mimiUnavailable(message)
+            }
+            do {
+                try mimiWhisper.ensureInstalled()
+            } catch {
+                throw VoiceTypingError.mimiUnavailable(
+                    "Set it up in Models, then try again. \(error.localizedDescription)"
+                )
+            }
+            return .mimi(mimiWhisper)
+
+        case .appleSpeech:
+            guard appleSpeech.isPlatformAvailable,
+                  await appleSpeech.assetStatus(for: language) == .installed else {
+                throw VoiceTypingError.appleAssetsUnavailable(language)
+            }
+            return .apple(try appleSpeech.makeEngine())
+        }
+    }
+}
+
+struct VoiceTypingModelSelectionVerificationReport: Codable {
+    let schemaVersion: Int
+    let status: String
+    let defaultUsesMimi: Bool
+    let preferenceRoundTrip: Bool
+    let mimiSelectionUsesMimi: Bool
+    let appleSelectionUsesApple: Bool
+    let unavailableMimiDoesNotFallback: Bool
+}
+
+@MainActor
+func verifyVoiceTypingModelSelectionContract() async
+    -> VoiceTypingModelSelectionVerificationReport
+{
+    let suiteName = "MimiVoiceTypingModelVerification-\(UUID().uuidString)"
+    let defaults = UserDefaults(suiteName: suiteName)!
+    defer { defaults.removePersistentDomain(forName: suiteName) }
+
+    let preferences = UserPreferences(defaults: defaults)
+    let defaultUsesMimi = preferences.voiceTypingModel == .mimiWhisper
+    preferences.voiceTypingModel = .appleSpeech
+    let preferenceRoundTrip =
+        UserPreferences(defaults: defaults).voiceTypingModel == .appleSpeech
+
+    let apple = VoiceTypingVerificationAppleProvider()
+    let mimi = VoiceTypingVerificationWhisper()
+    let factory = VoiceTypingEngineFactory(
+        appleSpeech: apple,
+        mimiWhisper: mimi
+    )
+
+    let mimiEngine = try? await factory.make(
+        model: .mimiWhisper,
+        language: .english
+    )
+    let mimiSelectionUsesMimi = mimiEngine?.model == .mimiWhisper
+        && mimi.ensureInstalledCount == 1
+        && apple.makeEngineCount == 0
+
+    let appleEngine = try? await factory.make(
+        model: .appleSpeech,
+        language: .japanese
+    )
+    let appleSelectionUsesApple = appleEngine?.model == .appleSpeech
+        && apple.makeEngineCount == 1
+        && apple.lastAssetLanguage == .japanese
+
+    let fallbackApple = VoiceTypingVerificationAppleProvider()
+    let unavailableFactory = VoiceTypingEngineFactory(
+        appleSpeech: fallbackApple,
+        mimiWhisper: VoiceTypingVerificationWhisper(
+            runtimeAvailabilityMessage: "Fixture runtime unavailable."
+        )
+    )
+    let unavailableMimiDoesNotFallback: Bool
+    do {
+        _ = try await unavailableFactory.make(
+            model: .mimiWhisper,
+            language: .english
+        )
+        unavailableMimiDoesNotFallback = false
+    } catch {
+        unavailableMimiDoesNotFallback = fallbackApple.makeEngineCount == 0
+    }
+
+    let passed = defaultUsesMimi
+        && preferenceRoundTrip
+        && mimiSelectionUsesMimi
+        && appleSelectionUsesApple
+        && unavailableMimiDoesNotFallback
+    return .init(
+        schemaVersion: 1,
+        status: passed ? "passed" : "failed",
+        defaultUsesMimi: defaultUsesMimi,
+        preferenceRoundTrip: preferenceRoundTrip,
+        mimiSelectionUsesMimi: mimiSelectionUsesMimi,
+        appleSelectionUsesApple: appleSelectionUsesApple,
+        unavailableMimiDoesNotFallback: unavailableMimiDoesNotFallback
+    )
+}
+
+@MainActor
+private final class VoiceTypingVerificationAppleEngine: AppleLiveTranscribing {
+    func start(
+        language: SpeechLanguage,
+        inputFormat: AVAudioFormat,
+        onEvent: @escaping @MainActor (TranscriptEvent) -> Void
+    ) async throws {
+        _ = (language, inputFormat, onEvent)
+    }
+
+    func consume(_ buffer: AVAudioPCMBuffer) {
+        _ = buffer
+    }
+
+    func stop() async {}
+}
+
+@MainActor
+private final class VoiceTypingVerificationAppleProvider: AppleSpeechProviding {
+    private let engine = VoiceTypingVerificationAppleEngine()
+    private(set) var makeEngineCount = 0
+    private(set) var lastAssetLanguage: SpeechLanguage?
+
+    var isPlatformAvailable: Bool { true }
+
+    func assetStatus(for language: SpeechLanguage) async -> AppleSpeechAssetStatus {
+        lastAssetLanguage = language
+        return .installed
+    }
+
+    func installAssets(for language: SpeechLanguage) async throws {
+        _ = language
+    }
+
+    func makeEngine() throws -> any AppleLiveTranscribing {
+        makeEngineCount += 1
+        return engine
+    }
+}
+
+@MainActor
+private final class VoiceTypingVerificationWhisper: WhisperAccuracyTranscribing {
+    let runtimeAvailabilityMessage: String?
+    private(set) var ensureInstalledCount = 0
+
+    init(runtimeAvailabilityMessage: String? = nil) {
+        self.runtimeAvailabilityMessage = runtimeAvailabilityMessage
+    }
+
+    var supportsLiveTranscription: Bool { true }
+    var isDownloaded: Bool { true }
+    var isRemovable: Bool { false }
+
+    func ensureInstalled() throws {
+        ensureInstalledCount += 1
+    }
+
+    func install(
+        onProgress: @escaping @MainActor @Sendable (ModelDownloadProgress) -> Void
+    ) async throws {
+        _ = onProgress
+    }
+
+    func transcribe(
+        recordingAt url: URL,
+        language: SpeechLanguage
+    ) async throws -> String {
+        _ = (url, language)
+        return ""
+    }
+
+    func removeDownloadedModel() async throws {}
 }
 
 private final class VoiceTypingAudioRelay: @unchecked Sendable {
@@ -392,8 +647,8 @@ final class VoiceTypingController {
     private let preferences: UserPreferences
     private let isSessionRecording: @MainActor () -> Bool
     private let microphone = MicrophoneCapture()
-    private let speechProvider = SystemAppleSpeechProvider()
-    private var engine: (any AppleLiveTranscribing)?
+    private let engineFactory: VoiceTypingEngineFactory
+    private var engine: ActiveVoiceTypingEngine?
     private var audioRelay: VoiceTypingAudioRelay?
     private var target: FocusedTextTarget?
     private var hotKeys: GlobalHotKeyRegistration!
@@ -403,6 +658,10 @@ final class VoiceTypingController {
     private var observingPreferences = false
     private var finalizedPhrases: [String] = []
     private var activationID: UUID?
+    private let logger = Logger(
+        subsystem: "dev.paras.mimi",
+        category: "VoiceTyping"
+    )
 
     private(set) var state: VoiceTypingState = .idle
     private(set) var text = ""
@@ -410,10 +669,16 @@ final class VoiceTypingController {
 
     init(
         preferences: UserPreferences,
-        isSessionRecording: @escaping @MainActor () -> Bool = { false }
+        isSessionRecording: @escaping @MainActor () -> Bool = { false },
+        appleSpeech: any AppleSpeechProviding = SystemAppleSpeechProvider(),
+        mimiWhisper: any WhisperAccuracyTranscribing = MimiWhisperMLXLiveEngine()
     ) {
         self.preferences = preferences
         self.isSessionRecording = isSessionRecording
+        engineFactory = VoiceTypingEngineFactory(
+            appleSpeech: appleSpeech,
+            mimiWhisper: mimiWhisper
+        )
         hotKeys = GlobalHotKeyRegistration { [weak self] identifier in
             if identifier == 2 { self?.cancel() } else { self?.toggle() }
         }
@@ -453,7 +718,7 @@ final class VoiceTypingController {
             _ = try? microphone.stop()
             if let audioRelay { drain(audioRelay) }
             audioRelay = nil
-            if let engine { await engine.stop() }
+            if let engine { await engine.cancel() }
             self.engine = nil
             pendingFieldText = nil
             if let fieldUpdateTask { await fieldUpdateTask.value }
@@ -477,32 +742,45 @@ final class VoiceTypingController {
                 guard !isSessionRecording() else { throw VoiceTypingError.sessionRecording }
                 let capturedTarget = try FocusedTextTarget.capture(promptIfNeeded: true)
                 guard await microphone.requestPermission() else { throw VoiceTypingError.microphonePermission }
-                guard await speechProvider.assetStatus(for: language) == .installed else {
-                    throw VoiceTypingError.assetsUnavailable(language)
-                }
                 let format = try microphone.configureInput(deviceID: nil)
-                let engine = try speechProvider.makeEngine()
+                let engine = try await engineFactory.make(
+                    model: preferences.voiceTypingModel,
+                    language: language
+                )
+                guard self.activationID == activationID else {
+                    await engine.cancel()
+                    return
+                }
                 text = ""
                 finalizedPhrases = []
                 pendingFieldText = nil
                 fieldUpdateTask = nil
                 target = capturedTarget
-                try await engine.start(language: language, inputFormat: format) { [weak self] event in
-                    guard let self, self.activationID == activationID else { return }
-                    switch event {
-                    case let .partial(value):
-                        self.updateDisplayedText(livePhrase: value)
-                    case let .final(value):
-                        let normalized = value.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if !normalized.isEmpty { self.finalizedPhrases.append(normalized) }
-                        self.updateDisplayedText(livePhrase: "")
+                self.engine = engine
+                try await engine.start(
+                    language: language,
+                    inputFormat: format,
+                    onEvent: { [weak self] event in
+                        guard let self, self.activationID == activationID else { return }
+                        switch event {
+                        case let .partial(value):
+                            self.updateDisplayedText(livePhrase: value)
+                        case let .final(value):
+                            let normalized = value.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if !normalized.isEmpty { self.finalizedPhrases.append(normalized) }
+                            self.updateDisplayedText(livePhrase: "")
+                        }
+                    },
+                    onBackpressure: { [weak self] message in
+                        self?.logger.warning(
+                            "Voice Type backpressure: \(message, privacy: .public)"
+                        )
                     }
-                }
+                )
                 guard self.activationID == activationID else {
-                    await engine.stop()
+                    await engine.cancel()
                     return
                 }
-                self.engine = engine
                 let relay = VoiceTypingAudioRelay()
                 audioRelay = relay
                 try microphone.start(recordingTo: nil, deviceID: nil) { [weak self, relay] buffer in
@@ -516,7 +794,7 @@ final class VoiceTypingController {
                 self.activationID = nil
                 _ = try? microphone.stop()
                 audioRelay = nil
-                if let engine { await engine.stop() }
+                if let engine { await engine.cancel() }
                 self.engine = nil
                 target = nil
                 showMessage(error.localizedDescription, isError: true)
@@ -531,7 +809,7 @@ final class VoiceTypingController {
             _ = try? microphone.stop()
             if let audioRelay { drain(audioRelay) }
             audioRelay = nil
-            if let engine { await engine.stop() }
+            if let engine { await engine.finish() }
             self.engine = nil
             hotKeys.setCancelEnabled(false)
             if let fieldUpdateTask { await fieldUpdateTask.value }
@@ -585,7 +863,7 @@ final class VoiceTypingController {
         target = nil
         _ = try? microphone.stop()
         audioRelay = nil
-        if let engine { await engine.stop() }
+        if let engine { await engine.cancel() }
         self.engine = nil
         activationID = nil
         hotKeys.setCancelEnabled(false)

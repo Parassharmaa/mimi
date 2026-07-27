@@ -75,12 +75,22 @@ private struct VoiceTypingSettingsPane: View {
                     }
                 }
                 .disabled(!preferences.voiceTypingEnabled)
+                Picker(preferences.text("Model", "モデル"), selection: $preferences.voiceTypingModel) {
+                    ForEach(VoiceTypingModel.allCases) { model in
+                        Text(model.displayName).tag(model)
+                    }
+                }
+                .disabled(!preferences.voiceTypingEnabled)
                 Picker(preferences.text("Spoken language", "話す言語"), selection: $preferences.voiceTypingLanguage) {
                     ForEach(SpeechLanguage.allCases) { language in
                         Text(language.nativeName).tag(language)
                     }
                 }
                 .disabled(!preferences.voiceTypingEnabled)
+
+                Text(modelDescription)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Section(preferences.text("Access", "アクセス")) {
@@ -115,6 +125,21 @@ private struct VoiceTypingSettingsPane: View {
             }
         }
         .formStyle(.grouped)
+    }
+
+    private var modelDescription: String {
+        switch preferences.voiceTypingModel {
+        case .mimiWhisper:
+            preferences.text(
+                "Higher local accuracy. The first dictation can take a moment while Mimi loads the model.",
+                "高精度のローカルモデルです。初回の音声入力では、モデルの読み込みに少し時間がかかることがあります。"
+            )
+        case .appleSpeech:
+            preferences.text(
+                "Faster startup using the English or Japanese speech asset managed by macOS.",
+                "macOS が管理する英語または日本語の音声アセットを使い、より速く起動します。"
+            )
+        }
     }
 }
 

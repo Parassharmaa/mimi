@@ -6,6 +6,9 @@ cd "$ROOT"
 
 swift build --product MimiSelfTest
 swift build --product Mimi
+VOICE_TYPING_REPORT="$(mktemp -t mimi-voice-typing-model-selection).json"
+"$ROOT/.build/debug/Mimi" \
+  --verify-voice-typing-model-selection "$VOICE_TYPING_REPORT"
 python3 scripts/speech/test_speech_benchmark_tools.py
 python3 scripts/speech/verify_paced_speech_evidence.py
 python3 scripts/speech/verify_adaptive_segmentation_evidence.py

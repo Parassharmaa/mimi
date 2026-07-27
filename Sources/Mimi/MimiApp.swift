@@ -12,6 +12,36 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
+        if let outputPath = argument(
+            after: "--verify-voice-typing-model-selection",
+            in: arguments
+        ) {
+            Task { @MainActor in
+                let report = await verifyVoiceTypingModelSelectionContract()
+                do {
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                    try encoder.encode(report).write(
+                        to: URL(filePath: outputPath),
+                        options: .atomic
+                    )
+                    print(
+                        "Mimi Voice Type model selection verification "
+                            + "\(report.status): \(outputPath)"
+                    )
+                    fflush(stdout)
+                    Darwin.exit(report.status == "passed" ? 0 : 1)
+                } catch {
+                    print(
+                        "Mimi Voice Type model selection verification failed "
+                            + "to write: \(error.localizedDescription)"
+                    )
+                    fflush(stdout)
+                    Darwin.exit(1)
+                }
+            }
+            return
+        }
         if arguments.contains(
             "--print-adaptive-segmentation-build-identity"
         ) {
@@ -1164,11 +1194,18 @@ struct MimiApp: App {
     private let voiceTypingPanelController: VoiceTypingPanelController
 
     init() {
-        let store = AppStore()
+        let appleSpeech = SystemAppleSpeechProvider()
+        let mimiWhisper = MimiWhisperMLXLiveEngine()
+        let store = AppStore(
+            appleSpeech: appleSpeech,
+            whisper: mimiWhisper
+        )
         let preferences = UserPreferences()
         let voiceTyping = VoiceTypingController(
             preferences: preferences,
-            isSessionRecording: { store.isRecording }
+            isSessionRecording: { store.isRecording },
+            appleSpeech: appleSpeech,
+            mimiWhisper: mimiWhisper
         )
         _store = State(initialValue: store)
         _preferences = State(initialValue: preferences)
