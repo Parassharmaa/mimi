@@ -45,6 +45,7 @@ final class AppleSpeechEngine {
         assetLogger.info("Apple Speech asset install requested for \(language.rawValue, privacy: .public); initial status: \(statusName(initialStatus), privacy: .public)")
         switch initialStatus {
         case .installed:
+            await reserveAssets(for: language)
             return
         case .unsupported:
             throw TranscriptionSessionError.appleSpeechLanguageUnavailable(language)
@@ -54,6 +55,7 @@ final class AppleSpeechEngine {
             throw TranscriptionSessionError.appleSpeechLanguageUnavailable(language)
         }
 
+        await reserveAssets(for: language)
         if let request = try await AssetInventory.assetInstallationRequest(supporting: [transcriber]) {
             try await request.downloadAndInstall()
             let finalStatus = await AssetInventory.status(forModules: [transcriber])
@@ -63,6 +65,21 @@ final class AppleSpeechEngine {
             // still report a transient older status to a separate immediate
             // query, so the session performs a short reconciliation poll.
             assetLogger.info("Apple Speech returned no installation request for \(language.rawValue, privacy: .public); the asset is already installed")
+        }
+    }
+
+    /// Installing alone does not hold an asset: macOS reclaims unreserved locales.
+    static func reserveAssets(for language: SpeechLanguage) async {
+        let requestedLocale = Locale(identifier: language.rawValue)
+        guard let supportedLocale = await SpeechTranscriber.supportedLocale(equivalentTo: requestedLocale) else {
+            assetLogger.error("Apple Speech has no reservable locale for \(language.rawValue, privacy: .public)")
+            return
+        }
+        do {
+            let added = try await AssetInventory.reserve(locale: supportedLocale)
+            assetLogger.info("Apple Speech locale reservation for \(language.rawValue, privacy: .public): \(added ? "added" : "already reserved", privacy: .public)")
+        } catch {
+            assetLogger.error("Apple Speech could not reserve \(language.rawValue, privacy: .public): \(error.localizedDescription, privacy: .public)")
         }
     }
 
@@ -81,7 +98,7 @@ final class AppleSpeechEngine {
         let transcriber = try await Self.makeTranscriber(for: language, resultMode: resultMode)
         switch await Self.resolvedAssetStatus(for: transcriber, language: language) {
         case .installed:
-            break
+            await Self.reserveAssets(for: language)
         case .supported:
             throw TranscriptionSessionError.appleAssetsNeedExplicitDownload
         case .downloading:
