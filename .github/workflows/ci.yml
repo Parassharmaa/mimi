@@ -31,6 +31,9 @@ jobs:
       - name: Show Swift toolchain
         run: swift --version
 
+      - name: Install ffmpeg
+        run: brew install ffmpeg
+
       - name: Run deterministic tests
         run: scripts/test.sh
 
