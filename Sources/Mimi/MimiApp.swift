@@ -18,8 +18,12 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             catch VoiceTypingError.unsupportedTerminal { terminalRejected = true }
             catch {}
             let ordinaryAccepted = (try? VoiceTypingDestinationPolicy.validate(bundleIdentifier: "dev.mimi.fixture")) != nil
-            print("Mimi Voice Type destination policy \(terminalRejected && ordinaryAccepted ? "passed" : "failed"): Terminal refused, supported text fields allowed.")
-            Darwin.exit(terminalRejected && ordinaryAccepted ? 0 : 1)
+            let snapshotRestoresSelection = (try? FocusedTextTarget.selectedText(in: "hello world", range: CFRange(location: 6, length: 5))) == "world"
+                && (try? FocusedTextTarget.selectedText(in: "a😀 東京です", range: CFRange(location: 4, length: 2))) == "東京"
+            let invalidRangeRejected = (try? FocusedTextTarget.selectedText(in: "short", range: CFRange(location: Int.max, length: 2))) == nil
+            let passed = terminalRejected && ordinaryAccepted && snapshotRestoresSelection && invalidRangeRejected
+            print("Mimi Voice Type destination policy \(passed ? "passed" : "failed"): safe destinations and bounded UTF-16 selection snapshots.")
+            Darwin.exit(passed ? 0 : 1)
         }
         if let output = argument(after: "--verify-voice-typing-lifecycle", in: arguments) {
             Task { @MainActor in
@@ -511,6 +515,9 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                         for (index, update) in updates.enumerated() {
                             if index > 0, stepDelay > 0 { try await Task.sleep(for: .seconds(stepDelay)) }
                             try await target.replaceLiveText(with: update)
+                            if update.isEmpty, try target.fieldTextForVerification() != originalText {
+                                throw VoiceTypingError.insertionFailed
+                            }
                         }
                     }
                     try await target.rollback()

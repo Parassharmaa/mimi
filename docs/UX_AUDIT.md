@@ -33,6 +33,8 @@ accessibility semantics. Web ARIA rules are not applied literally to SwiftUI.
 | UX-020 | Medium | Several user-visible controls and privacy descriptions are English-only or describe Apple despite selecting local engines. | Confirmed source. | Japanese interface matrix and selected-provider privacy inspection. |
 | UX-021 | High | Terminal keyboard fallback can delete existing shell text when the cursor or prompt changes. | Actual LiveTextEdit simulation reproduced deletion; AX history does not expose the writable prompt cursor. | Refuse Terminal at capture before model/microphone setup; remove unverified Backspace fallback and disclose supported-field scope. |
 | UX-022 | High | First-use setup can prepare Phonon/Apple but enable Voice Type with an unavailable Whisper default. | Stable bundle and complete setup source flow confirm mismatch. | 210 real preference/policy assertions; default follows prepared engine only when no saved model choice exists. |
+| UX-023 | High | Empty/withdrawn speech hypotheses delete an original text selection even when no dictation is committed. | Real empty-start field regression failed before the fix; ten field cases pass after it. | Empty hypotheses restore a prior partial or leave the original selection untouched; assert before final cancellation. |
+| UX-024 | High | Missing selected-text AX support can lose the original selection on rollback, and invalid ranges are not checked. | Capture used an empty-string fallback despite having the full field value. | Derive selection from one validated UTF-16 field snapshot; verify English/Japanese extraction and invalid-range refusal. |
 
 ## Implementation and evidence status
 
@@ -56,9 +58,14 @@ Type Settings deeplink, microphone callbacks and native Start/Stop have passed.
 The original 47-scenario state/light/dark rendering matrix passes. Tests using
 physical focus run serially, and the field harness pins its fixture PID.
 
-Pending: final-head repeat after the last safety changes, actual file export,
-extended Japanese/accessibility-display matrix, fresh source-bound speech
-controls and exact-head CI. AX semantics are inspected; a complete spoken
+The expanded 51-case language/appearance/accessibility-fallback matrix passed,
+as did the Japanese Phonon first-use walkthrough and ten final live field cases.
+Native Save wrote the selected session to a temporary folder, with exact UTF-8
+content verification. A long mixed English/Japanese/emoji insertion and rollback
+also passed. These are app-level checks, not certification of every host editor.
+
+Pending: refreshed source-bound speech controls after the last safety fix,
+the complete final-head suite and exact-head CI. AX semantics are inspected; a complete spoken
 VoiceOver audit is not claimed. Native macOS 15 compatibility is compile-gated,
 not verified on a second OS installation. Claude review could not run because
 its login expired; independent code review found and resolved the ownership

@@ -16,10 +16,13 @@ check_case() {
   while [[ "$1" != "--" ]]; do fixture_args+=("$1"); shift; done
   shift
   app_args=("$@")
+  local e2e_stream='there|there now'
+  if [[ "$case_name" == empty-start ]]; then e2e_stream='|'; fi
+  if [[ "$case_name" == withdrawn ]]; then e2e_stream='there|'; fi
   "$FIXTURE_DIR/fixture" "${fixture_args[@]}" > "$FIXTURE_DIR/$case_name.jsonl" &
   FIXTURE_PID="$!"
   sleep 0.5
-  "$APP" --e2e-stream-insert 'there|there now' --e2e-delay 1 --e2e-target-pid "$FIXTURE_PID" "${app_args[@]}"
+  "$APP" --e2e-stream-insert "$e2e_stream" --e2e-delay 1 --e2e-target-pid "$FIXTURE_PID" "${app_args[@]}"
   sleep 0.3
   local actual="$(tail -n 1 "$FIXTURE_DIR/$case_name.jsonl")"
   kill "$FIXTURE_PID"
@@ -37,4 +40,6 @@ check_case focus-change '["hello there","untouched second field"]' --switch-afte
 check_case user-edit '["user changed this field","untouched second field"]' --edit-after 2 -- --e2e-step-delay 2 --e2e-expect-destination-change
 check_case caret-change '["hello there","untouched second field"]' --move-caret-after 2 -- --e2e-step-delay 2 --e2e-expect-destination-change
 check_case secure-field '["hello world","untouched second field"]' --secure -- --e2e-expect-secure-field
+check_case empty-start '["hello world","untouched second field"]' --location 6 --length 5 --
+check_case withdrawn '["hello world","untouched second field"]' --location 6 --length 5 --
 print "Evidence is synthetic and retained at $FIXTURE_DIR"

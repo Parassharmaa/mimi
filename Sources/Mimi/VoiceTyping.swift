@@ -141,10 +141,11 @@ final class FocusedTextTarget {
         element: AXUIElement?,
         processIdentifier: pid_t,
         insertionRange: CFRange,
-        replacedText: String
+        replacedText: String,
+        fieldTextSnapshot: String
     ) {
         self.element = element
-        expectedFieldText = element.flatMap { Self.copyString(kAXValueAttribute as CFString, from: $0) }
+        expectedFieldText = fieldTextSnapshot
         expectedSelection = insertionRange
         self.processIdentifier = processIdentifier
         insertionLocation = insertionRange.location
@@ -186,6 +187,10 @@ final class FocusedTextTarget {
         guard let insertionRange = copyRange(kAXSelectedTextRangeAttribute as CFString, from: element) else {
             throw VoiceTypingError.noTextField
         }
+        guard let fieldText = copyString(kAXValueAttribute as CFString, from: element) else {
+            throw VoiceTypingError.noTextField
+        }
+        let replacedText = try selectedText(in: fieldText, range: insertionRange)
         var pid: pid_t = 0
         AXUIElementGetPid(element, &pid)
         guard pid == frontmostApplication.processIdentifier else { throw VoiceTypingError.focusChanged }
@@ -193,12 +198,29 @@ final class FocusedTextTarget {
             element: element,
             processIdentifier: pid,
             insertionRange: insertionRange,
-            replacedText: copyString(kAXSelectedTextAttribute as CFString, from: element) ?? ""
+            replacedText: replacedText,
+            fieldTextSnapshot: fieldText
         )
+    }
+
+    static func selectedText(in value: String, range: CFRange) throws -> String {
+        guard range.location >= 0, range.length >= 0,
+              range.location <= value.utf16.count,
+              range.length <= value.utf16.count - range.location,
+              let indices = Range(NSRange(location: range.location, length: range.length), in: value) else {
+            throw VoiceTypingError.noTextField
+        }
+        return String(value[indices])
     }
 
     func replaceLiveText(with text: String) async throws {
         try verifyFocus()
+        // Silence or a withdrawn hypothesis is not a request to delete the
+        // user's selection. Restore a prior partial, or leave it untouched.
+        if text.isEmpty {
+            try await rollback()
+            return
+        }
         try verifyOwnedText()
         try selectInsertedText()
         try postReplacementText(text)
