@@ -22,8 +22,9 @@ and translation on your Mac.
 - Recognize English and Japanese automatically as speech arrives.
 - Translate between English and Japanese locally.
 - Float original text, translations, or both above other apps.
-- Type into the selected field by speaking, with a global shortcut.
+- Dictate into supported text fields with a global shortcut.
 - Keep previous sessions so you can return to them later.
+- Search, copy, and export current or saved transcripts.
 - Open automatically when you log in, if you choose.
 
 Mimi uses Apple Speech by default for live transcription. The development
@@ -100,7 +101,12 @@ macOS asks for microphone or system-audio access only when the selected source
 needs it. Languages are prepared in **Settings → Languages**. To dictate into
 another app, enable **Voice Type** during setup or in Settings, place the cursor
 in a text field, and press the chosen shortcut. Words appear directly in the
-field as you speak; press the shortcut again to stop.
+field as you speak; press the shortcut again to stop, or Escape to restore the
+original text. Password fields and Terminal prompts are not supported.
+
+Navigation and controls use native Liquid Glass on macOS 26. Transcripts keep
+readable content surfaces, with opaque fallbacks for reduced transparency and
+increased contrast. Setup prepares only the models you choose.
 
 ## Test it
 

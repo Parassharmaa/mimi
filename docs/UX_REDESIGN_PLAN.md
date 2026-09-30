@@ -15,7 +15,8 @@ reproduction or source-level explanation before they become implementation work.
 
 This is separate from the Phonon integration. Branch
 `codex/mimi-liquid-glass-ux` starts from the Phonon feature commit so the UI can
-exercise all model choices. Parent PR15 must qualify before the UX PR can merge.
+exercise all model choices. Parent PR15 qualified and merged as `94fd8b2`.
+The UX branch is now based on that main commit.
 
 ## Definition of done
 
@@ -38,8 +39,8 @@ exercise all model choices. Parent PR15 must qualify before the UX PR can merge.
 ## Work sequence
 
 1. Read the design and verification principles. Complete.
-2. Qualify Phonon PR15. Resolve evidence versioning and investigate its latency
-   gate without weakening tests or changing historical results.
+2. Qualify Phonon PR15. Complete. Evidence versioning, latency and bounded
+   packaging gates passed; the exact tested head was merged.
 3. Capture the existing UI and build a reproducible interaction/accessibility
    audit. Treat rendering-only smoke tests as incomplete functional evidence.
 4. Record findings in UX_AUDIT.md with severity, reproduction, expected
@@ -62,3 +63,15 @@ are not substitutes for observing the product.
 Live observations of installed Mimi are kept locally in
 `/Users/paras/Documents/Codex/2026-10-01/mimi-ux-audit`. The initial screenshot
 contains private saved sessions and is intentionally excluded from the repo.
+
+## Final qualification
+
+Twenty-four findings are documented in UX_AUDIT.md. The original speech inputs
+and thresholds are retained. Independent review accepted the final empty-result
+and UTF-16 selection-snapshot fixes without new correctness findings. Claude's
+cross-model review could not run because its session expired.
+
+The final source identity is
+`28208e5c828f8fa8ebbcbeea07eb5224aabd5880b70b8f87673677186744a833`.
+Earlier-source replay reports remain separate historical evidence, not relabelled
+as measurements of this build. Final local suite and PR CI remain the merge gates.

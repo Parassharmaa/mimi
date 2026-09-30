@@ -38,10 +38,10 @@ accessibility semantics. Web ARIA rules are not applied literally to SwiftUI.
 
 ## Implementation and evidence status
 
-Functional/data safety changes precede visual changes. Commits `071af3a`,
-`207e293` and `208194a` cover persistence, provider-aware setup and dictation
-safety. Remaining interface changes are being compiled and tested before the
-separate UX PR is opened. Parsing does not establish runtime correctness.
+Functional/data safety changes precede visual changes. The branch contains
+separate commits for persistence, provider-aware setup, dictation ownership,
+native interface actions and final selection-safety regressions. Parsing alone
+does not establish runtime correctness.
 
 Verified so far:
 
@@ -79,14 +79,14 @@ and history storage and do not register the user's dictation shortcut.
 
 | Flow | Baseline | Fixed | Evidence |
 | --- | --- | --- | --- |
-| First launch and setup | Not tested | Not tested | Pending synthetic harness |
-| Microphone recording/start/stop/cancel | Prior pipeline checks only | Not tested | Pending real UI actions |
-| Output/app/display capture and permission recovery | Not tested | Not tested | Pending |
-| English/Japanese/model selection | Prior code checks only | Not tested | Pending live UI |
-| History selection/copy/delete/recovery | Source observations | Not tested | Pending synthetic sessions |
-| Transcript search/export | Source observations | Not tested | Pending |
-| Translation/empty/partial/failure states | Rendering smoke only | Not tested | Pending |
-| Floating captions/settings/window lifecycle | Rendering/lifecycle smoke only | Not tested | Pending |
-| Voice Type/shortcut/permissions/secure field/cancel | Prior insertion and ownership checks | Not tested | Pending full UI path |
-| Keyboard/VoiceOver/full keyboard access | Not tested | Not tested | Pending AX inspection |
-| Light/dark/contrast/transparency/motion/localization | Light/dark rendering smoke | Not tested | Pending matrix |
+| First launch and setup | Apple-only preparation confirmed | Passed Phonon setup walkthrough | Real Japanese Continue actions; Phonon/English selected for Voice Type; 210 policy/preference assertions |
+| Microphone recording/start/stop/cancel | Prior pipeline checks only | Start/Stop and callbacks passed | Native toolbar actions; 10 PCM callbacks in one second; lifecycle cancellation contract |
+| Output/app/display capture and permission recovery | Existing session tests | Controller/policy coverage only | Session E2E and permission cases; fresh real OS permission revocation not exercised |
+| English/Japanese/model selection | Prior code checks only | Setup and routing passed | Native first-use model values, language clamp, model-selection contract |
+| History selection/copy/delete/recovery | Source mismatch/data-loss findings | Passed | Named native confirmation, displayed-session copy, eight persistence invariants and damaged-file byte preservation |
+| Transcript search/export | No actions | Passed | Real Japanese search/no-match state; native Save to temporary folder with exact UTF-8 content |
+| Translation/empty/partial/failure states | Rendering smoke only | State rendering passed | Original state matrix and model gates; no new translation-model superiority claim |
+| Floating captions/settings/window lifecycle | Rendering/lifecycle smoke only | Rendering, deeplink and lifecycle passed | Native Voice Type Settings tab; existing lifecycle test; opacity/motion preview cases |
+| Voice Type/shortcut/permissions/secure field/cancel | Selected text duplication reproduced | Ten real field cases passed | Selected/cursor/Unicode/rollback/focus/edit/caret/password/empty/withdrawn cases; long mixed-text case; five asynchronous ownership checks |
+| Keyboard/VoiceOver/full keyboard access | Not tested | Keyboard input and AX semantics inspected | Foreground-PID pinned typing, native menu actions and control labels; spoken VoiceOver and global full-keyboard-access modes not certified |
+| Light/dark/contrast/transparency/motion/localization | Light/dark rendering smoke | 51 preview cases passed | English/Japanese, light/dark, app opacity/contrast/motion fallbacks; preview does not alter macOS settings |
