@@ -5,8 +5,10 @@ import SwiftUI
 struct FollowLatestScrollView<Content: View>: View {
     let contentVersion: String
     private let content: Content
+    private let preferences: UserPreferences?
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.mimiAccessibilityPreview) private var accessibilityPreview
     @State private var followsLatest: Bool
     @State private var isAtBottom = true
     @State private var userIsScrolling = false
@@ -17,9 +19,11 @@ struct FollowLatestScrollView<Content: View>: View {
     init(
         contentVersion: String,
         initiallyFollowing: Bool = true,
+        preferences: UserPreferences? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.contentVersion = contentVersion
+        self.preferences = preferences
         self.content = content()
         _followsLatest = State(initialValue: initiallyFollowing)
         _hasUnseenContent = State(initialValue: !initiallyFollowing)
@@ -72,7 +76,7 @@ struct FollowLatestScrollView<Content: View>: View {
                         scrollToLatest(using: proxy, animated: true)
                     } label: {
                         Label(
-                            hasUnseenContent ? "New text" : "Jump to Latest",
+                            hasUnseenContent ? t("New text", "新しいテキスト") : t("Jump to Latest", "最新のテキストへ"),
                             systemImage: "arrow.down"
                         )
                     }
@@ -80,8 +84,8 @@ struct FollowLatestScrollView<Content: View>: View {
                     .controlSize(.small)
                     .tint(hasUnseenContent ? .accentColor : .secondary)
                     .padding(8)
-                    .help("Return to the newest transcript text and resume automatic scrolling")
-                    .accessibilityHint("Resumes following new text automatically")
+                    .help(t("Return to the newest transcript text and resume automatic scrolling", "最新の文字起こしへ戻り、自動スクロールを再開します"))
+                    .accessibilityHint(t("Resumes following new text automatically", "新しいテキストへの自動スクロールを再開します"))
                 }
             }
         }
@@ -90,7 +94,7 @@ struct FollowLatestScrollView<Content: View>: View {
     private func scrollToLatest(using proxy: ScrollViewProxy, animated: Bool) {
         Task { @MainActor in
             await Task.yield()
-            if animated && !reduceMotion {
+            if animated && !reduceMotion && !accessibilityPreview.contains(.reduceMotion) {
                 withAnimation(.easeOut(duration: 0.2)) {
                     proxy.scrollTo(bottomAnchor, anchor: .bottom)
                 }
@@ -98,5 +102,9 @@ struct FollowLatestScrollView<Content: View>: View {
                 proxy.scrollTo(bottomAnchor, anchor: .bottom)
             }
         }
+    }
+
+    private func t(_ english: String, _ japanese: String) -> String {
+        preferences?.text(english, japanese) ?? english
     }
 }

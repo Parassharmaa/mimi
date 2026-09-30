@@ -22,11 +22,23 @@ final class AppStore {
         loadPersistedTranscript: Bool = true,
         appleSpeech: (any AppleSpeechProviding)? = nil,
         whisper: (any WhisperAccuracyTranscribing)? = nil,
-        phonon: (any WhisperAccuracyTranscribing)? = nil
+        phonon: (any WhisperAccuracyTranscribing)? = nil,
+        historyStore: TranscriptHistoryStore? = nil,
+        transcriptStorage: (any TranscriptPersisting)? = nil
     ) {
-        let historyStore = TranscriptHistoryStore()
+        let historyStore = historyStore ?? (loadPersistedTranscript
+            ? TranscriptHistoryStore()
+            : TranscriptHistoryStore(fileURL: FileManager.default.temporaryDirectory
+                .appending(path: "mimi-fixture-history-\(UUID().uuidString)/sessions.json")))
         self.historyStore = historyStore
-        historyRecords = loadPersistedTranscript ? historyStore.load() : []
+        let historyLoadError: Error?
+        do {
+            historyRecords = loadPersistedTranscript ? try historyStore.load() : []
+            historyLoadError = nil
+        } catch {
+            historyRecords = []
+            historyLoadError = error
+        }
         inputDevicesProvider = AudioDeviceCatalog.inputDevices
         outputDevicesProvider = AudioDeviceCatalog.outputDevices
         let appleSpeech = appleSpeech ?? SystemAppleSpeechProvider()
@@ -42,7 +54,7 @@ final class AppStore {
                 whisper: whisper,
                 nemotron: NemotronMLXLiveEngine(),
                 qwen: QwenMLXLiveEngine(),
-                storage: FileTranscriptStore(),
+                storage: transcriptStorage ?? (loadPersistedTranscript ? FileTranscriptStore() : TransientTranscriptStore()),
                 inputDevices: AudioDeviceCatalog.inputDevices(),
                 outputDevices: AudioDeviceCatalog.outputDevices(),
                 phonon: phonon
@@ -50,6 +62,9 @@ final class AppStore {
             loadPersistedTranscript: loadPersistedTranscript
         )
         session = createdSession
+        if let historyLoadError {
+            session.lastError = historyLoadError.localizedDescription
+        }
         Task { [weak createdSession] in
             await createdSession?.refreshSelectedModelReadiness()
         }
@@ -126,8 +141,9 @@ final class AppStore {
                 defer { recordingStartPending = false }
                 guard !isVoiceTypingActive() else { return }
                 if !session.document.renderedText.isEmpty {
-                    archiveCurrentSessionIfNeeded()
+                    guard archiveCurrentSessionIfNeeded() else { return }
                     session.clearTranscript()
+                    guard session.document.renderedText.isEmpty else { return }
                 }
                 selectedHistoryID = nil
                 recordingStartedAt = Date()
@@ -156,13 +172,28 @@ final class AppStore {
         session.removeSelectedModel()
     }
 
-    func clearTranscript() {
-        if let selectedHistoryID {
-            historyRecords.removeAll { $0.id == selectedHistoryID }
-            self.selectedHistoryID = nil
-            try? historyStore.save(historyRecords)
+    @discardableResult
+    func clearTranscript() -> Bool {
+        clearTranscript(historyID: selectedHistoryID)
+    }
+
+    @discardableResult
+    func clearTranscript(historyID: UUID?) -> Bool {
+        if let historyID {
+            let remainingRecords = historyRecords.filter { $0.id != historyID }
+            guard remainingRecords.count != historyRecords.count else { return true }
+            do {
+                try historyStore.save(remainingRecords)
+                historyRecords = remainingRecords
+                if selectedHistoryID == historyID { selectedHistoryID = nil }
+                return true
+            } catch {
+                session.lastError = error.localizedDescription
+                return false
+            }
         } else {
             session.clearTranscript()
+            return session.document.renderedText.isEmpty
         }
     }
 
@@ -173,24 +204,24 @@ final class AppStore {
     func newSession() {
         guard !controlsLocked else { return }
         if !session.document.renderedText.isEmpty {
-            archiveCurrentSessionIfNeeded()
+            guard archiveCurrentSessionIfNeeded() else { return }
         }
         session.clearTranscript()
+        guard session.document.renderedText.isEmpty else { return }
         selectedHistoryID = nil
         recordingStartedAt = nil
     }
 
-    private func archiveCurrentSessionIfNeeded() {
+    @discardableResult
+    private func archiveCurrentSessionIfNeeded() -> Bool {
         let document = session.document
         guard !document.renderedText.isEmpty else {
             recordingStartedAt = nil
-            return
+            return true
         }
         let start = recordingStartedAt ?? document.segments.first?.createdAt ?? Date()
-        if let existingIndex = historyRecords.firstIndex(where: { $0.document == document }) {
-            historyRecords.remove(at: existingIndex)
-        }
-        historyRecords.insert(
+        var updatedRecords = historyRecords.filter { $0.document != document }
+        updatedRecords.insert(
             TranscriptSessionRecord(
                 id: UUID(),
                 startedAt: start,
@@ -200,11 +231,14 @@ final class AppStore {
             ),
             at: 0
         )
-        recordingStartedAt = nil
         do {
-            try historyStore.save(historyRecords)
+            try historyStore.save(updatedRecords)
+            historyRecords = updatedRecords
+            recordingStartedAt = nil
+            return true
         } catch {
             session.lastError = error.localizedDescription
+            return false
         }
     }
 
@@ -218,6 +252,10 @@ final class AppStore {
 
     func selectScreenAudioContent() {
         Task { await session.selectScreenAudioContent() }
+    }
+
+    func reportError(_ error: Error) {
+        session.lastError = error.localizedDescription
     }
 
     func copyTranscript() {

@@ -192,6 +192,27 @@ final class UserPreferences {
         SMAppService.mainApp.status == .enabled
     }
 
+    func configureVoiceTypingForFirstUse(
+        engineID: TranscriptionEngineID,
+        language: SpeechLanguage,
+        speechIsReady: Bool
+    ) {
+        guard let choice = OnboardingVoiceTypingChoice.initialChoice(
+            engineID: engineID,
+            language: language,
+            speechIsReady: speechIsReady,
+            hasConfiguredModel: defaults.object(forKey: Key.voiceTypingModel) != nil
+        ) else { return }
+        // A language chosen independently in Settings is still an explicit
+        // preference. Do not replace it with an incompatible first-use default.
+        if defaults.object(forKey: Key.voiceTypingLanguage) != nil,
+           voiceTypingLanguage != choice.language {
+            return
+        }
+        voiceTypingModel = choice.model
+        voiceTypingLanguage = choice.language
+    }
+
     func setStartsAtLogin(_ enabled: Bool) {
         do {
             if enabled {

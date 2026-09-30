@@ -22,8 +22,9 @@ and translation on your Mac.
 - Recognize English and Japanese automatically as speech arrives.
 - Translate between English and Japanese locally.
 - Float original text, translations, or both above other apps.
-- Type into the selected field by speaking, with a global shortcut.
+- Dictate into supported text fields with a global shortcut.
 - Keep previous sessions so you can return to them later.
+- Search, copy, and export current or saved transcripts.
 - Open automatically when you log in, if you choose.
 
 Mimi uses Apple Speech by default for live transcription. The development
@@ -45,13 +46,12 @@ Mimi Speech Preview is one 468.15 MB 4-bit model for both English and Japanese.
 On the fixed 24-clip screens, it scores 6.57% Japanese CER and 5.54% English
 WER, versus 11.06% and 9.23% for Apple SpeechAnalyzer progressive. Its mean
 compute RTF is 0.397 in Japanese and 0.405 in English.
-The production-queue replay delivers audio on time with no drops and reaches
-first text at 3.88 seconds in Japanese and 2.88 seconds in English. It retained
-6.57% CER and 5.90% WER across six-minute and four-minute sessions with
-one-second utterance boundaries. Finalization p95 is still 2.12 seconds in
-Japanese and 1.73 seconds in English, and artificial gapless speech remains
-weak. Apple remains the default. The preview currently requires manual English
-or Japanese selection.
+The current fixed four-minute and six-minute production replays lose no audio.
+Paused speech retains 6.57% Japanese CER and 5.90% English WER; artificial
+gapless speech scores 6.03% and 12.36%. Stop finalization is 0.987 seconds in
+English, 1.003 seconds on its prescribed repeat, and 0.977 seconds in Japanese.
+Apple remains the default. The preview requires manual English or Japanese
+selection. Full methods and source-bound reports are kept in the research docs.
 
 - [Pinned public model](https://huggingface.co/mlx-community/whisper-large-v3-turbo-asr-4bit/tree/321a6ead9f6e0646bc8188a54d2a470e275c6b76)
 - [Native MLX loader review](https://github.com/Blaizzy/mlx-audio-swift/pull/235)
@@ -100,7 +100,12 @@ macOS asks for microphone or system-audio access only when the selected source
 needs it. Languages are prepared in **Settings → Languages**. To dictate into
 another app, enable **Voice Type** during setup or in Settings, place the cursor
 in a text field, and press the chosen shortcut. Words appear directly in the
-field as you speak; press the shortcut again to stop.
+field as you speak; press the shortcut again to stop, or Escape to restore the
+original text. Password fields and Terminal prompts are not supported.
+
+Navigation and controls use native Liquid Glass on macOS 26. Transcripts keep
+readable content surfaces, with opaque fallbacks for reduced transparency and
+increased contrast. Setup prepares only the models you choose.
 
 ## Test it
 

@@ -93,7 +93,11 @@ final class FloatingCaptionController: NSObject, NSWindowDelegate {
             ? clamped(preferences.floatingCaptionCustomOrigin ?? presetOrigin, size: size, in: visible)
             : presetOrigin
         isPositioningPanel = true
-        panel.setFrame(NSRect(origin: origin, size: size), display: true, animate: panel.isVisible)
+        panel.setFrame(
+            NSRect(origin: origin, size: size),
+            display: true,
+            animate: panel.isVisible && !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        )
         isPositioningPanel = false
     }
 
@@ -127,6 +131,11 @@ struct FloatingCaptionView: View {
     @Bindable var preferences: UserPreferences
     var allowsLiveTranslation = true
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.mimiAccessibilityPreview) private var accessibilityPreview
+    private var usesOpaqueSurface: Bool {
+        reduceTransparency || contrast == .increased || accessibilityPreview.contains(.reduceTransparency) || accessibilityPreview.contains(.increaseContrast)
+    }
     @State private var configuration: TranslationSession.Configuration?
     @State private var pipeline = LiveTranslationPipeline()
     @State private var configuredLanguage: SpeechLanguage?
@@ -212,13 +221,13 @@ struct FloatingCaptionView: View {
         .background {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(
-                    reduceTransparency
+                    usesOpaqueSurface
                         ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor))
                         : AnyShapeStyle(.ultraThinMaterial.opacity(0.58))
                 )
                 .overlay {
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .strokeBorder(.white.opacity(reduceTransparency ? 0.18 : 0.10))
+                        .strokeBorder(Color.primary.opacity(usesOpaqueSurface ? 0.35 : 0.10))
                 }
         }
         .overlay {

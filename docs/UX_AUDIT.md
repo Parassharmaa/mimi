@@ -1,0 +1,92 @@
+# Mimi UX audit
+
+Baseline: Phonon development commit 84cd1c4, macOS 26.5.1, Apple M3 Pro.
+The installed app is observable through macOS Accessibility and window
+screenshots. Initial live content is private; published evidence will use
+synthetic sessions.
+
+Findings start as hypotheses until reproduced or confirmed from the full
+implementation. The audit covers usability, functional behavior and native
+accessibility semantics. Web ARIA rules are not applied literally to SwiftUI.
+
+| ID | Priority | Finding | Evidence/status | Verification |
+| --- | --- | --- | --- | --- |
+| UX-001 | High | Historical session headers use current input/model/language settings rather than distinguishing saved content from current capture configuration. | Live screenshot and TranscriptWindow.sessionStrip; needs synthetic reproduction. | Select a saved Japanese session while current input is English; verify accurate context and recording destination. |
+| UX-002 | High | History deletion ignores storage errors and removes the item in memory before confirming durable persistence. | AppStore.clearTranscript uses try? historyStore.save. | Inject a storage failure; item must remain recoverable and error must be visible. |
+| UX-003 | Medium | Current transcript is a button rather than a selected source-list row, so selection/wayfinding differs from saved sessions. | TranscriptHistorySidebar; verify keyboard and VoiceOver behavior. | Navigate current/history by arrow keys and inspect selected state. |
+| UX-004 | Medium | Long transcript has no visible search or export action in the main toolbar. | Live screenshot and transcriptToolbar; discover menu alternatives before fixing. | Find text and export the selected session using pointer and keyboard. |
+| UX-005 | Medium | Settings, Voice Type and source/model preparation need clearer entry points from the transcript workflow. | Live screenshot; requires full navigation audit. | Complete first-use setup from main window without relying on prior product knowledge. |
+| UX-006 | High | Voice Type inserts before selected text and duplicates it on cancellation. | Reproduced in a synthetic AppKit field: `hello world` became `hello worldworld`; original smoke incorrectly passed. | Full-field replacement/rollback checks, including Japanese and emoji selection. |
+| UX-007 | High | Moving to another field in the same app can direct global key events to the wrong destination. | Confirmed from complete insertion implementation. | Two-field fixture changes focus between partial results; second field must remain unchanged. |
+| UX-008 | High | Editing text or moving the cursor inside the same field can cause subsequent partials or rollback to overwrite user edits. | Independent source review. | Intervening edit/caret fixtures must refuse further mutation and preserve edits. |
+| UX-009 | High | Cancelled asynchronous startup/finalization can release shared speech ownership too early or lose the rollback target. | Independent source review; production task-owner suspension test passes after fix. | Five lifecycle invariants plus actual dictation cancellation path. |
+| UX-010 | High | Archival failure is reported but New Session/Start still clears the current transcript. | Confirmed from full caller/callee flow; fixture integration verifier added. | Eight app persistence invariants, including archive/start/clear failures. |
+| UX-011 | High | Malformed or unreadable history is treated as empty and can be overwritten. | Failing-before store regression reproduced; actual store test now passes. | Exact byte preservation, missing/valid/malformed/repaired/unreadable cases. |
+| UX-012 | High | Menu preview displays current text while Copy/Delete targets the selected historical session. | Confirmed source mismatch. | Historical-session fixture plus live copy/delete actions. |
+| UX-013 | High | Deletion confirmation targets the selection/current content at confirmation time rather than the original target. | Confirmed source flow and independent review of current-session race. | Capture history UUID/current-document snapshot; reject changes and active recording. |
+| UX-014 | High | Offline onboarding requires Apple speech/translation downloads even when bundled local models are selected. | Confirmed source flow; 36 provider/permission assertions pass after fix. | Live first-run selection of bundled Whisper and Phonon without Apple preparation. |
+| UX-015 | Medium | Permission UI uses a green check for permissions that were never granted but are unnecessary for the selected source. | Confirmed source semantics; actual policy helper tests pass. | Distinct Granted/Not required/Request/Denied states. |
+| UX-016 | Medium | Voice Type preparation cannot be cancelled with Escape, and all active phases are announced as listening. | Confirmed source. | Escape during setup, startup/listening/finishing AX labels. |
+| UX-017 | Medium | Settings access status can remain stale after macOS permission changes, and setup links open the wrong tab. | Confirmed source. | App/window activation refresh and native Settings deeplinks. |
+| UX-018 | Medium | Voice Type error disappears after four seconds with no persistent recovery context. | Confirmed source. | Persistent latest issue in Voice Type settings. |
+| UX-019 | Medium | Caption repositioning animates despite Reduce Motion; setup progress lacks a spoken step count. | Confirmed source; code checks only after fix. | Reduced-motion fixture and AX step label. |
+| UX-020 | Medium | Several user-visible controls and privacy descriptions are English-only or describe Apple despite selecting local engines. | Confirmed source. | Japanese interface matrix and selected-provider privacy inspection. |
+| UX-021 | High | Terminal keyboard fallback can delete existing shell text when the cursor or prompt changes. | Actual LiveTextEdit simulation reproduced deletion; AX history does not expose the writable prompt cursor. | Refuse Terminal at capture before model/microphone setup; remove unverified Backspace fallback and disclose supported-field scope. |
+| UX-022 | High | First-use setup can prepare Phonon/Apple but enable Voice Type with an unavailable Whisper default. | Stable bundle and complete setup source flow confirm mismatch. | 210 real preference/policy assertions; default follows prepared engine only when no saved model choice exists. |
+| UX-023 | High | Empty/withdrawn speech hypotheses delete an original text selection even when no dictation is committed. | Real empty-start field regression failed before the fix; ten field cases pass after it. | Empty hypotheses restore a prior partial or leave the original selection untouched; assert before final cancellation. |
+| UX-024 | High | Missing selected-text AX support can lose the original selection on rollback, and invalid ranges are not checked. | Capture used an empty-string fallback despite having the full field value. | Derive selection from one validated UTF-16 field snapshot; verify English/Japanese extraction and invalid-range refusal. |
+
+## Implementation and evidence status
+
+Functional/data safety changes precede visual changes. The branch contains
+separate commits for persistence, provider-aware setup, dictation ownership,
+native interface actions and final selection-safety regressions. Parsing alone
+does not establish runtime correctness.
+
+Verified so far:
+
+- Baseline selected-text duplication in a real synthetic AppKit text field.
+- Actual history store regression, including exact damaged-file preservation.
+- 210 provider, permission and persisted preference-policy assertions.
+- Five asynchronous ownership invariants using the production task owner.
+- Native Settings coordinator SDK typecheck and edited-source parse checks.
+
+The full application builds. Eight app persistence invariants, five lifecycle
+ownership invariants and eight real text-field checks have passed. Live history
+Copy, named Delete/Cancel, Export/Cancel, Japanese search/no-match state, Voice
+Type Settings deeplink, microphone callbacks and native Start/Stop have passed.
+The original 47-scenario state/light/dark rendering matrix passes. Tests using
+physical focus run serially, and the field harness pins its fixture PID.
+
+The expanded 51-case language/appearance/accessibility-fallback matrix passed,
+as did the Japanese Phonon first-use walkthrough and ten final live field cases.
+Native Save wrote the selected session to a temporary folder, with exact UTF-8
+content verification. A long mixed English/Japanese/emoji insertion and rollback
+also passed. These are app-level checks, not certification of every host editor.
+
+Pending: refreshed source-bound speech controls after the last safety fix,
+the complete final-head suite and exact-head CI. AX semantics are inspected; a complete spoken
+VoiceOver audit is not claimed. Native macOS 15 compatibility is compile-gated,
+not verified on a second OS installation. Claude review could not run because
+its login expired; independent code review found and resolved the ownership
+and Terminal defects.
+
+Private installed-app screenshots remain local. Public evidence uses only
+synthetic English/Japanese content. Developer fixtures use transient transcript
+and history storage and do not register the user's dictation shortcut.
+
+## Flow matrix
+
+| Flow | Baseline | Fixed | Evidence |
+| --- | --- | --- | --- |
+| First launch and setup | Apple-only preparation confirmed | Passed Phonon setup walkthrough | Real Japanese Continue actions; Phonon/English selected for Voice Type; 210 policy/preference assertions |
+| Microphone recording/start/stop/cancel | Prior pipeline checks only | Start/Stop and callbacks passed | Native toolbar actions; 10 PCM callbacks in one second; lifecycle cancellation contract |
+| Output/app/display capture and permission recovery | Existing session tests | Controller/policy coverage only | Session E2E and permission cases; fresh real OS permission revocation not exercised |
+| English/Japanese/model selection | Prior code checks only | Setup and routing passed | Native first-use model values, language clamp, model-selection contract |
+| History selection/copy/delete/recovery | Source mismatch/data-loss findings | Passed | Named native confirmation, displayed-session copy, eight persistence invariants and damaged-file byte preservation |
+| Transcript search/export | No actions | Passed | Real Japanese search/no-match state; native Save to temporary folder with exact UTF-8 content |
+| Translation/empty/partial/failure states | Rendering smoke only | State rendering passed | Original state matrix and model gates; no new translation-model superiority claim |
+| Floating captions/settings/window lifecycle | Rendering/lifecycle smoke only | Rendering, deeplink and lifecycle passed | Native Voice Type Settings tab; existing lifecycle test; opacity/motion preview cases |
+| Voice Type/shortcut/permissions/secure field/cancel | Selected text duplication reproduced | Ten real field cases passed | Selected/cursor/Unicode/rollback/focus/edit/caret/password/empty/withdrawn cases; long mixed-text case; five asynchronous ownership checks |
+| Keyboard/VoiceOver/full keyboard access | Not tested | Keyboard input and AX semantics inspected | Foreground-PID pinned typing, native menu actions and control labels; spoken VoiceOver and global full-keyboard-access modes not certified |
+| Light/dark/contrast/transparency/motion/localization | Light/dark rendering smoke | 51 preview cases passed | English/Japanese, light/dark, app opacity/contrast/motion fallbacks; preview does not alter macOS settings |

@@ -16,6 +16,7 @@ struct SettingsView: View {
     @Bindable var preferences: UserPreferences
     @Bindable var voiceTyping: VoiceTypingController
     @State private var selectedTab: SettingsTab
+    private let focusCoordinator = SettingsWindowFocusCoordinator.shared
 
     init(
         store: AppStore,
@@ -48,26 +49,35 @@ struct SettingsView: View {
             }
 
             Tab(preferences.text("Audio", "音声"), systemImage: "waveform", value: .capture) {
-                CaptureSettingsPane(store: store)
+                CaptureSettingsPane(store: store, preferences: preferences)
             }
 
             Tab(preferences.text("Privacy", "プライバシー"), systemImage: "hand.raised", value: .privacy) {
-                PrivacySettingsPane(preferences: preferences)
+                PrivacySettingsPane(store: store, preferences: preferences)
             }
         }
         .scenePadding()
         .frame(width: 620, height: 540)
         .background(SettingsWindowRegistrar())
+        .onAppear { applyRequestedTab() }
+        .onChange(of: focusCoordinator.requestID) { applyRequestedTab() }
+    }
+
+    private func applyRequestedTab() {
+        if let tab = focusCoordinator.consumeRequestedTab() {
+            selectedTab = tab
+        }
     }
 }
 
 private struct VoiceTypingSettingsPane: View {
     @Bindable var preferences: UserPreferences
     @Bindable var voiceTyping: VoiceTypingController
+    @State private var accessibilityTrusted = false
 
     var body: some View {
         Form {
-            Section(preferences.text("Type anywhere by speaking", "声でどこにでも入力")) {
+            Section(preferences.text("Dictate into supported text fields", "対応する入力欄に音声入力")) {
                 Toggle(preferences.text("Enable Voice Type", "音声入力を有効にする"), isOn: $preferences.voiceTypingEnabled)
                 Picker(preferences.text("Shortcut", "ショートカット"), selection: $preferences.voiceTypingShortcut) {
                     ForEach(VoiceTypingShortcut.allCases) { shortcut in
@@ -96,12 +106,12 @@ private struct VoiceTypingSettingsPane: View {
             Section(preferences.text("Access", "アクセス")) {
                 LabeledContent(preferences.text("Accessibility", "アクセシビリティ")) {
                     Label(
-                        voiceTyping.hasAccessibilityAccess ? preferences.text("Ready", "準備完了") : preferences.text("Permission needed", "許可が必要"),
-                        systemImage: voiceTyping.hasAccessibilityAccess ? "checkmark.circle.fill" : "exclamationmark.circle"
+                        accessibilityTrusted ? preferences.text("Ready", "準備完了") : preferences.text("Permission needed", "許可が必要"),
+                        systemImage: accessibilityTrusted ? "checkmark.circle.fill" : "exclamationmark.circle"
                     )
-                    .foregroundStyle(voiceTyping.hasAccessibilityAccess ? .green : .secondary)
+                    .foregroundStyle(accessibilityTrusted ? .green : .secondary)
                 }
-                if !voiceTyping.hasAccessibilityAccess {
+                if !accessibilityTrusted {
                     Button(preferences.text("Allow in System Settings…", "システム設定で許可…")) {
                         voiceTyping.requestAccessibilityAccess()
                     }
@@ -116,15 +126,41 @@ private struct VoiceTypingSettingsPane: View {
                 }
             }
 
+            if let error = voiceTyping.lastError {
+                Section(preferences.text("Last dictation issue", "前回の音声入力の問題")) {
+                    Label(error, systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(.orange)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityElement(children: .combine)
+                    Text(preferences.text(
+                        "Check Accessibility access, then place the cursor in an editable text field and try your shortcut again.",
+                        "アクセシビリティの許可を確認し、編集できる入力欄にカーソルを置いて、もう一度ショートカットを押してください。"
+                    ))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+            }
+
             Section {
                 Text(preferences.text(
-                    "Place the cursor in a text field and press the shortcut. Your words appear in the field as you speak. Press the shortcut again to stop, or Escape to undo this dictation. Password fields are never supported.",
-                    "入力欄にカーソルを置き、ショートカットを押すと、話した内容がその場で入力されます。もう一度押すと停止し、Escで今回の音声入力を取り消せます。パスワード欄では使用できません。"
+                    "Place the cursor in a supported text field and press the shortcut. Press it again to stop, or Escape to undo this dictation. Password fields and Terminal prompts are not supported. Moving the cursor or editing the field stops dictation to preserve your edits.",
+                    "対応する入力欄にカーソルを置き、ショートカットを押すと音声入力が始まります。もう一度押すと停止し、Escで取り消せます。パスワード欄とTerminalのプロンプトには対応していません。カーソルの移動や編集を検知すると、内容を保護するために停止します。"
                 ))
                 .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
+        .onAppear { refreshAccessibilityAccess() }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            refreshAccessibilityAccess()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didBecomeKeyNotification)) { _ in
+            refreshAccessibilityAccess()
+        }
+    }
+
+    private func refreshAccessibilityAccess() {
+        accessibilityTrusted = voiceTyping.hasAccessibilityAccess
     }
 
     private var modelDescription: String {
@@ -153,7 +189,7 @@ private struct CaptionSettingsPane: View {
 
     var body: some View {
         Form {
-            Section("Floating captions") {
+            Section(preferences.text("Floating captions", "フローティング字幕")) {
                 Toggle(preferences.text("Show captions above other apps", "他のアプリの上に字幕を表示"), isOn: $preferences.floatingCaptionsEnabled)
                 Picker(preferences.text("Show", "表示内容"), selection: $preferences.floatingCaptionContent) {
                     Text(preferences.text("Original", "原文")).tag(FloatingCaptionContent.original)
@@ -230,15 +266,15 @@ private struct ModelsSettingsPane: View {
 
     var body: some View {
         Form {
-            Section("Transcription") {
-                Picker("Model", selection: $store.engineID) {
+            Section(preferences.text("Transcription", "文字起こし")) {
+                Picker(preferences.text("Model", "モデル"), selection: $store.engineID) {
                     ForEach(TranscriptionEngineID.selectableCases) { engine in
                         Text(engine.displayName).tag(engine)
                     }
                 }
                 .disabled(store.controlsLocked || store.isModelSetupActive)
 
-                Picker("Language", selection: $store.languageMode) {
+                Picker(preferences.text("Language", "言語"), selection: $store.languageMode) {
                     ForEach(store.selectableLanguageModes) { mode in
                         Text(mode.displayName).tag(mode)
                     }
@@ -252,14 +288,14 @@ private struct ModelsSettingsPane: View {
                 }
             }
 
-            Section("Local availability") {
+            Section(preferences.text("Local availability", "ローカルモデルの状態")) {
                 ModelSetupStatusView(
                     readiness: store.selectedModelReadiness,
                     setupState: store.selectedModelSetupState
                 )
 
                 if let pack = store.modelPack {
-                    LabeledContent("Storage") {
+                    LabeledContent(preferences.text("Storage", "ストレージ")) {
                         Text(storageDescription(for: pack))
                             .foregroundStyle(.secondary)
                     }
@@ -273,7 +309,7 @@ private struct ModelsSettingsPane: View {
                     Label(
                         translationModelAvailable
                             ? preferences.text("Mimi ready", "Mimi 準備完了")
-                            : preferences.text("Model missing", "モデルが見つかりません"),
+                            : preferences.text("Apple Translation fallback", "Apple Translationに切り替え"),
                         systemImage: translationModelAvailable
                             ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
                     )
@@ -284,13 +320,14 @@ private struct ModelsSettingsPane: View {
                         .foregroundStyle(.secondary)
                 }
                 LabeledContent(preferences.text("Storage", "ストレージ")) {
-                    Text(preferences.text("73.4 MB, included with Mimi", "73.4 MB、Mimiに同梱"))
+                    Text(translationModelAvailable
+                        ? preferences.text("73.4 MB, included with Mimi", "73.4 MB、Mimiに同梱")
+                        : preferences.text("Language assets managed by macOS", "macOSが管理する言語データ"))
                         .foregroundStyle(.secondary)
                 }
-                Text(preferences.text(
-                    "Translations run entirely on this Mac with the Mimi model. No text is sent to Apple or a cloud translation service.",
-                    "翻訳はMimiモデルを使い、このMac上だけで実行されます。テキストはAppleやクラウド翻訳サービスには送信されません。"
-                ))
+                Text(translationModelAvailable
+                    ? preferences.text("Translations run entirely on this Mac with the Mimi model. No text is sent to a cloud translation service.", "翻訳はMimiモデルを使い、このMac上だけで実行されます。テキストはクラウド翻訳サービスには送信されません。")
+                    : preferences.text("The Mimi translation model is unavailable. Apple Translation can prepare its language assets for on-device translation.", "Mimiの翻訳モデルを利用できません。Apple Translationの言語データを準備すると、端末内で翻訳できます。"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -304,7 +341,9 @@ private struct ModelsSettingsPane: View {
             if store.engineID.isExperimental {
                 Section {
                     Label(
-                        "This model is available locally, but remains experimental while Mimi evaluates Japanese accuracy, long-session stability, and thermal performance.",
+                        store.engineID == .phonon2
+                            ? preferences.text("Phonon 2 is an English-only preview. Use Mimi Speech or Apple Speech for Japanese.", "Phonon 2は英語専用のプレビューモデルです。日本語にはMimi SpeechまたはApple Speechを使用してください。")
+                            : preferences.text("This local model remains a preview while Mimi evaluates accuracy, long-session stability, and thermal performance.", "このローカルモデルは、認識精度、長時間利用時の安定性、発熱を評価中のプレビューモデルです。"),
                         systemImage: "flask"
                     )
                     .font(.caption)
@@ -326,13 +365,13 @@ private struct ModelsSettingsPane: View {
             }
 
             if store.canCancelSelectedModelInstall {
-                Button("Pause Download") {
+                Button(preferences.text("Pause Download", "ダウンロードを一時停止")) {
                     store.cancelSelectedModelInstall()
                 }
             }
 
             if shouldShowAppleStatusCheck {
-                Button("Check Status") {
+                Button(preferences.text("Check Status", "状態を確認")) {
                     store.refreshSelectedModelReadiness()
                 }
             }
@@ -349,9 +388,9 @@ private struct ModelsSettingsPane: View {
 
     private func storageDescription(for pack: LocalModelPack) -> String {
         if let size = pack.estimatedDownloadMB {
-            return "About \(size) MB, managed by Mimi"
+            return preferences.text("About \(size) MB, managed by Mimi", "約\(size) MB、Mimiが管理")
         }
-        return "Language asset managed by macOS"
+        return preferences.text("Language asset managed by macOS", "macOSが管理する言語データ")
     }
 
     private var translationModelAvailable: Bool {
@@ -374,13 +413,15 @@ private struct ModelsSettingsPane: View {
         }
         let base: String = switch store.engineID {
         case .appleSpeechAnalyzer:
-            store.languageMode == .automatic ? "Prepare English and Japanese" : "Prepare \(store.sourceLanguage.displayName)"
-        case .whisperKitLargeV3Turbo: "Download Mimi Speech"
-        case .phonon2: "Prepare Phonon 2"
-        case .nemotronStreamingExperimental: "Download Nemotron"
-        case .qwen3StreamingExperimental: "Download Qwen3-ASR"
+            store.languageMode == .automatic
+                ? preferences.text("Prepare English and Japanese", "英語と日本語を準備")
+                : preferences.text("Prepare \(store.sourceLanguage.displayName)", "\(store.sourceLanguage.nativeName)を準備")
+        case .whisperKitLargeV3Turbo: preferences.text("Download Mimi Speech", "Mimi Speechをダウンロード")
+        case .phonon2: preferences.text("Prepare Phonon 2", "Phonon 2を準備")
+        case .nemotronStreamingExperimental: preferences.text("Download Nemotron", "Nemotronをダウンロード")
+        case .qwen3StreamingExperimental: preferences.text("Download Qwen3-ASR", "Qwen3-ASRをダウンロード")
         }
-        return retry ? "Retry \(base)" : base
+        return retry ? preferences.text("Retry \(base)", "再試行: \(base)") : base
     }
 
     private var shouldShowAppleStatusCheck: Bool {
@@ -393,60 +434,61 @@ private struct ModelsSettingsPane: View {
 
     private var removeButtonTitle: String {
         switch store.engineID {
-        case .whisperKitLargeV3Turbo: "Remove Mimi Speech Download"
-        case .phonon2: "Phonon 2 is bundled"
-        case .nemotronStreamingExperimental: "Remove Nemotron Download"
-        case .qwen3StreamingExperimental: "Remove Qwen3-ASR Download"
-        case .appleSpeechAnalyzer: "Remove Download"
+        case .whisperKitLargeV3Turbo: preferences.text("Remove Mimi Speech Download", "Mimi Speechのダウンロードを削除")
+        case .phonon2: preferences.text("Phonon 2 is bundled", "Phonon 2は同梱済み")
+        case .nemotronStreamingExperimental: preferences.text("Remove Nemotron Download", "Nemotronのダウンロードを削除")
+        case .qwen3StreamingExperimental: preferences.text("Remove Qwen3-ASR Download", "Qwen3-ASRのダウンロードを削除")
+        case .appleSpeechAnalyzer: preferences.text("Remove Download", "ダウンロードを削除")
         }
     }
 }
 
 private struct CaptureSettingsPane: View {
     @Bindable var store: AppStore
+    @Bindable var preferences: UserPreferences
 
     var body: some View {
         Form {
-            Section("Device audio") {
-                LabeledContent("Microphone") {
-                    Label("Asked when recording starts", systemImage: "mic")
+            Section(preferences.text("Device audio", "デバイスの音声")) {
+                LabeledContent(preferences.text("Microphone", "マイク")) {
+                    Label(preferences.text("Asked when recording starts", "録音開始時に許可を確認"), systemImage: "mic")
                         .foregroundStyle(.secondary)
                 }
 
-                LabeledContent("Audio Output") {
-                    Label("System Audio Recording", systemImage: "speaker.wave.2")
+                LabeledContent(preferences.text("Audio Output", "音声出力")) {
+                    Label(preferences.text("System Audio Recording", "システム音声の録音"), systemImage: "speaker.wave.2")
                         .foregroundStyle(.secondary)
                 }
 
-                Text("Choose the exact microphone or output device in the Session sidebar. Mimi asks for the matching macOS permission only when capture begins.")
+                Text(preferences.text("Choose the microphone or output device in the Session sidebar. Mimi asks for the matching macOS permission only when capture begins.", "セッションのサイドバーでマイクまたは出力デバイスを選択してください。Mimiは録音を開始するときにだけ、必要なmacOSの権限を確認します。"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            Section("Scoped meeting audio") {
-                LabeledContent("App Audio") {
+            Section(preferences.text("Meeting audio", "会議の音声")) {
+                LabeledContent(preferences.text("App Audio", "アプリの音声")) {
                     selectionStatus(for: .applicationAudio)
                 }
-                Button("Choose App…") {
+                Button(preferences.text("Choose App…", "アプリを選択…")) {
                     chooseScreenAudio(.applicationAudio)
                 }
                 .disabled(store.controlsLocked)
 
-                LabeledContent("Display Audio") {
+                LabeledContent(preferences.text("Display Audio", "ディスプレイの音声")) {
                     selectionStatus(for: .systemAudio)
                 }
-                Button("Choose Display…") {
+                Button(preferences.text("Choose Display…", "ディスプレイを選択…")) {
                     chooseScreenAudio(.systemAudio)
                 }
                 .disabled(store.controlsLocked)
 
-                Text("For Google Meet, choose Chrome; for Zoom, choose Zoom. Mimi registers only an audio output for the selected app or display and never captures screen pixels.")
+                Text(preferences.text("For Google Meet, choose Chrome; for Zoom, choose Zoom. Mimi captures only audio from the selected app or display, never screen pixels.", "Google MeetにはChrome、ZoomにはZoomを選択してください。Mimiは選択したアプリまたはディスプレイの音声だけを取り込み、画面の画像は記録しません。"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
             if let message = store.lastError, store.source != .microphone {
-                Section("Capture status") {
+                Section(preferences.text("Capture status", "録音の状態")) {
                     Label(message, systemImage: "info.circle")
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -459,13 +501,13 @@ private struct CaptureSettingsPane: View {
     @ViewBuilder
     private func selectionStatus(for source: AudioSource) -> some View {
         if let selection = store.screenAudioSelection, selection.source == source {
-            Label("Selected", systemImage: "checkmark.circle.fill")
+            Label(preferences.text("Selected", "選択済み"), systemImage: "checkmark.circle.fill")
                 .foregroundStyle(.green)
-                .accessibilityLabel("\(source.displayName) selected")
+                .accessibilityLabel(preferences.text("\(source.displayName) selected", "\(source.displayName)を選択済み"))
         } else {
-            Label("Not selected", systemImage: "circle")
+            Label(preferences.text("Not selected", "未選択"), systemImage: "circle")
                 .foregroundStyle(.secondary)
-                .accessibilityLabel("\(source.displayName) not selected")
+                .accessibilityLabel(preferences.text("\(source.displayName) not selected", "\(source.displayName)は未選択"))
         }
     }
 
@@ -476,6 +518,7 @@ private struct CaptureSettingsPane: View {
 }
 
 private struct PrivacySettingsPane: View {
+    @Bindable var store: AppStore
     @Bindable var preferences: UserPreferences
 
     var body: some View {
@@ -492,17 +535,16 @@ private struct PrivacySettingsPane: View {
                 privacyRow(
                     preferences.text("Transcription", "音声認識"),
                     detail: preferences.text(
-                        "Apple Speech turns audio into text on this Mac.",
-                        "Apple SpeechがこのMac上で音声をテキストに変換します。"
+                        "Your selected speech model, \(store.engineID.displayName), turns audio into text on this Mac. Voice Type uses \(preferences.voiceTypingModel.displayName).",
+                        "選択した音声認識モデルの\(store.engineID.displayName)が、このMac上で音声をテキストに変換します。音声入力には\(preferences.voiceTypingModel.displayName)を使用します。"
                     ),
                     symbol: "waveform"
                 )
                 privacyRow(
                     preferences.text("Translation", "翻訳"),
-                    detail: preferences.text(
-                        "The bundled Mimi model translates English and Japanese on this Mac.",
-                        "同梱されたMimiモデルが、このMac上で英語と日本語を翻訳します。"
-                    ),
+                    detail: ExperimentalMLXTranslationConfiguration.resolved() != nil
+                        ? preferences.text("The bundled Mimi model translates English and Japanese on this Mac.", "同梱されたMimiモデルが、このMac上で英語と日本語を翻訳します。")
+                        : preferences.text("Apple Translation translates English and Japanese on this Mac using macOS language assets.", "Apple TranslationがmacOSの言語データを使い、このMac上で英語と日本語を翻訳します。"),
                     symbol: "translate"
                 )
             }
