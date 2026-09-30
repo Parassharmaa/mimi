@@ -6,6 +6,13 @@ CONFIGURATION="${1:-debug}"
 APP="$ROOT/.build/Mimi.app"
 TRANSLATION_CHANNEL="${MIMI_TRANSLATION_CHANNEL:-development}"
 SPEECH_CHANNEL="${MIMI_SPEECH_CHANNEL:-stable}"
+PHONON_CACHE="$ROOT/.build/phonon2-model"
+"$ROOT/scripts/speech/fetch_phonon2_pack.sh" "$PHONON_CACHE"
+
+copy_model_tree() {
+  mkdir -p "$2"
+  cp -cR "$1/." "$2/" 2>/dev/null || cp -R "$1/." "$2/"
+}
 
 case "$TRANSLATION_CHANNEL" in
   development)
@@ -42,7 +49,7 @@ case "$SPEECH_CHANNEL" in
 esac
 
 cd "$ROOT"
-swift build -c "$CONFIGURATION" --product Mimi
+swift build --disable-index-store -c "$CONFIGURATION" --product Mimi
 
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
@@ -57,16 +64,22 @@ else
     --model-root "$MODEL_RESOURCES" \
     --license-root "$LICENSE_RESOURCES"
 fi
-cp -R "$MODEL_RESOURCES" "$APP/Contents/Resources/TranslationModels"
+copy_model_tree "$MODEL_RESOURCES" "$APP/Contents/Resources/TranslationModels"
 cp -R "$LICENSE_RESOURCES" "$APP/Contents/Resources/TranslationLicenses"
 if [[ "$SPEECH_CHANNEL" == "development" ]]; then
   python3 "$ROOT/scripts/speech/verify_development_speech_pack.py" \
     "$SPEECH_MODEL_RESOURCES"
   mkdir -p "$APP/Contents/Resources/SpeechModels"
-  cp -R "$SPEECH_MODEL_RESOURCES" \
+  copy_model_tree "$SPEECH_MODEL_RESOURCES" \
     "$APP/Contents/Resources/SpeechModels/mimi-whisper-large-v3-turbo-q4"
 fi
 cp -R "$SPEECH_LICENSE_RESOURCES" "$APP/Contents/Resources/SpeechLicenses"
+mkdir -p "$APP/Contents/Resources/SpeechModels"
+copy_model_tree "$PHONON_CACHE/model" "$APP/Contents/Resources/SpeechModels/mimi-phonon2"
+cp -R "$PHONON_CACHE/notices" "$APP/Contents/Resources/SpeechLicenses/Phonon2"
+cp "$ROOT/App/Resources/SpeechLicenses/PHONON2-CONVERSION.md" \
+  "$APP/Contents/Resources/SpeechLicenses/Phonon2/MIMI-CONVERSION.md"
+python3 "$ROOT/scripts/speech/verify_phonon2_pack.py" "$APP/Contents/Resources/SpeechModels/mimi-phonon2"
 cmp "$ROOT/App/Resources/SpeechLicenses/OPENAI-WHISPER-MIT.txt" \
   "$APP/Contents/Resources/SpeechLicenses/OPENAI-WHISPER-MIT.txt"
 cmp "$ROOT/App/Resources/SpeechLicenses/PROVENANCE.md" \

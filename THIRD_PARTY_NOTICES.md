@@ -2,7 +2,20 @@
 
 Mimi bundles a compact English-Japanese translation model. Optional
 transcription models are fetched only after the person using the app selects
-one.
+one. Phonon 2 is bundled for English speech recognition.
+
+## Bundled Phonon 2
+
+- [Phonon 2 by Fermion Research](https://huggingface.co/FermionResearch/Phonon-2),
+  revision `1c388bcec35d19740bf36b0b675718223fa7904e`, derives from NVIDIA
+  Parakeet TDT 0.6B v3. Both use CC BY 4.0.
+- Mimi represents the five-value encoder weights exactly with two 2-bit affine
+  MLX planes and FP32 scale tables. The remaining parameters use BF16, matching
+  the packed reference runtime. The native pack is approximately 424 MB.
+- The upstream modification notice, CC BY 4.0 weight license and Apache 2.0
+  Fermion code license ship in `SpeechLicenses/Phonon2` inside the app.
+- Inference uses MLX Swift and MLX Audio Swift under MIT. Python conversion
+  tools are used only on the developer's build machine.
 
 ## WhisperKit and Whisper Large-v3
 

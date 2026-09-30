@@ -28,6 +28,9 @@ and translation on your Mac.
 
 Mimi uses Apple Speech by default for live transcription. The development
 build also includes Mimi Speech Preview, a bilingual local MLX model.
+Phonon 2 is bundled as an English-only option for recording and Voice Type.
+Its native MLX pack is 424 MB and works without Python or a model download.
+Choose Mimi Speech Preview or Apple Speech for Japanese.
 Automatic language detection uses a small local helper that is downloaded only
 when you choose Auto.
 English↔Japanese translation uses the bundled 73.4 MB ElanMT Marian model

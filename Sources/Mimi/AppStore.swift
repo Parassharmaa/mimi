@@ -15,11 +15,14 @@ final class AppStore {
     @ObservationIgnored private var recordingStartedAt: Date?
     var historyRecords: [TranscriptSessionRecord]
     var selectedHistoryID: UUID?
+    @ObservationIgnored var isVoiceTypingActive: @MainActor () -> Bool = { false }
+    private var recordingStartPending = false
 
     init(
         loadPersistedTranscript: Bool = true,
         appleSpeech: (any AppleSpeechProviding)? = nil,
-        whisper: (any WhisperAccuracyTranscribing)? = nil
+        whisper: (any WhisperAccuracyTranscribing)? = nil,
+        phonon: (any WhisperAccuracyTranscribing)? = nil
     ) {
         let historyStore = TranscriptHistoryStore()
         self.historyStore = historyStore
@@ -28,6 +31,7 @@ final class AppStore {
         outputDevicesProvider = AudioDeviceCatalog.outputDevices
         let appleSpeech = appleSpeech ?? SystemAppleSpeechProvider()
         let whisper = whisper ?? MimiWhisperMLXLiveEngine()
+        let phonon = phonon ?? MimiPhononMLXLiveEngine()
         let createdSession = TranscriptionSession(
             dependencies: .init(
                 microphoneCapture: MicrophoneCapture(),
@@ -40,7 +44,8 @@ final class AppStore {
                 qwen: QwenMLXLiveEngine(),
                 storage: FileTranscriptStore(),
                 inputDevices: AudioDeviceCatalog.inputDevices(),
-                outputDevices: AudioDeviceCatalog.outputDevices()
+                outputDevices: AudioDeviceCatalog.outputDevices(),
+                phonon: phonon
             ),
             loadPersistedTranscript: loadPersistedTranscript
         )
@@ -95,7 +100,8 @@ final class AppStore {
     }
     var menuBarSymbolName: String { session.menuBarSymbolName }
     var isRecording: Bool { session.isRecording }
-    var controlsLocked: Bool { session.controlsLocked }
+    var isTranscriptionSessionBusy: Bool { session.controlsLocked || recordingStartPending }
+    var controlsLocked: Bool { isTranscriptionSessionBusy || isVoiceTypingActive() }
     var modelPack: LocalModelPack? { session.modelPack }
     var canRemoveSelectedModel: Bool { session.canRemoveSelectedModel }
     var selectedModelReadiness: ModelReadiness { session.selectedModelReadiness }
@@ -103,18 +109,22 @@ final class AppStore {
     var modelSetupState: ModelSetupState { session.modelSetupState }
     var selectedModelSetupState: ModelSetupState { session.selectedModelSetupState }
     var isModelSetupActive: Bool { session.modelSetupState.isActive }
-    var canStartRecording: Bool { session.canStartRecording }
+    var canStartRecording: Bool { session.canStartRecording && !recordingStartPending && !isVoiceTypingActive() }
     var canInstallSelectedModel: Bool { session.canInstallSelectedModel }
     var canCancelSelectedModelInstall: Bool { session.canCancelSelectedModelInstall }
 
     func toggleRecording() {
+        guard !isVoiceTypingActive(), !recordingStartPending else { return }
         if session.isRecording {
             Task {
                 await session.stopRecording()
                 archiveCurrentSessionIfNeeded()
             }
         } else {
+            recordingStartPending = true
             Task {
+                defer { recordingStartPending = false }
+                guard !isVoiceTypingActive() else { return }
                 if !session.document.renderedText.isEmpty {
                     archiveCurrentSessionIfNeeded()
                     session.clearTranscript()

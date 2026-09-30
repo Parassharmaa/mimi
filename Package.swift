@@ -27,7 +27,7 @@ let package = Package(
         .package(url: "https://github.com/huggingface/swift-huggingface.git", exact: "0.8.1"),
         .package(
             url: "https://github.com/Parassharmaa/mlx-audio-swift.git",
-            revision: "f2ed44cd00aacae034ce0a2c88febc8072b4ccb4"
+            revision: "4b344007b9b57f12a26b7dd4daa3be073f2dfce9"
         )
     ],
     targets: [

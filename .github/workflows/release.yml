@@ -63,6 +63,9 @@ jobs:
           chmod 600 "$MIMI_NOTARY_KEY_PATH"
           echo "MIMI_NOTARY_KEY_PATH=$MIMI_NOTARY_KEY_PATH" >> "$GITHUB_ENV"
 
+      - name: Prepare model conversion tools
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+
       - name: Run tests
         run: scripts/test.sh
 

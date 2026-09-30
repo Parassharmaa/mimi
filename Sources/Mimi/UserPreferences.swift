@@ -44,6 +44,7 @@ enum VoiceTypingShortcut: String, CaseIterable, Identifiable {
 
 enum VoiceTypingModel: String, CaseIterable, Identifiable {
     case mimiWhisper
+    case phonon2
     case appleSpeech
 
     var id: String { rawValue }
@@ -51,6 +52,7 @@ enum VoiceTypingModel: String, CaseIterable, Identifiable {
     var displayName: String {
         switch self {
         case .mimiWhisper: "Mimi (Whisper Large v3 Turbo)"
+        case .phonon2: "Phonon 2 (English)"
         case .appleSpeech: "Apple Speech"
         }
     }
@@ -106,7 +108,10 @@ final class UserPreferences {
         didSet { defaults.set(voiceTypingShortcut.rawValue, forKey: Key.voiceTypingShortcut) }
     }
     var voiceTypingModel: VoiceTypingModel {
-        didSet { defaults.set(voiceTypingModel.rawValue, forKey: Key.voiceTypingModel) }
+        didSet {
+            defaults.set(voiceTypingModel.rawValue, forKey: Key.voiceTypingModel)
+            if voiceTypingModel == .phonon2 { voiceTypingLanguage = .english }
+        }
     }
     var voiceTypingLanguage: SpeechLanguage {
         didSet { defaults.set(voiceTypingLanguage.rawValue, forKey: Key.voiceTypingLanguage) }

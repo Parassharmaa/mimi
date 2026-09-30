@@ -1,5 +1,5 @@
 {
-  "originHash" : "2f535b1a5f529a2d7fc7da6806afd173a4c1fd943998697c98f4dff83d80d801",
+  "originHash" : "f95021740021dec3386e922584aeaab94dce4dfc5b9c904d20c832db60251d92",
   "pins" : [
     {
       "identity" : "argmax-oss-swift",
@@ -33,7 +33,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Parassharmaa/mlx-audio-swift.git",
       "state" : {
-        "revision" : "f2ed44cd00aacae034ce0a2c88febc8072b4ccb4"
+        "revision" : "4b344007b9b57f12a26b7dd4daa3be073f2dfce9"
       }
     },
     {

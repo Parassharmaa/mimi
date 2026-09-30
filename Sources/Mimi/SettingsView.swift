@@ -80,13 +80,13 @@ private struct VoiceTypingSettingsPane: View {
                         Text(model.displayName).tag(model)
                     }
                 }
-                .disabled(!preferences.voiceTypingEnabled)
+                .disabled(!preferences.voiceTypingEnabled || voiceTyping.state.isActive)
                 Picker(preferences.text("Spoken language", "話す言語"), selection: $preferences.voiceTypingLanguage) {
-                    ForEach(SpeechLanguage.allCases) { language in
+                    ForEach(preferences.voiceTypingModel == .phonon2 ? [.english] : SpeechLanguage.allCases) { language in
                         Text(language.nativeName).tag(language)
                     }
                 }
-                .disabled(!preferences.voiceTypingEnabled)
+                .disabled(!preferences.voiceTypingEnabled || voiceTyping.state.isActive)
 
                 Text(modelDescription)
                     .font(.caption)
@@ -133,6 +133,11 @@ private struct VoiceTypingSettingsPane: View {
             preferences.text(
                 "Higher local accuracy. The first dictation can take a moment while Mimi loads the model.",
                 "高精度のローカルモデルです。初回の音声入力では、モデルの読み込みに少し時間がかかることがあります。"
+            )
+        case .phonon2:
+            preferences.text(
+                "Fast local English dictation. Choose Mimi Whisper or Apple Speech for Japanese.",
+                "高速なローカル英語音声入力です。日本語には Mimi Whisper または Apple Speech を選択してください。"
             )
         case .appleSpeech:
             preferences.text(
@@ -371,6 +376,7 @@ private struct ModelsSettingsPane: View {
         case .appleSpeechAnalyzer:
             store.languageMode == .automatic ? "Prepare English and Japanese" : "Prepare \(store.sourceLanguage.displayName)"
         case .whisperKitLargeV3Turbo: "Download Mimi Speech"
+        case .phonon2: "Prepare Phonon 2"
         case .nemotronStreamingExperimental: "Download Nemotron"
         case .qwen3StreamingExperimental: "Download Qwen3-ASR"
         }
@@ -388,6 +394,7 @@ private struct ModelsSettingsPane: View {
     private var removeButtonTitle: String {
         switch store.engineID {
         case .whisperKitLargeV3Turbo: "Remove Mimi Speech Download"
+        case .phonon2: "Phonon 2 is bundled"
         case .nemotronStreamingExperimental: "Remove Nemotron Download"
         case .qwen3StreamingExperimental: "Remove Qwen3-ASR Download"
         case .appleSpeechAnalyzer: "Remove Download"
