@@ -1,4 +1,5 @@
 import AppKit
+import Observation
 import SwiftUI
 
 /// Keeps the Settings scene discoverable from Mimi's menu-bar popover.
@@ -9,19 +10,31 @@ import SwiftUI
 /// AppKit activation, the settings scene can appear behind the currently
 /// active app and look as if the command did nothing.
 @MainActor
+@Observable
 final class SettingsWindowFocusCoordinator {
     static let shared = SettingsWindowFocusCoordinator()
 
     private weak var settingsWindow: NSWindow?
     private var focusRequested = false
+    private(set) var requestID = 0
+    private var requestedTab: SettingsTab?
 
     private init() {}
 
     /// Call immediately before SwiftUI's `openSettings()` action.
-    func requestFocus() {
+    func requestFocus(tab: SettingsTab? = nil) {
+        if let tab {
+            requestedTab = tab
+            requestID += 1
+        }
         focusRequested = true
         NSApp.activate(ignoringOtherApps: true)
         focusRegisteredWindowIfNeeded()
+    }
+
+    func consumeRequestedTab() -> SettingsTab? {
+        defer { requestedTab = nil }
+        return requestedTab
     }
 
     /// The Settings scene registers its actual `NSWindow` as soon as it is

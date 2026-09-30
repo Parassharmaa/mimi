@@ -93,7 +93,11 @@ final class FloatingCaptionController: NSObject, NSWindowDelegate {
             ? clamped(preferences.floatingCaptionCustomOrigin ?? presetOrigin, size: size, in: visible)
             : presetOrigin
         isPositioningPanel = true
-        panel.setFrame(NSRect(origin: origin, size: size), display: true, animate: panel.isVisible)
+        panel.setFrame(
+            NSRect(origin: origin, size: size),
+            display: true,
+            animate: panel.isVisible && !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        )
         isPositioningPanel = false
     }
 
