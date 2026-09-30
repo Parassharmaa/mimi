@@ -1,0 +1,5 @@
+ts	phase	decision	why	evidence	result
+2026-09-30T18:28:10Z	frame	Keep UX work in a separate stacked branch	Separate model delivery from interface changes while testing every model choice	docs/UX_REDESIGN_PLAN.md; parent PR15; commit84cd1c4	Plan recorded
+2026-09-30T18:28:10Z	baseline	Keep private live screenshots local and use synthetic data for PR evidence	The installed transcript contains saved user sessions	/Users/paras/Documents/Codex/2026-10-01/mimi-ux-audit/baseline/installed-transcript.png	Baseline captured locally
+2026-09-30T19:13:40Z	functional	Fix dictation text ownership before visual polish	Live test duplicated selected text and old smoke asserted only a substring	Synthetic hello world fixture ended hello worldworld despite smoke success	Selected UTF16 range and whole-field assertions added; post-fix live test pending
+2026-09-30T19:13:40Z	design	Use native Glass only for chrome	Readable transcripts and accessibility display modes need stable opaque surfaces	Native macOS and SwiftUI guidance; macOS 26 availability and contrast/transparency preferences	Chrome modifier added with material and solid fallbacks; visual matrix pending

@@ -12,6 +12,32 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
+        if let output = argument(after: "--verify-voice-typing-lifecycle", in: arguments) {
+            Task { @MainActor in
+                let report = await verifyVoiceTypingLifecycleContract()
+                do {
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                    try encoder.encode(report).write(to: URL(fileURLWithPath: output), options: .atomic)
+                    print("Mimi Voice Type lifecycle verification \(report.status)")
+                    Darwin.exit(report.status == "passed" ? 0 : 1)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
+        if let output = argument(after: "--verify-transcript-persistence-safety", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let report = try await verifyTranscriptPersistenceSafetyContract()
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                    try encoder.encode(report).write(to: URL(fileURLWithPath: output), options: .atomic)
+                    print("Mimi transcript persistence verification \(report.status)")
+                    Darwin.exit(report.status == "passed" ? 0 : 1)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
         if let output = argument(after: "--verify-speech-exclusivity", in: arguments) {
             Task { @MainActor in
                 let report = await verifySpeechExclusivity()
@@ -464,12 +490,34 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                     let delay = Double(argument(after: "--e2e-delay", in: arguments) ?? "3") ?? 3
                     try await Task.sleep(for: .seconds(delay))
                     let target = try FocusedTextTarget.capture(promptIfNeeded: false)
+                    let originalText = try target.fieldTextForVerification()
+                    let stepDelay = Double(argument(after: "--e2e-step-delay", in: arguments) ?? "0") ?? 0
                     let updates = stream.split(separator: "|", omittingEmptySubsequences: false).map(String.init)
-                    for update in updates {
-                        try await target.replaceLiveText(with: update)
+                    if !arguments.contains("--e2e-rollback-only") {
+                        for (index, update) in updates.enumerated() {
+                            if index > 0, stepDelay > 0 { try await Task.sleep(for: .seconds(stepDelay)) }
+                            try await target.replaceLiveText(with: update)
+                        }
                     }
                     try await target.rollback()
+                    guard try target.fieldTextForVerification() == originalText else {
+                        throw VoiceTypingError.insertionFailed
+                    }
+                    guard !arguments.contains(where: {
+                        ["--e2e-expect-focus-change", "--e2e-expect-secure-field", "--e2e-expect-destination-change"].contains($0)
+                    }) else {
+                        throw VoiceTypingError.insertionFailed
+                    }
                     print("Mimi realtime Voice Type smoke passed: \(updates.count) verified field updates and rollback.")
+                    status = 0
+                } catch VoiceTypingError.focusChanged where arguments.contains("--e2e-expect-focus-change") {
+                    print("Mimi Voice Type focus guard passed: refused to mutate the new destination.")
+                    status = 0
+                } catch VoiceTypingError.secureTextField where arguments.contains("--e2e-expect-secure-field") {
+                    print("Mimi Voice Type secure-field guard passed.")
+                    status = 0
+                } catch VoiceTypingError.destinationChanged where arguments.contains("--e2e-expect-destination-change") {
+                    print("Mimi Voice Type destination guard passed: preserved the user's edit or cursor change.")
                     status = 0
                 } catch {
                     print("Mimi realtime Voice Type smoke failed: \(error.localizedDescription)")
@@ -917,6 +965,11 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             ? .automatic
             : .japanese
         store.engineID = .appleSpeechAnalyzer
+        switch argument(after: "--e2e-engine", in: arguments) {
+        case "whisper": store.engineID = .whisperKitLargeV3Turbo
+        case "phonon": store.engineID = .phonon2
+        default: break
+        }
         // Seed deterministic UI fixtures before enabling the visible
         // translation mode. Otherwise every short-lived visual smoke process
         // starts real MLX work and Darwin.exit can race Metal completion
@@ -926,6 +979,18 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
         store.translationMode = .translateFinalSegments
+        if presentationState == "history" {
+            let record = TranscriptSessionRecord(
+                id: UUID(), startedAt: Date(timeIntervalSince1970: 1_790_730_000),
+                endedAt: Date(timeIntervalSince1970: 1_790_730_060), source: .outputAudio,
+                document: TranscriptDocument(segments: [.init(text: "昨日の会議では、来週のリリースについて話しました。", language: .japanese)])
+            )
+            store.historyRecords = [record]
+            store.selectedHistoryID = record.id
+            store.languageMode = .english
+        } else if presentationState == "empty" {
+            store.clearTranscript(historyID: nil)
+        }
         let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
         if argument(after: "--e2e-language", in: arguments) == "japanese" {
             fixturePreferences.interfaceLanguage = .japanese
@@ -963,9 +1028,9 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 store: store,
                 preferences: fixturePreferences,
                 voiceTyping: fixtureVoiceTyping,
-                initialStep: ["ready", "voice-enabled"].contains(presentationState)
+                initialStep: presentationState == "local-setup" ? 2 : (["ready", "voice-enabled"].contains(presentationState)
                     ? 4
-                    : (["model-preparing", "model-ready", "model-failed"].contains(presentationState) ? 2 : 0),
+                    : (["model-preparing", "model-ready", "model-failed"].contains(presentationState) ? 2 : 0)),
                 preparationFixture: onboardingFixture
             ))
             size = NSSize(width: 620, height: 560)
@@ -991,7 +1056,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 fixtureTranslation: exercisesLiveTranslation
                     && ["incremental-translation", "translation-stream"].contains(presentationState)
                     ? nil
-                    : "Hello. Mimi transcribes locally on this Mac.",
+                    : (presentationState == "history" ? "At yesterday's meeting, we talked about next week's release." : "Hello. Mimi transcribes locally on this Mac."),
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"
             ))
             size = NSSize(width: 820, height: 600)
@@ -1020,7 +1085,12 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             size = NSSize(width: 430, height: 580)
         }
 
-        let hostingController = NSHostingController(rootView: view)
+        var accessibilityPreview: MimiAccessibilityPreview = []
+        if arguments.contains("--e2e-reduce-motion") { accessibilityPreview.insert(.reduceMotion) }
+        if arguments.contains("--e2e-reduce-transparency") { accessibilityPreview.insert(.reduceTransparency) }
+        if arguments.contains("--e2e-increase-contrast") { accessibilityPreview.insert(.increaseContrast) }
+        let hostingController = NSHostingController(rootView: view
+            .environment(\.mimiAccessibilityPreview, accessibilityPreview))
         // The smoke harness owns a fixed AppKit test window. Letting the
         // hosting controller also resize it from intrinsic content produces a
         // constraint feedback loop for a popover-width SwiftUI surface.
@@ -1240,15 +1310,23 @@ struct MimiApp: App {
     private let voiceTypingPanelController: VoiceTypingPanelController
 
     init() {
+        let arguments = ProcessInfo.processInfo.arguments
+        let isVerification = arguments.contains { argument in
+            ["--e2e-", "--verify-", "--smoke-", "--benchmark-", "--validate-", "--print-"].contains { argument.hasPrefix($0) }
+        }
         let appleSpeech = SystemAppleSpeechProvider()
         let mimiWhisper = MimiWhisperMLXLiveEngine()
         let phonon = MimiPhononMLXLiveEngine()
         let store = AppStore(
+            loadPersistedTranscript: !isVerification,
             appleSpeech: appleSpeech,
             whisper: mimiWhisper,
             phonon: phonon
         )
-        let preferences = UserPreferences()
+        let preferences = UserPreferences(defaults: isVerification
+            ? UserDefaults(suiteName: "dev.paras.mimi.verification.\(UUID().uuidString)")!
+            : .standard)
+        if isVerification { preferences.completedOnboarding = true }
         let voiceTyping = VoiceTypingController(
             preferences: preferences,
             isSessionRecording: { store.isTranscriptionSessionBusy },
@@ -1297,7 +1375,7 @@ struct MimiApp: App {
                     store.copyTranscript()
                 }
                 .keyboardShortcut("c", modifiers: [.command, .shift])
-                .disabled(store.document.renderedText.isEmpty)
+                .disabled(store.viewedDocument.renderedText.isEmpty)
 
             }
         }

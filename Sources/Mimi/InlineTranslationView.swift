@@ -1,3 +1,4 @@
+import AppKit
 import MimiCore
 import Observation
 import SwiftUI
@@ -13,6 +14,7 @@ struct InlineTranslationView: View {
     let fillsAvailableSpace: Bool
     let fixtureTranslation: String?
     let initiallyFollowingLatest: Bool
+    let preferences: UserPreferences?
 
     @State private var model = SegmentTranslationModel()
     @State private var retryGeneration = 0
@@ -21,12 +23,14 @@ struct InlineTranslationView: View {
         segments: [TranscriptSegment],
         fillsAvailableSpace: Bool = false,
         fixtureTranslation: String? = nil,
-        initiallyFollowingLatest: Bool = true
+        initiallyFollowingLatest: Bool = true,
+        preferences: UserPreferences? = nil
     ) {
         self.segments = segments
         self.fillsAvailableSpace = fillsAvailableSpace
         self.fixtureTranslation = fixtureTranslation
         self.initiallyFollowingLatest = initiallyFollowingLatest
+        self.preferences = preferences
     }
 
     private var renderedTranslation: String {
@@ -43,9 +47,19 @@ struct InlineTranslationView: View {
                 if model.isTranslating {
                     ProgressView()
                         .controlSize(.small)
-                        .accessibilityLabel("Translating newest sentences locally")
+                        .accessibilityLabel(t("Translating newest sentences locally", "新しい文をローカルで翻訳中"))
                 }
-                Button("Refresh") {
+                Button {
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(renderedTranslation, forType: .string)
+                } label: {
+                    Image(systemName: "doc.on.doc")
+                }
+                .buttonStyle(.borderless)
+                .help(t("Copy Translation", "翻訳をコピー"))
+                .accessibilityLabel(t("Copy Translation", "翻訳をコピー"))
+                .disabled(renderedTranslation.isEmpty)
+                Button(t("Refresh", "更新")) {
                     model.reset(for: segments)
                     retryGeneration &+= 1
                 }
@@ -60,7 +74,8 @@ struct InlineTranslationView: View {
             if !renderedTranslation.isEmpty {
                 FollowLatestScrollView(
                     contentVersion: renderedTranslation,
-                    initiallyFollowing: initiallyFollowingLatest
+                    initiallyFollowing: initiallyFollowingLatest,
+                    preferences: preferences
                 ) {
                     VStack(alignment: .leading, spacing: 12) {
                         if let fixtureTranslation {
@@ -81,18 +96,18 @@ struct InlineTranslationView: View {
                 .frame(maxHeight: fillsAvailableSpace ? .infinity : 160)
             } else if model.isTranslating {
                 ContentUnavailableView {
-                    Label("Translating First Sentences", systemImage: "translate")
+                    Label(t("Translating First Sentences", "最初の文を翻訳中"), systemImage: "translate")
                 } description: {
-                    Text("Finalized speech is translated locally, one sentence at a time.")
+                    Text(t("Finalized speech is translated locally, one sentence at a time.", "確定した音声を一文ずつローカルで翻訳します。"))
                 } actions: {
                     ProgressView().controlSize(.small)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ContentUnavailableView(
-                    "No Translation Yet",
+                    t("No Translation Yet", "翻訳はまだありません"),
                     systemImage: "translate",
-                    description: Text("A translation appears after a sentence is finalized.")
+                    description: Text(t("A translation appears after a sentence is finalized.", "文が確定すると翻訳が表示されます。"))
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -106,7 +121,7 @@ struct InlineTranslationView: View {
                         .font(.caption)
                         .foregroundStyle(.red)
                     Spacer()
-                    Button("Try Again") {
+                    Button(t("Try Again", "再試行")) {
                         model.clearErrors()
                         retryGeneration &+= 1
                     }
@@ -147,6 +162,10 @@ struct InlineTranslationView: View {
         .onChange(of: segments.map(\.id), initial: true) { _, ids in
             model.prune(validIDs: Set(ids))
         }
+    }
+
+    private func t(_ english: String, _ japanese: String) -> String {
+        preferences?.text(english, japanese) ?? english
     }
 }
 

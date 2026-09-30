@@ -4,8 +4,15 @@ set -euo pipefail
 ROOT="${0:A:h:h}"
 cd "$ROOT"
 
+zsh scripts/test-history-safety.sh
+zsh scripts/test-onboarding-policy.sh
+
 swift build --disable-index-store --product MimiSelfTest
 swift build --disable-index-store --product Mimi
+PERSISTENCE_REPORT="$(mktemp -t mimi-persistence-safety).json"
+"$ROOT/.build/debug/Mimi" --verify-transcript-persistence-safety "$PERSISTENCE_REPORT"
+LIFECYCLE_REPORT="$(mktemp -t mimi-voice-lifecycle).json"
+"$ROOT/.build/debug/Mimi" --verify-voice-typing-lifecycle "$LIFECYCLE_REPORT"
 VOICE_TYPING_REPORT="$(mktemp -t mimi-voice-typing-model-selection).json"
 "$ROOT/.build/debug/Mimi" \
   --verify-voice-typing-model-selection "$VOICE_TYPING_REPORT"

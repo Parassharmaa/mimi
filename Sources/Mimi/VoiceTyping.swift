@@ -1188,6 +1188,7 @@ struct VoiceTypingPill: View {
     let preferences: UserPreferences
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.mimiAccessibilityPreview) private var accessibilityPreview
 
     var body: some View {
         Group {
@@ -1211,7 +1212,7 @@ struct VoiceTypingPill: View {
                     .symbolEffect(
                         .pulse,
                         options: .repeating.speed(1.15),
-                        isActive: controller.state == .listening && !reduceMotion
+                        isActive: controller.state == .listening && !reduceMotion && !accessibilityPreview.contains(.reduceMotion)
                     )
                     .frame(width: 52, height: 52)
                     .mimiChrome(padding: 0, radius: 26)
@@ -1224,7 +1225,7 @@ struct VoiceTypingPill: View {
     }
 
     private var surface: AnyShapeStyle {
-        reduceTransparency
+        (reduceTransparency || accessibilityPreview.contains(.reduceTransparency) || accessibilityPreview.contains(.increaseContrast))
             ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor))
             : AnyShapeStyle(.regularMaterial)
     }

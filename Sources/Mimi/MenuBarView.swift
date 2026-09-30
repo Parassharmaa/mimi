@@ -7,6 +7,8 @@ struct MenuBarView: View {
     @Bindable var preferences: UserPreferences
     @Environment(\.openSettings) private var openSettings
     @State private var isConfirmingClear = false
+    @State private var clearHistoryID: UUID?
+    @State private var clearDocument: TranscriptDocument?
 
     private let initiallyFollowingLatest: Bool
 
@@ -20,6 +22,8 @@ struct MenuBarView: View {
         self.preferences = preferences
         self.initiallyFollowingLatest = initiallyFollowingLatest
         _isConfirmingClear = State(initialValue: isConfirmingClear)
+        _clearHistoryID = State(initialValue: store.selectedHistoryID)
+        _clearDocument = State(initialValue: store.viewedDocument)
     }
 
     var body: some View {
@@ -67,6 +71,17 @@ struct MenuBarView: View {
         .frame(width: 430)
         .containerBackground(Color(nsColor: .windowBackgroundColor), for: .window)
         .background(MenuBarWindowBackgroundConfigurator())
+        .onChange(of: store.controlsLocked) { if store.controlsLocked { isConfirmingClear = false } }
+        .alert(t("Delete transcript?", "文字起こしを削除しますか？"), isPresented: $isConfirmingClear) {
+            Button(t("Cancel", "キャンセル"), role: .cancel) {}
+            Button(t("Delete", "削除"), role: .destructive) {
+                guard !store.controlsLocked,
+                      clearHistoryID != nil || store.document == clearDocument else { return }
+                store.clearTranscript(historyID: clearHistoryID)
+            }
+        } message: {
+            Text(t("The selected transcript will be deleted. This cannot be undone.", "選択した文字起こしを削除します。この操作は取り消せません。"))
+        }
     }
 
     private var recordingButton: some View {
@@ -150,7 +165,7 @@ struct MenuBarView: View {
                 .accessibilityLabel("Translation mode")
             }
         }
-        .mimiCard()
+        .mimiChrome()
     }
 
     @ViewBuilder
@@ -220,12 +235,15 @@ struct MenuBarView: View {
                 compact: true
             )
 
-            Button(t("Open Language Settings…", "言語設定を開く…"), action: openMimiSettings)
+            Button(t("Open Language Settings…", "言語設定を開く…")) {
+                SettingsWindowFocusCoordinator.shared.requestFocus(tab: .models)
+                openSettings()
+            }
                 .buttonStyle(.bordered)
                 .accessibilityHint("Opens the model setup window")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .mimiCard(padding: 14)
+        .mimiChrome(padding: 14)
     }
 
     private var transcriptPreview: some View {
@@ -233,12 +251,13 @@ struct MenuBarView: View {
             transcriptHeader
 
             FollowLatestScrollView(
-                contentVersion: store.document.renderedText,
-                initiallyFollowing: initiallyFollowingLatest
+                contentVersion: store.viewedDocument.renderedText,
+                initiallyFollowing: initiallyFollowingLatest,
+                preferences: preferences
             ) {
                 TranscriptContentView(
-                    document: store.document,
-                    emptyMessage: "Start recording to see local transcription here."
+                    document: store.viewedDocument,
+                    emptyMessage: t("Start recording to see local transcription here.", "録音を開始すると、ここに文字起こしが表示されます。")
                 )
                 .padding(.vertical, 2)
             }
@@ -249,25 +268,8 @@ struct MenuBarView: View {
 
     @ViewBuilder
     private var transcriptHeader: some View {
-        if isConfirmingClear {
             HStack(spacing: 8) {
-                Text(t("Clear transcript?", "文字起こしを消去しますか？"))
-                    .font(.caption.weight(.semibold))
-                Spacer()
-                Button(t("Cancel", "キャンセル")) { setClearConfirmation(false) }
-                    .keyboardShortcut(.cancelAction)
-                Button(t("Clear", "消去"), role: .destructive) {
-                    store.clearTranscript()
-                    setClearConfirmation(false)
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.red)
-            }
-            .accessibilityElement(children: .contain)
-            .accessibilityLabel("Clear local transcript confirmation")
-        } else {
-            HStack(spacing: 8) {
-                MimiSectionLabel(t("Latest transcript", "最新の文字起こし"), symbol: "text.alignleft")
+                MimiSectionLabel(store.selectedHistoryID == nil ? t("Current transcript", "現在の文字起こし") : t("Selected session", "選択したセッション"), symbol: "text.alignleft")
                 Spacer()
                 Button {
                     store.copyTranscript()
@@ -277,7 +279,7 @@ struct MenuBarView: View {
                 .buttonStyle(.borderless)
                 .help("Copy transcript")
                 .accessibilityLabel("Copy transcript")
-                .disabled(store.document.renderedText.isEmpty)
+                .disabled(store.viewedDocument.renderedText.isEmpty)
 
                 Button {
                     setClearConfirmation(true)
@@ -287,9 +289,8 @@ struct MenuBarView: View {
                 .buttonStyle(.borderless)
                 .help("Clear saved transcript")
                 .accessibilityLabel("Clear saved transcript")
-                .disabled(store.document.renderedText.isEmpty)
+                .disabled(store.viewedDocument.renderedText.isEmpty || store.controlsLocked)
             }
-        }
     }
 
     private var footer: some View {
@@ -332,6 +333,10 @@ struct MenuBarView: View {
     }
 
     private func setClearConfirmation(_ confirming: Bool) {
+        if confirming {
+            clearHistoryID = store.selectedHistoryID
+            clearDocument = store.viewedDocument
+        }
         isConfirmingClear = confirming
     }
 

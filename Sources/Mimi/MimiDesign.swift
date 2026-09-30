@@ -1,6 +1,24 @@
 import MimiCore
 import SwiftUI
 
+struct MimiAccessibilityPreview: OptionSet, Sendable {
+    let rawValue: Int
+    static let reduceMotion = Self(rawValue: 1)
+    static let reduceTransparency = Self(rawValue: 2)
+    static let increaseContrast = Self(rawValue: 4)
+}
+
+private struct MimiAccessibilityPreviewKey: EnvironmentKey {
+    static let defaultValue: MimiAccessibilityPreview = []
+}
+
+extension EnvironmentValues {
+    var mimiAccessibilityPreview: MimiAccessibilityPreview {
+        get { self[MimiAccessibilityPreviewKey.self] }
+        set { self[MimiAccessibilityPreviewKey.self] = newValue }
+    }
+}
+
 enum MimiMetrics {
     static let compactSpacing: CGFloat = 8
     static let sectionSpacing: CGFloat = 16
@@ -149,6 +167,7 @@ struct MimiControlRow<Control: View>: View {
 
 private struct MimiCardModifier: ViewModifier {
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.mimiAccessibilityPreview) private var preview
 
     let padding: CGFloat
 
@@ -157,7 +176,7 @@ private struct MimiCardModifier: ViewModifier {
             .padding(padding)
             .background(Color.primary.opacity(0.045), in: RoundedRectangle(cornerRadius: MimiMetrics.cardRadius, style: .continuous))
             .overlay {
-                if contrast == .increased {
+                if contrast == .increased || preview.contains(.increaseContrast) {
                     RoundedRectangle(cornerRadius: MimiMetrics.cardRadius, style: .continuous)
                         .strokeBorder(Color.primary.opacity(0.32), lineWidth: 1)
                 }
@@ -168,6 +187,31 @@ private struct MimiCardModifier: ViewModifier {
 extension View {
     func mimiCard(padding: CGFloat = MimiMetrics.cardPadding) -> some View {
         modifier(MimiCardModifier(padding: padding))
+    }
+
+    /// Chrome only. Transcript text retains a stable opaque content surface.
+    func mimiChrome(padding: CGFloat = MimiMetrics.cardPadding, radius: CGFloat = 16) -> some View {
+        modifier(MimiChromeModifier(padding: padding, radius: radius))
+    }
+}
+
+private struct MimiChromeModifier: ViewModifier {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.mimiAccessibilityPreview) private var preview
+    let padding: CGFloat
+    let radius: CGFloat
+
+    @ViewBuilder func body(content: Content) -> some View {
+        if reduceTransparency || contrast == .increased || preview.contains(.reduceTransparency) || preview.contains(.increaseContrast) {
+            content.padding(padding)
+                .background(Color(nsColor: .windowBackgroundColor), in: .rect(cornerRadius: radius))
+                .overlay { RoundedRectangle(cornerRadius: radius).strokeBorder(.primary.opacity(0.35)) }
+        } else if #available(macOS 26, *) {
+            content.padding(padding).glassEffect(.regular, in: .rect(cornerRadius: radius))
+        } else {
+            content.padding(padding).background(.regularMaterial, in: .rect(cornerRadius: radius))
+        }
     }
 }
 
