@@ -26,7 +26,10 @@ final class AppStore {
         historyStore: TranscriptHistoryStore? = nil,
         transcriptStorage: (any TranscriptPersisting)? = nil
     ) {
-        let historyStore = historyStore ?? TranscriptHistoryStore()
+        let historyStore = historyStore ?? (loadPersistedTranscript
+            ? TranscriptHistoryStore()
+            : TranscriptHistoryStore(fileURL: FileManager.default.temporaryDirectory
+                .appending(path: "mimi-fixture-history-\(UUID().uuidString)/sessions.json")))
         self.historyStore = historyStore
         let historyLoadError: Error?
         do {
@@ -51,7 +54,7 @@ final class AppStore {
                 whisper: whisper,
                 nemotron: NemotronMLXLiveEngine(),
                 qwen: QwenMLXLiveEngine(),
-                storage: transcriptStorage ?? FileTranscriptStore(),
+                storage: transcriptStorage ?? (loadPersistedTranscript ? FileTranscriptStore() : TransientTranscriptStore()),
                 inputDevices: AudioDeviceCatalog.inputDevices(),
                 outputDevices: AudioDeviceCatalog.outputDevices(),
                 phonon: phonon
