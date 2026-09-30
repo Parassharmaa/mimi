@@ -11,6 +11,30 @@ struct OnboardingRequirements: Equatable {
     }
 }
 
+struct OnboardingVoiceTypingChoice: Equatable {
+    let model: VoiceTypingModel
+    let language: SpeechLanguage
+
+    static func initialChoice(
+        engineID: TranscriptionEngineID,
+        language: SpeechLanguage,
+        speechIsReady: Bool,
+        hasConfiguredModel: Bool
+    ) -> Self? {
+        guard speechIsReady, !hasConfiguredModel else { return nil }
+        switch engineID {
+        case .appleSpeechAnalyzer:
+            return .init(model: .appleSpeech, language: language)
+        case .whisperKitLargeV3Turbo:
+            return .init(model: .mimiWhisper, language: language)
+        case .phonon2:
+            return .init(model: .phonon2, language: .english)
+        case .nemotronStreamingExperimental, .qwen3StreamingExperimental:
+            return nil
+        }
+    }
+}
+
 enum OnboardingMicrophonePermission: Equatable {
     case notRequired
     case granted

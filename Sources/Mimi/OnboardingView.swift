@@ -29,6 +29,7 @@ struct OnboardingView: View {
     @State private var startAtLogin = false
     @State private var preparedSpeechSelection: String?
     @State private var accessibilityTrusted = false
+    @State private var hasEnteredReadyStep = false
     @State private var translationState: TranslationPreparationState = .idle
     @State private var translationSources: [SpeechLanguage] = []
     @State private var translationConfiguration: TranslationSession.Configuration?
@@ -96,6 +97,7 @@ struct OnboardingView: View {
         .onAppear {
             startAtLogin = preferences.startsAtLogin
             refreshAccess()
+            enterReadyStepIfNeeded()
         }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             refreshAccess()
@@ -105,9 +107,7 @@ struct OnboardingView: View {
             await prepareLanguagesIfNeeded()
         }
         .onChange(of: step) { _, newStep in
-            if newStep == 4, !preferences.completedOnboarding {
-                preferences.voiceTypingEnabled = true
-            }
+            if newStep == 4 { enterReadyStepIfNeeded() }
         }
         .translationTask(translationConfiguration) { @MainActor session in
             await prepareCurrentTranslation(using: session)
@@ -249,6 +249,18 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Toggle(t("Type anywhere by speaking", "声でどこにでも入力"), isOn: $preferences.voiceTypingEnabled)
                 if preferences.voiceTypingEnabled {
+                    Picker(t("Voice Type model", "音声入力モデル"), selection: $preferences.voiceTypingModel) {
+                        ForEach(VoiceTypingModel.allCases) { model in
+                            Text(model.displayName).tag(model)
+                        }
+                    }
+                    .disabled(voiceTyping.state.isActive)
+                    Picker(t("Spoken language", "話す言語"), selection: $preferences.voiceTypingLanguage) {
+                        ForEach(preferences.voiceTypingModel == .phonon2 ? [.english] : SpeechLanguage.allCases) { language in
+                            Text(language.nativeName).tag(language)
+                        }
+                    }
+                    .disabled(voiceTyping.state.isActive)
                     HStack {
                         Text(t("Shortcut", "ショートカット"))
                         Spacer()
@@ -263,8 +275,8 @@ struct OnboardingView: View {
                         }
                     }
                     Text(t(
-                        "Mimi needs Accessibility access only to insert text into the field you selected.",
-                        "アクセシビリティ権限は、選択中の入力欄に文字を入力するためだけに使用します。"
+                        "Voice Type uses your microphone and its selected model. A different model may need separate setup in Settings. Accessibility access is used only to insert text into the field you selected.",
+                        "音声入力はマイクと選択したモデルを使用します。別のモデルを選ぶ場合は、設定で準備が必要なことがあります。アクセシビリティ権限は選択中の入力欄に文字を入力するためだけに使用します。"
                     ))
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -455,6 +467,17 @@ struct OnboardingView: View {
         preferences.completedOnboarding = true
         dismissWindow(id: "onboarding")
         NSApplication.shared.keyWindow?.close()
+    }
+
+    private func enterReadyStepIfNeeded() {
+        guard step == 4, !hasEnteredReadyStep, !preferences.completedOnboarding else { return }
+        hasEnteredReadyStep = true
+        preferences.configureVoiceTypingForFirstUse(
+            engineID: store.engineID,
+            language: store.sourceLanguage,
+            speechIsReady: store.selectedModelReadiness.canStart
+        )
+        preferences.voiceTypingEnabled = true
     }
 
     private func prepareLanguagesIfNeeded() async {
