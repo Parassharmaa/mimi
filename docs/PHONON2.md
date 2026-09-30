@@ -39,15 +39,23 @@ limits Phonon to English in the UI and rejects Japanese before capture.
 
 The existing Whisper regression recordings were re-materialized from the same
 pinned FLEURS revision and registered case positions using the current audio
-toolchain. Artifact hashes are refreshed with the new replay reports; source
-case selection, references and quality/latency thresholds are unchanged.
+toolchain. Historical product manifests are preserved separately from the new
+materialization. Source selection, references and all thresholds are unchanged.
 
 The refreshed Whisper controls retain 6.0% Japanese gapless CER, 12.4% English
 gapless WER, 6.6% Japanese paused CER and 5.9% English paused WER, with no
-audio drops. Japanese paced finalization passed at 1.068 s. English paced
-finalization measured 1.251 s in both the first attempt and an identical retry,
-above the existing 1.1 s gate. Both attempts are retained. The full regression
-gate is therefore not green, and this integration remains a draft preview.
+audio drops. Two initial English paced runs failed the existing 1.1 s
+finalization gate at 1.251 s; both failures are retained. Preparing Whisper's
+constant token suppression masks once per chunk resolved the CPU overhead
+while preserving exact logits, transcripts and segment boundaries.
+
+The final pinned build passed both prescribed English paced runs at 1.000 s
+and 0.996 s. Japanese paced finalization passed at 0.972 s. The first English
+run remains the selected report, with the repeat retained separately. Both
+paused controls and the full local deterministic, model-routing, session,
+light/dark UI and main-window lifecycle suite passed. These are registered
+regression controls, not broad claims about natural-speech accuracy. See
+[qualification details](PHONON2_QUALIFICATION.md).
 
 ## Reproduction
 
