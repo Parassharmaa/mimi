@@ -59,6 +59,26 @@ struct AccessibilityAudit {
         (node.role == "AXSheet" ? 1 : 0) + node.children.reduce(0) { $0 + sheetCount($1) }
     }
 
+    static func key(_ code: CGKeyCode, flags: CGEventFlags = []) {
+        for down in [true, false] {
+            let event = CGEvent(keyboardEventSource: nil, virtualKey: code, keyDown: down)!
+            event.flags = flags
+            event.post(tap: .cghidEventTap)
+        }
+    }
+
+    static func unicode(_ text: String) {
+        let event = CGEvent(keyboardEventSource: nil, virtualKey: 0, keyDown: true)!
+        event.flags = []
+        Array(text.utf16).withUnsafeBufferPointer {
+            event.keyboardSetUnicodeString(stringLength: $0.count, unicodeString: $0.baseAddress)
+        }
+        event.post(tap: .cghidEventTap)
+        let up = CGEvent(keyboardEventSource: nil, virtualKey: 0, keyDown: false)!
+        up.flags = []
+        up.post(tap: .cghidEventTap)
+    }
+
     static func searchField(_ element: AXUIElement, depth: Int = 0) -> AXUIElement? {
         if attribute(kAXSubroleAttribute, element) as? String == "AXSearchField" { return element }
         guard depth < 24 else { return nil }
@@ -117,6 +137,20 @@ struct AccessibilityAudit {
                 let sheetsBefore = sheetCount(node(app))
                 let result = AXUIElementPerformAction(target, kAXPressAction as CFString)
                 Thread.sleep(forTimeInterval: Double(argument("--step-delay") ?? "0.3") ?? 0.3)
+                if title == "Export Transcript…", let directory = argument("--export-directory") {
+                    let url = URL(fileURLWithPath: directory).standardizedFileURL
+                    guard url.path.hasPrefix(FileManager.default.temporaryDirectory.standardizedFileURL.path),
+                          FileManager.default.fileExists(atPath: url.path),
+                          NSWorkspace.shared.frontmostApplication?.processIdentifier == pid else {
+                        throw CocoaError(.userCancelled)
+                    }
+                    key(5, flags: [.maskCommand, .maskShift]) // Go to Folder.
+                    Thread.sleep(forTimeInterval: 0.3)
+                    unicode(url.path)
+                    Thread.sleep(forTimeInterval: 0.3)
+                    key(36)
+                    Thread.sleep(forTimeInterval: 0.8)
+                }
                 // Native sheet dismissal can invalidate the AX button before
                 // the IPC call returns. Verify the effect, never blindly retry.
                 let confirmedDismissal = title == "Cancel" && sheetsBefore > 0 && sheetCount(node(app)) < sheetsBefore
