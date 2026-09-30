@@ -51,6 +51,7 @@ struct MimiSectionLabel: View {
 struct MimiStatusHeader: View {
     let state: RecordingState
     let source: AudioSource
+    let preferences: UserPreferences
 
     var body: some View {
         HStack(spacing: 11) {
@@ -85,21 +86,23 @@ struct MimiStatusHeader: View {
     private var statusText: String {
         switch state {
         case .recording:
-            "Listening to \(source.displayName.lowercased()) on this Mac"
+            preferences.text("Listening to \(source.displayName.lowercased()) on this Mac", "このMacで音声を文字起こし中")
         case .idle:
-            "Ready for local transcription"
-        case .preparing, .processing, .failed:
+            preferences.text("Ready for local transcription", "ローカル文字起こしの準備完了")
+        case .preparing: preferences.text("Preparing", "準備中")
+        case .processing: preferences.text("Finalizing", "確定処理中")
+        case .failed:
             state.label
         }
     }
 
     private var badgeText: String {
         switch state {
-        case .idle: "Ready"
-        case .preparing: "Preparing"
-        case .recording: "Recording"
-        case .processing: "Finalizing"
-        case .failed: "Attention"
+        case .idle: preferences.text("Ready", "準備完了")
+        case .preparing: preferences.text("Preparing", "準備中")
+        case .recording: preferences.text("Recording", "録音中")
+        case .processing: preferences.text("Finalizing", "確定処理中")
+        case .failed: preferences.text("Attention", "確認が必要")
         }
     }
 

@@ -31,6 +31,8 @@ accessibility semantics. Web ARIA rules are not applied literally to SwiftUI.
 | UX-018 | Medium | Voice Type error disappears after four seconds with no persistent recovery context. | Confirmed source. | Persistent latest issue in Voice Type settings. |
 | UX-019 | Medium | Caption repositioning animates despite Reduce Motion; setup progress lacks a spoken step count. | Confirmed source; code checks only after fix. | Reduced-motion fixture and AX step label. |
 | UX-020 | Medium | Several user-visible controls and privacy descriptions are English-only or describe Apple despite selecting local engines. | Confirmed source. | Japanese interface matrix and selected-provider privacy inspection. |
+| UX-021 | High | Terminal keyboard fallback can delete existing shell text when the cursor or prompt changes. | Actual LiveTextEdit simulation reproduced deletion; AX history does not expose the writable prompt cursor. | Refuse Terminal at capture before model/microphone setup; remove unverified Backspace fallback and disclose supported-field scope. |
+| UX-022 | High | First-use setup can prepare Phonon/Apple but enable Voice Type with an unavailable Whisper default. | Stable bundle and complete setup source flow confirm mismatch. | 210 real preference/policy assertions; default follows prepared engine only when no saved model choice exists. |
 
 ## Implementation and evidence status
 
@@ -43,14 +45,24 @@ Verified so far:
 
 - Baseline selected-text duplication in a real synthetic AppKit text field.
 - Actual history store regression, including exact damaged-file preservation.
-- 36 provider and permission-policy assertions.
+- 210 provider, permission and persisted preference-policy assertions.
 - Five asynchronous ownership invariants using the production task owner.
 - Native Settings coordinator SDK typecheck and edited-source parse checks.
 
-Pending: full application build, post-fix real field tests, live native alerts,
-search/export/Settings interactions, accessibility and appearance matrix,
-fresh source-bound speech controls and exact-head CI. No complete VoiceOver
-audit or end-to-end pass is claimed yet.
+The full application builds. Eight app persistence invariants, five lifecycle
+ownership invariants and eight real text-field checks have passed. Live history
+Copy, named Delete/Cancel, Export/Cancel, Japanese search/no-match state, Voice
+Type Settings deeplink, microphone callbacks and native Start/Stop have passed.
+The original 47-scenario state/light/dark rendering matrix passes. Tests using
+physical focus run serially, and the field harness pins its fixture PID.
+
+Pending: final-head repeat after the last safety changes, actual file export,
+extended Japanese/accessibility-display matrix, fresh source-bound speech
+controls and exact-head CI. AX semantics are inspected; a complete spoken
+VoiceOver audit is not claimed. Native macOS 15 compatibility is compile-gated,
+not verified on a second OS installation. Claude review could not run because
+its login expired; independent code review found and resolved the ownership
+and Terminal defects.
 
 Private installed-app screenshots remain local. Public evidence uses only
 synthetic English/Japanese content. Developer fixtures use transient transcript

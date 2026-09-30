@@ -32,7 +32,7 @@ struct MenuBarView: View {
                 .ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: MimiMetrics.sectionSpacing) {
-                MimiStatusHeader(state: store.recordingState, source: store.source)
+                MimiStatusHeader(state: store.recordingState, source: store.source, preferences: preferences)
 
                 if !store.controlsLocked {
                     Button {
@@ -257,7 +257,8 @@ struct MenuBarView: View {
             ) {
                 TranscriptContentView(
                     document: store.viewedDocument,
-                    emptyMessage: t("Start recording to see local transcription here.", "録音を開始すると、ここに文字起こしが表示されます。")
+                    emptyMessage: t("Start recording to see local transcription here.", "録音を開始すると、ここに文字起こしが表示されます。"),
+                    preferences: preferences
                 )
                 .padding(.vertical, 2)
             }

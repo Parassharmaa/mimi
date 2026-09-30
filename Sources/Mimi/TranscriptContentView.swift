@@ -8,11 +8,13 @@ struct TranscriptContentView: View {
     let document: TranscriptDocument
     let emptyMessage: String
     let font: Font
+    let preferences: UserPreferences?
 
-    init(document: TranscriptDocument, emptyMessage: String, font: Font = .body) {
+    init(document: TranscriptDocument, emptyMessage: String, font: Font = .body, preferences: UserPreferences? = nil) {
         self.document = document
         self.emptyMessage = emptyMessage
         self.font = font
+        self.preferences = preferences
     }
 
     var body: some View {
@@ -37,7 +39,7 @@ struct TranscriptContentView: View {
                         .foregroundStyle(.secondary)
                         .textSelection(.enabled)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityLabel("Current transcription: \(document.liveText)")
+                        .accessibilityLabel(preferences?.text("Current transcription: \(document.liveText)", "現在の文字起こし：\(document.liveText)") ?? "Current transcription: \(document.liveText)")
                 }
             }
         }

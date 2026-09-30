@@ -434,7 +434,8 @@ private struct TranscriptLanguagePane: View {
                     TranscriptContentView(
                         document: displayedDocument,
                         emptyMessage: "Speech will appear here.",
-                        font: .title3
+                        font: .title3,
+                        preferences: preferences
                     )
                     .padding(18)
                 }
