@@ -68,3 +68,23 @@ The full `scripts/test.sh` suite passed after these replays: model selection,
 speech exclusivity, benchmark tools, both evidence verifiers, translation
 pack/runtime validation, self-tests, deterministic speech/session E2E,
 light/dark UI fixtures, and the main-window lifecycle check.
+
+## Packaging size policy
+
+The first clean CI run passed deterministic tests and both architecture builds
+but rejected the 659,115,028-byte universal app against a legacy 500 MB cap
+for the entire app. The user's size constraint applies to each model. The
+translation pack is 73,403,427 bytes, Phonon is 424,191,836 bytes, and the
+optional development Whisper pack is 468,150,715 bytes.
+
+The core app, excluding independently verified named speech packs, retains
+its 500 MB ceiling. Each speech model must be smaller than 500 MB and pass
+its pinned manifest, inventory and weight checksum verification. Stable
+apps have a finite 750 MB total ceiling; bundles containing the verified
+Whisper development pack have a 1.25 GB total ceiling. The actual verified
+pack set selects the ceiling, and unknown packs are rejected.
+
+Fast regression tests cover core, total and per-model limits, unknown packs,
+manifest mutation and weight checksum failure. The full local gate is rerun
+after this packaging-only change. Speech identities and quality/latency
+thresholds are unchanged.

@@ -5,8 +5,13 @@ import hashlib
 import json
 from pathlib import Path
 
+EXPECTED_MANIFEST_SHA256 = "d3836539e203396f1e0f32cec20bd2e319850fef2a47cb4ff43ee1ae4b5fd45c"
+
 def verify(root):
-    manifest = json.loads((root / "manifest.json").read_text())
+    manifest_path = root / "manifest.json"
+    if manifest_path.is_symlink() or hashlib.sha256(manifest_path.read_bytes()).hexdigest() != EXPECTED_MANIFEST_SHA256:
+        raise SystemExit("Phonon manifest does not match the pinned native conversion")
+    manifest = json.loads(manifest_path.read_text())
     assert manifest["format"] == "mimi-phonon2-two-plane-v1"
     assert manifest["repository"] == "FermionResearch/Phonon-2"
     assert manifest["revision"] == "1c388bcec35d19740bf36b0b675718223fa7904e"

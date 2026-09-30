@@ -12,6 +12,7 @@ VOICE_TYPING_REPORT="$(mktemp -t mimi-voice-typing-model-selection).json"
 EXCLUSIVITY_REPORT="$(mktemp -t mimi-speech-exclusivity).json"
 "$ROOT/.build/debug/Mimi" --verify-speech-exclusivity "$EXCLUSIVITY_REPORT"
 python3 scripts/speech/test_speech_benchmark_tools.py
+python3 scripts/translation/test_app_payload_budget.py
 python3 scripts/speech/verify_paced_speech_evidence.py
 python3 scripts/speech/verify_adaptive_segmentation_evidence.py
 python3 scripts/translation/verify_shipped_translation_pack.py \
