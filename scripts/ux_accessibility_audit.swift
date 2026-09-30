@@ -116,7 +116,7 @@ struct AccessibilityAudit {
                 }
                 let sheetsBefore = sheetCount(node(app))
                 let result = AXUIElementPerformAction(target, kAXPressAction as CFString)
-                Thread.sleep(forTimeInterval: 0.3)
+                Thread.sleep(forTimeInterval: Double(argument("--step-delay") ?? "0.3") ?? 0.3)
                 // Native sheet dismissal can invalidate the AX button before
                 // the IPC call returns. Verify the effect, never blindly retry.
                 let confirmedDismissal = title == "Cancel" && sheetsBefore > 0 && sheetCount(node(app)) < sheetsBefore

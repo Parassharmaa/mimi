@@ -132,9 +132,7 @@ final class FocusedTextTarget {
     let processIdentifier: pid_t
     private let insertionLocation: Int
     private let replacedText: String
-    private let usesKeyboardFallback: Bool
     private var insertedUTF16Length = 0
-    private var insertedText = ""
     private var hasMutated = false
     private var expectedFieldText: String?
     private var expectedSelection: CFRange
@@ -143,8 +141,7 @@ final class FocusedTextTarget {
         element: AXUIElement?,
         processIdentifier: pid_t,
         insertionRange: CFRange,
-        replacedText: String,
-        usesKeyboardFallback: Bool = false
+        replacedText: String
     ) {
         self.element = element
         expectedFieldText = element.flatMap { Self.copyString(kAXValueAttribute as CFString, from: $0) }
@@ -153,7 +150,6 @@ final class FocusedTextTarget {
         insertionLocation = insertionRange.location
         insertedUTF16Length = insertionRange.length
         self.replacedText = replacedText
-        self.usesKeyboardFallback = usesKeyboardFallback
     }
 
     static func capture(promptIfNeeded: Bool) throws -> FocusedTextTarget {
@@ -167,6 +163,7 @@ final class FocusedTextTarget {
         guard !IsSecureEventInputEnabled() else { throw VoiceTypingError.secureTextField }
         let system = AXUIElementCreateSystemWide()
         let frontmostApplication = NSWorkspace.shared.frontmostApplication
+        try VoiceTypingDestinationPolicy.validate(bundleIdentifier: frontmostApplication?.bundleIdentifier)
         let application = frontmostApplication.map {
             AXUIElementCreateApplication($0.processIdentifier)
         }
@@ -179,40 +176,19 @@ final class FocusedTextTarget {
             _ = AXUIElementCopyAttributeValue(system, kAXFocusedUIElementAttribute as CFString, &value)
         }
         guard let frontmostApplication else { throw VoiceTypingError.noTextField }
-        let isTerminal = frontmostApplication.bundleIdentifier == "com.apple.Terminal"
         guard let value, CFGetTypeID(value) == AXUIElementGetTypeID() else {
-            if isTerminal {
-                return FocusedTextTarget(
-                    element: nil,
-                    processIdentifier: frontmostApplication.processIdentifier,
-                    insertionRange: CFRange(location: 0, length: 0),
-                    replacedText: "",
-                    usesKeyboardFallback: true
-                )
-            }
             throw VoiceTypingError.noTextField
         }
         let element = unsafeDowncast(value as AnyObject, to: AXUIElement.self)
         if copyString(kAXSubroleAttribute as CFString, from: element) == (kAXSecureTextFieldSubrole as String) {
             throw VoiceTypingError.secureTextField
         }
-        // Terminal can advertise a selected text range for its text area, but
-        // that range is output history rather than a writable prompt range.
-        // Always use the reversible keyboard-diff lane for its active prompt.
-        if isTerminal {
-            return FocusedTextTarget(
-                element: element,
-                processIdentifier: frontmostApplication.processIdentifier,
-                insertionRange: CFRange(location: 0, length: 0),
-                replacedText: "",
-                usesKeyboardFallback: true
-            )
-        }
         guard let insertionRange = copyRange(kAXSelectedTextRangeAttribute as CFString, from: element) else {
             throw VoiceTypingError.noTextField
         }
         var pid: pid_t = 0
         AXUIElementGetPid(element, &pid)
+        guard pid == frontmostApplication.processIdentifier else { throw VoiceTypingError.focusChanged }
         return FocusedTextTarget(
             element: element,
             processIdentifier: pid,
@@ -223,19 +199,11 @@ final class FocusedTextTarget {
 
     func replaceLiveText(with text: String) async throws {
         try verifyFocus()
-        if usesKeyboardFallback {
-            try replaceUsingKeyboard(with: text)
-            insertedText = text
-            insertedUTF16Length = text.utf16.count
-            hasMutated = true
-            return
-        }
         try verifyOwnedText()
         try selectInsertedText()
         try postReplacementText(text)
         updateExpectedField(replacement: text)
         insertedUTF16Length = text.utf16.count
-        insertedText = text
         hasMutated = true
         try await Task.sleep(for: .milliseconds(70))
         try verifyFocus()
@@ -248,13 +216,6 @@ final class FocusedTextTarget {
     func rollback() async throws {
         guard hasMutated else { return }
         try verifyFocus()
-        if usesKeyboardFallback {
-            for _ in insertedText { try postKey(CGKeyCode(kVK_Delete)) }
-            insertedText = ""
-            insertedUTF16Length = 0
-            hasMutated = false
-            return
-        }
         try verifyOwnedText()
         try selectInsertedText()
         try postReplacementText(replacedText)
@@ -262,7 +223,6 @@ final class FocusedTextTarget {
         try await Task.sleep(for: .milliseconds(70))
         guard containsInsertedText(replacedText) else { throw VoiceTypingError.insertionFailed }
         insertedUTF16Length = replacedText.utf16.count
-        insertedText = ""
         hasMutated = false
     }
 
@@ -280,7 +240,7 @@ final class FocusedTextTarget {
         }
         // Global key events go to the currently focused field, not the field
         // whose AX selection we change. A matching application is insufficient.
-        guard let element else { return } // Terminal's explicit keyboard lane.
+        guard let element else { throw VoiceTypingError.focusChanged }
         let application = AXUIElementCreateApplication(processIdentifier)
         var focused: CFTypeRef?
         guard AXUIElementCopyAttributeValue(
@@ -341,17 +301,6 @@ final class FocusedTextTarget {
         up.post(tap: .cghidEventTap)
     }
 
-    /// Terminal exposes its prompt as a keyboard destination, not as a normal
-    /// AX text field. Keep the already-inserted prefix and edit only the
-    /// changed suffix so volatile recognition results remain live and stable.
-    private func replaceUsingKeyboard(with text: String) throws {
-        let edit = LiveTextEdit(previous: insertedText, next: text)
-        for _ in 0..<edit.removalCount {
-            try postKey(CGKeyCode(kVK_Delete))
-        }
-        if !edit.insertion.isEmpty { try postReplacementText(edit.insertion) }
-    }
-
     private func postKey(_ key: CGKeyCode) throws {
         guard let source = CGEventSource(stateID: .hidSystemState),
               let down = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: true),
@@ -402,6 +351,7 @@ enum VoiceTypingError: LocalizedError {
     case accessibilityPermission, noTextField, secureTextField, microphonePermission
     case appleAssetsUnavailable(SpeechLanguage), mimiUnavailable(String)
     case shortcutUnavailable, sessionRecording, focusChanged, destinationChanged, insertionFailed
+    case unsupportedTerminal
 
     var errorDescription: String? {
         switch self {
@@ -417,8 +367,17 @@ enum VoiceTypingError: LocalizedError {
         case .sessionRecording: "Stop the current transcription session before using Voice Type."
         case .focusChanged: "Voice Type stopped because focus moved to another field or app."
         case .destinationChanged: "Voice Type stopped because the text or cursor changed. Your edits were preserved."
+        case .unsupportedTerminal: "Voice Type cannot safely edit Terminal prompts. Use a supported text field instead."
         case .insertionFailed: "Mimi couldn’t update this field. No success was reported."
         }
+    }
+}
+
+enum VoiceTypingDestinationPolicy {
+    static func validate(bundleIdentifier: String?) throws {
+        // Terminal exposes output-history selection, not the writable prompt
+        // cursor. Unverified Backspace cannot provide a safe rollback.
+        guard bundleIdentifier != "com.apple.Terminal" else { throw VoiceTypingError.unsupportedTerminal }
     }
 }
 

@@ -19,7 +19,7 @@ check_case() {
   "$FIXTURE_DIR/fixture" "${fixture_args[@]}" > "$FIXTURE_DIR/$case_name.jsonl" &
   FIXTURE_PID="$!"
   sleep 0.5
-  "$APP" --e2e-stream-insert 'there|there now' --e2e-delay 1 "${app_args[@]}"
+  "$APP" --e2e-stream-insert 'there|there now' --e2e-delay 1 --e2e-target-pid "$FIXTURE_PID" "${app_args[@]}"
   sleep 0.3
   local actual="$(tail -n 1 "$FIXTURE_DIR/$case_name.jsonl")"
   kill "$FIXTURE_PID"

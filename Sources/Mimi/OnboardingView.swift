@@ -247,7 +247,7 @@ struct OnboardingView: View {
             Toggle(t("Open Mimi when I log in", "ログイン時にMimiを開く"), isOn: $startAtLogin)
                 .frame(width: 320, alignment: .leading)
             VStack(alignment: .leading, spacing: 8) {
-                Toggle(t("Type anywhere by speaking", "声でどこにでも入力"), isOn: $preferences.voiceTypingEnabled)
+                Toggle(t("Dictate into text fields", "入力欄に音声入力"), isOn: $preferences.voiceTypingEnabled)
                 if preferences.voiceTypingEnabled {
                     Picker(t("Voice Type model", "音声入力モデル"), selection: $preferences.voiceTypingModel) {
                         ForEach(VoiceTypingModel.allCases) { model in

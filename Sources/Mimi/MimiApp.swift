@@ -12,6 +12,15 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("--verify-voice-typing-destination") {
+            var terminalRejected = false
+            do { try VoiceTypingDestinationPolicy.validate(bundleIdentifier: "com.apple.Terminal") }
+            catch VoiceTypingError.unsupportedTerminal { terminalRejected = true }
+            catch {}
+            let ordinaryAccepted = (try? VoiceTypingDestinationPolicy.validate(bundleIdentifier: "dev.mimi.fixture")) != nil
+            print("Mimi Voice Type destination policy \(terminalRejected && ordinaryAccepted ? "passed" : "failed"): Terminal refused, supported text fields allowed.")
+            Darwin.exit(terminalRejected && ordinaryAccepted ? 0 : 1)
+        }
         if let output = argument(after: "--verify-voice-typing-lifecycle", in: arguments) {
             Task { @MainActor in
                 let report = await verifyVoiceTypingLifecycleContract()
@@ -489,6 +498,11 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 do {
                     let delay = Double(argument(after: "--e2e-delay", in: arguments) ?? "3") ?? 3
                     try await Task.sleep(for: .seconds(delay))
+                    if let value = argument(after: "--e2e-target-pid", in: arguments), let expectedPID = Int32(value) {
+                        guard NSWorkspace.shared.frontmostApplication?.processIdentifier == expectedPID else {
+                            throw VoiceTypingError.focusChanged
+                        }
+                    }
                     let target = try FocusedTextTarget.capture(promptIfNeeded: false)
                     let originalText = try target.fieldTextForVerification()
                     let stepDelay = Double(argument(after: "--e2e-step-delay", in: arguments) ?? "0") ?? 0

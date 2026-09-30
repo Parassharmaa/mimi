@@ -77,7 +77,7 @@ private struct VoiceTypingSettingsPane: View {
 
     var body: some View {
         Form {
-            Section(preferences.text("Type anywhere by speaking", "声でどこにでも入力")) {
+            Section(preferences.text("Dictate into supported text fields", "対応する入力欄に音声入力")) {
                 Toggle(preferences.text("Enable Voice Type", "音声入力を有効にする"), isOn: $preferences.voiceTypingEnabled)
                 Picker(preferences.text("Shortcut", "ショートカット"), selection: $preferences.voiceTypingShortcut) {
                     ForEach(VoiceTypingShortcut.allCases) { shortcut in
@@ -143,8 +143,8 @@ private struct VoiceTypingSettingsPane: View {
 
             Section {
                 Text(preferences.text(
-                    "Place the cursor in a text field and press the shortcut. Your words appear in the field as you speak. Press the shortcut again to stop, or Escape to undo this dictation. Password fields are never supported.",
-                    "入力欄にカーソルを置き、ショートカットを押すと、話した内容がその場で入力されます。もう一度押すと停止し、Escで今回の音声入力を取り消せます。パスワード欄では使用できません。"
+                    "Place the cursor in a supported text field and press the shortcut. Press it again to stop, or Escape to undo this dictation. Password fields and Terminal prompts are not supported. Moving the cursor or editing the field stops dictation to preserve your edits.",
+                    "対応する入力欄にカーソルを置き、ショートカットを押すと音声入力が始まります。もう一度押すと停止し、Escで取り消せます。パスワード欄とTerminalのプロンプトには対応していません。カーソルの移動や編集を検知すると、内容を保護するために停止します。"
                 ))
                 .foregroundStyle(.secondary)
             }
