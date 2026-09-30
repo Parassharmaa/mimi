@@ -158,6 +158,7 @@ public enum AudioSource: String, CaseIterable, Codable, Sendable, Identifiable {
 public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Identifiable {
     case appleSpeechAnalyzer
     case whisperKitLargeV3Turbo
+    case phonon2
     case nemotronStreamingExperimental
     case qwen3StreamingExperimental
 
@@ -167,13 +168,15 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
     /// passes. Apple Speech remains the default and the immediate fallback.
     public static let selectableCases: [TranscriptionEngineID] = [
         .appleSpeechAnalyzer,
-        .whisperKitLargeV3Turbo
+        .whisperKitLargeV3Turbo,
+        .phonon2
     ]
 
     public var displayName: String {
         switch self {
         case .appleSpeechAnalyzer: "Apple Speech"
         case .whisperKitLargeV3Turbo: "Mimi Speech Preview (468 MB)"
+        case .phonon2: "Phonon 2 (English, 424 MB)"
         case .nemotronStreamingExperimental: "Nemotron 3.5 MLX (756 MB)"
         case .qwen3StreamingExperimental: "Qwen3-ASR 0.6B MLX (713 MB)"
         }
@@ -185,6 +188,8 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
             "Native, on-device live transcription. Available on macOS 26 and later."
         case .whisperKitLargeV3Turbo:
             "Development MLX model for bounded-window English and Japanese live transcription."
+        case .phonon2:
+            "Bundled native MLX speech recognition for English. Choose Mimi Speech or Apple Speech for Japanese."
         case .nemotronStreamingExperimental:
             "Experimental on-device MLX live transcription for English and Japanese. Uses bounded local windows for predictable memory."
         case .qwen3StreamingExperimental:
@@ -194,7 +199,7 @@ public enum TranscriptionEngineID: String, CaseIterable, Codable, Sendable, Iden
 
     public var isExperimental: Bool {
         switch self {
-        case .whisperKitLargeV3Turbo, .nemotronStreamingExperimental, .qwen3StreamingExperimental: true
+        case .whisperKitLargeV3Turbo, .phonon2, .nemotronStreamingExperimental, .qwen3StreamingExperimental: true
         case .appleSpeechAnalyzer: false
         }
     }
@@ -262,6 +267,14 @@ public enum ModelCatalog {
             ownership: .experimental,
             estimatedDownloadMB: 468,
             recommendation: "Preview candidate for higher English and Japanese accuracy. Apple Speech remains the default until the frozen promotion gate passes."
+        ),
+        .init(
+            id: "phonon2-en",
+            engine: .phonon2,
+            supportedLanguages: [.english],
+            ownership: .appManaged,
+            estimatedDownloadMB: 424,
+            recommendation: "Bundled fast English speech recognition. Japanese requires Mimi Speech or Apple Speech."
         )
     ]
 

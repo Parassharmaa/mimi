@@ -12,6 +12,52 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
+        if let output = argument(after: "--verify-speech-exclusivity", in: arguments) {
+            Task { @MainActor in
+                let report = await verifySpeechExclusivity()
+                do {
+                    let data = try JSONEncoder().encode(report)
+                    try data.write(to: URL(fileURLWithPath: output))
+                    print("Mimi speech exclusivity verification \(report.status)")
+                    Darwin.exit(report.status == "passed" ? 0 : 1)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
+        if let root = argument(after: "--smoke-phonon2-live", in: arguments),
+           let audio = argument(after: "--audio", in: arguments),
+           let output = argument(after: "--output", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let engine = MimiPhononMLXLiveEngine(modelRoot: URL(fileURLWithPath: root))
+                    let report = try await engine.runLiveSmoke(recordingAt: URL(fileURLWithPath: audio))
+                    let data = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted,.sortedKeys])
+                    try data.write(to: URL(fileURLWithPath: output))
+                    print("Phonon native live smoke complete: \(output)")
+                    Darwin.exit((report["warnings"] as? [String])?.isEmpty == true && (report["text"] as? String)?.isEmpty == false ? 0 : 1)
+                } catch { print("Phonon live smoke failed: \(error)"); Darwin.exit(1) }
+            }
+            return
+        }
+        if let root = argument(after: "--smoke-phonon2", in: arguments),
+           let audio = argument(after: "--audio", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let engine = MimiPhononMLXLiveEngine(modelRoot: URL(fileURLWithPath: root))
+                    var attempts: [[String: Any]] = []
+                    let count = Int(argument(after: "--warm-runs", in: arguments) ?? "1") ?? 1
+                    for index in 0..<max(1, min(count, 5)) {
+                        let start = ContinuousClock.now
+                        let text = try await engine.transcribe(recordingAt: URL(fileURLWithPath: audio), language: .english)
+                        attempts.append(["text": text, "wall_seconds": start.duration(to: .now).seconds, "index": index])
+                    }
+                    let data = try JSONSerialization.data(withJSONObject: ["attempts": attempts, "model": "phonon2-native-mlx"], options: [.sortedKeys])
+                    print(String(data: data, encoding: .utf8)!)
+                    Darwin.exit(attempts.contains { ($0["text"] as? String)?.isEmpty != false } ? 1 : 0)
+                } catch { print("Phonon native smoke failed: \(error)"); Darwin.exit(1) }
+            }
+            return
+        }
         if let outputPath = argument(
             after: "--verify-voice-typing-model-selection",
             in: arguments
@@ -1196,17 +1242,21 @@ struct MimiApp: App {
     init() {
         let appleSpeech = SystemAppleSpeechProvider()
         let mimiWhisper = MimiWhisperMLXLiveEngine()
+        let phonon = MimiPhononMLXLiveEngine()
         let store = AppStore(
             appleSpeech: appleSpeech,
-            whisper: mimiWhisper
+            whisper: mimiWhisper,
+            phonon: phonon
         )
         let preferences = UserPreferences()
         let voiceTyping = VoiceTypingController(
             preferences: preferences,
-            isSessionRecording: { store.isRecording },
+            isSessionRecording: { store.isTranscriptionSessionBusy },
             appleSpeech: appleSpeech,
-            mimiWhisper: mimiWhisper
+            mimiWhisper: mimiWhisper,
+            phonon: phonon
         )
+        store.isVoiceTypingActive = { [weak voiceTyping] in voiceTyping?.state.isActive == true }
         _store = State(initialValue: store)
         _preferences = State(initialValue: preferences)
         AppWindowCoordinator.shared.configure(store: store, preferences: preferences)

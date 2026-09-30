@@ -15,6 +15,12 @@ enum VoiceTypingState: Equatable {
     case message(String, isError: Bool)
 
     var isVisible: Bool { self != .idle }
+    var isActive: Bool {
+        switch self {
+        case .preparing, .listening, .finishing: true
+        case .idle, .message: false
+        }
+    }
 }
 
 private struct HotKeyDefinition {
@@ -362,11 +368,13 @@ private enum VoiceTypingError: LocalizedError {
 @MainActor
 private enum ActiveVoiceTypingEngine {
     case mimi(any WhisperAccuracyTranscribing)
+    case phonon(any WhisperAccuracyTranscribing)
     case apple(any AppleLiveTranscribing)
 
     var model: VoiceTypingModel {
         switch self {
         case .mimi: .mimiWhisper
+        case .phonon: .phonon2
         case .apple: .appleSpeech
         }
     }
@@ -378,7 +386,7 @@ private enum ActiveVoiceTypingEngine {
         onBackpressure: @escaping @MainActor (String) -> Void
     ) async throws {
         switch self {
-        case let .mimi(engine):
+        case let .mimi(engine), let .phonon(engine):
             try await engine.startLive(
                 language: language,
                 inputFormat: inputFormat,
@@ -396,21 +404,21 @@ private enum ActiveVoiceTypingEngine {
 
     func consume(_ buffer: AVAudioPCMBuffer) {
         switch self {
-        case let .mimi(engine): engine.consumeLive(buffer)
+        case let .mimi(engine), let .phonon(engine): engine.consumeLive(buffer)
         case let .apple(engine): engine.consume(buffer)
         }
     }
 
     func finish() async {
         switch self {
-        case let .mimi(engine): await engine.stopLive()
+        case let .mimi(engine), let .phonon(engine): await engine.stopLive()
         case let .apple(engine): await engine.stop()
         }
     }
 
     func cancel() async {
         switch self {
-        case let .mimi(engine): await engine.cancelLive()
+        case let .mimi(engine), let .phonon(engine): await engine.cancelLive()
         case let .apple(engine): await engine.stop()
         }
     }
@@ -420,12 +428,18 @@ private enum ActiveVoiceTypingEngine {
 private struct VoiceTypingEngineFactory {
     let appleSpeech: any AppleSpeechProviding
     let mimiWhisper: any WhisperAccuracyTranscribing
+    var phonon: any WhisperAccuracyTranscribing = MimiPhononMLXLiveEngine()
 
     func make(
         model: VoiceTypingModel,
         language: SpeechLanguage
     ) async throws -> ActiveVoiceTypingEngine {
         switch model {
+        case .phonon2:
+            guard language == .english else { throw MimiPhononError.englishOnly }
+            guard phonon.supportsLiveTranscription, phonon.runtimeAvailabilityMessage == nil else { throw MimiPhononError.notInstalled }
+            try phonon.ensureInstalled()
+            return .phonon(phonon)
         case .mimiWhisper:
             guard mimiWhisper.supportsLiveTranscription else {
                 throw VoiceTypingError.mimiUnavailable(
@@ -462,6 +476,8 @@ struct VoiceTypingModelSelectionVerificationReport: Codable {
     let mimiSelectionUsesMimi: Bool
     let appleSelectionUsesApple: Bool
     let unavailableMimiDoesNotFallback: Bool
+    let phononSelectionUsesPhonon: Bool
+    let japanesePhononRejectedWithoutFallback: Bool
 }
 
 @MainActor
@@ -480,9 +496,11 @@ func verifyVoiceTypingModelSelectionContract() async
 
     let apple = VoiceTypingVerificationAppleProvider()
     let mimi = VoiceTypingVerificationWhisper()
+    let phonon = VoiceTypingVerificationWhisper()
     let factory = VoiceTypingEngineFactory(
         appleSpeech: apple,
-        mimiWhisper: mimi
+        mimiWhisper: mimi,
+        phonon: phonon
     )
 
     let mimiEngine = try? await factory.make(
@@ -500,6 +518,17 @@ func verifyVoiceTypingModelSelectionContract() async
     let appleSelectionUsesApple = appleEngine?.model == .appleSpeech
         && apple.makeEngineCount == 1
         && apple.lastAssetLanguage == .japanese
+    let phononEngine = try? await factory.make(model: .phonon2, language: .english)
+    let phononSelectionUsesPhonon = phononEngine?.model == .phonon2
+        && phonon.ensureInstalledCount == 1 && mimi.ensureInstalledCount == 1
+    let japanesePhononRejectedWithoutFallback: Bool
+    do {
+        _ = try await factory.make(model: .phonon2, language: .japanese)
+        japanesePhononRejectedWithoutFallback = false
+    } catch {
+        japanesePhononRejectedWithoutFallback = phonon.ensureInstalledCount == 1
+            && mimi.ensureInstalledCount == 1 && apple.makeEngineCount == 1
+    }
 
     let fallbackApple = VoiceTypingVerificationAppleProvider()
     let unavailableFactory = VoiceTypingEngineFactory(
@@ -524,6 +553,8 @@ func verifyVoiceTypingModelSelectionContract() async
         && mimiSelectionUsesMimi
         && appleSelectionUsesApple
         && unavailableMimiDoesNotFallback
+        && phononSelectionUsesPhonon
+        && japanesePhononRejectedWithoutFallback
     return .init(
         schemaVersion: 1,
         status: passed ? "passed" : "failed",
@@ -531,7 +562,9 @@ func verifyVoiceTypingModelSelectionContract() async
         preferenceRoundTrip: preferenceRoundTrip,
         mimiSelectionUsesMimi: mimiSelectionUsesMimi,
         appleSelectionUsesApple: appleSelectionUsesApple,
-        unavailableMimiDoesNotFallback: unavailableMimiDoesNotFallback
+        unavailableMimiDoesNotFallback: unavailableMimiDoesNotFallback,
+        phononSelectionUsesPhonon: phononSelectionUsesPhonon,
+        japanesePhononRejectedWithoutFallback: japanesePhononRejectedWithoutFallback
     )
 }
 
@@ -671,13 +704,15 @@ final class VoiceTypingController {
         preferences: UserPreferences,
         isSessionRecording: @escaping @MainActor () -> Bool = { false },
         appleSpeech: any AppleSpeechProviding = SystemAppleSpeechProvider(),
-        mimiWhisper: any WhisperAccuracyTranscribing = MimiWhisperMLXLiveEngine()
+        mimiWhisper: any WhisperAccuracyTranscribing = MimiWhisperMLXLiveEngine(),
+        phonon: any WhisperAccuracyTranscribing = MimiPhononMLXLiveEngine()
     ) {
         self.preferences = preferences
         self.isSessionRecording = isSessionRecording
         engineFactory = VoiceTypingEngineFactory(
             appleSpeech: appleSpeech,
-            mimiWhisper: mimiWhisper
+            mimiWhisper: mimiWhisper,
+            phonon: phonon
         )
         hotKeys = GlobalHotKeyRegistration { [weak self] identifier in
             if identifier == 2 { self?.cancel() } else { self?.toggle() }

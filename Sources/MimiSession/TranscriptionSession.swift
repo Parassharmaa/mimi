@@ -256,6 +256,7 @@ public struct TranscriptionSessionDependencies {
     public let appleSpeech: any AppleSpeechProviding
     public let automaticAppleSpeech: any AutomaticAppleSpeechTranscribing
     public let whisper: any WhisperAccuracyTranscribing
+    public let phonon: (any WhisperAccuracyTranscribing)?
     public let nemotron: any NemotronMLXLiveTranscribing
     public let qwen: any QwenMLXLiveTranscribing
     public let storage: any TranscriptPersisting
@@ -273,7 +274,8 @@ public struct TranscriptionSessionDependencies {
         qwen: any QwenMLXLiveTranscribing,
         storage: any TranscriptPersisting,
         inputDevices: [AudioInputDevice],
-        outputDevices: [AudioOutputDevice]
+        outputDevices: [AudioOutputDevice],
+        phonon: (any WhisperAccuracyTranscribing)? = nil
     ) {
         self.microphoneCapture = microphoneCapture
         self.outputAudioCapture = outputAudioCapture
@@ -281,6 +283,7 @@ public struct TranscriptionSessionDependencies {
         self.appleSpeech = appleSpeech
         self.automaticAppleSpeech = automaticAppleSpeech
         self.whisper = whisper
+        self.phonon = phonon
         self.nemotron = nemotron
         self.qwen = qwen
         self.storage = storage
@@ -398,6 +401,10 @@ public final class TranscriptionSession {
     public var engineID: TranscriptionEngineID {
         didSet {
             guard engineID != oldValue else { return }
+            if engineID == .phonon2 {
+                sourceLanguage = .english
+                languageMode = .english
+            }
             if engineID != .appleSpeechAnalyzer, languageMode == .automatic {
                 languageMode = TranscriptionLanguageMode(language: sourceLanguage)
             }
@@ -422,6 +429,13 @@ public final class TranscriptionSession {
     private let appleSpeech: any AppleSpeechProviding
     private let automaticAppleSpeech: any AutomaticAppleSpeechTranscribing
     private let whisper: any WhisperAccuracyTranscribing
+    private let phonon: any WhisperAccuracyTranscribing
+    private func localSpeech(for engine: TranscriptionEngineID) -> any WhisperAccuracyTranscribing {
+        engine == .phonon2 ? phonon : whisper
+    }
+    private var selectedLocalSpeech: any WhisperAccuracyTranscribing {
+        localSpeech(for: activeSession?.engine ?? engineID)
+    }
     private let nemotron: any NemotronMLXLiveTranscribing
     private let qwen: any QwenMLXLiveTranscribing
     private let storage: any TranscriptPersisting
@@ -451,6 +465,7 @@ public final class TranscriptionSession {
         appleSpeech = dependencies.appleSpeech
         automaticAppleSpeech = dependencies.automaticAppleSpeech
         whisper = dependencies.whisper
+        phonon = dependencies.phonon ?? UnavailablePhononEngine()
         nemotron = dependencies.nemotron
         qwen = dependencies.qwen
         storage = dependencies.storage
@@ -487,7 +502,8 @@ public final class TranscriptionSession {
     }
 
     public var selectableLanguageModes: [TranscriptionLanguageMode] {
-        engineID == .appleSpeechAnalyzer
+        if engineID == .phonon2 { return [.english] }
+        return engineID == .appleSpeechAnalyzer
             ? TranscriptionLanguageMode.allCases
             : [.english, .japanese]
     }
@@ -496,7 +512,7 @@ public final class TranscriptionSession {
         _ = modelStorageRevision
         guard !modelSetupState.isActive else { return false }
         return switch engineID {
-        case .whisperKitLargeV3Turbo: whisper.isRemovable
+        case .whisperKitLargeV3Turbo, .phonon2: selectedLocalSpeech.isRemovable
         case .nemotronStreamingExperimental: nemotron.isDownloaded
         case .qwen3StreamingExperimental: qwen.isDownloaded
         case .appleSpeechAnalyzer:
@@ -548,11 +564,17 @@ public final class TranscriptionSession {
                 return .checking("Checking the \(sourceLanguage.displayName) Apple Speech asset…")
             }
             return appleReadiness(for: assetStatus, language: sourceLanguage)
-        case .whisperKitLargeV3Turbo:
-            if let runtimeAvailabilityMessage = whisper.runtimeAvailabilityMessage {
+        case .whisperKitLargeV3Turbo, .phonon2:
+            if engineID == .phonon2, sourceLanguage != .english {
+                return .unavailable("Phonon 2 supports English only. Choose Mimi Speech or Apple Speech for Japanese.")
+            }
+            if let runtimeAvailabilityMessage = selectedLocalSpeech.runtimeAvailabilityMessage {
                 return .unavailable(runtimeAvailabilityMessage)
             }
-            return whisper.isDownloaded
+            if engineID == .phonon2 {
+                return selectedLocalSpeech.isDownloaded ? .ready : .unavailable("Phonon 2 is not bundled. Install a Mimi build that includes it.")
+            }
+            return selectedLocalSpeech.isDownloaded
                 ? .ready
                 : .needsDownload("Download Mimi Speech (468 MB) before starting local live transcription.")
         case .nemotronStreamingExperimental:
@@ -719,7 +741,7 @@ public final class TranscriptionSession {
             } else {
                 _ = await refreshAppleSpeechAssetStatus(for: sourceLanguage)
             }
-        case .whisperKitLargeV3Turbo, .nemotronStreamingExperimental, .qwen3StreamingExperimental:
+        case .whisperKitLargeV3Turbo, .phonon2, .nemotronStreamingExperimental, .qwen3StreamingExperimental:
             modelStorageRevision += 1
         }
     }
@@ -864,9 +886,9 @@ public final class TranscriptionSession {
                         scheduleAppleSpeechDownloadRefresh(for: [language], setupLanguage: language)
                     }
                 }
-            case .whisperKitLargeV3Turbo:
+            case .whisperKitLargeV3Turbo, .phonon2:
                 updateModelSetup(.downloading(engine: request.engine, language: nil, progress: nil), for: request)
-                try await whisper.install { [weak self, request] progress in
+                try await localSpeech(for: request.engine).install { [weak self, request] progress in
                     self?.updateModelDownloadProgress(progress, for: request)
                 }
                 modelStorageRevision += 1
@@ -904,8 +926,8 @@ public final class TranscriptionSession {
 
         do {
             switch request.engine {
-            case .whisperKitLargeV3Turbo:
-                try await whisper.removeDownloadedModel()
+            case .whisperKitLargeV3Turbo, .phonon2:
+                try await localSpeech(for: request.engine).removeDownloadedModel()
                 modelStorageRevision += 1
             case .nemotronStreamingExperimental:
                 try await nemotron.removeDownloadedModel()
@@ -1007,7 +1029,7 @@ public final class TranscriptionSession {
         return switch engine {
         case .appleSpeechAnalyzer:
             "\(verb) \(language?.displayName ?? "Apple Speech") Apple Speech"
-        case .whisperKitLargeV3Turbo:
+        case .whisperKitLargeV3Turbo, .phonon2:
             "\(verb) Whisper Large-v3"
         case .nemotronStreamingExperimental:
             "\(verb) Nemotron MLX"
@@ -1218,8 +1240,11 @@ public final class TranscriptionSession {
             switch configuration.engine {
             case .appleSpeechAnalyzer:
                 guard appleSpeech.isPlatformAvailable else { throw TranscriptionSessionError.appleSpeechRequiresMacOS26 }
-            case .whisperKitLargeV3Turbo:
-                try whisper.ensureInstalled()
+            case .whisperKitLargeV3Turbo, .phonon2:
+                if configuration.engine == .phonon2, configuration.language != .english {
+                    throw TranscriptionSessionError.whisperLiveUnavailable
+                }
+                try selectedLocalSpeech.ensureInstalled()
             case .nemotronStreamingExperimental:
                 try nemotron.ensureInstalled()
             case .qwen3StreamingExperimental:
@@ -1230,8 +1255,8 @@ public final class TranscriptionSession {
             switch configuration.engine {
             case .appleSpeechAnalyzer:
                 recordingURL = nil
-            case .whisperKitLargeV3Turbo:
-                recordingURL = whisper.supportsLiveTranscription
+            case .whisperKitLargeV3Turbo, .phonon2:
+                recordingURL = selectedLocalSpeech.supportsLiveTranscription
                     ? nil
                     : try storage.makeTemporaryRecordingURL(fileExtension: "caf")
             case .nemotronStreamingExperimental:
@@ -1287,9 +1312,9 @@ public final class TranscriptionSession {
                 let frames = RealtimeAudioFramePipe(capacity: 32)
                 activeAudioFrames = frames
                 audioFrames = frames
-            case .whisperKitLargeV3Turbo:
-                if whisper.supportsLiveTranscription {
-                    try await whisper.startLive(
+            case .whisperKitLargeV3Turbo, .phonon2:
+                if selectedLocalSpeech.supportsLiveTranscription {
+                    try await selectedLocalSpeech.startLive(
                         language: configuration.language,
                         inputFormat: inputFormat,
                         onEvent: { [weak self] event in
@@ -1415,16 +1440,16 @@ public final class TranscriptionSession {
                 appleEngine = nil
                 document.finalizeLiveText(language: detectedLanguage ?? configuration.language)
                 try persistDocument()
-            case .whisperKitLargeV3Turbo:
+            case .whisperKitLargeV3Turbo, .phonon2:
                 if whisperLiveSessionActive {
                     if let activeAudioFrames {
                         drainAudioFrames(activeAudioFrames, for: configuration)
                     }
-                    await whisper.stopLive()
+                    await selectedLocalSpeech.stopLive()
                     whisperLiveSessionActive = false
                 } else {
                     guard let completedURL else { throw TranscriptionSessionError.missingRecording }
-                    let text = try await whisper.transcribe(
+                    let text = try await selectedLocalSpeech.transcribe(
                         recordingAt: completedURL,
                         language: configuration.language
                     )
@@ -1540,7 +1565,7 @@ public final class TranscriptionSession {
             automaticAppleEngineActive = false
         }
         if whisperLiveSessionActive {
-            await whisper.cancelLive()
+            await selectedLocalSpeech.cancelLive()
             whisperLiveSessionActive = false
         }
         if nemotronLiveSessionActive {
@@ -1596,9 +1621,9 @@ public final class TranscriptionSession {
                 qwenLiveSessionActive = false
             }
             try? persistDocument()
-        case .whisperKitLargeV3Turbo:
+        case .whisperKitLargeV3Turbo, .phonon2:
             if whisperLiveSessionActive {
-                await whisper.stopLive()
+                await selectedLocalSpeech.stopLive()
                 whisperLiveSessionActive = false
             }
             try? persistDocument()
@@ -1641,9 +1666,9 @@ public final class TranscriptionSession {
                 nemotron.consumeLive(frame.buffer)
             case .qwen3StreamingExperimental:
                 qwen.consumeLive(frame.buffer)
-            case .whisperKitLargeV3Turbo:
+            case .whisperKitLargeV3Turbo, .phonon2:
                 if whisperLiveSessionActive {
-                    whisper.consumeLive(frame.buffer)
+                    selectedLocalSpeech.consumeLive(frame.buffer)
                 } else {
                     audioFrames.discard()
                     return

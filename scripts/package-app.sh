@@ -11,11 +11,13 @@ SIGNING_IDENTITY="${MIMI_CODESIGN_IDENTITY:--}"
 MODEL_RESOURCES="$ROOT/App/Resources/TranslationModels"
 LICENSE_RESOURCES="$ROOT/App/Resources/TranslationLicenses"
 SPEECH_LICENSE_RESOURCES="$ROOT/App/Resources/SpeechLicenses"
+PHONON_CACHE="$ROOT/.build/phonon2-model"
+"$ROOT/scripts/speech/fetch_phonon2_pack.sh" "$PHONON_CACHE"
 
 cd "$ROOT"
 
-swift build -c release --product Mimi --arch arm64 --build-path "$ARM_BUILD"
-swift build -c release --product Mimi --arch x86_64 --build-path "$INTEL_BUILD"
+swift build --disable-index-store -c release --product Mimi --arch arm64 --build-path "$ARM_BUILD"
+swift build --disable-index-store -c release --product Mimi --arch x86_64 --build-path "$INTEL_BUILD"
 
 rm -rf "$APP" "$DIST"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$DIST"
@@ -34,6 +36,13 @@ cp -R "$LICENSE_RESOURCES" "$APP/Contents/Resources/TranslationLicenses"
 [[ -s "$SPEECH_LICENSE_RESOURCES/OPENAI-WHISPER-MIT.txt" ]]
 [[ -s "$SPEECH_LICENSE_RESOURCES/PROVENANCE.md" ]]
 cp -R "$SPEECH_LICENSE_RESOURCES" "$APP/Contents/Resources/SpeechLicenses"
+mkdir -p "$APP/Contents/Resources/SpeechModels/mimi-phonon2"
+cp -cR "$PHONON_CACHE/model/." "$APP/Contents/Resources/SpeechModels/mimi-phonon2/" 2>/dev/null \
+  || cp -R "$PHONON_CACHE/model/." "$APP/Contents/Resources/SpeechModels/mimi-phonon2/"
+cp -R "$PHONON_CACHE/notices" "$APP/Contents/Resources/SpeechLicenses/Phonon2"
+cp "$ROOT/App/Resources/SpeechLicenses/PHONON2-CONVERSION.md" \
+  "$APP/Contents/Resources/SpeechLicenses/Phonon2/MIMI-CONVERSION.md"
+python3 "$ROOT/scripts/speech/verify_phonon2_pack.py" "$APP/Contents/Resources/SpeechModels/mimi-phonon2"
 cmp "$SPEECH_LICENSE_RESOURCES/OPENAI-WHISPER-MIT.txt" \
   "$APP/Contents/Resources/SpeechLicenses/OPENAI-WHISPER-MIT.txt"
 cmp "$SPEECH_LICENSE_RESOURCES/PROVENANCE.md" \

@@ -177,12 +177,12 @@ def main() -> None:
         verify_report(
             long_root
             / "mimi-product-paced-queue-silence-1s-8s-corrected-v2.json",
-            long_root / "manifest-silence-1s.jsonl",
+            long_root / "manifest-product-silence-1s-corrected-v2.jsonl",
             paced=True,
         )
         verify_report(
             long_root / "mimi-product-paced-queue-gapless-8s-corrected-v2.json",
-            long_root / "manifest.jsonl",
+            long_root / "manifest-product-corrected-v2.jsonl",
             paced=True,
         )
 

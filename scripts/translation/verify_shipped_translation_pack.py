@@ -7,12 +7,24 @@ import argparse
 import hashlib
 import json
 import subprocess
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "speech"))
+import verify_development_speech_pack
+import verify_phonon2_pack
 
 
 EXPECTED_MANIFEST_SHA256 = "8e55e8f24eed07e89bdad6db0ca1d65aa791905123f764130ed021bc2380807a"
 EXPECTED_MODEL_BYTES = 73_403_427
-MAX_APP_BYTES = 500_000_000
+MAX_CORE_APP_BYTES = 500_000_000
+MAX_SPEECH_PACK_BYTES = 500_000_000
+MAX_STABLE_APP_BYTES = 750_000_000
+MAX_DEVELOPMENT_APP_BYTES = 1_250_000_000
+SPEECH_PACK_VERIFIERS = {
+    "mimi-phonon2": verify_phonon2_pack.verify,
+    "mimi-whisper-large-v3-turbo-q4": verify_development_speech_pack.verify,
+}
 EXPECTED_REVISIONS = {
     "en-ja": "02c48e7031386cd2d41974b0ff1aaf52f010c5fa",
     "ja-en": "539f80eb05306e27a166b45e4264c7fa2eb4de97",
@@ -143,6 +155,38 @@ def verify_licenses(license_root: Path) -> None:
             fail(f"license notice hash changed: {relative}")
 
 
+def verified_speech_pack_bytes(root: Path) -> dict[str, int]:
+    if not root.exists():
+        return {}
+    if root.is_symlink() or not root.is_dir():
+        fail("speech model root must be a directory without symlinks")
+    sizes = {}
+    for pack in root.iterdir():
+        if pack.name not in SPEECH_PACK_VERIFIERS or not pack.is_dir() or pack.is_symlink():
+            fail(f"unknown or invalid bundled speech pack: {pack.name}")
+        files = measured_files(pack)
+        SPEECH_PACK_VERIFIERS[pack.name](pack)
+        sizes[pack.name] = sum(path.stat().st_size for path in files.values())
+    return sizes
+
+
+def verify_app_size(app_bytes: int, speech_bytes: dict[str, int]) -> None:
+    if set(speech_bytes) - set(SPEECH_PACK_VERIFIERS):
+        fail("app size accounting includes an unknown speech pack")
+    if any(size < 0 or size >= MAX_SPEECH_PACK_BYTES for size in speech_bytes.values()):
+        fail("bundled speech pack exceeds its 500 MB model ceiling")
+    core_bytes = app_bytes - sum(speech_bytes.values())
+    if core_bytes < 0 or core_bytes >= MAX_CORE_APP_BYTES:
+        fail(f"core app payload is {core_bytes} bytes, over its 500 MB ceiling")
+    ceiling = (
+        MAX_DEVELOPMENT_APP_BYTES
+        if "mimi-whisper-large-v3-turbo-q4" in speech_bytes
+        else MAX_STABLE_APP_BYTES
+    )
+    if app_bytes > ceiling:
+        fail(f"app payload is {app_bytes} bytes, over the {ceiling}-byte ceiling")
+
+
 def verify_app(app: Path) -> None:
     resources = app / "Contents" / "Resources"
     verify_model(resources / "TranslationModels")
@@ -160,8 +204,8 @@ def verify_app(app: Path) -> None:
     if "arm64" not in architectures:
         fail("app has no Apple Silicon executable slice")
     app_bytes = sum(path.stat().st_size for path in app.rglob("*") if path.is_file())
-    if app_bytes >= MAX_APP_BYTES:
-        fail(f"app payload is {app_bytes} bytes, over the {MAX_APP_BYTES}-byte ceiling")
+    speech_bytes = verified_speech_pack_bytes(resources / "SpeechModels")
+    verify_app_size(app_bytes, speech_bytes)
 
 
 def main() -> None:
