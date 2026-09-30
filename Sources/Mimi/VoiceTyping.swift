@@ -135,6 +135,9 @@ final class FocusedTextTarget {
     private let usesKeyboardFallback: Bool
     private var insertedUTF16Length = 0
     private var insertedText = ""
+    private var hasMutated = false
+    private var expectedFieldText: String?
+    private var expectedSelection: CFRange
 
     private init(
         element: AXUIElement?,
@@ -144,8 +147,11 @@ final class FocusedTextTarget {
         usesKeyboardFallback: Bool = false
     ) {
         self.element = element
+        expectedFieldText = element.flatMap { Self.copyString(kAXValueAttribute as CFString, from: $0) }
+        expectedSelection = insertionRange
         self.processIdentifier = processIdentifier
         insertionLocation = insertionRange.location
+        insertedUTF16Length = insertionRange.length
         self.replacedText = replacedText
         self.usesKeyboardFallback = usesKeyboardFallback
     }
@@ -216,41 +222,91 @@ final class FocusedTextTarget {
     }
 
     func replaceLiveText(with text: String) async throws {
-        guard NSWorkspace.shared.frontmostApplication?.processIdentifier == processIdentifier else {
-            throw VoiceTypingError.focusChanged
-        }
+        try verifyFocus()
         if usesKeyboardFallback {
             try replaceUsingKeyboard(with: text)
             insertedText = text
             insertedUTF16Length = text.utf16.count
+            hasMutated = true
             return
         }
+        try verifyOwnedText()
         try selectInsertedText()
         try postReplacementText(text)
+        updateExpectedField(replacement: text)
+        insertedUTF16Length = text.utf16.count
+        insertedText = text
+        hasMutated = true
         try await Task.sleep(for: .milliseconds(70))
+        try verifyFocus()
+        try verifyOwnedText()
         guard containsInsertedText(text) else {
             throw VoiceTypingError.insertionFailed
         }
-        insertedUTF16Length = text.utf16.count
-        insertedText = text
     }
 
     func rollback() async throws {
-        guard insertedUTF16Length > 0 || !replacedText.isEmpty else { return }
-        guard NSWorkspace.shared.frontmostApplication?.processIdentifier == processIdentifier else {
-            throw VoiceTypingError.focusChanged
-        }
+        guard hasMutated else { return }
+        try verifyFocus()
         if usesKeyboardFallback {
             for _ in insertedText { try postKey(CGKeyCode(kVK_Delete)) }
             insertedText = ""
             insertedUTF16Length = 0
+            hasMutated = false
             return
         }
+        try verifyOwnedText()
         try selectInsertedText()
         try postReplacementText(replacedText)
+        updateExpectedField(replacement: replacedText)
         try await Task.sleep(for: .milliseconds(70))
         guard containsInsertedText(replacedText) else { throw VoiceTypingError.insertionFailed }
         insertedUTF16Length = replacedText.utf16.count
+        insertedText = ""
+        hasMutated = false
+    }
+
+    func fieldTextForVerification() throws -> String {
+        guard let element, let text = Self.copyString(kAXValueAttribute as CFString, from: element) else {
+            throw VoiceTypingError.insertionFailed
+        }
+        return text
+    }
+
+    private func verifyFocus() throws {
+        guard !IsSecureEventInputEnabled() else { throw VoiceTypingError.secureTextField }
+        guard NSWorkspace.shared.frontmostApplication?.processIdentifier == processIdentifier else {
+            throw VoiceTypingError.focusChanged
+        }
+        // Global key events go to the currently focused field, not the field
+        // whose AX selection we change. A matching application is insufficient.
+        guard let element else { return } // Terminal's explicit keyboard lane.
+        let application = AXUIElementCreateApplication(processIdentifier)
+        var focused: CFTypeRef?
+        guard AXUIElementCopyAttributeValue(
+            application, kAXFocusedUIElementAttribute as CFString, &focused
+        ) == .success, let focused, CFEqual(element, focused) else {
+            throw VoiceTypingError.focusChanged
+        }
+    }
+
+    private func verifyOwnedText() throws {
+        guard let element, let expectedFieldText,
+              Self.copyString(kAXValueAttribute as CFString, from: element) == expectedFieldText,
+              let selection = Self.copyRange(kAXSelectedTextRangeAttribute as CFString, from: element),
+              selection.location == expectedSelection.location,
+              selection.length == expectedSelection.length else {
+            throw VoiceTypingError.destinationChanged
+        }
+    }
+
+    private func updateExpectedField(replacement: String) {
+        guard let expectedFieldText else { return }
+        self.expectedFieldText = (expectedFieldText as NSString).replacingCharacters(
+            in: NSRange(location: insertionLocation, length: insertedUTF16Length),
+            with: replacement
+        )
+        expectedSelection = CFRange(location: insertionLocation + replacement.utf16.count, length: 0)
     }
 
     private func selectInsertedText() throws {
@@ -342,10 +398,10 @@ final class FocusedTextTarget {
     }
 }
 
-private enum VoiceTypingError: LocalizedError {
+enum VoiceTypingError: LocalizedError {
     case accessibilityPermission, noTextField, secureTextField, microphonePermission
     case appleAssetsUnavailable(SpeechLanguage), mimiUnavailable(String)
-    case shortcutUnavailable, sessionRecording, focusChanged, insertionFailed
+    case shortcutUnavailable, sessionRecording, focusChanged, destinationChanged, insertionFailed
 
     var errorDescription: String? {
         switch self {
@@ -359,7 +415,8 @@ private enum VoiceTypingError: LocalizedError {
             "Mimi Speech isn’t ready. \(message)"
         case .shortcutUnavailable: "That shortcut is already used by another app. Choose another one in Settings."
         case .sessionRecording: "Stop the current transcription session before using Voice Type."
-        case .focusChanged: "Voice Type stopped because focus moved to another app."
+        case .focusChanged: "Voice Type stopped because focus moved to another field or app."
+        case .destinationChanged: "Voice Type stopped because the text or cursor changed. Your edits were preserved."
         case .insertionFailed: "Mimi couldn’t update this field. No success was reported."
         }
     }
@@ -674,6 +731,133 @@ private final class VoiceTypingAudioRelay: @unchecked Sendable {
     }
 }
 
+// BEGIN VoiceTyping lifecycle ownership
+@MainActor
+final class VoiceTypingLifecycleTasks {
+    private var startupTask: Task<Void, Never>?
+    private var finishingTask: Task<Void, Never>?
+    private var cleanupTask: Task<Void, Never>?
+
+    var hasPendingOperations: Bool {
+        startupTask != nil || finishingTask != nil || cleanupTask != nil
+    }
+
+    var isCleaningUp: Bool { cleanupTask != nil }
+
+    @discardableResult
+    func start(_ operation: @escaping @MainActor () async -> Void) -> Bool {
+        guard !hasPendingOperations else { return false }
+        startupTask = Task {
+            await operation()
+            startupTask = nil
+        }
+        return true
+    }
+
+    func finish(_ operation: @escaping @MainActor () async -> Void) {
+        guard finishingTask == nil, cleanupTask == nil else { return }
+        let startup = startupTask
+        finishingTask = Task {
+            if let startup { await startup.value }
+            await operation()
+            finishingTask = nil
+        }
+    }
+
+    @discardableResult
+    func cleanup(_ operation: @escaping @MainActor () async -> Void) -> Task<Void, Never> {
+        if let cleanupTask { return cleanupTask }
+        let startup = startupTask
+        let finishing = finishingTask
+        startup?.cancel()
+        finishing?.cancel()
+        let task = Task {
+            // The engine is shared with normal transcription. A late startup
+            // or finalization must settle before that shared engine is released.
+            if let startup { await startup.value }
+            if let finishing { await finishing.value }
+            await operation()
+            cleanupTask = nil
+        }
+        cleanupTask = task
+        return task
+    }
+}
+
+struct VoiceTypingLifecycleVerificationReport: Codable {
+    let schemaVersion: Int
+    let status: String
+    let startupSettlesBeforeCleanup: Bool
+    let finalizationSettlesBeforeCleanup: Bool
+    let repeatedCancellationUsesOneCleanup: Bool
+    let restartBlockedUntilCleanup: Bool
+    let restartAllowedAfterCleanup: Bool
+}
+
+@MainActor
+func verifyVoiceTypingLifecycleContract() async -> VoiceTypingLifecycleVerificationReport {
+    let lifecycle = VoiceTypingLifecycleTasks()
+    let startupGate = VoiceTypingVerificationGate()
+    var events: [String] = []
+    lifecycle.start {
+        await startupGate.wait()
+        events.append("startup settled")
+    }
+    while !startupGate.isWaiting { await Task.yield() }
+    let cleanup = lifecycle.cleanup { events.append("cleanup") }
+    lifecycle.cleanup { events.append("duplicate cleanup") }
+    let restartBlockedUntilCleanup = !lifecycle.start { events.append("premature restart") }
+    let startupWasRetained = lifecycle.isCleaningUp && events.isEmpty
+    startupGate.resume()
+    await cleanup.value
+    let startupSettlesBeforeCleanup = startupWasRetained && events == ["startup settled", "cleanup"]
+    let repeatedCancellationUsesOneCleanup = !events.contains("duplicate cleanup")
+
+    let finalizationGate = VoiceTypingVerificationGate()
+    lifecycle.finish {
+        await finalizationGate.wait()
+        events.append("finalization settled")
+    }
+    while !finalizationGate.isWaiting { await Task.yield() }
+    let finalCleanup = lifecycle.cleanup { events.append("rollback") }
+    let finalizationWasRetained = lifecycle.isCleaningUp && !events.contains("rollback")
+    finalizationGate.resume()
+    await finalCleanup.value
+    let finalizationSettlesBeforeCleanup = finalizationWasRetained
+        && Array(events.suffix(2)) == ["finalization settled", "rollback"]
+    let restartAllowedAfterCleanup = lifecycle.start { events.append("restart") }
+    let settled = lifecycle.cleanup {}
+    await settled.value
+
+    let passed = startupSettlesBeforeCleanup && finalizationSettlesBeforeCleanup
+        && repeatedCancellationUsesOneCleanup && restartBlockedUntilCleanup && restartAllowedAfterCleanup
+    return .init(
+        schemaVersion: 1, status: passed ? "passed" : "failed",
+        startupSettlesBeforeCleanup: startupSettlesBeforeCleanup,
+        finalizationSettlesBeforeCleanup: finalizationSettlesBeforeCleanup,
+        repeatedCancellationUsesOneCleanup: repeatedCancellationUsesOneCleanup,
+        restartBlockedUntilCleanup: restartBlockedUntilCleanup,
+        restartAllowedAfterCleanup: restartAllowedAfterCleanup
+    )
+}
+
+@MainActor
+private final class VoiceTypingVerificationGate {
+    private var continuation: CheckedContinuation<Void, Never>?
+    var isWaiting: Bool { continuation != nil }
+
+    func wait() async {
+        await withCheckedContinuation { continuation = $0 }
+    }
+
+    func resume() {
+        let waiting = continuation
+        continuation = nil
+        waiting?.resume()
+    }
+}
+// END VoiceTyping lifecycle ownership
+
 @MainActor
 @Observable
 final class VoiceTypingController {
@@ -691,6 +875,7 @@ final class VoiceTypingController {
     private var observingPreferences = false
     private var finalizedPhrases: [String] = []
     private var activationID: UUID?
+    @ObservationIgnored private let lifecycleTasks = VoiceTypingLifecycleTasks()
     private let logger = Logger(
         subsystem: "dev.paras.mimi",
         category: "VoiceTyping"
@@ -699,6 +884,7 @@ final class VoiceTypingController {
     private(set) var state: VoiceTypingState = .idle
     private(set) var text = ""
     private(set) var shortcutRegistered = false
+    private(set) var lastError: String?
 
     init(
         preferences: UserPreferences,
@@ -727,7 +913,8 @@ final class VoiceTypingController {
         switch state {
         case .idle, .message: start()
         case .listening: finish()
-        case .preparing, .finishing: break
+        case .preparing: cancel()
+        case .finishing: break
         }
     }
 
@@ -747,45 +934,29 @@ final class VoiceTypingController {
 
     func cancel() {
         guard state == .preparing || state == .listening || state == .finishing else { return }
-        activationID = nil
-        state = .finishing
-        Task {
-            _ = try? microphone.stop()
-            if let audioRelay { drain(audioRelay) }
-            audioRelay = nil
-            if let engine { await engine.cancel() }
-            self.engine = nil
-            pendingFieldText = nil
-            if let fieldUpdateTask { await fieldUpdateTask.value }
-            self.fieldUpdateTask = nil
-            try? await target?.rollback()
-            target = nil
-            text = ""
-            hotKeys.setCancelEnabled(false)
-            state = .idle
-        }
+        beginCleanup(rollback: true)
     }
 
     private func start() {
+        guard !lifecycleTasks.hasPendingOperations else { return }
         messageTask?.cancel()
         let activationID = UUID()
         self.activationID = activationID
         state = .preparing
-        Task {
+        hotKeys.setCancelEnabled(true)
+        lifecycleTasks.start { [self] in
             do {
                 guard shortcutRegistered else { throw VoiceTypingError.shortcutUnavailable }
                 guard !isSessionRecording() else { throw VoiceTypingError.sessionRecording }
                 let capturedTarget = try FocusedTextTarget.capture(promptIfNeeded: true)
                 guard await microphone.requestPermission() else { throw VoiceTypingError.microphonePermission }
+                guard self.activationID == activationID else { return }
                 let format = try microphone.configureInput(deviceID: nil)
                 let engine = try await engineFactory.make(
                     model: preferences.voiceTypingModel,
                     language: language
                 )
-                guard self.activationID == activationID else {
-                    await engine.cancel()
-                    return
-                }
+                guard self.activationID == activationID else { return }
                 text = ""
                 finalizedPhrases = []
                 pendingFieldText = nil
@@ -812,10 +983,7 @@ final class VoiceTypingController {
                         )
                     }
                 )
-                guard self.activationID == activationID else {
-                    await engine.cancel()
-                    return
-                }
+                guard self.activationID == activationID else { return }
                 let relay = VoiceTypingAudioRelay()
                 audioRelay = relay
                 try microphone.start(recordingTo: nil, deviceID: nil) { [weak self, relay] buffer in
@@ -823,16 +991,11 @@ final class VoiceTypingController {
                     Task { @MainActor [weak self, relay] in self?.drain(relay) }
                 }
                 state = .listening
+                lastError = nil
                 hotKeys.setCancelEnabled(true)
             } catch {
                 guard self.activationID == activationID else { return }
-                self.activationID = nil
-                _ = try? microphone.stop()
-                audioRelay = nil
-                if let engine { await engine.cancel() }
-                self.engine = nil
-                target = nil
-                showMessage(error.localizedDescription, isError: true)
+                beginCleanup(rollback: false, error: error)
             }
         }
     }
@@ -840,17 +1003,19 @@ final class VoiceTypingController {
     private func finish() {
         let finishingActivationID = activationID
         state = .finishing
-        Task {
+        lifecycleTasks.finish { [self] in
             _ = try? microphone.stop()
             if let audioRelay { drain(audioRelay) }
             audioRelay = nil
             if let engine { await engine.finish() }
+            guard activationID == finishingActivationID else { return }
+            if let fieldUpdateTask { await fieldUpdateTask.value }
+            guard activationID == finishingActivationID else { return }
             self.engine = nil
             hotKeys.setCancelEnabled(false)
-            if let fieldUpdateTask { await fieldUpdateTask.value }
             self.fieldUpdateTask = nil
             target = nil
-            if activationID == finishingActivationID { activationID = nil }
+            activationID = nil
             guard case .finishing = state else { return }
             state = .idle
             text = ""
@@ -886,26 +1051,47 @@ final class VoiceTypingController {
                 try await target.replaceLiveText(with: next)
             } catch {
                 fieldUpdateTask = nil
-                await stopAfterFieldFailure(error)
+                stopAfterFieldFailure(error)
                 return
             }
         }
         fieldUpdateTask = nil
     }
 
-    private func stopAfterFieldFailure(_ error: Error) async {
-        pendingFieldText = nil
-        target = nil
+    private func stopAfterFieldFailure(_ error: Error) {
+        beginCleanup(rollback: false, error: error)
+    }
+
+    private func beginCleanup(rollback: Bool, error: Error? = nil) {
+        guard !lifecycleTasks.isCleaningUp else { return }
+        activationID = nil
+        state = .finishing
         _ = try? microphone.stop()
         audioRelay = nil
-        if let engine { await engine.cancel() }
-        self.engine = nil
-        activationID = nil
+        pendingFieldText = nil
         hotKeys.setCancelEnabled(false)
-        showMessage(error.localizedDescription, isError: true)
+        lifecycleTasks.cleanup { [self] in
+            if let engine { await engine.cancel() }
+            self.engine = nil
+            if let fieldUpdateTask { await fieldUpdateTask.value }
+            self.fieldUpdateTask = nil
+            var cleanupError = error
+            if rollback {
+                do { try await target?.rollback() }
+                catch { cleanupError = error }
+            }
+            target = nil
+            text = ""
+            if let cleanupError {
+                showMessage(cleanupError.localizedDescription, isError: true)
+            } else {
+                state = .idle
+            }
+        }
     }
 
     private func showMessage(_ message: String, isError: Bool) {
+        if isError { lastError = message }
         state = .message(message, isError: isError)
         hotKeys.setCancelEnabled(false)
         messageTask?.cancel()
@@ -921,6 +1107,7 @@ final class VoiceTypingController {
         guard preferences.voiceTypingEnabled else {
             hotKeys.unregisterPrimary()
             shortcutRegistered = false
+            if state.isActive { beginCleanup(rollback: false) }
             return
         }
         shortcutRegistered = hotKeys.registerPrimary(preferences.voiceTypingShortcut)
@@ -1027,9 +1214,8 @@ struct VoiceTypingPill: View {
                         isActive: controller.state == .listening && !reduceMotion
                     )
                     .frame(width: 52, height: 52)
-                    .background(surface, in: Circle())
-                    .overlay { Circle().stroke(.separator.opacity(0.45)) }
-                    .accessibilityLabel(preferences.text("Voice Type is listening", "音声入力中"))
+                    .mimiChrome(padding: 0, radius: 26)
+                    .accessibilityLabel(phaseLabel)
             case .idle:
                 EmptyView()
             }
@@ -1041,5 +1227,14 @@ struct VoiceTypingPill: View {
         reduceTransparency
             ? AnyShapeStyle(Color(nsColor: .windowBackgroundColor))
             : AnyShapeStyle(.regularMaterial)
+    }
+
+    private var phaseLabel: String {
+        switch controller.state {
+        case .preparing: preferences.text("Preparing Voice Type. Press Escape to cancel.", "音声入力を準備中。Escapeキーでキャンセルできます。")
+        case .listening: preferences.text("Voice Type is listening. Press Escape to cancel.", "音声入力中。Escapeキーでキャンセルできます。")
+        case .finishing: preferences.text("Finishing Voice Type", "音声入力を完了中")
+        case .idle, .message: ""
+        }
     }
 }
