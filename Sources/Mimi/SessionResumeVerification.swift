@@ -125,6 +125,34 @@ func verifySessionResumeContract() async throws -> SessionResumeVerificationRepo
     checks["startupFreezesDestinationButPreservesNewSidebarSelection"] = reservedImmediately && destinationFrozen
         && starting.currentSessionID == record.id && starting.selectedHistoryID == other.id
     checks["rapidDoubleStartIsBlockedUntilStartupSettles"] = duplicateBlocked && !starting.isTranscriptionSessionBusy
+    var richer = continued
+    richer.apply(.final("Safely archived after a latest-cache failure."), language: .english)
+    let staleStorage = SessionResumeVerificationStorage()
+    try staleStorage.saveLatestTranscript(continued)
+    staleStorage.failsSave = true
+    try? staleStorage.saveLatestTranscript(richer)
+    let richerHistory = TranscriptHistoryStore(fileURL: directory.appending(path: "richer.json"))
+    try richerHistory.save([TranscriptSessionRecord(id: record.id, startedAt: record.startedAt, endedAt: Date(), source: record.source, document: richer)])
+    let restoredRicher = AppStore(appleSpeech: SessionResumeUnavailableApple(), historyStore: richerHistory, transcriptStorage: staleStorage)
+    checks["newerHistoryCannotBeOverwrittenByStaleLatestCache"] = restoredRicher.document.segments == richer.segments
+        && restoredRicher.currentSessionID == record.id
+    staleStorage.failsSave = false
+    let safelyResumedRicher = restoredRicher.prepareSessionForRecording(historyID: record.id)
+    let richerAfterResume = try richerHistory.load()
+    checks["resumingRecoveredHistoryKeepsEveryArchivedSegment"] = safelyResumedRicher
+        && richerAfterResume.first?.document.segments == richer.segments
+    first.isVoiceTypingActive = { false }
+    let capturedDeleteID = first.viewedSessionID
+    first.newSession()
+    let replacementDraft = first.document
+    let capturedDeletion = first.clearTranscript(historyID: capturedDeleteID)
+    checks["capturedDeleteCannotClearAReplacementDraft"] = capturedDeletion
+        && first.document == replacementDraft && first.currentSessionID != capturedDeleteID
+        && !first.historyRecords.contains(where: { $0.id == capturedDeleteID })
+    first.applyFixture(.final("Unarchived working text."), language: .english)
+    let unarchivedID = first.viewedSessionID
+    checks["currentUUIDCanBeDeletedWithoutAnArchiveEntry"] = first.clearTranscript(historyID: unarchivedID)
+        && first.document.renderedText.isEmpty && first.currentSessionID == nil
     let passed = selectedContentPreserved && selectedIdentityPreserved && originalStartDatePreserved && checks.values.allSatisfy { $0 }
     return .init(status: passed ? "passed" : "failed", selectedContentPreserved: selectedContentPreserved, selectedIdentityPreserved: selectedIdentityPreserved, originalStartDatePreserved: originalStartDatePreserved, checks: checks)
 }

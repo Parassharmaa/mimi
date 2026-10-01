@@ -65,7 +65,17 @@ final class AppStore {
             loadPersistedTranscript: loadPersistedTranscript
         )
         session = createdSession
-        let loadedDocument = createdSession.document
+        var loadedDocument = createdSession.document
+        // Finals form an append-only segment chain. A successful history
+        // commit can outlive a failed latest-cache write for the same owner.
+        if let owner = loadedDocument.sessionIdentity,
+           let archived = loadedRecords.first(where: { $0.id == owner.id }),
+           archived.document.segments.count > loadedDocument.segments.count,
+           Array(archived.document.segments.prefix(loadedDocument.segments.count)) == loadedDocument.segments {
+            loadedDocument = archived.document
+            loadedDocument.sessionIdentity = TranscriptSessionIdentity(id: archived.id, startedAt: archived.startedAt, source: archived.source)
+            createdSession.document = loadedDocument
+        }
         let recovered = loadedRecords.first {
             !loadedDocument.renderedText.isEmpty && $0.document.segments == loadedDocument.segments
                 && $0.document.liveText == loadedDocument.liveText
@@ -229,12 +239,14 @@ final class AppStore {
         guard !controlsLocked else { return false }
         if let historyID {
             let remainingRecords = historyRecords.filter { $0.id != historyID }
-            guard remainingRecords.count != historyRecords.count else { return true }
+            let removesSavedRecord = remainingRecords.count != historyRecords.count
+            let removesWorkingRecord = historyID == currentSessionID
+            guard removesSavedRecord || removesWorkingRecord else { return true }
             do {
-                try historyStore.save(remainingRecords)
-                if historyID == currentSessionID {
+                if removesSavedRecord { try historyStore.save(remainingRecords) }
+                if removesWorkingRecord {
                     guard session.clearTranscript() else {
-                        try? historyStore.save(historyRecords)
+                        if removesSavedRecord { try? historyStore.save(historyRecords) }
                         return false
                     }
                 }

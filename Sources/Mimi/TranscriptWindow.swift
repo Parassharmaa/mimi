@@ -30,7 +30,7 @@ struct TranscriptWindow: View {
         self.fixtureTranslation = fixtureTranslation
         self.initiallyFollowingLatest = initiallyFollowingLatest
         _isConfirmingClear = State(initialValue: isConfirmingClear)
-        _clearHistoryID = State(initialValue: store.selectedHistoryID)
+        _clearHistoryID = State(initialValue: store.viewedSessionID)
         _clearDocument = State(initialValue: store.viewedDocument)
         _clearTitle = State(initialValue: preferences.text("Current transcript", "現在の文字起こし"))
     }
@@ -232,7 +232,7 @@ struct TranscriptWindow: View {
 
     private func setClearConfirmation(_ confirming: Bool) {
         if confirming {
-            clearHistoryID = store.selectedHistoryID
+            clearHistoryID = store.viewedSessionID
             clearTitle = sessionTitle
             clearDocument = store.viewedDocument
         }
