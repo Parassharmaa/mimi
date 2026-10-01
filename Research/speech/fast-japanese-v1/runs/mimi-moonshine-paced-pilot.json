@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "candidate": "moonshine",
+  "executableSHA256": "be3ed064528c496627edcd2eb8380cf79c771f0e6f3b5c9c5b4c1c8304a7bac4",
+  "suiteSHA256": "3fa9a58898bd265ba255a1a8d9822b7ec5d8f97b37c58a481d4f807ab9a42d57",
+  "audioDeliveryBoundary": "end of each 50ms buffer",
+  "mode": "paced",
+  "attempts": [
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "repeat": 0,
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "exitCode": 0,
+      "stderr": "Thread 0x16fc07000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-pilot.current.json\n",
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.07731995881226056,
+        "compute_seconds": 0.8072203700000001,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.578184625,
+            "text": "見て"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.576115667,
+            "text": "インターネットで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.607681167,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.567901209,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.638370834,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.6506264999999996,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.644905375,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.552307792,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.552313375,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.578184625,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.013369208000000299,
+        "prepare_seconds": 0.186547166,
+        "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "wall_seconds": 10.457908792,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "outcome": "passed",
+      "elapsedSeconds": 12.001463249966037
+    }
+  ]
+}

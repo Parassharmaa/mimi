@@ -1,0 +1,24 @@
+{
+  "repo": "mouri45/parakeet-tdt_ctc-0.6b-ja-bf16",
+  "revision": "4f8f02b8473fa440313e02a089fc45b5dc496591",
+  "files": [
+    {
+      "file": "config.json",
+      "bytes": 165040,
+      "sha256": "d66bcff9dcde3f31b3ec25b77d6bdc02c42abfdce739d1d32b5bd854c4931fe0",
+      "publisherBlob": "96d0d207c8d8c55ed96504b743d1e38b769e0724"
+    },
+    {
+      "file": "model.safetensors",
+      "bytes": 1245136098,
+      "sha256": "983b6338e3b323890dd13c71290dcfec2be4c85b4b0a5ead1d4a45f7892217ac",
+      "publisherBlob": "76349c78aaaae4e63409c93b06419665afbad615"
+    },
+    {
+      "file": "vocab.txt",
+      "bytes": 20285,
+      "sha256": "094ae331c119441155b3a845eed2be1e4a9e01c984aebde54a119d4f3a8b40a0",
+      "publisherBlob": "ae33459f8ca521dafd8d47a4a054944657ab2f2c"
+    }
+  ]
+}

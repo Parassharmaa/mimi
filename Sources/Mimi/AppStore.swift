@@ -23,6 +23,7 @@ final class AppStore {
         appleSpeech: (any AppleSpeechProviding)? = nil,
         whisper: (any WhisperAccuracyTranscribing)? = nil,
         phonon: (any WhisperAccuracyTranscribing)? = nil,
+        japaneseFast: (any WhisperAccuracyTranscribing)? = nil,
         historyStore: TranscriptHistoryStore? = nil,
         transcriptStorage: (any TranscriptPersisting)? = nil
     ) {
@@ -47,6 +48,7 @@ final class AppStore {
         let appleSpeech = appleSpeech ?? SystemAppleSpeechProvider()
         let whisper = whisper ?? MimiWhisperMLXLiveEngine()
         let phonon = phonon ?? MimiPhononMLXLiveEngine()
+        let japaneseFast = japaneseFast ?? MimiParakeetJapaneseLiveEngine()
         let createdSession = TranscriptionSession(
             dependencies: .init(
                 microphoneCapture: MicrophoneCapture(),
@@ -60,7 +62,8 @@ final class AppStore {
                 storage: transcriptStorage ?? (loadPersistedTranscript ? FileTranscriptStore() : TransientTranscriptStore()),
                 inputDevices: AudioDeviceCatalog.inputDevices(),
                 outputDevices: AudioDeviceCatalog.outputDevices(),
-                phonon: phonon
+                phonon: phonon,
+                japaneseFast: japaneseFast
             ),
             loadPersistedTranscript: loadPersistedTranscript
         )

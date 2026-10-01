@@ -1,0 +1,2298 @@
+{
+  "schemaVersion": 1,
+  "candidate": "moonshine",
+  "executableSHA256": "a89185ba6ebe7347cf2bac15d8bd7a0a9bb5bbf06a0cac06cb724dc718ee0b42",
+  "suiteSHA256": "3fa9a58898bd265ba255a1a8d9822b7ec5d8f97b37c58a481d4f807ab9a42d57",
+  "harnessSHA256": "b64ab35852d6d65c436926412940f0ab37f4bec0e8a61a96260e871657afcbd6",
+  "executableSourceIdentity": "mimi-adaptive-segmentation-build-identity:d53d8fa53b9ad379d52e98c1697b5cead027a57f6e3e8b2a29affb122e89a29c",
+  "audioDeliveryBoundary": "end of each 50ms buffer",
+  "mode": "paced",
+  "attempts": [
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b6b7000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.07343753591954023,
+        "compute_seconds": 0.766687875,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.574505792,
+            "text": "見て"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.588349875,
+            "text": "インターネットで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.601590625,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.609095083,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.6009015,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.620125833,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.597200333,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.58763325,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.587639208,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.574505792,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.00597933399999917,
+        "prepare_seconds": 0.183378708,
+        "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "wall_seconds": 10.449147792,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b6b7000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.07036101551724142,
+        "compute_seconds": 0.7345690020000003,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.559879041,
+            "text": "見て"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.560706,
+            "text": "インターネットで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.60739,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.583745208,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.603839708,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.612669708,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.632886125,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.583794166,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.5837985,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.559879041,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.004368250000000629,
+        "prepare_seconds": 0.0003435,
+        "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "wall_seconds": 10.447840458,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b6b7000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.07235887624521072,
+        "compute_seconds": 0.7554266679999998,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.551899083,
+            "text": "見て"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.58230025,
+            "text": "インターネットで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.573952916,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.601504333,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.609781333,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.636829583,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.628647458,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.578791875,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.578797041,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.551899083,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.004012708000001197,
+        "prepare_seconds": 0.000291291,
+        "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "wall_seconds": 10.449114458,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "outcome": "passed",
+      "processElapsedSeconds": 31.729145125020295
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f9db000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.04896637222222225,
+        "compute_seconds": 0.49358103200000025,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.596566791,
+            "text": "ロランド面倒さ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.579074,
+            "text": "ロランド面倒さはM166"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.621681416,
+            "text": "ロランド面倒さはM16ライフルで観光で"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.636508916,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.636537958,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.596566791,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.009860083000001296,
+        "prepare_seconds": 0.180372083,
+        "text": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "wall_seconds": 10.097470958,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f9db000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.04648375902777774,
+        "compute_seconds": 0.4685562909999996,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.597799209,
+            "text": "ロランド面倒さ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.580841834,
+            "text": "ロランド面倒さはM166"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.603234792,
+            "text": "ロランド面倒さはM16ライフルで観光"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.615994,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.616001,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.597799209,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.002887582999999694,
+        "prepare_seconds": 0.000689625,
+        "text": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "wall_seconds": 10.0847175,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f9db000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.050943299801587315,
+        "compute_seconds": 0.5135084620000001,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.589011167,
+            "text": "ロランド面倒さ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.604437667,
+            "text": "ロランド面倒さはM166"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.5935939999999995,
+            "text": "ロランド面倒さはM16ライフルで観光"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.632380333,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.632388958,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.589011167,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.01034575000000082,
+        "prepare_seconds": 0.000318167,
+        "text": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "wall_seconds": 10.098227208,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "outcome": "passed",
+      "processElapsedSeconds": 30.6689194579958
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f473000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.09286627213333329,
+        "compute_seconds": 1.3929940819999993,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.6077857079999998,
+            "text": "スンダルコ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.604087917,
+            "text": "スンダルバンス世界世界"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.5903086250000005,
+            "text": "スンダルバンス世界最大の沿岸"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.639292583,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯の"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.643029042,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.643039875,
+            "text": "海外"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.5957099580000005,
+            "text": "海外からバングラデュアル"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.615569542,
+            "text": "海外からバングラディッシュとインドの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.607129917,
+            "text": "海外からバングラディッシュとインドの内陸地域まで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.656195083,
+            "text": "海外からバングラディストインドの内陸地域まで80キロ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.610154792,
+            "text": "海外からバングラディストインドの内陸地域まで80km、56km"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.657793292000001,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたってきました"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.591237625,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.591243167,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.6077857079999998,
+        "maximum_queued_samples": 2400,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.002963624999999581,
+        "prepare_seconds": 0.186378,
+        "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり 海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています",
+        "wall_seconds": 15.007155375,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 69,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f473000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.09404248299999997,
+        "compute_seconds": 1.4106372449999995,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.58190675,
+            "text": "スンダルル"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.615029708,
+            "text": "スンダルバンスは世界最多"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.6019335,
+            "text": "スンダルバンスは世界最大の沿岸"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.629664208,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯だ"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.640820583,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.640834791,
+            "text": "海外"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.606566708,
+            "text": "海外からバングラデュアル"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.619843041,
+            "text": "海外からバングラディッシュとインドの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.61063725,
+            "text": "海外からバングラディッシュとインドの内陸地域まで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.649143166,
+            "text": "海外からバングラディストインドの内陸地域まで80キロ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.612705625,
+            "text": "海外からバングラディストインドの内陸地域まで80km、56km"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.65248725,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたってきました"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.611331666,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.611344833,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.58190675,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0021949580000004687,
+        "prepare_seconds": 0.0004255,
+        "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています",
+        "wall_seconds": 15.005149541,
+        "warnings": []
+      },
+      "characterEdits": 4,
+      "referenceCharacters": 69,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f473000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.09277574386666668,
+        "compute_seconds": 1.391636158,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.588546625,
+            "text": "スンダルか"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.613373792,
+            "text": "スンダルバンスは世界最多"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.581692125,
+            "text": "スンダルバンスは世界最大の沿岸の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.632706375,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯の"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.634544917,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.6345535,
+            "text": "海外"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.572108,
+            "text": "海外からバングラデュアル"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.61816875,
+            "text": "海外からバングラディッシュとインドの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.613213792,
+            "text": "海外からバングラディッシュとインドの内陸地域まで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.662935417,
+            "text": "海外からバングラディストインドの内陸地域まで80キロ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.638410334,
+            "text": "海外からバングラディストインドの内陸地域まで80km、56km"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.632319292,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたってきました"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.618245042,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.618276459,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.588546625,
+        "maximum_queued_samples": 2400,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0073002920000000415,
+        "prepare_seconds": 0.000271,
+        "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています",
+        "wall_seconds": 15.017328459,
+        "warnings": []
+      },
+      "characterEdits": 4,
+      "referenceCharacters": 69,
+      "outcome": "passed",
+      "processElapsedSeconds": 45.46504124999046
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "Thread 0x16be43000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.11106863703703698,
+        "compute_seconds": 1.3194954079999994,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.569748834,
+            "text": "なんだ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.59208775,
+            "text": "ダンデュー大学の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.64151825,
+            "text": "ダンデユ大学のパメラファーガソン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.673348125,
+            "text": "ダンデウ大学のパメラ・ファーガソン教授は容疑者の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.6812715,
+            "text": "ダンデュー大学のパメラファーガソン教授は容疑者の写真などを公開"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.714496209,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.60371425,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡った"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.792389625,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.583696625,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.583702459,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.569748834,
+        "maximum_queued_samples": 4000,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0023495410000009542,
+        "prepare_seconds": 0.191483625,
+        "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています",
+        "wall_seconds": 11.88596225,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 55,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "Thread 0x16be43000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.1035288825757575,
+        "compute_seconds": 1.2299231249999991,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.5640665,
+            "text": "なんだ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.594629958,
+            "text": "ダンデュー大学の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.595877583,
+            "text": "ダンデユ大学のパメラファーガソン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.680689875,
+            "text": "ダンデウ大学のパメラ・ファーガソン教授は容疑者の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.6952855,
+            "text": "ダンデュー大学のパメラファーガソン教授は容疑者の写真などを公開"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.647266958,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.650547292,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡った"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.753257625,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.564999792,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.56500625,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.5640665,
+        "maximum_queued_samples": 4000,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.00218495900000093,
+        "prepare_seconds": 0.000321708,
+        "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています",
+        "wall_seconds": 11.892375167,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 55,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "Thread 0x16be43000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.10427175193602696,
+        "compute_seconds": 1.2387484130000004,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.557291834,
+            "text": "なんだ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.597433709,
+            "text": "ダンデュー大学の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.611758292,
+            "text": "ダンデユ大学のパメラファーガソン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.658295917,
+            "text": "ダンデウ大学のパメラ・ファーガソン教授は容疑者の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.690979792,
+            "text": "ダンデュー大学のパメラファーガソン教授は容疑者の写真などを公開"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.656837125,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.635875,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡った"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.766915334,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.569636,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.569644875,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.557291834,
+        "maximum_queued_samples": 4000,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.007543791999999883,
+        "prepare_seconds": 0.000418458,
+        "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています",
+        "wall_seconds": 11.888139792,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 55,
+      "outcome": "passed",
+      "processElapsedSeconds": 36.12861699995119
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0047:1955",
+      "reference": "msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です",
+      "audioSHA256": "7597dd598c8c28710f107d3b2b80d72f977479c3f7087305806ddeaf76be7249",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ms",
+        "中枢神経系"
+      ],
+      "protectedTermAliases": {
+        "ms": [],
+        "中枢神経系": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16bbf3000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 9.72,
+        "compute_rtf": 0.08179867232510281,
+        "compute_seconds": 0.7950830949999994,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.596899417,
+            "text": "MSはの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.621767458,
+            "text": "MSはNO、脊髄、脊髄"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.647002958,
+            "text": "MSは脳脊髄視神経からなる中枢"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.585305625,
+            "text": "MSは脳脊髄視神経からなる中枢神経系に"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.683585,
+            "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える美容"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.608442375,
+            "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.608447542,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.596899417,
+        "maximum_queued_samples": 2400,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.004130458000000559,
+        "prepare_seconds": 0.187572917,
+        "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です",
+        "wall_seconds": 9.72605,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 29,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0047:1955",
+      "reference": "msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です",
+      "audioSHA256": "7597dd598c8c28710f107d3b2b80d72f977479c3f7087305806ddeaf76be7249",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ms",
+        "中枢神経系"
+      ],
+      "protectedTermAliases": {
+        "ms": [],
+        "中枢神経系": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16bbf3000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 9.72,
+        "compute_rtf": 0.08231355853909458,
+        "compute_seconds": 0.8000877889999994,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.591959292,
+            "text": "MSはの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.602026084,
+            "text": "MSはNO、脊髄、脊髄"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.646524125,
+            "text": "MSは脳脊髄視神経からなる中枢"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.584461417,
+            "text": "MSは脳脊髄視神経からなる中枢神経系に"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.730783334,
+            "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える美容器"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.600610209,
+            "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.600616084,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.591959292,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.006580625000001561,
+        "prepare_seconds": 0.0008275,
+        "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です",
+        "wall_seconds": 9.730762542,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 29,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0047:1955",
+      "reference": "msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です",
+      "audioSHA256": "7597dd598c8c28710f107d3b2b80d72f977479c3f7087305806ddeaf76be7249",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ms",
+        "中枢神経系"
+      ],
+      "protectedTermAliases": {
+        "ms": [],
+        "中枢神経系": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16bbf3000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 9.72,
+        "compute_rtf": 0.08502968220164604,
+        "compute_seconds": 0.8264885109999996,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.591407958,
+            "text": "MSはの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.617134458,
+            "text": "MSはNO、脊髄、脊髄"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.640144583,
+            "text": "MSは脳脊髄視神経からなる中枢"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.618565875,
+            "text": "MSは脳脊髄視神経からなる中枢神経系に"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.7024035,
+            "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える美容器"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.610674083,
+            "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.610682417,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.591407958,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.005730166999999398,
+        "prepare_seconds": 0.00082075,
+        "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です",
+        "wall_seconds": 9.727803917,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 29,
+      "outcome": "passed",
+      "processElapsedSeconds": 29.62978566699894
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0068:1979",
+      "reference": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています",
+      "audioSHA256": "8b93845c8d6e4b588147b339cefd8afe091f3441f41c2cb841934efe286ee786",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "fkp",
+        "gbp",
+        "1ポンド"
+      ],
+      "protectedTermAliases": {
+        "fkp": [],
+        "gbp": [],
+        "1ポンド": [
+          "一ポンド"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b9bb000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.94,
+        "compute_rtf": 0.0864618989949749,
+        "compute_seconds": 1.0323550740000003,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.569687959,
+            "text": "フォーク"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.598706667,
+            "text": "フォークラウンドの公式版"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.596679125,
+            "text": "フォークラウンドの公式通貨はフォークラウンド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.627732292,
+            "text": "フォークラウンドの公式通貨はフォークラウンド初頭ポンドで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.627828167,
+            "text": "フォークラウンドの公式通貨はフォークラウンド初頭ポンドFKPで石ポ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.66480075,
+            "text": "フォークラウンドの公式通貨はフォークラウンド初頭ポンドFKPで1ポンドが1Aポンド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.617115209,
+            "text": "フォークラウンドの公式通貨はフォークラウンド初頭ポンドFKPで1ポンドが1AポンドGBPと同"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.616509917,
+            "text": "フォークラウンドの公式通貨はフォークラウンド初頭ポンドFKPで1ポンドが1AポンドGBPと10日に固定されていました"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.609187209,
+            "text": "フォークラウンドの公式通貨はフォークラウンド初頭ポンドFKPで1ポンドが1AポンドGBPと10日に固定されています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.609203375,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.569687959,
+        "maximum_queued_samples": 2400,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0020476249999994423,
+        "prepare_seconds": 0.182914291,
+        "text": "フォークラウンドの公式通貨はフォークラウンド初頭ポンドFKPで1ポンドが1AポンドGBPと10日に固定されています",
+        "wall_seconds": 11.949022084,
+        "warnings": []
+      },
+      "characterEdits": 8,
+      "referenceCharacters": 54,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0068:1979",
+      "reference": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています",
+      "audioSHA256": "8b93845c8d6e4b588147b339cefd8afe091f3441f41c2cb841934efe286ee786",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "fkp",
+        "gbp",
+        "1ポンド"
+      ],
+      "protectedTermAliases": {
+        "fkp": [],
+        "gbp": [],
+        "1ポンド": [
+          "一ポンド"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b9bb000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.94,
+        "compute_rtf": 0.0872306224455612,
+        "compute_seconds": 1.0415336320000008,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.581281458,
+            "text": "フォーク"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.600854708,
+            "text": "フォークラウンドの公式"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.626999333,
+            "text": "フォークランドの公式通貨はフォークランド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.584641875,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.6361497499999995,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.655095416,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1Aポンド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.612689833,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPとと"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.648239625,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されていました"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.621158666,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.621170541,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.581281458,
+        "maximum_queued_samples": 2400,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.002074999999999605,
+        "prepare_seconds": 0.000294958,
+        "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されています",
+        "wall_seconds": 11.949544791,
+        "warnings": []
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 54,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0068:1979",
+      "reference": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています",
+      "audioSHA256": "8b93845c8d6e4b588147b339cefd8afe091f3441f41c2cb841934efe286ee786",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "fkp",
+        "gbp",
+        "1ポンド"
+      ],
+      "protectedTermAliases": {
+        "fkp": [],
+        "gbp": [],
+        "1ポンド": [
+          "一ポンド"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b9bb000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.94,
+        "compute_rtf": 0.0855452537688442,
+        "compute_seconds": 1.0214103299999997,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.575429584,
+            "text": "フォーク"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.598893875,
+            "text": "フォークラウンドの公式"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.608692417,
+            "text": "フォークランドの公式通貨はフォークランド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.609229709,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.631323542,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.621932834,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1Aポンド"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.625986791999999,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPとと"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.6195195,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されていました"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.633814917,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.633825834,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.575429584,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.008073375000000382,
+        "prepare_seconds": 0.0003095,
+        "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されています",
+        "wall_seconds": 11.9558605,
+        "warnings": []
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 54,
+      "outcome": "passed",
+      "processElapsedSeconds": 36.293313666014
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0083:1735",
+      "reference": "米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました",
+      "audioSHA256": "7070db2623ee66124ed0d7afc58a3f86c61fae021c69f358602b43488e5c5854",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "プリンストン大学",
+        "ウプサラ大学",
+        "2世代"
+      ],
+      "protectedTermAliases": {
+        "プリンストン大学": [],
+        "ウプサラ大学": [],
+        "2世代": [
+          "二世代"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16fe97000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 22.68,
+        "compute_rtf": 0.11318374263668435,
+        "compute_seconds": 2.567007283000001,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.581469375,
+            "text": "で、"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.599252542,
+            "text": "冷酷なクリンストンが"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.65925725,
+            "text": "米国のクリンストン大学とスウェーデン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.630806375,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.6206715,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.642490209,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新進"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.635925667,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2000"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.651521875,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.611025292,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.620462333999999,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの方"
+          },
+          {
+            "kind": "final",
+            "seconds": 12.694706,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程は"
+          },
+          {
+            "kind": "final",
+            "seconds": 12.694711209,
+            "text": "これは"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.694711834,
+            "text": "冬"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.618084792,
+            "text": "不融資のガラパゴスフィン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.597018667,
+            "text": "不融資のガラパゴスフィンチと移入者"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.69079825,
+            "text": "富裕市のガラパゴスフィンチと移入市のオーセボ店"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.647879167,
+            "text": "富裕市のガラパゴスフィンチと移入市のオーサボテンフィンチが交配した"
+          },
+          {
+            "kind": "final",
+            "seconds": 17.749661,
+            "text": "不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した"
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.749668042,
+            "text": ""
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.5975315,
+            "text": "繁殖であるため"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.599565083999998,
+            "text": "繁殖であるためもっと長い時間"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.6075685,
+            "text": "繁殖であるためもっと長い時間がかかると考えると"
+          },
+          {
+            "kind": "final",
+            "seconds": 21.610887875,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 21.610899834,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.581469375,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.001642958999998001,
+        "prepare_seconds": 0.200100792,
+        "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程は これは 不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した 繁殖であるためもっと長い時間がかかると考えられていました",
+        "wall_seconds": 22.690856209,
+        "warnings": []
+      },
+      "characterEdits": 13,
+      "referenceCharacters": 123,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0083:1735",
+      "reference": "米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました",
+      "audioSHA256": "7070db2623ee66124ed0d7afc58a3f86c61fae021c69f358602b43488e5c5854",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "プリンストン大学",
+        "ウプサラ大学",
+        "2世代"
+      ],
+      "protectedTermAliases": {
+        "プリンストン大学": [],
+        "ウプサラ大学": [],
+        "2世代": [
+          "二世代"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16fe97000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 22.68,
+        "compute_rtf": 0.10418751992945323,
+        "compute_seconds": 2.3629729519999993,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.5607205410000002,
+            "text": "で、"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.631274333,
+            "text": "冷酷なクリンストンが"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.634708916,
+            "text": "米国のクリンストン大学とスウェーデン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.611188375,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.621637,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者の"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.608127083,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らは"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.6081305,
+            "text": "このシーン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.631839916,
+            "text": "この新種がわずか2世"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.623557041,
+            "text": "この新種がわずか2世代で進化した頃"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.588559166,
+            "text": "この新種がわずか2世代で進化したことを報告しました"
+          },
+          {
+            "kind": "final",
+            "seconds": 11.628737041,
+            "text": "この新種がわずか2世代で進化したことを報告しましたが"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.628742625,
+            "text": "この方"
+          },
+          {
+            "kind": "final",
+            "seconds": 12.640033541,
+            "text": "この過程は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.640038583,
+            "text": "冬"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.62567175,
+            "text": "不融資のガラパゴスフィン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.614740833,
+            "text": "不融資のガラパゴスフィンチと移入者"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.673862083,
+            "text": "富裕市のガラパゴスフィンチと移入市のオーセボ店"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.679644125,
+            "text": "富裕市のガラパゴスフィンチと移入市のオーサボテンフィンチが交配した"
+          },
+          {
+            "kind": "final",
+            "seconds": 17.6668985,
+            "text": "不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した"
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.666901541,
+            "text": ""
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.598848208,
+            "text": "繁殖であるため"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.57688175,
+            "text": "繁殖であるためもっと長い時間"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.613481458,
+            "text": "繁殖であるためもっと長い時間がかかると考えると"
+          },
+          {
+            "kind": "final",
+            "seconds": 21.611742916,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 21.61176575,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.5607205410000002,
+        "maximum_queued_samples": 2400,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0012837079999989953,
+        "prepare_seconds": 0.0004305,
+        "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した 繁殖であるためもっと長い時間がかかると考えられていました",
+        "wall_seconds": 22.682445458,
+        "warnings": []
+      },
+      "characterEdits": 10,
+      "referenceCharacters": 123,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0083:1735",
+      "reference": "米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました",
+      "audioSHA256": "7070db2623ee66124ed0d7afc58a3f86c61fae021c69f358602b43488e5c5854",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "プリンストン大学",
+        "ウプサラ大学",
+        "2世代"
+      ],
+      "protectedTermAliases": {
+        "プリンストン大学": [],
+        "ウプサラ大学": [],
+        "2世代": [
+          "二世代"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16fe97000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 22.68,
+        "compute_rtf": 0.10584947094356262,
+        "compute_seconds": 2.4006660010000003,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.555209917,
+            "text": "で、"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.626948459,
+            "text": "冷酷なクリンストンが"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.657462084,
+            "text": "米国のクリンストン大学とスウェーデン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.611458084,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.621913,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者の"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.6567293339999996,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らは"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.656733375,
+            "text": "このシーン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.619322084,
+            "text": "この新種がわずか2世"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.581816792,
+            "text": "この新種がわずか2世代で進化した頃"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.608225375,
+            "text": "この新種がわずか2世代で進化したことを報告しました"
+          },
+          {
+            "kind": "final",
+            "seconds": 11.599323375,
+            "text": "この新種がわずか2世代で進化したことを報告しましたが"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.599328209,
+            "text": "この方"
+          },
+          {
+            "kind": "final",
+            "seconds": 12.6346005,
+            "text": "この過程は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.634607584,
+            "text": "冬"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.623098709,
+            "text": "不融資のガラパゴスフィン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.6128555,
+            "text": "不融資のガラパゴスフィンチと移入者"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.709347042,
+            "text": "富裕市のガラパゴスフィンチと移入市のオーセボ店"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.605573417,
+            "text": "富裕市のガラパゴスフィンチと移入市のオーサボテンフィンチが交配した"
+          },
+          {
+            "kind": "final",
+            "seconds": 17.783757667,
+            "text": "不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した"
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.783762417,
+            "text": ""
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.602357834,
+            "text": "繁殖であるため"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.5926405,
+            "text": "繁殖であるためもっと長い時間"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.611296167,
+            "text": "繁殖であるためもっと長い時間がかかると考えると"
+          },
+          {
+            "kind": "final",
+            "seconds": 21.593217416999998,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 21.593224,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.555209917,
+        "maximum_queued_samples": 4000,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.001343667000000437,
+        "prepare_seconds": 0.000324167,
+        "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した 繁殖であるためもっと長い時間がかかると考えられていました",
+        "wall_seconds": 22.683038917,
+        "warnings": []
+      },
+      "characterEdits": 10,
+      "referenceCharacters": 123,
+      "outcome": "passed",
+      "processElapsedSeconds": 68.51316970895277
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0095:1823",
+      "reference": "交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+      "audioSHA256": "30cb375df36d09fcabcb88c3b4370f185165e3045ffed941ad6fdc983006dcae",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "交通流研究"
+      ],
+      "protectedTermAliases": {
+        "交通流研究": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16c0eb000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.22,
+        "compute_rtf": 0.07259452210338682,
+        "compute_seconds": 0.8145105380000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.580175541,
+            "text": "交通流入"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.605087125,
+            "text": "交通流研究とは、"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.618650291,
+            "text": "交通流研究とは2点間にいること"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.622522208,
+            "text": "交通流研究とは2点間にいる個々の運転手と車"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.61812225,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きと"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.637859541,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互差異"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.62681125,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.626816708,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.580175541,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0032395420000010944,
+        "prepare_seconds": 0.185522833,
+        "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+        "wall_seconds": 11.228153,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 39,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0095:1823",
+      "reference": "交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+      "audioSHA256": "30cb375df36d09fcabcb88c3b4370f185165e3045ffed941ad6fdc983006dcae",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "交通流研究"
+      ],
+      "protectedTermAliases": {
+        "交通流研究": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16c0eb000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.22,
+        "compute_rtf": 0.06649362326203208,
+        "compute_seconds": 0.746058453,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.555640292,
+            "text": "交通流入"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.5957061249999995,
+            "text": "交通流研究とは、"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.616213625,
+            "text": "交通流研究とは2点間にいること"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.601204709,
+            "text": "交通流研究とは2点間にいる個々の運転手と車"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.617244542,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きと"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.63825075,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互差異"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.614908084,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.614913625,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.555640292,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.01234762499999853,
+        "prepare_seconds": 0.00031325,
+        "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+        "wall_seconds": 11.233901084,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 39,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0095:1823",
+      "reference": "交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+      "audioSHA256": "30cb375df36d09fcabcb88c3b4370f185165e3045ffed941ad6fdc983006dcae",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "交通流研究"
+      ],
+      "protectedTermAliases": {
+        "交通流研究": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16c0eb000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.22,
+        "compute_rtf": 0.0712047050802139,
+        "compute_seconds": 0.798916791,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.579732625,
+            "text": "交通流入"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.602885792,
+            "text": "交通流研究とは、"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.623099875,
+            "text": "交通流研究とは2点間にいること"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.619879333,
+            "text": "交通流研究とは2点間にいる個々の運転手と車"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.617233208,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きと"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.600434625,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互差異"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.640290625,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.640299125,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.579732625,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.009194708000000773,
+        "prepare_seconds": 0.000792125,
+        "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+        "wall_seconds": 11.23817925,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 39,
+      "outcome": "passed",
+      "processElapsedSeconds": 34.14859583298676
+    }
+  ]
+}

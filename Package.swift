@@ -17,6 +17,10 @@ let package = Package(
         .executable(name: "MimiTokenizerSelfTest", targets: ["MimiTokenizerSelfTest"])
     ],
     dependencies: [
+        // EventSource uses canImport(AsyncHTTPClient); make that optional import
+        // an explicit dependency so fresh builds receive all C module maps.
+        .package(url: "https://github.com/mattt/EventSource.git", exact: "1.4.1", traits: ["AsyncHTTPClient"]),
+        .package(url: "https://github.com/moonshine-ai/moonshine-swift.git", revision: "45a14f9edf1f2a6913d3aff38c1fd4e72d5b7daa"),
         // WhisperKit supplies the small, optional English/Japanese Auto router.
         .package(url: "https://github.com/argmaxinc/argmax-oss-swift.git", exact: "0.18.0"),
         // Developer-only local translation candidate. Model assets are loaded
@@ -45,6 +49,7 @@ let package = Package(
             dependencies: [
                 "MimiCore",
                 "MimiSession",
+                .product(name: "MoonshineVoice", package: "moonshine-swift"),
                 .product(name: "WhisperKit", package: "argmax-oss-swift"),
                 .product(name: "MLXLMCommon", package: "mlx-swift-lm"),
                 .product(name: "MLX", package: "mlx-swift"),

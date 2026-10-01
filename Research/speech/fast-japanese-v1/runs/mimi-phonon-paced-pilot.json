@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "candidate": "phonon",
+  "executableSHA256": "be3ed064528c496627edcd2eb8380cf79c771f0e6f3b5c9c5b4c1c8304a7bac4",
+  "suiteSHA256": "e381d367c0f5ce8a07da9e0346fdaa64579d35a1b74ad4e777bb3545f2d31380",
+  "audioDeliveryBoundary": "end of each 50ms buffer",
+  "mode": "paced",
+  "attempts": [
+    {
+      "caseID": "fleurs-en-screen-v1:0000:1904",
+      "repeat": 0,
+      "reference": "however due to the slow communication channels styles in the west could lag behind by 25 to 30 year",
+      "audioSHA256": "33aca50159ec2e3cbcc894eb26faa916d6badb1b49fb75994973561540a7f012",
+      "timeoutSeconds": 120,
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-pilot.current.json\n",
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.56,
+        "compute_rtf": 0.33892642367424225,
+        "compute_seconds": 3.579063033999998,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.400399042,
+            "text": "However,"
+          },
+          {
+            "kind": "final",
+            "seconds": 3.4433499579999998,
+            "text": "However,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.586748333,
+            "text": "Due to the slow community"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.6346635000000003,
+            "text": "Due to the slow communication."
+          },
+          {
+            "kind": "final",
+            "seconds": 3.9711475419999998,
+            "text": "due to the slow communication channels."
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.065159125,
+            "text": "Styles"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.565462292,
+            "text": "Styles in the way"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.06977975,
+            "text": "Styles in the West could"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.741513875,
+            "text": "Styles in the West could lag behind"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.080306417,
+            "text": "Styles in the West could lag behind,"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.323358375,
+            "text": "Styles in the West could lag behind,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.061579292,
+            "text": "By twenty five."
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.573602791999999,
+            "text": "By twenty five to thirty."
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.076972875,
+            "text": "by twenty five to thirty years."
+          },
+          {
+            "kind": "final",
+            "seconds": 9.311866333,
+            "text": "by twenty five to thirty years."
+          }
+        ],
+        "first_text_seconds": 3.400399042,
+        "maximum_queued_samples": 35200,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 5.0959000001071786e-05,
+        "prepare_seconds": 0.47128175,
+        "text": "However, due to the slow communication channels. Styles in the West could lag behind, by twenty five to thirty years.",
+        "wall_seconds": 10.561015917,
+        "warnings": []
+      },
+      "characterEdits": 17,
+      "referenceCharacters": 81,
+      "outcome": "passed",
+      "elapsedSeconds": 11.239893959020264
+    }
+  ]
+}

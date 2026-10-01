@@ -1,0 +1,12 @@
+{
+  "candidate": "Moonshine Japanese Streaming Small",
+  "provider": "CPU",
+  "initialUpdateSeconds": 0.5,
+  "steadyUpdateSeconds": 1.0,
+  "vadWindowSeconds": 0.5,
+  "maxTokensPerSecond": 13,
+  "threadPolicy": "ORT default",
+  "selection": "Exploratory tuning based on first pilot; full registered corpus not used to tune this cadence. Tiny accuracy failed initial gate; CoreML runtime failure retained.",
+  "primaryComparison": "baseline Small 0.5s cadence versus optimized Small, same 24 Japanese clips; first latency and final CER alongside compute RTF",
+  "speechLeadIn": "Absolute first-text includes clip lead-in; fresh Phonon English FLEURS point 3.458s cannot be directly equated to earlier earnings 0.738s. Original one-second threshold is retained as a diagnostic, not silently reported as passed."
+}

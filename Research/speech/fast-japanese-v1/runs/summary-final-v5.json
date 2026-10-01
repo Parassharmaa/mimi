@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "analysisSHA256": "4849458fc010b7e0e1f7f6f2f81c7f5993d61634b73646d65ddedb547b2791ac",
+  "selection": "Exploratory source/conversion/configuration screen; no held-out or population accuracy claim.",
+  "quality": {
+    "mimi-moonshine-direct-v2": {
+      "attempts": 24,
+      "passed": 24,
+      "failures": 0,
+      "corpusCER": 0.10054137664346481
+    },
+    "parakeet-bf16-silero-direct-v1": {
+      "attempts": 24,
+      "passed": 24,
+      "failures": 0,
+      "corpusCER": 0.08894044856921887
+    },
+    "parakeet-silero-direct-v1": {
+      "attempts": 24,
+      "passed": 24,
+      "failures": 0,
+      "corpusCER": 0.10518174787316319
+    },
+    "parakeet-silero-lookbehind2s-direct-v2": {
+      "attempts": 24,
+      "passed": 24,
+      "failures": 0,
+      "corpusCER": 0.18793503480278423
+    },
+    "parakeet-encoder-q4-silero-direct-v3": {
+      "attempts": 24,
+      "passed": 24,
+      "failures": 0,
+      "corpusCER": 0.09048723897911833
+    }
+  },
+  "moonshineWarm": {
+    "totalAttempts": 24,
+    "totalFailures": 0,
+    "successfulUtterances": 8,
+    "timingUnit": "utterance mean of two loaded-model repeats",
+    "conditionalOnSuccessfulNonemptyFinal": true,
+    "units": {
+      "fleurs-ja-screen-v1:0000:1828": {
+        "first_text_seconds": 2.555889062,
+        "compute_rtf": 0.07135994588122607,
+        "post_audio_finalization_seconds": 0.004190479000000913
+      },
+      "fleurs-ja-screen-v1:0013:1736": {
+        "first_text_seconds": 3.593405188,
+        "compute_rtf": 0.04871352941468253,
+        "post_audio_finalization_seconds": 0.006616666500000257
+      },
+      "fleurs-ja-screen-v1:0021:1893": {
+        "first_text_seconds": 2.5852266875,
+        "compute_rtf": 0.09340911343333333,
+        "post_audio_finalization_seconds": 0.004747625000000255
+      },
+      "fleurs-ja-screen-v1:0029:1843": {
+        "first_text_seconds": 2.560679167,
+        "compute_rtf": 0.10390031725589223,
+        "post_audio_finalization_seconds": 0.004864375500000406
+      },
+      "fleurs-ja-screen-v1:0047:1955": {
+        "first_text_seconds": 3.591683625,
+        "compute_rtf": 0.08367162037037032,
+        "post_audio_finalization_seconds": 0.006155396000000479
+      },
+      "fleurs-ja-screen-v1:0068:1979": {
+        "first_text_seconds": 2.5783555209999998,
+        "compute_rtf": 0.0863879381072027,
+        "post_audio_finalization_seconds": 0.005074187499999994
+      },
+      "fleurs-ja-screen-v1:0083:1735": {
+        "first_text_seconds": 2.557965229,
+        "compute_rtf": 0.10501849543650793,
+        "post_audio_finalization_seconds": 0.0013136874999997161
+      },
+      "fleurs-ja-screen-v1:0095:1823": {
+        "first_text_seconds": 3.5676864585,
+        "compute_rtf": 0.068849164171123,
+        "post_audio_finalization_seconds": 0.010771166499999651
+      }
+    },
+    "first_text_seconds": {
+      "mean": 2.94886136725,
+      "p50": 2.5817911042499997,
+      "p95": 3.593405188
+    },
+    "compute_rtf": {
+      "mean": 0.08266376550879226,
+      "p50": 0.08502977923878652,
+      "p95": 0.10501849543650793
+    },
+    "post_audio_finalization_seconds": {
+      "mean": 0.005466697937500209,
+      "p50": 0.0049692815000002,
+      "p95": 0.010771166499999651
+    },
+    "maximumQueuedAudioSeconds": 0.25
+  },
+  "parakeetWarm": {
+    "totalAttempts": 24,
+    "totalFailures": 0,
+    "successfulUtterances": 8,
+    "timingUnit": "utterance mean of two loaded-model repeats",
+    "conditionalOnSuccessfulNonemptyFinal": true,
+    "units": {
+      "fleurs-ja-screen-v1:0000:1828": {
+        "first_text_seconds": 2.252084729,
+        "compute_rtf": 0.11188994784482759,
+        "post_audio_finalization_seconds": 0.009170625000000321
+      },
+      "fleurs-ja-screen-v1:0013:1736": {
+        "first_text_seconds": 2.467888479,
+        "compute_rtf": 0.07252687033730157,
+        "post_audio_finalization_seconds": 0.010792125000000041
+      },
+      "fleurs-ja-screen-v1:0021:1893": {
+        "first_text_seconds": 1.848966312,
+        "compute_rtf": 0.12414142893333335,
+        "post_audio_finalization_seconds": 0.0011686250000000342
+      },
+      "fleurs-ja-screen-v1:0029:1843": {
+        "first_text_seconds": 2.2932240005,
+        "compute_rtf": 0.11985549583333338,
+        "post_audio_finalization_seconds": 0.0013317710000002592
+      },
+      "fleurs-ja-screen-v1:0047:1955": {
+        "first_text_seconds": 2.439829521,
+        "compute_rtf": 0.09919188760288067,
+        "post_audio_finalization_seconds": 0.00021702050000005357
+      },
+      "fleurs-ja-screen-v1:0068:1979": {
+        "first_text_seconds": 2.244160125,
+        "compute_rtf": 0.1260212502093802,
+        "post_audio_finalization_seconds": 0.0018422500000001563
+      },
+      "fleurs-ja-screen-v1:0083:1735": {
+        "first_text_seconds": 2.200867625,
+        "compute_rtf": 0.12210821452821866,
+        "post_audio_finalization_seconds": 0.0019862289999981186
+      },
+      "fleurs-ja-screen-v1:0095:1823": {
+        "first_text_seconds": 2.6765846460000002,
+        "compute_rtf": 0.10800574442959003,
+        "post_audio_finalization_seconds": 0.00011597950000030721
+      }
+    },
+    "first_text_seconds": {
+      "mean": 2.3029506796875,
+      "p50": 2.27265436475,
+      "p95": 2.6765846460000002
+    },
+    "compute_rtf": {
+      "mean": 0.11046760496485818,
+      "p50": 0.11587272183908048,
+      "p95": 0.1260212502093802
+    },
+    "post_audio_finalization_seconds": {
+      "mean": 0.0033280781249999114,
+      "p50": 0.0015870105000002077,
+      "p95": 0.010792125000000041
+    },
+    "maximumQueuedAudioSeconds": 0.15,
+    "afterNativeVadObservationSeconds": {
+      "p50": 0.04732599950000005,
+      "maximum": 0.057816417000000175,
+      "note": "After causal detector observation, not annotated acoustic speech onset; first text may be wrong."
+    }
+  },
+  "phononEnglishWarm": {
+    "totalAttempts": 24,
+    "totalFailures": 12,
+    "successfulUtterances": 4,
+    "timingUnit": "utterance mean of two loaded-model repeats",
+    "conditionalOnSuccessfulNonemptyFinal": true,
+    "units": {
+      "fleurs-en-screen-v1:0000:1904": {
+        "first_text_seconds": 1.6701421245,
+        "compute_rtf": 0.11287135260416664,
+        "post_audio_finalization_seconds": 0.00025612499999994043
+      },
+      "fleurs-en-screen-v1:0013:1919": {
+        "first_text_seconds": 2.323485979,
+        "compute_rtf": 0.05696092504432625,
+        "post_audio_finalization_seconds": 0.00010997899999942717
+      },
+      "fleurs-en-screen-v1:0029:1789": {
+        "first_text_seconds": 0.923222459,
+        "compute_rtf": 0.21608707390410958,
+        "post_audio_finalization_seconds": 0.00011112499999921255
+      },
+      "fleurs-en-screen-v1:0068:1712": {
+        "first_text_seconds": 1.917331521,
+        "compute_rtf": 0.22462803674112267,
+        "post_audio_finalization_seconds": 0.11440991650000143
+      }
+    },
+    "first_text_seconds": {
+      "mean": 1.708545520875,
+      "p50": 1.7937368227500001,
+      "p95": 2.323485979
+    },
+    "compute_rtf": {
+      "mean": 0.15263684707343128,
+      "p50": 0.1644792132541381,
+      "p95": 0.22462803674112267
+    },
+    "post_audio_finalization_seconds": {
+      "mean": 0.028721786375000002,
+      "p50": 0.0001836249999995765,
+      "p95": 0.11440991650000143
+    },
+    "maximumQueuedAudioSeconds": 0.35,
+    "comparisonLimit": "Different corpus/language; four of eight utterances produced blank finals in all three trials. Conditional timings are not overall system performance."
+  },
+  "pairedJapaneseFirstTextDifferenceSeconds": {
+    "units": 8,
+    "parakeetMinusMoonshineMean": -0.6459106875625,
+    "bootstrap95PercentCI": [
+      -0.8949352451250001,
+      -0.41455328900000005
+    ],
+    "method": "Paired bootstrap of eight utterances; each value averages its two loaded-model trials. Descriptive selected-screen comparison."
+  },
+  "payloadBytes": {
+    "bf16Source": 1245321423,
+    "allModuleQ4": 474668178,
+    "encoderOnlyQ4": 481857364
+  },
+  "finalModelLongReplay": {
+    "durationSeconds": 331.56,
+    "corpusCER": 0.09280742459396751,
+    "drops": 0,
+    "computeRTF": 0.11139925277777721,
+    "firstTextFromStartSeconds": 2.244759917,
+    "firstNativeVadObservedAudioSeconds": 2.2,
+    "maximumQueueSeconds": 0.1,
+    "postAudioFinalizationSeconds": 0.0012714589999518466,
+    "prepareSeconds": 0.502529584,
+    "peakMemoryFootprintBytes": 2104920416
+  }
+}

@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "candidate": "parakeet",
+  "executableSHA256": "a5bc93840e272562fa4b369f4814cc72dd1dff0f55e28c5607449399f425eb3b",
+  "suiteSHA256": "3fa9a58898bd265ba255a1a8d9822b7ec5d8f97b37c58a481d4f807ab9a42d57",
+  "harnessSHA256": "0766890aa9e2c7659a5a0600e4038f6f4cc972ac65c5192adfe3044dfc03160d",
+  "executableSourceIdentity": "mimi-adaptive-segmentation-build-identity:7050a292098aab861e719fd02f290d689a849a1634c6b57302307972648856e8",
+  "audioDeliveryBoundary": "end of each 50ms buffer",
+  "mode": "paced",
+  "attempts": [
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-silero-paced-pilot-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.14213387614942533,
+        "compute_seconds": 1.4838776670000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.554617209,
+            "text": "引退。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.830403417,
+            "text": "インターネットで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.261454334,
+            "text": "インターネットで出来た。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.8055045,
+            "text": "インターネットで敵対的監視。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.452530625,
+            "text": "インターネットで敵対的環境を構成。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.865887459,
+            "text": "インターネットで敵対的環境構成について。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.411917709,
+            "text": "インターネットで敵対的環境コースについて検索する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.964377125,
+            "text": "インターネットで敵対的環境コースについて検索すると。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.465063917,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.028920625,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.597212875,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.082800834,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.633477292,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.815670625,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          }
+        ],
+        "first_text_seconds": 2.554617209,
+        "maximum_queued_samples": 5600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.0012817919999985605,
+        "prepare_seconds": 0.216238459,
+        "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。",
+        "wall_seconds": 10.444438917,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 45,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-silero-paced-pilot-v1.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.10020865249042146,
+        "compute_seconds": 1.046178332,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.2554835,
+            "text": "引退。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.743520459,
+            "text": "インターネットで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.245075459,
+            "text": "インターネットで出来た。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.8100579999999997,
+            "text": "インターネットで敵対的監視。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.37089625,
+            "text": "インターネットで敵対的環境を構成。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.857586209,
+            "text": "インターネットで敵対的環境構成について。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.413794959,
+            "text": "インターネットで敵対的環境コースについて検索する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.974965,
+            "text": "インターネットで敵対的環境コースについて検索すると。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.46873175,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.032092459,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.5770965,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.085981834,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.655168209,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.842155709,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          }
+        ],
+        "first_text_seconds": 2.2554835,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.0012124579999994722,
+        "prepare_seconds": 0.000491209,
+        "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。",
+        "wall_seconds": 10.447902,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 45,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-silero-paced-pilot-v1.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.10324854683908051,
+        "compute_seconds": 1.0779148290000005,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.253299125,
+            "text": "引退。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.7448601249999998,
+            "text": "インターネットで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.258800042,
+            "text": "インターネットで出来た。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.807657292,
+            "text": "インターネットで敵対的監視。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.360131167,
+            "text": "インターネットで敵対的環境を構成。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.8723287079999995,
+            "text": "インターネットで敵対的環境構成について。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.410861917,
+            "text": "インターネットで敵対的環境コースについて検索する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.954549917,
+            "text": "インターネットで敵対的環境コースについて検索すると。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.477188417,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.040700875,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.594759625,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.097757083,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.638530583,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.8283395,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          }
+        ],
+        "first_text_seconds": 2.253299125,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.0005351660000005865,
+        "prepare_seconds": 0.000277125,
+        "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。",
+        "wall_seconds": 10.446583958,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 45,
+      "outcome": "passed",
+      "processElapsedSeconds": 31.769984041980933
+    }
+  ]
+}

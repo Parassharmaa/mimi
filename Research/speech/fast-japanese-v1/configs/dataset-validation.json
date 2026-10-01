@@ -1,0 +1,20 @@
+{
+  "count": 24,
+  "sourceRoot": "/Users/paras/.codex/worktrees/mimi-ux/mimi/.build/fleurs-ja-screen-v1",
+  "allAudioHashesMatch": true,
+  "referenceCharacterMedian": 53.0,
+  "referenceCharacterMax": 127,
+  "sampleIDs": [
+    "fleurs-ja-screen-v1:0089:1962",
+    "fleurs-ja-screen-v1:0013:1736",
+    "fleurs-ja-screen-v1:0000:1828",
+    "fleurs-ja-screen-v1:0026:1827",
+    "fleurs-ja-screen-v1:0022:1908",
+    "fleurs-ja-screen-v1:0084:1766",
+    "fleurs-ja-screen-v1:0016:1733",
+    "fleurs-ja-screen-v1:0106:1685",
+    "fleurs-ja-screen-v1:0010:1980",
+    "fleurs-ja-screen-v1:0029:1843"
+  ],
+  "note": "Mixed PCM16/float32 16kHz mono WAV input. Preserve registered waveforms; native probe supports both without lossy conversion. Tokenizer output-side vocabulary 12288, BOS1/EOS2; no input text tokenizer is used for ASR."
+}

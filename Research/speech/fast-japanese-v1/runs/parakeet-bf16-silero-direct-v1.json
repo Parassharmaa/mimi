@@ -1,0 +1,3315 @@
+{
+  "schemaVersion": 1,
+  "candidate": "parakeet",
+  "executableSHA256": "1e4350a1553af643dba4e2b3ca076a8af54ae5e6db4353db91620c1e340ce228",
+  "suiteSHA256": "3fa9a58898bd265ba255a1a8d9822b7ec5d8f97b37c58a481d4f807ab9a42d57",
+  "harnessSHA256": "0766890aa9e2c7659a5a0600e4038f6f4cc972ac65c5192adfe3044dfc03160d",
+  "executableSourceIdentity": "mimi-adaptive-segmentation-build-identity:ad7c42bdd3dd470c37c5cbbf9bf074af26e28cc880ed045b63e690c904df0062",
+  "audioDeliveryBoundary": "end of each 50ms buffer",
+  "mode": "direct",
+  "attempts": [
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.08721487509578543,
+        "compute_seconds": 0.9105232959999999,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.21533575,
+            "text": "引退。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.24713375,
+            "text": "インターネットで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.283092167,
+            "text": "インターネットで出来た。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.320837625,
+            "text": "インターネットで敵対的監視。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.365100042,
+            "text": "インターネットで敵対的環境構成。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.410137709,
+            "text": "インターネットで敵対的環境構成について。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.459024542,
+            "text": "インターネットで敵対的環境コースについて検索する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.5084215,
+            "text": "インターネットで敵対的環境コースについて検索すると。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.557853167,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.6245635,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.692809542,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.763130167,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.838792792,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.908903167,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          }
+        ],
+        "first_text_seconds": 0.21533575,
+        "first_vad": {
+          "observedAudioSeconds": 2.2,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6640000343322754
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00018962499999997107,
+        "prepare_seconds": 0.652681959,
+        "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.917533959,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 45,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.7805020830128342
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0004:1744",
+      "reference": "ロスビー数が小さいほど磁気反転に関して星の活性が低下するわけです",
+      "audioSHA256": "3a268d324535ea7360c2448837f8947e87440554f01cbfc54879052d48703110",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ロスビー数",
+        "磁気反転"
+      ],
+      "protectedTermAliases": {
+        "ロスビー数": [],
+        "磁気反転": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 12.06,
+        "compute_rtf": 0.047488513101160854,
+        "compute_seconds": 0.572711468,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.0700715,
+            "text": "ロス。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.103515292,
+            "text": "ロスビースがチェック。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.141090583,
+            "text": "ロスビースが小さいほど。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.181059375,
+            "text": "ロスビースが小さいほど事件発生。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.228096542,
+            "text": "ロスビースが小さいほど時期判定に。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.276266583,
+            "text": "ロスビー数が小さいほど時期判定に関して。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.327659833,
+            "text": "ロスビースが小さいほど磁気判定に関して星の数が少ない。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.380493667,
+            "text": "ロスビースが小さいほど磁気判定に関して星の活性が低下します。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.4337325,
+            "text": "ロスビースが小さいほど磁気判定に関して星の活性が低下するわけだ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.501009583,
+            "text": "ロスビースが小さいほど磁気判定に関して星の活性が低下する訳です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.566219667,
+            "text": "ロスビースが小さいほど磁気判定に関して星の活性が低下する訳です。"
+          }
+        ],
+        "first_text_seconds": 0.0700715,
+        "first_vad": {
+          "observedAudioSeconds": 3.95,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 3.4240000247955322
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 5.162499999999959e-05,
+        "prepare_seconds": 0.215054834,
+        "text": "ロスビースが小さいほど磁気判定に関して星の活性が低下する訳です。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.580064,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 32,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.011910832952708
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0010:1980",
+      "reference": "残念ながら 運転手の行動を100%の確率で予測することはできないので 交通の流れを研究することは困難です",
+      "audioSHA256": "a7297368ff66e4deaf5639aec5c4dbac2840f8ef233008b2709e1ba9a7f0fbd8",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.94,
+        "compute_rtf": 0.0851037235343383,
+        "compute_seconds": 1.0161384589999993,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.05957575,
+            "text": "残念。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.090834291,
+            "text": "残念ながら。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.126780708,
+            "text": "残念ながら運転手。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.165405875,
+            "text": "残念ながら運転手の行動。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.211004791,
+            "text": "残念ながら運転手の行動を100%。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.308845708,
+            "text": "残念ながら運転士の行動を100%の確率で。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.3616925,
+            "text": "残念ながら運転手の行動を100%の確率で予測することができません。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.41341325,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできない。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.480566,
+            "text": "残念ながら運転士の行動を100%の確率で予測することはできないので。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.549174083,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので今後。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.618439875,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の中。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.691005291,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので交通の流れを研究。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.765953666,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので交通の流れを研究すること。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.849041791,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので交通の流れを研究することは困難です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.017237708,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので交通の流れを研究することは困難です。"
+          }
+        ],
+        "first_text_seconds": 0.05957575,
+        "first_vad": {
+          "observedAudioSeconds": 2.15,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.5999999046325684
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00030337500000010564,
+        "prepare_seconds": 0.206917292,
+        "text": "残念ながら運転手の行動を100%の確率で予測することはできないので交通の流れを研究することは困難です。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.024376833,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 49,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.4279317909968086
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.04433204801587298,
+        "compute_seconds": 0.44686704399999966,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.07063675,
+            "text": "ロラン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.103916875,
+            "text": "ロランドメンドース。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.140938,
+            "text": "ロランド面動さはm。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.180803542,
+            "text": "ロランドメンドーサはm16の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.227361125,
+            "text": "ロランド面動作はm16ライフルで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.276960042,
+            "text": "ロランドメンドーサはm16ライフルで観光客の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.328141042,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲されます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.379688625,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.433334625,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。"
+          }
+        ],
+        "first_text_seconds": 0.07063675,
+        "first_vad": {
+          "observedAudioSeconds": 2.4,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.8559999465942383
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00020300000000000873,
+        "prepare_seconds": 0.296235166,
+        "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.454370708,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 28,
+      "outcome": "passed",
+      "processElapsedSeconds": 0.9496056670323014
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0016:1733",
+      "reference": "78ある提言うち最初に挙げられているのは 敵対的な介入に対してイラクの国境を確保し 近隣諸国との外交関係を再び確立するために 年内に新たな外交主導権を発揮するべきだというものです",
+      "audioSHA256": "a5825b86aedc8ff2cf984d92e4c16a89fd8db07c087474899fd9a9b3cd3661ec",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 18.6,
+        "compute_rtf": 0.09146928322580646,
+        "compute_seconds": 1.7013286680000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.059293208,
+            "text": "70。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.08987325,
+            "text": "78ある。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.123817708,
+            "text": "78ある定義。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.161986583,
+            "text": "78ある提言のうち最終。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.2072735,
+            "text": "78ある提言のうち最初に挙げられる。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.254038917,
+            "text": "78ある提言のうち最初に挙げられているのは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.353956583,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的対立。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.404645792,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.4710315,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対し。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.539777875,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの反対です。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.608851667,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの声。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.680922292,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保することです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.753341958,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.835407708,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.920521042,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との対立。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.009664542,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.098147208,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を断つ。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.188005042,
+            "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び拡大することです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.215956,
+            "text": "アナビカ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.247320917,
+            "text": "再び隔離された。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.282545708,
+            "text": "再び確立するために。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.32111225,
+            "text": "再び確立するために、年内に。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.366566792,
+            "text": "再び確立するために、年内に新たな。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.416326833,
+            "text": "再び確立するために、年内に新たな外交を手術。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.46659275,
+            "text": "再び確立するために、年内に新たな外交主導権を発揮する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.5195695420000002,
+            "text": "再び確立するために、年内に新たな外交主導権を発揮するべき。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.571590458,
+            "text": "再び確立するために、年内に新たな外交主導権を発揮するべきだという。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.638810625,
+            "text": "再び確立するために、年内に新たな外交主導権を発揮するべきだというものです。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.705703292,
+            "text": "再び確立するために年内に新たな外交主導権を発揮するべきだというものです。"
+          }
+        ],
+        "first_text_seconds": 0.059293208,
+        "first_vad": {
+          "observedAudioSeconds": 2.25,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.6959998607635498
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 5.312499999998721e-05,
+        "prepare_seconds": 0.20434625,
+        "text": "78ある提言のうち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び拡大することです。 再び確立するために年内に新たな外交主導権を発揮するべきだというものです。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.713906167,
+        "warnings": []
+      },
+      "characterEdits": 11,
+      "referenceCharacters": 86,
+      "outcome": "passed",
+      "processElapsedSeconds": 2.1251162919797935
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0020:1775",
+      "reference": "ビデオ録画の利用は 数ミリ秒程度続く微表情 つまり顔の動きを解釈するうえで重要な発見につながっています",
+      "audioSHA256": "12cacd7f63c7964c1fdaf2ef63d75dcd5fe8d3aa15e15ed382b839c068dc75a8",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "微表情"
+      ],
+      "protectedTermAliases": {
+        "微表情": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.76,
+        "compute_rtf": 0.08246984821428571,
+        "compute_seconds": 0.969845415,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.060949917,
+            "text": "ビデオアリ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.094597333,
+            "text": "ビデオ録画の理由。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.133121792,
+            "text": "ビデオ録画の利用はすべて。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.173379292,
+            "text": "ビデオ録画の利用は数ミリリットル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.221229042,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.270921375,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.320725583,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表情。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.374772708,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表情つまり顔の表現。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.429524083,
+            "text": "ビデオ録画の利用は、数ミリ秒程度続く微表情、つまり顔の動きを確認。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.498440958,
+            "text": "ビデオ録画の利用は、数ミリ秒程度続く微表情、つまり顔の動きを解釈する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.5673975,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表情つまり顔の動きを解釈するうえで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.64208075,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表情つまり顔の動きを解釈するうえで重要な要素。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.720248,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表情つまり顔の動きを解釈するうえで重要な発見につながります。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.797716458,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表情つまり顔の動きを解釈するうえで重要な発見につながっています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.881900708,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表情つまり顔の動きを解釈する上で重要な発見につながっています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.966234167,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表情つまり顔の動きを解釈する上で重要な発見につながっています。"
+          }
+        ],
+        "first_text_seconds": 0.060949917,
+        "first_vad": {
+          "observedAudioSeconds": 2.05,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.503999948501587
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 6.141699999995254e-05,
+        "prepare_seconds": 0.209808209,
+        "text": "ビデオ録画の利用は数ミリ秒程度続く微表情つまり顔の動きを解釈する上で重要な発見につながっています。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.9789565,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 49,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.389316333050374
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.08729019413333333,
+        "compute_seconds": 1.309352912,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.059769916,
+            "text": "すん。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.093143708,
+            "text": "スンダルバンス。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.130601875,
+            "text": "ツンダルバンサー世界。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.1685065,
+            "text": "スンダルバンスは世界最大。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.215830458,
+            "text": "スンダルバンスは世界最大の沿岸地域。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.264190166,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ林。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.314093333,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.365692291,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.415301125,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.443527458,
+            "text": "海外。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.474140666,
+            "text": "海外から。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.511431458,
+            "text": "海外からバングラデシュに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.549990791,
+            "text": "海外からバングラデシュとイラン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.595809416,
+            "text": "海外からバングラデシュとインドの内陸。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.643593458,
+            "text": "海外からバングラデシュとインドの内陸地域。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.692075125,
+            "text": "海外からバングラデシュとインドの内陸地域まで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.743315541,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.794983416,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.863092958,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.932206625,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50マイルに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.007314083,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50マイルにわたって広がっています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.080983125,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっている。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.154212958,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.3098825,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。"
+          }
+        ],
+        "first_text_seconds": 0.059769916,
+        "first_vad": {
+          "observedAudioSeconds": 1.75,
+          "segmentDurationSeconds": 0.5119999647140503,
+          "segmentStartSeconds": 1.2160000801086426
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 5.816699999994235e-05,
+        "prepare_seconds": 0.207492708,
+        "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。 海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.319895333,
+        "warnings": []
+      },
+      "characterEdits": 7,
+      "referenceCharacters": 69,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.7415570419980213
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0022:1908",
+      "reference": "これは 一部の動詞と目的語を区別するうえで重要な方法です",
+      "audioSHA256": "cd65b437d63e592adaa06513a2a264573c203b300998463d3563e2a0b75cc10a",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 8.4,
+        "compute_rtf": 0.05014104726190477,
+        "compute_seconds": 0.4211847970000001,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.066200042,
+            "text": "これは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.0978435,
+            "text": "これは一部の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.134392125,
+            "text": "これは一部の同志とも。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.173090708,
+            "text": "これは一部の同意した目的合意。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.218802125,
+            "text": "これは一部の同意と目的語を区別する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.26731875,
+            "text": "これは一部の同意と目的語を区別するうえで重要。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.317447625,
+            "text": "これは一部の同意と目的語を区別するうえで重要な方法。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.368494458,
+            "text": "これは一部の同意と目的語を区別する上で重要な方法です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.4176305,
+            "text": "これは一部の同意と目的語を区別する上で重要な方法です。"
+          }
+        ],
+        "first_text_seconds": 0.066200042,
+        "first_vad": {
+          "observedAudioSeconds": 2.6,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 2.047999858856201
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 4.524999999999668e-05,
+        "prepare_seconds": 0.211926792,
+        "text": "これは一部の同意と目的語を区別する上で重要な方法です。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.426450917,
+        "warnings": []
+      },
+      "characterEdits": 4,
+      "referenceCharacters": 27,
+      "outcome": "passed",
+      "processElapsedSeconds": 0.8434316249913536
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0026:1827",
+      "reference": "地殻の厚さは 手前側が約70 km 奥側が約100 kmです",
+      "audioSHA256": "2e9c014b3d4e55ec9ce96c87a4936f4880f6b30fde22d4d658ad982df0a161aa",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "70 km",
+        "100 km"
+      ],
+      "protectedTermAliases": {
+        "70 km": [
+          "70キロメートル",
+          "七十キロメートル"
+        ],
+        "100 km": [
+          "100キロメートル",
+          "百キロメートル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 8.1,
+        "compute_rtf": 0.06045429962962961,
+        "compute_seconds": 0.4896798269999998,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.063653208,
+            "text": "近くに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.096741333,
+            "text": "地殻の厚さは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.133685,
+            "text": "地殻の熱さは手前側が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.174560875,
+            "text": "地殻の厚さは手前側が約70キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.223361208,
+            "text": "地殻の厚さは手前側が約70キロメートル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.271122125,
+            "text": "地殻の厚さは手前側が約70km。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.324669875,
+            "text": "地殻の厚さは手前側が約70キロメートル奥側が約100キロメートル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.379738083,
+            "text": "地殻の厚さは手前側が約70キロメートル、奥側が約100キロメートルです。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.487729625,
+            "text": "地殻の厚さは手前側が約70キロメートル、奥側が約100キロメートルです。"
+          }
+        ],
+        "first_text_seconds": 0.063653208,
+        "first_vad": {
+          "observedAudioSeconds": 2.15,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6319999694824219
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 4.9917000000010425e-05,
+        "prepare_seconds": 0.208366375,
+        "text": "地殻の厚さは手前側が約70キロメートル、奥側が約100キロメートルです。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.495372625,
+        "warnings": []
+      },
+      "characterEdits": 12,
+      "referenceCharacters": 26,
+      "outcome": "passed",
+      "processElapsedSeconds": 0.9140940829529427
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.08253945025252525,
+        "compute_seconds": 0.9805686690000001,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.060397459,
+            "text": "なんで?"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.095027709,
+            "text": "ダンデ大学の教授。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.134561959,
+            "text": "ダンデ大学のパメラホンです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.176844542,
+            "text": "ダンデ大学のパミラファーガソン教授。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.224880125,
+            "text": "ダンディ大学のパメラファーガソン教授は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.274438,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の男。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.328602125,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真の中に。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.382720459,
+            "text": "ダンディー大学のパミラファーガソン教授は、容疑者の写真などを公開し、"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.439425917,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道を続けています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.509172,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.582780917,
+            "text": "ダンディ大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋だと指摘。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.656155875,
+            "text": "ダンディ大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っている。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.731716542,
+            "text": "ダンディー大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.808729125,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.9771945,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          }
+        ],
+        "first_text_seconds": 0.060397459,
+        "first_vad": {
+          "observedAudioSeconds": 2.25,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.7279999256134033
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00018495800000006835,
+        "prepare_seconds": 0.208002083,
+        "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.988602292,
+        "warnings": []
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 55,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.4073484579566866
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0033:1997",
+      "reference": "しかし 結核患者全体に占めるxdr-tbの割合はまだ低いようで こうしている間にも南アフリカでは33万人のうち6,000人が感染している",
+      "audioSHA256": "34e7eb92d3834c52204bd8a5eda1d65f761190fa7c0fa80cb2d7b3bf9513700d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "xdr-tb",
+        "33万人",
+        "6,000人"
+      ],
+      "protectedTermAliases": {
+        "xdr-tb": [],
+        "33万人": [
+          "330,000人",
+          "330000人",
+          "三十三万人"
+        ],
+        "6,000人": [
+          "6000人",
+          "六千人"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 20.76,
+        "compute_rtf": 0.06346192003853565,
+        "compute_seconds": 1.3174694600000003,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.067626375,
+            "text": "しかし。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.099232083,
+            "text": "しかし結果は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.133849292,
+            "text": "しかし結核患者。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.172665167,
+            "text": "しかし結核患者全体が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.217970417,
+            "text": "しかし結核患者全体に死滅を与えた。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.265140958,
+            "text": "しかし結核患者全体に占めるx。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.3127215,
+            "text": "しかし、結核患者全体に占めるxbb。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.361933833,
+            "text": "しかし、結核患者全体に占めるxbrt。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.412309083,
+            "text": "しかし結核患者全体に占めるxdrtbの割合。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.479221458,
+            "text": "しかし結核患者全体に占めるxbrtbの割合はまだ低い。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.546641125,
+            "text": "しかし結核患者全体に占めるxdrtbの割合はまだ低い。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.614074083,
+            "text": "しかし結核患者全体に占めるxdrtbの割合はまだ低いようで。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.680794833,
+            "text": "しかし結核患者全体に占めるxdrtbの割合はまだ低いようで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.709741208,
+            "text": "こうして。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.740493875,
+            "text": "こうしている間。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.773927875,
+            "text": "こうしている間にも。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.811338542,
+            "text": "こうしている間にも南アフリカ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.854964625,
+            "text": "こうしている間にも南アフリカでは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.900975167,
+            "text": "こうしている間にも南アフリカでは33万人。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.996419625,
+            "text": "こうしている間にも南アフリカでは33万人のうち。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.047894125,
+            "text": "こうしている間にも南アフリカでは33万人のうち6000人が感染。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.112900417,
+            "text": "こうしている間にも南アフリカでは33万人のうち6000人が感染しました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.17779275,
+            "text": "こうしている間にも南アフリカでは33万人のうち6000人が感染している。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.308034,
+            "text": "こうしている間にも南アフリカでは33万人のうち6000人が感染している。"
+          }
+        ],
+        "first_text_seconds": 0.067626375,
+        "first_vad": {
+          "observedAudioSeconds": 3.55,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 3.007999897003174
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 6.72500000000742e-05,
+        "prepare_seconds": 0.213105167,
+        "text": "しかし結核患者全体に占めるxdrtbの割合はまだ低いようで。 こうしている間にも南アフリカでは33万人のうち6000人が感染している。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.330891292,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 64,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.7484199170139618
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0045:1725",
+      "reference": "asusのeee pcは コスト面と機能面で世界に先駆けて発売され 2007 taipei it monthで話題となりました",
+      "audioSHA256": "9f55b186f1728b92c6f6d82c0c79910429a22c0f9ae2e632e98c81c9ab70770a",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "asus",
+        "eee pc",
+        "2007",
+        "taipei it month"
+      ],
+      "protectedTermAliases": {
+        "asus": [],
+        "eee pc": [],
+        "2007": [
+          "二千七",
+          "二〇〇七"
+        ],
+        "taipei it month": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 13.5,
+        "compute_rtf": 0.08191511400000001,
+        "compute_seconds": 1.1058540390000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.065435167,
+            "text": "エース。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.097801875,
+            "text": "エースする。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.131532958,
+            "text": "レースする。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.159938792,
+            "text": "いい。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.191627792,
+            "text": "epcは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.227793875,
+            "text": "epcはコストコ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.265137458,
+            "text": "epcはコストメント。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.309969083,
+            "text": "epcはコスト面と機能面。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.356850208,
+            "text": "epcはコスト面と機能面で世界。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.404933542,
+            "text": "epcはコスト面と機能面で世界に最強。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.456031125,
+            "text": "epcはコスト面と機能面で世界に先駆けて発展。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.5070995,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.574288,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され2023年。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.64118425,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され2007。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.709515958,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され2007台。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.782881167,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され2007台itマーケット。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.859245542,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され2007台北itmaseで話題となりました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.942341833,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され2007台itmaseで話題となりました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.025071333,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され2007台北itmaresで話題となりました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.104873792,
+            "text": "epcはコスト面と機能面で世界に先駆けて販売され2007台北itmaresで話題となりました。"
+          }
+        ],
+        "first_text_seconds": 0.065435167,
+        "first_vad": {
+          "observedAudioSeconds": 2.15,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6319999694824219
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 4.866600000008603e-05,
+        "prepare_seconds": 0.213341916,
+        "text": "レースする。 epcはコスト面と機能面で世界に先駆けて販売され2007台北itmaresで話題となりました。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.115120708,
+        "warnings": []
+      },
+      "characterEdits": 18,
+      "referenceCharacters": 57,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.543626042024698
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0047:1955",
+      "reference": "msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です",
+      "audioSHA256": "7597dd598c8c28710f107d3b2b80d72f977479c3f7087305806ddeaf76be7249",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ms",
+        "中枢神経系"
+      ],
+      "protectedTermAliases": {
+        "ms": [],
+        "中枢神経系": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 9.72,
+        "compute_rtf": 0.06416105576131688,
+        "compute_seconds": 0.6236454620000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.062462334,
+            "text": "ms。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.096839417,
+            "text": "msはノーマル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.133297375,
+            "text": "msは脳脊髄。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.172510542,
+            "text": "msは脳、脊髄視神経。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.21873925,
+            "text": "msは脳、脊髄視神経感。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.26721625,
+            "text": "msは脳、脊髄視神経から成る中枢神経。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.316113209,
+            "text": "msは脳、脊髄視神経から成る中枢神経系。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.369014792,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与えます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.42148325,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与える。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.488812042,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与える病気です。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.555798125,
+            "text": "msは脳、脊髄、視神経から成る中枢神経系に影響を与える病気です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.620916417,
+            "text": "msは脳、脊髄、視神経から成る中枢神経系に影響を与える病気です。"
+          }
+        ],
+        "first_text_seconds": 0.062462334,
+        "first_vad": {
+          "observedAudioSeconds": 2.4,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.8559999465942383
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 6.345799999996071e-05,
+        "prepare_seconds": 0.205680375,
+        "text": "msは脳、脊髄、視神経から成る中枢神経系に影響を与える病気です。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.630279625,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 29,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.038171250023879
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0049:1721",
+      "reference": "1963年にダムが建設されてからは 川全体に土砂を拡散する季節性洪水が止まりました",
+      "audioSHA256": "0b196289cc470bcf10103785e41f3c93ff84bbdd577bb7f9e72c9371d66c5897",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "1963"
+      ],
+      "protectedTermAliases": {
+        "1963": [
+          "千九百六十三",
+          "一九六三"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15.18,
+        "compute_rtf": 0.06100702094861661,
+        "compute_seconds": 0.9260865780000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.070453833,
+            "text": "1000円。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.101971375,
+            "text": "1960年。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.136130958,
+            "text": "1963年。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.172979416,
+            "text": "1963年に第2弾。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.218272083,
+            "text": "1963年にダムが建設されました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.26399825,
+            "text": "1963年にダムが建設されてから。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.30992825,
+            "text": "1963年にダムが建設されてからは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.360448166,
+            "text": "1963年にダムが建設されてからは川全体が水が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.412434166,
+            "text": "1963年にダムが建設されてからは川全体に土砂が流れ込み。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.478166583,
+            "text": "1963年にダムが建設されてからは川全体に土砂を拡散。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.544548958,
+            "text": "1963年にダムが建設されてからは川全体に土砂を拡散する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.616833,
+            "text": "1963年にダムが建設されてからは川全体に土砂を拡散する気絶性土砂災害が進んでいます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.689481291,
+            "text": "1963年にダムが建設されてからは川全体に土砂を拡散する気絶性洪水が発生しています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.762113333,
+            "text": "1963年にダムが建設されてからは川全体に土砂を拡散する気絶性洪水が止まりました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.920630416,
+            "text": "1963年にダムが建設されてからは、川全体に土砂を拡散する気絶性洪水が止まりました。"
+          }
+        ],
+        "first_text_seconds": 0.070453833,
+        "first_vad": {
+          "observedAudioSeconds": 4.45,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 3.935999870300293
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00018625000000005443,
+        "prepare_seconds": 0.206111709,
+        "text": "1963年にダムが建設されてからは、川全体に土砂を拡散する気絶性洪水が止まりました。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.935956416,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 40,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.3436785829835571
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0059:1983",
+      "reference": "文明という言葉は 市民を意味するラテン語の形容詞civilisから来ており 市民を意味するラテン語の名詞civis 都市や都市国家を意味し 何らかの形で社会の規模を定義するcivitasという名詞に関係しています",
+      "audioSHA256": "65a999507bdb7b4edee824c67b0bb1ccb559205ee992039e6844b51b2d4a6a72",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "civilis",
+        "civis",
+        "civitas"
+      ],
+      "protectedTermAliases": {
+        "civilis": [],
+        "civis": [],
+        "civitas": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 24.48,
+        "compute_rtf": 0.06594174648692809,
+        "compute_seconds": 1.6142539539999996,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.076267459,
+            "text": "文明。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.107594792,
+            "text": "文明ということ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.142570417,
+            "text": "文明という言葉は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.181856584,
+            "text": "文明という言葉は市民を救う。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.228277709,
+            "text": "文明という言葉は市民を意味するラッキー。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.276372709,
+            "text": "文明という言葉は市民を意味するラテン語の意味。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.325968542,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.377461834,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.431506209,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シヴィリスから生まれました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.500055209,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シヴィリスから来ており。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.56772875,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シヴィリスから来ており。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.595508292,
+            "text": "市民。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.627385875,
+            "text": "市民を意味する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.663668667,
+            "text": "市民を意味するラテン語。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.702520125,
+            "text": "市民を意味するラテン語の名詞。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.748606209,
+            "text": "市民を意味するラテン語の名詞シヴィズ。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.842014417,
+            "text": "市民を意味するラテン語の名詞シヴィツ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.870971167,
+            "text": "都市。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.903450834,
+            "text": "都市や都市国家。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.94054925,
+            "text": "都市や都市国家を意味します。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.980731084,
+            "text": "都市や都市国家を意味し何十年も。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.027519625,
+            "text": "都市や都市国家を意味し、なんらかの形で。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.079224792,
+            "text": "都市や都市国家を意味しなんらかの形で社会を守る。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.131331584,
+            "text": "都市や都市国家を意味しなんらかの形で社会の規模を。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.189004792,
+            "text": "都市や都市国家を意味し、なんらかの形で社会の規模を定義する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.244513625,
+            "text": "都市や都市国家を意味し何らかの形で社会の規模を定義するシビ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.315927542,
+            "text": "都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名称。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.388031459,
+            "text": "都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名詞に。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.461712875,
+            "text": "都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名詞に関係しています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.538479375,
+            "text": "都市や都市国家を意味し何らかの形で社会の規模を定義するシヴィタスという名詞に関係しています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.6125776250000001,
+            "text": "都市や都市国家を意味し何らかの形で社会の規模を定義するシヴィタスという名詞に関係しています。"
+          }
+        ],
+        "first_text_seconds": 0.076267459,
+        "first_vad": {
+          "observedAudioSeconds": 5.45,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 4.895999908447266
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00018099999999998673,
+        "prepare_seconds": 0.210780084,
+        "text": "文明という言葉は市民を意味するラテン語の形容詞シヴィリスから来ており。 市民を意味するラテン語の名詞シヴィツ。 都市や都市国家を意味し何らかの形で社会の規模を定義するシヴィタスという名詞に関係しています。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.630076709,
+        "warnings": []
+      },
+      "characterEdits": 19,
+      "referenceCharacters": 102,
+      "outcome": "passed",
+      "processElapsedSeconds": 2.0548663749941625
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0068:1979",
+      "reference": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています",
+      "audioSHA256": "8b93845c8d6e4b588147b339cefd8afe091f3441f41c2cb841934efe286ee786",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "fkp",
+        "gbp",
+        "1ポンド"
+      ],
+      "protectedTermAliases": {
+        "fkp": [],
+        "gbp": [],
+        "1ポンド": [
+          "一ポンド"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.94,
+        "compute_rtf": 0.08400792814070353,
+        "compute_seconds": 1.003054662,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.062658167,
+            "text": "フォークアイス。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.09685825,
+            "text": "フォークランドの工場。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.135579834,
+            "text": "フォークランドの公式ツイッター。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.178925542,
+            "text": "フォークランドの公式通貨はフォークラウンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.228574459,
+            "text": "フォークランドの公式通貨はフォークランド諸島。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.279274959,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.333011917,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkp。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.388052459,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンド=fkpで1万。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.444654917,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.515982209,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.589797875,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgpsで1億円。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.66534575,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpとともに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.746994709,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.826658042,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.000110125,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。"
+          }
+        ],
+        "first_text_seconds": 0.062658167,
+        "first_vad": {
+          "observedAudioSeconds": 2.2,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6640000343322754
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00036195800000005107,
+        "prepare_seconds": 0.2043445,
+        "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.011090125,
+        "warnings": []
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 54,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.4166270419955254
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0077:1671",
+      "reference": "連邦議会は2005年度から猥褻物取締法への資金提供を開始し fbiはアダルトポルノに10人の捜査員を投入しなければならないと規定しました",
+      "audioSHA256": "f7ea91bf7108de023b845e7c3b2f3310642d4f67b980942bc3ca3b10bdb6c1ff",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "2005",
+        "fbi",
+        "10人"
+      ],
+      "protectedTermAliases": {
+        "2005": [
+          "二千五",
+          "二〇〇五"
+        ],
+        "fbi": [],
+        "10人": [
+          "十人"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 18.42,
+        "compute_rtf": 0.06986103425624317,
+        "compute_seconds": 1.2868402509999992,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.067584209,
+            "text": "連邦。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.0992635,
+            "text": "連邦議会は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.136241542,
+            "text": "連邦議会は2009年。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.174337459,
+            "text": "連邦議会は2005年6月。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.221485167,
+            "text": "連邦議会は2005年度からifc。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.269083709,
+            "text": "連邦議会は2005年度からわいせつ物。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.320198334,
+            "text": "連邦議会は2005年度からわいせつ物取締法を強化。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.373458125,
+            "text": "連邦議会は2005年度からわいせつ物取締法への審議を始めました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.426787542,
+            "text": "連邦議会は2005年度からわいせつ物取締法への資金提供を始めました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.49469975,
+            "text": "連邦議会は2005年度からわいせつ物取締法への資金提供を開始しています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.562559792,
+            "text": "連邦議会は2005年度からわいせつ物取締法への資金提供を開始し。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.63329075,
+            "text": "連邦議会は2005年度からわいせつ物取締法への資金提供を開始しfbi。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.704084917,
+            "text": "連邦議会は2005年度からわいせつ物取締法への資金提供を開始しfbiは。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.772962959,
+            "text": "連邦議会は2005年度からわいせつ物取締法への資金提供を開始しfbiは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.802800125,
+            "text": "当たる。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.835610542,
+            "text": "アロルズポールの2。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.872854834,
+            "text": "アタロイザポールの20人。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.912227375,
+            "text": "アトロイザポールの20人の捜査員。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.958560709,
+            "text": "アタロルズポールドに10人の捜査員を投入。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.008015834,
+            "text": "アタロイザポールドに10人の捜査員を投入しなければいけない。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.0579585,
+            "text": "アタロイザポールドに10人の捜査員を投入しなければならない。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.110669375,
+            "text": "アダロイザポールドに10人の捜査員を投入しなければならないと規定しています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.165540375,
+            "text": "アダロイザポールドに10人の捜査員を投入しなければならないと規定しました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.281066375,
+            "text": "アダロイザポールドに10人の捜査員を投入しなければならないと規定しました。"
+          }
+        ],
+        "first_text_seconds": 0.067584209,
+        "first_vad": {
+          "observedAudioSeconds": 3.65,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 3.1039998531341553
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 6.887499999996827e-05,
+        "prepare_seconds": 0.210837875,
+        "text": "連邦議会は2005年度からわいせつ物取締法への資金提供を開始しfbiは。 アダロイザポールドに10人の捜査員を投入しなければならないと規定しました。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.298975375,
+        "warnings": []
+      },
+      "characterEdits": 9,
+      "referenceCharacters": 67,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.7318857079953887
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0081:1692",
+      "reference": "日本の原子力庁によれば 原発内で放射性セシウムとヨウ素が特定されています",
+      "audioSHA256": "2f0182ce761f4a91728f4287c168a35c6e9c4e0333bb4c2382b0fd01c7c13e09",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "放射性セシウム",
+        "ヨウ素"
+      ],
+      "protectedTermAliases": {
+        "放射性セシウム": [],
+        "ヨウ素": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 9.66,
+        "compute_rtf": 0.07125724668737062,
+        "compute_seconds": 0.6883450030000001,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.064094792,
+            "text": "日本。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.095666792,
+            "text": "日本の原始。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.13126175,
+            "text": "日本の原子力庁に。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.168836125,
+            "text": "日本の原子力庁によれば。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.214127459,
+            "text": "日本の原子力庁によれば原発の事故。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.260309709,
+            "text": "日本の原子力庁によれば、原発内で。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.310526542,
+            "text": "日本の原子力庁によれば原発内で放射性物質。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.36093375,
+            "text": "日本の原子力庁によれば原発内で放射性セシウム。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.4138765,
+            "text": "日本の原子力庁によれば原発内で放射性セシウムと陽性の発生。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.48263125,
+            "text": "日本の原子力庁によれば原発内で放射性セシウムとヨウ素が特定される。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.551183042,
+            "text": "日本の原子力庁によれば原発内で放射性セシウムとヨウ素が特定されています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.686918917,
+            "text": "日本の原子力庁によれば原発内で放射性セシウムとヨウ素が特定されています。"
+          }
+        ],
+        "first_text_seconds": 0.064094792,
+        "first_vad": {
+          "observedAudioSeconds": 2.1,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.5679998397827148
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 6.249999999996536e-05,
+        "prepare_seconds": 0.211299042,
+        "text": "日本の原子力庁によれば原発内で放射性セシウムとヨウ素が特定されています。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.694667959,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 35,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.1110850419499911
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0083:1735",
+      "reference": "米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました",
+      "audioSHA256": "7070db2623ee66124ed0d7afc58a3f86c61fae021c69f358602b43488e5c5854",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "プリンストン大学",
+        "ウプサラ大学",
+        "2世代"
+      ],
+      "protectedTermAliases": {
+        "プリンストン大学": [],
+        "ウプサラ大学": [],
+        "2世代": [
+          "二世代"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 22.68,
+        "compute_rtf": 0.09441244977954141,
+        "compute_seconds": 2.1412743609999993,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.0586495,
+            "text": "冷酷。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.090275459,
+            "text": "冷酷な国。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.128078375,
+            "text": "冷酷なプリンストン大学。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.167934917,
+            "text": "冷酷なプリンストン大学と。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.215342334,
+            "text": "米国のプリンストン大学とスウェーデン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.266501459,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.3198495,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.374731709,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者ら。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.430126834,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.501523542,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは、この新種を。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.575563917,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種がわずかに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.64905475,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2000種類。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.72572375,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.804535875,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したこと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.889214667,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.976661,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたが。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.066039584,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたがこの。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.15686025,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたがこの過程は。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.247253542,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたがこの過程は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.273621959,
+            "text": "えっ?"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.299498209,
+            "text": "えっ?"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.327276417,
+            "text": "よし。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.360385875,
+            "text": "固有種のガラガラ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.398822375,
+            "text": "固有種のガラパゴスフィンチ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.438913667,
+            "text": "固有種のガラパゴスフィンチといいます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.485396625,
+            "text": "固有種のガラパゴスフィンチと離乳種の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.535457834,
+            "text": "固有種のガラパゴスフィンチと輸入種のオーサバ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.589275792,
+            "text": "固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.646026542,
+            "text": "固有種のガラパゴスフィンチと異乳種のオオサボテンフィンチが交配。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.7031535,
+            "text": "固有種のガラパゴスフィンチと輸入種のオオサボテンフィンチが交配した。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.7730794589999999,
+            "text": "固有種のガラパゴスフィンチと輸入種のオオサボテンフィンチが交配した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.8037429999999999,
+            "text": "あれですよ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.8348829169999998,
+            "text": "繁殖であるため。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.870538792,
+            "text": "繁殖であるため、もっと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.908611125,
+            "text": "繁殖であるため、もっと長い時間。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.9537146669999998,
+            "text": "繁殖であるため、もっと長い時間がかかる。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.001732042,
+            "text": "繁殖であるため、もっと長い時間がかかると考えられます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.05128425,
+            "text": "繁殖であるため、もっと長い時間がかかると考えられていました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.102701,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 2.149554209,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました。"
+          }
+        ],
+        "first_text_seconds": 0.0586495,
+        "first_vad": {
+          "observedAudioSeconds": 2.15,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6319999694824219
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.0001927500000000748,
+        "prepare_seconds": 0.209672,
+        "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたがこの過程は。 えっ? 固有種のガラパゴスフィンチと輸入種のオオサボテンフィンチが交配した。 繁殖であるためもっと長い時間がかかると考えられていました。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 2.156683209,
+        "warnings": []
+      },
+      "characterEdits": 6,
+      "referenceCharacters": 123,
+      "outcome": "passed",
+      "processElapsedSeconds": 2.585089790984057
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0084:1766",
+      "reference": "原子の中には不安定な原子核を持つものがあり その原子核は ほとんど何もしなくても分裂してしまう傾向があります",
+      "audioSHA256": "87060a4b963feae72c19ca250d99dcad08c507f663a4c5acfe72d8bf341dbf05",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "原子核"
+      ],
+      "protectedTermAliases": {
+        "原子核": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.64,
+        "compute_rtf": 0.08161475197594499,
+        "compute_seconds": 0.9499957129999997,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.061675292,
+            "text": "原始。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.094400167,
+            "text": "原子の中にある。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.132407083,
+            "text": "原子の中には不安定なもの。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.171911958,
+            "text": "原子の中には不安定な原子核。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.220132458,
+            "text": "原子の中には不安定な原子核を持つものもいる。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.269583208,
+            "text": "原子の中には不安定な原子核を持つものがあり。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.320924333,
+            "text": "原子の中には不安定な原子核を持つものがありその原子を使用する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.372313,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.426865667,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.49498525,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしない。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.565864625,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても済ませる。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.63741275,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても分裂し。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.712492375,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても分裂してしまう傾向があります。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.950126875,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても分裂してしまう傾向があります。"
+          }
+        ],
+        "first_text_seconds": 0.061675292,
+        "first_vad": {
+          "observedAudioSeconds": 2.4,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.8880000114440918
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00019599999999997397,
+        "prepare_seconds": 0.2060315,
+        "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても分裂してしまう傾向があります。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.958527208,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 52,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.3585620420053601
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0089:1962",
+      "reference": "ph レベルは 検査した化学物質に含まれる水素イオンphのhの量で示されます",
+      "audioSHA256": "7b39981d7b4876b08b57ffc07d30c774e749b6b760446848145425996fc10613",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ph",
+        "水素イオン"
+      ],
+      "protectedTermAliases": {
+        "ph": [],
+        "水素イオン": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.56,
+        "compute_rtf": 0.06835235984848483,
+        "compute_seconds": 0.7218009199999997,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.0595875,
+            "text": "pm。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.090931333,
+            "text": "phl。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.12658875,
+            "text": "phレールは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.154640625,
+            "text": "掲載。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.185030208,
+            "text": "検索者。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.221993583,
+            "text": "検査者、化学物質。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.261897667,
+            "text": "検査者、化学物質に含まれています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.310060542,
+            "text": "検査車、化学物質に含まれる水素イオン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.359849,
+            "text": "検査した化学物質に含まれる水素イオンpa。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.411271792,
+            "text": "検査した化学物質に含まれる水素イオンphの1。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.4636,
+            "text": "検査した化学物質に含まれる水素イオンphhの2。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.517987292,
+            "text": "検査した化学物質に含まれる水素イオンphhの量でシンプル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.586465917,
+            "text": "検査、化学物質に含まれる水素イオンphhの量で示されます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.654190333,
+            "text": "検査化学物質に含まれる水素イオンphhの量で示されます。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.719100917,
+            "text": "検査化学物質に含まれる水素イオンphhの量で示されます。"
+          }
+        ],
+        "first_text_seconds": 0.0595875,
+        "first_vad": {
+          "observedAudioSeconds": 1.9,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.3439998626708984
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.00018950000000006462,
+        "prepare_seconds": 0.215793833,
+        "text": "phレールは。 検査化学物質に含まれる水素イオンphhの量で示されます。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.728702708,
+        "warnings": []
+      },
+      "characterEdits": 4,
+      "referenceCharacters": 36,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.1504121249890886
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0095:1823",
+      "reference": "交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+      "audioSHA256": "30cb375df36d09fcabcb88c3b4370f185165e3045ffed941ad6fdc983006dcae",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "交通流研究"
+      ],
+      "protectedTermAliases": {
+        "交通流研究": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.22,
+        "compute_rtf": 0.0699223185383244,
+        "compute_seconds": 0.7845284139999998,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.059906542,
+            "text": "交通。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.092020334,
+            "text": "交通流系。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.129418584,
+            "text": "交通流研究とは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.168926292,
+            "text": "交通流研究とは似てます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.21454175,
+            "text": "交通理由研究とは2転換に論。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.262950792,
+            "text": "交通流研究とは2点間にいる個々の運動。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.31315325,
+            "text": "交通理由研究とは、2点間にいる個々の運転士と。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.368090125,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の運転のこと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.42271475,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.494866334,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらのことです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.565156625,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの総合作業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.636931417,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.71086925,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.783351917,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。"
+          }
+        ],
+        "first_text_seconds": 0.059906542,
+        "first_vad": {
+          "observedAudioSeconds": 2.6,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 2.0799999237060547
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 5.862499999997883e-05,
+        "prepare_seconds": 0.215873625,
+        "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 0.792095417,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 39,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.2191292499774136
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0106:1685",
+      "reference": "例えば 世界で最も普及している静止画写真のフィルム形式は35 mmで これはアナログフィルム時代の終わり頃には主流のフィルムサイズでした",
+      "audioSHA256": "c926cd46b1cb516ce15670b196343deaef40e1ac539fc59b8f5516fdd0ecca35",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "35 mm"
+      ],
+      "protectedTermAliases": {
+        "35 mm": [
+          "35ミリ",
+          "35ミリメートル",
+          "三十五ミリ"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 18.24,
+        "compute_rtf": 0.05629285838815789,
+        "compute_seconds": 1.0267817369999999,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.072360375,
+            "text": "例えば。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.106180709,
+            "text": "例えば世界の世界。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.14317975,
+            "text": "例えば世界で最も古い。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.181429334,
+            "text": "例えば世界で最も普及した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.226371667,
+            "text": "例えば世界で最も普及している。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.272909,
+            "text": "例えば世界で最も普及している静止画検査。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.321650709,
+            "text": "例えば世界で最も普及している静止画写真の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.374748625,
+            "text": "例えば世界で最も普及している静止画写真のフィルムケース。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.42750725,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.494992959,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35枚。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.562870042,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリです。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.631490542,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリレ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.658789584,
+            "text": "これは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.691869167,
+            "text": "これはアナログの。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.73082475,
+            "text": "これはアナログフィルムシステム。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.770072334,
+            "text": "これはアナログフィルム時代の終わり。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.815500125,
+            "text": "これはアナログフィルム時代の終わりごろには。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.863466209,
+            "text": "これはアナログフィルム時代の終わりごろには主流でした。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.916260792,
+            "text": "これはアナログフィルム時代の終わりごろには主流のフィルムサイズです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.969966,
+            "text": "これはアナログフィルム時代の終わりごろには主流のフィルムサイズでした。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.022300292,
+            "text": "これはアナログフィルム時代の終わりごろには主流のフィルムサイズでした。"
+          }
+        ],
+        "first_text_seconds": 0.072360375,
+        "first_vad": {
+          "observedAudioSeconds": 4.4,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 3.871999740600586
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 0.0003174580000000482,
+        "prepare_seconds": 0.205036792,
+        "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリレ。 これはアナログフィルム時代の終わりごろには主流のフィルムサイズでした。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.038972625,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 65,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.442737124976702
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0119:1901",
+      "reference": "aiはsf的な意味合いが強いものの コンピュータサイエンスにおける非常に重要な分野を形成しており 行動 学習 知的適応を機械で処理します",
+      "audioSHA256": "ea82259a64d2811c0834e836d262455218f073a61bf414d4bff77f6b842766d5",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ai",
+        "sf",
+        "コンピュータサイエンス"
+      ],
+      "protectedTermAliases": {
+        "ai": [],
+        "sf": [],
+        "コンピュータサイエンス": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-bf16-silero-direct-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15.3,
+        "compute_rtf": 0.07243448026143788,
+        "compute_seconds": 1.1082475479999996,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.063040458,
+            "text": "ええわ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.095174625,
+            "text": "aiは。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.1247585,
+            "text": "aiは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.153999916,
+            "text": "sns。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.186618916,
+            "text": "sf的な意味。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.223699125,
+            "text": "政府的な意味合いが強い。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.262486,
+            "text": "sf的な意味合いが強いものの。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.310167833,
+            "text": "sf的な意味合いが強いもののコンピューター。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.359625541,
+            "text": "sf的な意味合いが強いもののコンピューターサイエンス。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.41152675,
+            "text": "sf的な意味合いが強いもののコンピューターサイエンスにおける。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.466425416,
+            "text": "sf的な意味合いが強いもののコンピューターサイエンスにおける非常に強い。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.521730458,
+            "text": "sf的な意味合いが強いもののコンピューターサイエンスにおける非常に重要な分野。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.592845041,
+            "text": "sf的な意味合いが強いもののコンピューターサイエンスにおける非常に重要な分野を形成する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.665038291,
+            "text": "sf的な意味合いが強いもののコンピューターサイエンスにおける非常に重要な分野を形成しており。"
+          },
+          {
+            "kind": "final",
+            "seconds": 0.739578875,
+            "text": "sf的な意味合いが強いもののコンピューターサイエンスにおける非常に重要な分野を形成しており。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.76792225,
+            "text": "こう。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.800332416,
+            "text": "行動が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.838307125,
+            "text": "行動、学習、知識。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.875191041,
+            "text": "行動、学習してきて。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.918096541,
+            "text": "行動、学習、知的点滴。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 0.962883458,
+            "text": "行動、学習、知的適応。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.01135575,
+            "text": "行動、学習、知的適応、機械で処理。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.060456666,
+            "text": "行動、学習、知的適用を機械で処理します。"
+          },
+          {
+            "kind": "final",
+            "seconds": 1.108572833,
+            "text": "行動学習知的適応を機械で処理します。"
+          }
+        ],
+        "first_text_seconds": 0.063040458,
+        "first_vad": {
+          "observedAudioSeconds": 2.3,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.7599999904632568
+        },
+        "maximum_queued_samples": 800,
+        "mode": "direct-production-queue",
+        "model": "parakeet-japanese-q4-silero-probe",
+        "post_audio_finalization_seconds": 5.079100000004999e-05,
+        "prepare_seconds": 0.204344875,
+        "text": "aiは。 sf的な意味合いが強いもののコンピューターサイエンスにおける非常に重要な分野を形成しており。 行動学習知的適応を機械で処理します。",
+        "vad_lookbehind_samples": "8192",
+        "wall_seconds": 1.118571041,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 64,
+      "outcome": "passed",
+      "processElapsedSeconds": 1.5180490839993581
+    }
+  ]
+}

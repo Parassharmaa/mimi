@@ -1,0 +1,2 @@
+Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.
+

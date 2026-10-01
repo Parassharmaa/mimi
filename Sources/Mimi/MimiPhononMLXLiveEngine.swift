@@ -15,6 +15,8 @@ final class MimiPhononMLXLiveEngine: WhisperAccuracyTranscribing {
     private var sessionID: UUID?
     private var drainTask: Task<Void, Never>?
     private var stopping = false
+    private var computeSeconds = 0.0
+    private var maximumQueuedSamples = 0
 
     init(modelRoot: URL? = nil) { explicitRoot = modelRoot }
 
@@ -69,16 +71,18 @@ final class MimiPhononMLXLiveEngine: WhisperAccuracyTranscribing {
             let frames = min(step, AVAudioFrameCount(file.length - file.framePosition))
             guard let buffer = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: frames) else { throw MimiPhononError.noAudioFormat }
             try file.read(into: buffer, frameCount: frames)
-            consumeLive(buffer)
             let deadline = Double(file.framePosition) / file.processingFormat.sampleRate
             let delay = deadline - started.duration(to: .now).seconds
             if delay > 0 { try await Task.sleep(for: .seconds(delay)) }
+            consumeLive(buffer)
         }
         let audioEnded = started.duration(to: .now).seconds
         await stopLive()
         let wall = started.duration(to: .now).seconds
         return ["model":"phonon2-native-mlx", "mode":"paced-production-queue", "audio_seconds":Double(file.length)/file.processingFormat.sampleRate,
-                "prepare_seconds":preparation, "wall_seconds":wall, "first_text_seconds":events.first?["seconds"] ?? NSNull(),
+                "prepare_seconds":preparation, "wall_seconds":wall, "first_text_seconds":events.first(where: { ($0["text"] as? String)?.isEmpty == false })?["seconds"] ?? NSNull(),
+                "compute_seconds":computeSeconds, "compute_rtf":computeSeconds / (Double(file.length) / file.processingFormat.sampleRate),
+                "maximum_queued_samples":maximumQueuedSamples, "audio_delivery_boundary":"end of each 50ms buffer",
                 "post_audio_finalization_seconds":wall-audioEnded, "events":events, "warnings":warnings, "text":finals.joined(separator:" ")]
     }
     func startLive(
@@ -96,6 +100,7 @@ final class MimiPhononMLXLiveEngine: WhisperAccuracyTranscribing {
         converter = conversion; format = normalized
         self.onEvent = onEvent; self.onBackpressure = onBackpressure
         sessionID = UUID(); stopping = false
+        computeSeconds = 0; maximumQueuedSamples = 0
     }
     func consumeLive(_ buffer: AVAudioPCMBuffer) {
         guard let converter, let format, let id = sessionID, !stopping else { return }
@@ -110,6 +115,7 @@ final class MimiPhononMLXLiveEngine: WhisperAccuracyTranscribing {
         }
         let audio = Array(UnsafeBufferPointer(start: channel, count: Int(converted.frameLength)))
         let dropped = pending.append(audio)
+        maximumQueuedSamples = max(maximumQueuedSamples, pending.count)
         if dropped > 0 { onBackpressure?("Phonon audio queue exceeded its eight-second limit; \(dropped) samples were dropped.") }
         schedule(id)
     }
@@ -126,7 +132,9 @@ final class MimiPhononMLXLiveEngine: WhisperAccuracyTranscribing {
         while sessionID == id, !Task.isCancelled, !pending.isEmpty, flush || pending.count >= 800 {
             let samples = pending.dequeue(upTo: 800)
             do {
+                let workStarted = ContinuousClock.now
                 let update = try await runtime.consume(samples)
+                computeSeconds += workStarted.duration(to: .now).seconds
                 guard sessionID == id else { return }
                 if let update { onEvent?(update.final ? .final(update.text) : .partial(update.text)) }
             } catch { onBackpressure?(error.localizedDescription); return }
@@ -138,7 +146,9 @@ final class MimiPhononMLXLiveEngine: WhisperAccuracyTranscribing {
         if let drainTask { await drainTask.value }
         await drain(id, flush: true)
         do {
+            let workStarted = ContinuousClock.now
             let text = try await runtime.finish()
+            computeSeconds += workStarted.duration(to: .now).seconds
             if sessionID == id, !text.isEmpty { onEvent?(.final(text)) }
         } catch { onBackpressure?(error.localizedDescription) }
         clear()

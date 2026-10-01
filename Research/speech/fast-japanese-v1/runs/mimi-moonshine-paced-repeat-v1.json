@@ -1,0 +1,1052 @@
+{
+  "schemaVersion": 1,
+  "candidate": "moonshine",
+  "executableSHA256": "a90afc124ba4e25a6b1d7e8fa967653f9b1416006b7e0ebd0077ab6bb020d52d",
+  "suiteSHA256": "3fa9a58898bd265ba255a1a8d9822b7ec5d8f97b37c58a481d4f807ab9a42d57",
+  "harnessSHA256": "b64ab35852d6d65c436926412940f0ab37f4bec0e8a61a96260e871657afcbd6",
+  "executableSourceIdentity": "mimi-adaptive-segmentation-build-identity:21ab8b2a201d495e150627ca895de8b3fe9b7615ad76e0682087e9cfac2eddc4",
+  "audioDeliveryBoundary": "end of each 50ms buffer",
+  "mode": "paced",
+  "attempts": [
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b91b000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.07498363678160923,
+        "compute_seconds": 0.7828291680000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.550058625,
+            "text": "見て"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.574330042,
+            "text": "インターネットで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.60770675,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.610326417,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.619832792,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.62565025,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.640531625,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.56514275,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.565150917,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.550058625,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.011504791000000125,
+        "prepare_seconds": 0.178768833,
+        "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "wall_seconds": 10.454015375,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b91b000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.07391817136015325,
+        "compute_seconds": 0.7717057089999998,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.56601875,
+            "text": "見て"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.571076416,
+            "text": "インターネットで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.611283166,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.606418083,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.635774291,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.619840208,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.600680791,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.588452916,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.588464375000001,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.56601875,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.011753290999999777,
+        "prepare_seconds": 0.000587042,
+        "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "wall_seconds": 10.453811916,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16b91b000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.07014135488505743,
+        "compute_seconds": 0.7322757449999996,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.55130875,
+            "text": "見て"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.575451542,
+            "text": "インターネットで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.569583583,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.615992417,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.585130625,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.62720075,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.639193875,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.56975175,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.569759958,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.55130875,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.016019207999999452,
+        "prepare_seconds": 0.000594917,
+        "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "wall_seconds": 10.4604365,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "outcome": "passed",
+      "processElapsedSeconds": 31.75273599999491
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f0a7000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.04789048422619047,
+        "compute_seconds": 0.482736081,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.57445025,
+            "text": "ロランド面倒さ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.596932625,
+            "text": "ロランド面倒さはM166"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.596571792,
+            "text": "ロランド面倒さはM16ライフルで観光で"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.636818834,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.636824334,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.57445025,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.005227708000001385,
+        "prepare_seconds": 0.191469416,
+        "text": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "wall_seconds": 10.090698375,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f0a7000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.04857825724206351,
+        "compute_seconds": 0.48966883300000014,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.587402541,
+            "text": "ロランド面倒さ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.6129982080000005,
+            "text": "ロランド面倒さはM166"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.5934458750000005,
+            "text": "ロランド面倒さはM16ライフルで観光"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.625023791,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.625031666,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.587402541,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.009319750000001292,
+        "prepare_seconds": 0.000527167,
+        "text": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "wall_seconds": 10.09418875,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16f0a7000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.04735511279761905,
+        "compute_seconds": 0.47733953700000004,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 3.58991375,
+            "text": "ロランド面倒さ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.598078291,
+            "text": "ロランド面倒さはM166"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.602871375,
+            "text": "ロランド面倒さはM16ライフルで観光"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.621565125,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.621570708,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 3.58991375,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0028060830000011805,
+        "prepare_seconds": 0.000741792,
+        "text": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "wall_seconds": 10.091243708,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "outcome": "passed",
+      "processElapsedSeconds": 30.723646541009657
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16db8f000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.09781473580000002,
+        "compute_seconds": 1.4672210370000003,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.5860418750000003,
+            "text": "スンダルコ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.5964516250000003,
+            "text": "スンダルバンス世界世界"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.6113050829999995,
+            "text": "スンダルバンス世界最大の沿岸"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.617537083,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯の"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.638196875,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.638209958,
+            "text": "海外"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.6022630410000005,
+            "text": "海外からバングラデュアル"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.610891541,
+            "text": "海外からバングラディッシュとインドの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.611087791,
+            "text": "海外からバングラディッシュとインドの内陸地域まで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.651597958,
+            "text": "海外からバングラディストインドの内陸地域まで80キロ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.659426916,
+            "text": "海外からバングラディストインドの内陸地域まで80km、56km"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.680434791,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたってきました"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.613401333,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.613414875,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.5860418750000003,
+        "maximum_queued_samples": 2400,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0043007500000005194,
+        "prepare_seconds": 0.176932042,
+        "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり 海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています",
+        "wall_seconds": 15.008242416,
+        "warnings": []
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 69,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16db8f000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.09430962080000004,
+        "compute_seconds": 1.4146443120000005,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.594013083,
+            "text": "スンダルル"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.611165416,
+            "text": "スンダルバンスは世界最多"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.597601958,
+            "text": "スンダルバンスは世界最大の沿岸"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.625130958,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯だ"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.596696958,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.596701958,
+            "text": "海外"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.627295208,
+            "text": "海外からバングラデュアル"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.610028583,
+            "text": "海外からバングラディッシュとインドの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.626124416,
+            "text": "海外からバングラディッシュとインドの内陸地域まで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.633863333,
+            "text": "海外からバングラディストインドの内陸地域まで80キロ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.652987708,
+            "text": "海外からバングラディストインドの内陸地域まで80km、56km"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.650408708,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたってきました"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.636038291,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.636045583,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.594013083,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.005413250000000147,
+        "prepare_seconds": 0.000463041,
+        "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています",
+        "wall_seconds": 15.015616291,
+        "warnings": []
+      },
+      "characterEdits": 4,
+      "referenceCharacters": 69,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "Thread 0x16db8f000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.09800243540000006,
+        "compute_seconds": 1.470036531000001,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.5921685,
+            "text": "スンダルか"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.609849542,
+            "text": "スンダルバンスは世界最多"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.615452084,
+            "text": "スンダルバンスは世界最大の沿岸の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.640055917,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯の"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.643420042,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.64344225,
+            "text": "海外"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.612271667,
+            "text": "海外からバングラデュアル"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.619801209,
+            "text": "海外からバングラディッシュとインドの"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.62125375,
+            "text": "海外からバングラディッシュとインドの内陸地域まで"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.657065,
+            "text": "海外からバングラディストインドの内陸地域まで80キロ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.653519917,
+            "text": "海外からバングラディストインドの内陸地域まで80km、56km"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.656181792,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたってきました"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.605752042,
+            "text": "海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.605758167,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.5921685,
+        "maximum_queued_samples": 2400,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.0021472499999983796,
+        "prepare_seconds": 0.000443875,
+        "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています",
+        "wall_seconds": 15.002305959,
+        "warnings": []
+      },
+      "characterEdits": 4,
+      "referenceCharacters": 69,
+      "outcome": "passed",
+      "processElapsedSeconds": 45.40794104099041
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "Thread 0x16d193000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.10818003712121212,
+        "compute_seconds": 1.285178841,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.567689709,
+            "text": "なんだ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.597886625,
+            "text": "ダンデュー大学の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.63098825,
+            "text": "ダンデユ大学のパメラファーガソン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.680653834,
+            "text": "ダンデウ大学のパメラ・ファーガソン教授は容疑者の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.693316542,
+            "text": "ダンデュー大学のパメラファーガソン教授は容疑者の写真などを公開"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.671998,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.631359667,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡った"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.751487834,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.590760209,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.590767417,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.567689709,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.006876415999998997,
+        "prepare_seconds": 0.1746755,
+        "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています",
+        "wall_seconds": 11.888952249999999,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 55,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "Thread 0x16d193000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.11465255942760946,
+        "compute_seconds": 1.3620724060000005,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.576513375,
+            "text": "なんだ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.600393542,
+            "text": "ダンデュー大学の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.619576334,
+            "text": "ダンデユ大学のパメラファーガソン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.682390417,
+            "text": "ダンデウ大学のパメラ・ファーガソン教授は容疑者の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.697245,
+            "text": "ダンデュー大学のパメラファーガソン教授は容疑者の写真などを公開"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.723723542,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.613016917,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡った"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.774530459,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.590273375,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.590278084,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.576513375,
+        "maximum_queued_samples": 4000,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.006969624999999979,
+        "prepare_seconds": 0.000747208,
+        "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています",
+        "wall_seconds": 11.897270834,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 55,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "Thread 0x16d193000:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "stdout": "Moonshine Japanese native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-moonshine-paced-repeat-v1.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.09770024149831648,
+        "compute_seconds": 1.1606788689999998,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.544790833,
+            "text": "なんだ"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.574580917,
+            "text": "ダンデュー大学の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.604562333,
+            "text": "ダンデユ大学のパメラファーガソン"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.655104542,
+            "text": "ダンデウ大学のパメラ・ファーガソン教授は容疑者の"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.6701155,
+            "text": "ダンデュー大学のパメラファーガソン教授は容疑者の写真などを公開"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.703275333,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.601429,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡った"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.712766292,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.593018458,
+            "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.593029125,
+            "text": ""
+          }
+        ],
+        "first_text_seconds": 2.544790833,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "moonshine-japanese-small-native",
+        "post_audio_finalization_seconds": 0.007067834000000772,
+        "prepare_seconds": 0.000629041,
+        "text": "ダンディ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています",
+        "wall_seconds": 11.895964792000001,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 55,
+      "outcome": "passed",
+      "processElapsedSeconds": 36.07186504197307
+    }
+  ],
+  "runStatus": "interrupted after return_audio_data=true was found; superseded by v2 disabling completed-line PCM"
+}

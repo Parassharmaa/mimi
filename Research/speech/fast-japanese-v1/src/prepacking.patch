@@ -1,0 +1,7 @@
+--- upstream/core/ort-utils/ort-utils.cpp
++++ experiment/core/ort-utils/ort-utils.cpp
+@@
+-                    session_options, "session.disable_prepacking", "1"));
+-  LOG_ORT_ERROR(ort_api, ort_api->DisableCpuMemArena(session_options));
++                    session_options, "session.disable_prepacking", "0"));
++  LOG_ORT_ERROR(ort_api, ort_api->EnableCpuMemArena(session_options));
