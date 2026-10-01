@@ -86,10 +86,16 @@ a spoken VoiceOver audit or a substitute for functional tests.
 
 ## Gates still open
 
-- The full test script stops at the source-bound adaptive-speech gate because
-  the previous evidence and generated executable identity belong to PR16.
-  Regenerate and rerun source-bound evidence after the design is settled. Do
-  not relabel previous reports or change thresholds.
+- Fresh adaptive speech evidence uses source identity
+  `cfee84196094b2490e9cd9995768ed9c26a5e11e5e020f9f64da293d32279549`.
+  Both paused controls and paced English passed the unchanged gates. Japanese
+  accuracy was identical across three runs with zero audio loss. The first run
+  missed the 1.1 s finalization gate at 1.271 s; two serial repeats passed at
+  0.834 s and 0.825 s. All attempts are retained. This demonstrates timing
+  variability, not a proven environmental cause or an inference speedup.
+  The final repeat is selected and the independent repeat was checked with the
+  same identity, model, suite, latency, zero-loss and segment requirements.
+- The full local suite and fresh exact-head CI must pass before merging.
 - Claude independent review remains unavailable until its login is renewed.
 - User feedback, exact-head CI, final independent review and merge checks are
   required for delivery. No release or installation is part of this preview.

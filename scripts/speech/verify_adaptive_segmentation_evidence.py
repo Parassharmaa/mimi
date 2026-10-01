@@ -34,12 +34,12 @@ LANGUAGE_PROFILE = {
 }
 SELECTED_REPORTS = {
     "ja": {
-        "gapless": "mimi-paced-gapless-adaptive-ja30-6-final-v2.json",
-        "paused": "mimi-direct-paused-adaptive-ja30-6-final-v2.json",
+        "gapless": "mimi-paced-gapless-adaptive-ja30-6-workspace-repeat2-v3.json",
+        "paused": "mimi-direct-paused-adaptive-ja30-6-workspace-v3.json",
     },
     "en": {
-        "gapless": "mimi-paced-gapless-adaptive-en24-6-final-v2.json",
-        "paused": "mimi-direct-paused-adaptive-en24-6-final-v2.json",
+        "gapless": "mimi-paced-gapless-adaptive-en24-6-workspace-v3.json",
+        "paused": "mimi-direct-paused-adaptive-en24-6-workspace-v3.json",
     },
 }
 
