@@ -19,7 +19,7 @@ With no sessions, Record creates the first session automatically.
 
 - Transcribe a microphone, audio output, app, or display.
 - Recognize English and Japanese automatically as speech arrives.
-- Translate between English and Japanese locally.
+- Translate between English and Japanese locally, including speech that is still being transcribed.
 - Float original text, translations, or both above other apps.
 - Dictate into supported text fields with a global shortcut.
 - Keep previous sessions so you can return to them later.
@@ -119,12 +119,13 @@ For implementation details, benchmarks, and physical-Mac checks, see:
 
 - [Version 1 plan](docs/V1_PLAN.md)
 - [Realtime benchmark](docs/REALTIME_BENCHMARK.md)
+- [Live translation measurements](docs/LIVE_TRANSLATION.md)
 - [Translation development report](Research/translation/development-accuracy-v1-report.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 ## Release status
 
-Mimi is under active development. [0.1.7 preview 1](https://github.com/Parassharmaa/mimi/releases/tag/0.1.7-preview.1)
+Mimi is under active development. [0.1.8 preview 1](https://github.com/Parassharmaa/mimi/releases/tag/0.1.8-preview.1)
 is an unsigned preview, not notarized by Apple. Its universal CI archive includes
 Phonon 2 for English and the stable translation pack. Bilingual Mimi Speech
 Preview is available as an optional model download.

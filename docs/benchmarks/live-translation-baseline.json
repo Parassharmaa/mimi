@@ -1,0 +1,500 @@
+{
+  "attempts": [
+    {
+      "computeMS": 46.458167,
+      "eventToPublicationMS": 1259.411042,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "明日の朝、会議を移動できますか。",
+      "policy": "final-only",
+      "repetition": 0,
+      "source": "Can we move the meeting to tomorrow morning?"
+    },
+    {
+      "computeMS": 33.18975,
+      "eventToPublicationMS": 180.082833,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 44.633209,
+      "eventToPublicationMS": 1311.9325840000001,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョンはテストの準備ができています。",
+      "policy": "final-only",
+      "repetition": 0,
+      "source": "The new version is ready for testing."
+    },
+    {
+      "computeMS": 17.473958,
+      "eventToPublicationMS": 166.414667,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 52.429833,
+      "eventToPublicationMS": 1309.572334,
+      "failure": "The selected local translation path changed a protected URL, placeholder, markup token, or number.",
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "",
+      "policy": "final-only",
+      "repetition": 0,
+      "source": "I would like to book a room for two nights."
+    },
+    {
+      "computeMS": 33.417833,
+      "eventToPublicationMS": 183.096709,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 41.7405,
+      "eventToPublicationMS": 1297.029416,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "電話の前のマイクをチェックしてください。",
+      "policy": "final-only",
+      "repetition": 0,
+      "source": "Please check the microphone before the call."
+    },
+    {
+      "computeMS": 18.390042,
+      "eventToPublicationMS": 164.365,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 49.068333,
+      "eventToPublicationMS": 1289.276208,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "The meeting tomorrow will start at ten in the morning.",
+      "policy": "final-only",
+      "repetition": 0,
+      "source": "明日の会議は午前十時に始まります。"
+    },
+    {
+      "computeMS": 30.11025,
+      "eventToPublicationMS": 174.440583,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 30.267208,
+      "eventToPublicationMS": 1304.3533750000001,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "Please test a new version.",
+      "policy": "final-only",
+      "repetition": 0,
+      "source": "新しいバージョンをテストしてください。"
+    },
+    {
+      "computeMS": 12.265417,
+      "eventToPublicationMS": 153.162416,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 43.876667,
+      "eventToPublicationMS": 1268.7245,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "What time does the train leave for Tokyo?",
+      "policy": "final-only",
+      "repetition": 0,
+      "source": "東京までの電車は何時に出発しますか。"
+    },
+    {
+      "computeMS": 34.643541,
+      "eventToPublicationMS": 181.546125,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "Up to Tokyo",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 37.024291,
+      "eventToPublicationMS": 1299.914584,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Please check the volume of the microphone.",
+      "policy": "final-only",
+      "repetition": 0,
+      "source": "マイクの音量を確認してください。"
+    },
+    {
+      "computeMS": 20.141375,
+      "eventToPublicationMS": 169.584708,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "マイクの"
+    },
+    {
+      "computeMS": 40.144417,
+      "eventToPublicationMS": 190.264834,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 42.768458,
+      "eventToPublicationMS": 1261.5240410000001,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "明日の朝、会議を移動できますか。",
+      "policy": "final-only",
+      "repetition": 1,
+      "source": "Can we move the meeting to tomorrow morning?"
+    },
+    {
+      "computeMS": 18.1885,
+      "eventToPublicationMS": 162.210667,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 49.5995,
+      "eventToPublicationMS": 1313.333625,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョンはテストの準備ができています。",
+      "policy": "final-only",
+      "repetition": 1,
+      "source": "The new version is ready for testing."
+    },
+    {
+      "computeMS": 19.133125,
+      "eventToPublicationMS": 168.529958,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 41.670666,
+      "eventToPublicationMS": 1244.138542,
+      "failure": "The selected local translation path changed a protected URL, placeholder, markup token, or number.",
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "",
+      "policy": "final-only",
+      "repetition": 1,
+      "source": "I would like to book a room for two nights."
+    },
+    {
+      "computeMS": 17.602666,
+      "eventToPublicationMS": 160.944458,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 77.616042,
+      "eventToPublicationMS": 1329.598,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "電話の前のマイクをチェックしてください。",
+      "policy": "final-only",
+      "repetition": 1,
+      "source": "Please check the microphone before the call."
+    },
+    {
+      "computeMS": 53.7705,
+      "eventToPublicationMS": 203.05275,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 85.6865,
+      "eventToPublicationMS": 1343.463917,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "The meeting tomorrow will start at ten in the morning.",
+      "policy": "final-only",
+      "repetition": 1,
+      "source": "明日の会議は午前十時に始まります。"
+    },
+    {
+      "computeMS": 15.622417,
+      "eventToPublicationMS": 163.916042,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 29.933833,
+      "eventToPublicationMS": 1286.3225,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "Please test a new version.",
+      "policy": "final-only",
+      "repetition": 1,
+      "source": "新しいバージョンをテストしてください。"
+    },
+    {
+      "computeMS": 21.336125,
+      "eventToPublicationMS": 169.657792,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "Up to Tokyo",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 38.421375,
+      "eventToPublicationMS": 1242.0335420000001,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "What time does the train leave for Tokyo?",
+      "policy": "final-only",
+      "repetition": 1,
+      "source": "東京までの電車は何時に出発しますか。"
+    },
+    {
+      "computeMS": 19.9135,
+      "eventToPublicationMS": 168.976417,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "マイクの"
+    },
+    {
+      "computeMS": 34.798375,
+      "eventToPublicationMS": 1310.701916,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Please check the volume of the microphone.",
+      "policy": "final-only",
+      "repetition": 1,
+      "source": "マイクの音量を確認してください。"
+    },
+    {
+      "computeMS": 54.090333,
+      "eventToPublicationMS": 1325.501542,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "明日の朝、会議を移動できますか。",
+      "policy": "final-only",
+      "repetition": 2,
+      "source": "Can we move the meeting to tomorrow morning?"
+    },
+    {
+      "computeMS": 23.651375,
+      "eventToPublicationMS": 165.756917,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 45.970667,
+      "eventToPublicationMS": 1325.720792,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョンはテストの準備ができています。",
+      "policy": "final-only",
+      "repetition": 2,
+      "source": "The new version is ready for testing."
+    },
+    {
+      "computeMS": 18.152417,
+      "eventToPublicationMS": 168.042916,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 68.045709,
+      "eventToPublicationMS": 1346.181166,
+      "failure": "The selected local translation path changed a protected URL, placeholder, markup token, or number.",
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "",
+      "policy": "final-only",
+      "repetition": 2,
+      "source": "I would like to book a room for two nights."
+    },
+    {
+      "computeMS": 37.359791,
+      "eventToPublicationMS": 182.230375,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 76.457458,
+      "eventToPublicationMS": 1339.014458,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "電話の前のマイクをチェックしてください。",
+      "policy": "final-only",
+      "repetition": 2,
+      "source": "Please check the microphone before the call."
+    },
+    {
+      "computeMS": 38.402416,
+      "eventToPublicationMS": 185.139458,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 81.496167,
+      "eventToPublicationMS": 1325.265167,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "The meeting tomorrow will start at ten in the morning.",
+      "policy": "final-only",
+      "repetition": 2,
+      "source": "明日の会議は午前十時に始まります。"
+    },
+    {
+      "computeMS": 52.195333,
+      "eventToPublicationMS": 197.921458,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 37.633334,
+      "eventToPublicationMS": 1258.675292,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "Please test a new version.",
+      "policy": "final-only",
+      "repetition": 2,
+      "source": "新しいバージョンをテストしてください。"
+    },
+    {
+      "computeMS": 24.908542,
+      "eventToPublicationMS": 173.10425,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 39.297334,
+      "eventToPublicationMS": 1274.758042,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "What time does the train leave for Tokyo?",
+      "policy": "final-only",
+      "repetition": 2,
+      "source": "東京までの電車は何時に出発しますか。"
+    },
+    {
+      "computeMS": 21.651834,
+      "eventToPublicationMS": 165.660417,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "Up to Tokyo",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 49.796583,
+      "eventToPublicationMS": 1305.5406659999999,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Please check the volume of the microphone.",
+      "policy": "final-only",
+      "repetition": 2,
+      "source": "マイクの音量を確認してください。"
+    },
+    {
+      "computeMS": 37.204833,
+      "eventToPublicationMS": 178.182417,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "マイクの"
+    }
+  ],
+  "coldFirstCallMS": {
+    "en-US": 1008.410333,
+    "ja-JP": 310.107333
+  },
+  "createdAt": "2026-10-01T16:01:53Z",
+  "hardware": "Mac15,6",
+  "metadataCorrection": "Timeout wording corrected after collection; raw attempts unchanged.",
+  "modelManifestSHA256": "824214ae6434ef0abdf06e7b208077ff3014d372144ab905b64127bbe7c1b8f7",
+  "modelRoot": "/Users/paras/.codex/worktrees/mimi-ux/mimi/.build/translation-models/blazeofchi/mimi-en-ja-mlx-development-v1-e6a02099fc62d9f351ffab1fa1efbd46b2c512a0/model",
+  "os": "Version 26.5.1 (Build 25F80)",
+  "phase": "baseline",
+  "protocol": "8 owned EN/JA utterances, 3 paired repetitions. Final at 1200ms after initial partial. Baseline caption waits 140ms after a stable first partial. No retries. Failure includes empty/unsafe model output. No per-call timeout. The original run completed without an operational timeout. Latency ends at publication-ready response, excluding paint and ASR. Same engine and model for both policies.",
+  "schemaVersion": 1
+}

@@ -1,0 +1,1324 @@
+{
+  "coldFirstCallMS": {
+    "en-US": 328.143291,
+    "ja-JP": 292.359667
+  },
+  "createdAt": "2026-10-01T16:29:55Z",
+  "hardware": "Mac15,6",
+  "modelManifestSHA256": "8e55e8f24eed07e89bdad6db0ca1d65aa791905123f764130ed021bc2380807a",
+  "os": "Version 26.5.1 (Build 25F80)",
+  "pairedAttempts": [
+    {
+      "computeMS": 18.910708,
+      "eventToPublicationMS": 18.908917,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "instant",
+      "repetition": 0,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 23.584625,
+      "eventToPublicationMS": 170.80025,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 20.362834,
+      "eventToPublicationMS": 20.360583,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "instant",
+      "repetition": 0,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 19.845667,
+      "eventToPublicationMS": 166.076167,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 18.096041,
+      "eventToPublicationMS": 18.094958,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "instant",
+      "repetition": 0,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 18.161334,
+      "eventToPublicationMS": 166.832833,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 16.322042,
+      "eventToPublicationMS": 16.321,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "instant",
+      "repetition": 0,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 16.499792,
+      "eventToPublicationMS": 162.3135,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 30.991333,
+      "eventToPublicationMS": 30.989625,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "instant",
+      "repetition": 0,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 29.654875,
+      "eventToPublicationMS": 178.646875,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 12.89775,
+      "eventToPublicationMS": 12.89625,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "instant",
+      "repetition": 0,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 12.060959,
+      "eventToPublicationMS": 159.865542,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 15.328667,
+      "eventToPublicationMS": 15.327167,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "To Tokyo",
+      "policy": "instant",
+      "repetition": 0,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 14.698583,
+      "eventToPublicationMS": 160.875334,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "To Tokyo",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 18.998625,
+      "eventToPublicationMS": 18.99725,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "instant",
+      "repetition": 0,
+      "source": "マイクの"
+    },
+    {
+      "computeMS": 19.0755,
+      "eventToPublicationMS": 166.790375,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "caption-debounce-140ms",
+      "repetition": 0,
+      "source": "マイクの"
+    },
+    {
+      "computeMS": 22.021583,
+      "eventToPublicationMS": 165.952375,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 21.642875,
+      "eventToPublicationMS": 21.641708,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "instant",
+      "repetition": 1,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 18.952042,
+      "eventToPublicationMS": 167.464125,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 18.424458,
+      "eventToPublicationMS": 18.423375,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "instant",
+      "repetition": 1,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 42.8355,
+      "eventToPublicationMS": 192.755291,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 25.097,
+      "eventToPublicationMS": 25.096125,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "instant",
+      "repetition": 1,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 39.2755,
+      "eventToPublicationMS": 188.175792,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 25.7355,
+      "eventToPublicationMS": 25.733541,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "instant",
+      "repetition": 1,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 57.759875,
+      "eventToPublicationMS": 200.97725,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 33.044875,
+      "eventToPublicationMS": 33.043667,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "instant",
+      "repetition": 1,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 27.687917,
+      "eventToPublicationMS": 175.800458,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 13.930583,
+      "eventToPublicationMS": 13.929042,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "instant",
+      "repetition": 1,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 18.204541,
+      "eventToPublicationMS": 159.791959,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "To Tokyo",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 16.861167,
+      "eventToPublicationMS": 16.859625,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "To Tokyo",
+      "policy": "instant",
+      "repetition": 1,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 22.845375,
+      "eventToPublicationMS": 171.771125,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "caption-debounce-140ms",
+      "repetition": 1,
+      "source": "マイクの"
+    },
+    {
+      "computeMS": 20.314791,
+      "eventToPublicationMS": 20.313333,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "instant",
+      "repetition": 1,
+      "source": "マイクの"
+    },
+    {
+      "computeMS": 25.405,
+      "eventToPublicationMS": 25.404,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "instant",
+      "repetition": 2,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 30.576,
+      "eventToPublicationMS": 172.87175,
+      "fixtureID": "en-meeting",
+      "language": "en-US",
+      "output": "私たちにできること",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "Can we"
+    },
+    {
+      "computeMS": 26.258375,
+      "eventToPublicationMS": 26.2575,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "instant",
+      "repetition": 2,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 44.905083,
+      "eventToPublicationMS": 193.339042,
+      "fixtureID": "en-build",
+      "language": "en-US",
+      "output": "新しいバージョン",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "The new version"
+    },
+    {
+      "computeMS": 42.700792,
+      "eventToPublicationMS": 42.699,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "instant",
+      "repetition": 2,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 39.184334,
+      "eventToPublicationMS": 186.53875,
+      "fixtureID": "en-travel",
+      "language": "en-US",
+      "output": "私が欲しい",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "I would like"
+    },
+    {
+      "computeMS": 23.311166,
+      "eventToPublicationMS": 23.310084,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "instant",
+      "repetition": 2,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 18.916291,
+      "eventToPublicationMS": 161.155917,
+      "fixtureID": "en-audio",
+      "language": "en-US",
+      "output": "チェックしてください",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "Please check"
+    },
+    {
+      "computeMS": 63.585833,
+      "eventToPublicationMS": 63.584792,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "instant",
+      "repetition": 2,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 56.400916,
+      "eventToPublicationMS": 200.515875,
+      "fixtureID": "ja-meeting",
+      "language": "ja-JP",
+      "output": "Tomorrow's Day",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "明日の"
+    },
+    {
+      "computeMS": 28.928458,
+      "eventToPublicationMS": 28.925917,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "instant",
+      "repetition": 2,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 30.697417,
+      "eventToPublicationMS": 177.462833,
+      "fixtureID": "ja-build",
+      "language": "ja-JP",
+      "output": "New",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "新しい"
+    },
+    {
+      "computeMS": 36.028541,
+      "eventToPublicationMS": 36.026709,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "To Tokyo",
+      "policy": "instant",
+      "repetition": 2,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 28.636166,
+      "eventToPublicationMS": 175.182708,
+      "fixtureID": "ja-travel",
+      "language": "ja-JP",
+      "output": "To Tokyo",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "東京まで"
+    },
+    {
+      "computeMS": 30.031333,
+      "eventToPublicationMS": 30.030167,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "instant",
+      "repetition": 2,
+      "source": "マイクの"
+    },
+    {
+      "computeMS": 41.87725,
+      "eventToPublicationMS": 185.844125,
+      "fixtureID": "ja-audio",
+      "language": "ja-JP",
+      "output": "Mike's",
+      "policy": "caption-debounce-140ms",
+      "repetition": 2,
+      "source": "マイクの"
+    }
+  ],
+  "phase": "instant",
+  "protocol": "Same 8 owned EN/JA fixtures and 3 paired repeats as baseline. Immediate vs 140ms calls counterbalanced. Production LocalTranslationStream receives prefixes at 0/220/440ms and final at 1200ms. Retain publications, failures, and inference counts. No retries. 5s final drain cap; missing final is failure. Publication excludes compositor paint and ASR. Fixture is independent unit; repeats and prefixes are dependent. Final output exact parity with baseline is correctness gate, not translation quality assessment.",
+  "purpose": "Stable release pack compatibility check. Collected while compiler activity could overlap; not used for primary latency claims.",
+  "replays": [
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 22.359542,
+      "fixtureID": "en-meeting",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 22.320208,
+          "isPartial": true,
+          "output": "私たちにできること",
+          "source": "Can we"
+        },
+        {
+          "eventToPublicationMS": 33.343583,
+          "isPartial": true,
+          "output": "会議を動かすことができます",
+          "source": "Can we move the meeting"
+        },
+        {
+          "eventToPublicationMS": 61.163917,
+          "isPartial": true,
+          "output": "明日の朝、会議を移動できますか。",
+          "source": "Can we move the meeting to tomorrow morning?"
+        },
+        {
+          "eventToPublicationMS": 0.0445,
+          "isPartial": false,
+          "output": "明日の朝、会議を移動できますか。",
+          "source": "Can we move the meeting to tomorrow morning?"
+        }
+      ],
+      "repetition": 0
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 18.162417,
+      "fixtureID": "en-build",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 18.158125,
+          "isPartial": true,
+          "output": "新しいバージョン",
+          "source": "The new version"
+        },
+        {
+          "eventToPublicationMS": 33.638125,
+          "isPartial": true,
+          "output": "新しいバージョンの準備ができています",
+          "source": "The new version is ready"
+        },
+        {
+          "eventToPublicationMS": 38.229708,
+          "isPartial": true,
+          "output": "新バージョンはテストの準備ができています。",
+          "source": "The new version is ready for testing."
+        },
+        {
+          "eventToPublicationMS": 0.0215,
+          "isPartial": false,
+          "output": "新バージョンはテストの準備ができています。",
+          "source": "The new version is ready for testing."
+        }
+      ],
+      "repetition": 0
+    },
+    {
+      "failures": [
+        "The selected local translation path changed a protected URL, placeholder, markup token, or number.",
+        "The selected local translation path changed a protected URL, placeholder, markup token, or number."
+      ],
+      "finalFailureMatchesBaseline": true,
+      "finalMatchesBaseline": false,
+      "firstTranslationMS": 18.348959,
+      "fixtureID": "en-travel",
+      "inferenceCount": 4,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 18.343042,
+          "isPartial": true,
+          "output": "私が欲しい",
+          "source": "I would like"
+        },
+        {
+          "eventToPublicationMS": 25.877584,
+          "isPartial": true,
+          "output": "部屋を予約したい",
+          "source": "I would like to book a room"
+        }
+      ],
+      "repetition": 0
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 16.724,
+      "fixtureID": "en-audio",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 16.721125,
+          "isPartial": true,
+          "output": "チェックしてください",
+          "source": "Please check"
+        },
+        {
+          "eventToPublicationMS": 29.983042,
+          "isPartial": true,
+          "output": "マイクをご確認ください。",
+          "source": "Please check the microphone"
+        },
+        {
+          "eventToPublicationMS": 52.174333,
+          "isPartial": true,
+          "output": "電話を切らないうちにマイクを調べて下さい。",
+          "source": "Please check the microphone before the call."
+        },
+        {
+          "eventToPublicationMS": 0.022208,
+          "isPartial": false,
+          "output": "電話を切らないうちにマイクを調べて下さい。",
+          "source": "Please check the microphone before the call."
+        }
+      ],
+      "repetition": 0
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 30.615584,
+      "fixtureID": "ja-meeting",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 30.609333,
+          "isPartial": true,
+          "output": "Tomorrow's Day",
+          "source": "明日の"
+        },
+        {
+          "eventToPublicationMS": 47.238667,
+          "isPartial": true,
+          "output": "Tomorrow's meeting is tomorrow's.",
+          "source": "明日の会議は"
+        },
+        {
+          "eventToPublicationMS": 59.735708,
+          "isPartial": true,
+          "output": "Tomorrow's meeting will start at ten in the morning.",
+          "source": "明日の会議は午前十時に始まります。"
+        },
+        {
+          "eventToPublicationMS": 0.02875,
+          "isPartial": false,
+          "output": "Tomorrow's meeting will start at ten in the morning.",
+          "source": "明日の会議は午前十時に始まります。"
+        }
+      ],
+      "repetition": 0
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 11.840167,
+      "fixtureID": "ja-build",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 11.833083,
+          "isPartial": true,
+          "output": "New",
+          "source": "新しい"
+        },
+        {
+          "eventToPublicationMS": 29.326083,
+          "isPartial": true,
+          "output": "A new version is available.",
+          "source": "新しいバージョンを"
+        },
+        {
+          "eventToPublicationMS": 28.971542,
+          "isPartial": true,
+          "output": "Please test a new version.",
+          "source": "新しいバージョンをテストしてください。"
+        },
+        {
+          "eventToPublicationMS": 0.03,
+          "isPartial": false,
+          "output": "Please test a new version.",
+          "source": "新しいバージョンをテストしてください。"
+        }
+      ],
+      "repetition": 0
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 14.301041,
+      "fixtureID": "ja-travel",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 14.295416,
+          "isPartial": true,
+          "output": "To Tokyo",
+          "source": "東京まで"
+        },
+        {
+          "eventToPublicationMS": 30.491084,
+          "isPartial": true,
+          "output": "The train to Tokyo is here",
+          "source": "東京までの電車は"
+        },
+        {
+          "eventToPublicationMS": 41.686458,
+          "isPartial": true,
+          "output": "What time does the train leave for Tokyo?",
+          "source": "東京までの電車は何時に出発しますか。"
+        },
+        {
+          "eventToPublicationMS": 0.02675,
+          "isPartial": false,
+          "output": "What time does the train leave for Tokyo?",
+          "source": "東京までの電車は何時に出発しますか。"
+        }
+      ],
+      "repetition": 0
+    },
+    {
+      "failures": [
+        "The experimental translator returned an empty, untranslated, or malformed result."
+      ],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 19.023083,
+      "fixtureID": "ja-audio",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 19.018375,
+          "isPartial": true,
+          "output": "Mike's",
+          "source": "マイクの"
+        },
+        {
+          "eventToPublicationMS": 34.719,
+          "isPartial": true,
+          "output": "Please check the volume of the microphone.",
+          "source": "マイクの音量を確認してください。"
+        },
+        {
+          "eventToPublicationMS": 0.023292,
+          "isPartial": false,
+          "output": "Please check the volume of the microphone.",
+          "source": "マイクの音量を確認してください。"
+        }
+      ],
+      "repetition": 0
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 21.118375,
+      "fixtureID": "en-meeting",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 21.114125,
+          "isPartial": true,
+          "output": "私たちにできること",
+          "source": "Can we"
+        },
+        {
+          "eventToPublicationMS": 28.78175,
+          "isPartial": true,
+          "output": "会議を動かすことができます",
+          "source": "Can we move the meeting"
+        },
+        {
+          "eventToPublicationMS": 47.642125,
+          "isPartial": true,
+          "output": "明日の朝、会議を移動できますか。",
+          "source": "Can we move the meeting to tomorrow morning?"
+        },
+        {
+          "eventToPublicationMS": 0.0225,
+          "isPartial": false,
+          "output": "明日の朝、会議を移動できますか。",
+          "source": "Can we move the meeting to tomorrow morning?"
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 18.283125,
+      "fixtureID": "en-build",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 18.276167,
+          "isPartial": true,
+          "output": "新しいバージョン",
+          "source": "The new version"
+        },
+        {
+          "eventToPublicationMS": 31.453292,
+          "isPartial": true,
+          "output": "新しいバージョンの準備ができています",
+          "source": "The new version is ready"
+        },
+        {
+          "eventToPublicationMS": 41.765541,
+          "isPartial": true,
+          "output": "新バージョンはテストの準備ができています。",
+          "source": "The new version is ready for testing."
+        },
+        {
+          "eventToPublicationMS": 0.034,
+          "isPartial": false,
+          "output": "新バージョンはテストの準備ができています。",
+          "source": "The new version is ready for testing."
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "failures": [
+        "The selected local translation path changed a protected URL, placeholder, markup token, or number.",
+        "The selected local translation path changed a protected URL, placeholder, markup token, or number."
+      ],
+      "finalFailureMatchesBaseline": true,
+      "finalMatchesBaseline": false,
+      "firstTranslationMS": 21.586417,
+      "fixtureID": "en-travel",
+      "inferenceCount": 4,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 21.580875,
+          "isPartial": true,
+          "output": "私が欲しい",
+          "source": "I would like"
+        },
+        {
+          "eventToPublicationMS": 55.645541,
+          "isPartial": true,
+          "output": "部屋を予約したい",
+          "source": "I would like to book a room"
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 22.626833,
+      "fixtureID": "en-audio",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 22.620334,
+          "isPartial": true,
+          "output": "チェックしてください",
+          "source": "Please check"
+        },
+        {
+          "eventToPublicationMS": 61.491083,
+          "isPartial": true,
+          "output": "マイクをご確認ください。",
+          "source": "Please check the microphone"
+        },
+        {
+          "eventToPublicationMS": 87.717208,
+          "isPartial": true,
+          "output": "電話を切らないうちにマイクを調べて下さい。",
+          "source": "Please check the microphone before the call."
+        },
+        {
+          "eventToPublicationMS": 0.084667,
+          "isPartial": false,
+          "output": "電話を切らないうちにマイクを調べて下さい。",
+          "source": "Please check the microphone before the call."
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 31.242792,
+      "fixtureID": "ja-meeting",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 31.2375,
+          "isPartial": true,
+          "output": "Tomorrow's Day",
+          "source": "明日の"
+        },
+        {
+          "eventToPublicationMS": 84.494708,
+          "isPartial": true,
+          "output": "Tomorrow's meeting is tomorrow's.",
+          "source": "明日の会議は"
+        },
+        {
+          "eventToPublicationMS": 59.455084,
+          "isPartial": true,
+          "output": "Tomorrow's meeting will start at ten in the morning.",
+          "source": "明日の会議は午前十時に始まります。"
+        },
+        {
+          "eventToPublicationMS": 0.084833,
+          "isPartial": false,
+          "output": "Tomorrow's meeting will start at ten in the morning.",
+          "source": "明日の会議は午前十時に始まります。"
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 13.441125,
+      "fixtureID": "ja-build",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 13.436209,
+          "isPartial": true,
+          "output": "New",
+          "source": "新しい"
+        },
+        {
+          "eventToPublicationMS": 55.028041,
+          "isPartial": true,
+          "output": "A new version is available.",
+          "source": "新しいバージョンを"
+        },
+        {
+          "eventToPublicationMS": 33.42725,
+          "isPartial": true,
+          "output": "Please test a new version.",
+          "source": "新しいバージョンをテストしてください。"
+        },
+        {
+          "eventToPublicationMS": 0.028625,
+          "isPartial": false,
+          "output": "Please test a new version.",
+          "source": "新しいバージョンをテストしてください。"
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 15.428041,
+      "fixtureID": "ja-travel",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 15.424375,
+          "isPartial": true,
+          "output": "To Tokyo",
+          "source": "東京まで"
+        },
+        {
+          "eventToPublicationMS": 53.043083,
+          "isPartial": true,
+          "output": "The train to Tokyo is here",
+          "source": "東京までの電車は"
+        },
+        {
+          "eventToPublicationMS": 72.098542,
+          "isPartial": true,
+          "output": "What time does the train leave for Tokyo?",
+          "source": "東京までの電車は何時に出発しますか。"
+        },
+        {
+          "eventToPublicationMS": 0.042708,
+          "isPartial": false,
+          "output": "What time does the train leave for Tokyo?",
+          "source": "東京までの電車は何時に出発しますか。"
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "failures": [
+        "The experimental translator returned an empty, untranslated, or malformed result."
+      ],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 18.782792,
+      "fixtureID": "ja-audio",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 18.778458,
+          "isPartial": true,
+          "output": "Mike's",
+          "source": "マイクの"
+        },
+        {
+          "eventToPublicationMS": 58.585625,
+          "isPartial": true,
+          "output": "Please check the volume of the microphone.",
+          "source": "マイクの音量を確認してください。"
+        },
+        {
+          "eventToPublicationMS": 0.030916,
+          "isPartial": false,
+          "output": "Please check the volume of the microphone.",
+          "source": "マイクの音量を確認してください。"
+        }
+      ],
+      "repetition": 1
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 26.2765,
+      "fixtureID": "en-meeting",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 26.271084,
+          "isPartial": true,
+          "output": "私たちにできること",
+          "source": "Can we"
+        },
+        {
+          "eventToPublicationMS": 58.757583,
+          "isPartial": true,
+          "output": "会議を動かすことができます",
+          "source": "Can we move the meeting"
+        },
+        {
+          "eventToPublicationMS": 74.870125,
+          "isPartial": true,
+          "output": "明日の朝、会議を移動できますか。",
+          "source": "Can we move the meeting to tomorrow morning?"
+        },
+        {
+          "eventToPublicationMS": 0.032833,
+          "isPartial": false,
+          "output": "明日の朝、会議を移動できますか。",
+          "source": "Can we move the meeting to tomorrow morning?"
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 26.670375,
+      "fixtureID": "en-build",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 26.661792,
+          "isPartial": true,
+          "output": "新しいバージョン",
+          "source": "The new version"
+        },
+        {
+          "eventToPublicationMS": 65.3705,
+          "isPartial": true,
+          "output": "新しいバージョンの準備ができています",
+          "source": "The new version is ready"
+        },
+        {
+          "eventToPublicationMS": 75.122792,
+          "isPartial": true,
+          "output": "新バージョンはテストの準備ができています。",
+          "source": "The new version is ready for testing."
+        },
+        {
+          "eventToPublicationMS": 0.09575,
+          "isPartial": false,
+          "output": "新バージョンはテストの準備ができています。",
+          "source": "The new version is ready for testing."
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "failures": [
+        "The selected local translation path changed a protected URL, placeholder, markup token, or number.",
+        "The selected local translation path changed a protected URL, placeholder, markup token, or number."
+      ],
+      "finalFailureMatchesBaseline": true,
+      "finalMatchesBaseline": false,
+      "firstTranslationMS": 24.774542,
+      "fixtureID": "en-travel",
+      "inferenceCount": 4,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 24.766416,
+          "isPartial": true,
+          "output": "私が欲しい",
+          "source": "I would like"
+        },
+        {
+          "eventToPublicationMS": 46.826375,
+          "isPartial": true,
+          "output": "部屋を予約したい",
+          "source": "I would like to book a room"
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 17.535292,
+      "fixtureID": "en-audio",
+      "inferenceCount": 3,
+      "language": "en-US",
+      "publications": [
+        {
+          "eventToPublicationMS": 17.529834,
+          "isPartial": true,
+          "output": "チェックしてください",
+          "source": "Please check"
+        },
+        {
+          "eventToPublicationMS": 32.501625,
+          "isPartial": true,
+          "output": "マイクをご確認ください。",
+          "source": "Please check the microphone"
+        },
+        {
+          "eventToPublicationMS": 69.618333,
+          "isPartial": true,
+          "output": "電話を切らないうちにマイクを調べて下さい。",
+          "source": "Please check the microphone before the call."
+        },
+        {
+          "eventToPublicationMS": 0.093833,
+          "isPartial": false,
+          "output": "電話を切らないうちにマイクを調べて下さい。",
+          "source": "Please check the microphone before the call."
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 37.548667,
+      "fixtureID": "ja-meeting",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 37.540958,
+          "isPartial": true,
+          "output": "Tomorrow's Day",
+          "source": "明日の"
+        },
+        {
+          "eventToPublicationMS": 73.011,
+          "isPartial": true,
+          "output": "Tomorrow's meeting is tomorrow's.",
+          "source": "明日の会議は"
+        },
+        {
+          "eventToPublicationMS": 85.733167,
+          "isPartial": true,
+          "output": "Tomorrow's meeting will start at ten in the morning.",
+          "source": "明日の会議は午前十時に始まります。"
+        },
+        {
+          "eventToPublicationMS": 0.107208,
+          "isPartial": false,
+          "output": "Tomorrow's meeting will start at ten in the morning.",
+          "source": "明日の会議は午前十時に始まります。"
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 18.547458,
+      "fixtureID": "ja-build",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 18.537334,
+          "isPartial": true,
+          "output": "New",
+          "source": "新しい"
+        },
+        {
+          "eventToPublicationMS": 54.416667,
+          "isPartial": true,
+          "output": "A new version is available.",
+          "source": "新しいバージョンを"
+        },
+        {
+          "eventToPublicationMS": 54.53825,
+          "isPartial": true,
+          "output": "Please test a new version.",
+          "source": "新しいバージョンをテストしてください。"
+        },
+        {
+          "eventToPublicationMS": 0.072167,
+          "isPartial": false,
+          "output": "Please test a new version.",
+          "source": "新しいバージョンをテストしてください。"
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "failures": [],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 21.446583,
+      "fixtureID": "ja-travel",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 21.437959,
+          "isPartial": true,
+          "output": "To Tokyo",
+          "source": "東京まで"
+        },
+        {
+          "eventToPublicationMS": 60.383208,
+          "isPartial": true,
+          "output": "The train to Tokyo is here",
+          "source": "東京までの電車は"
+        },
+        {
+          "eventToPublicationMS": 56.263542,
+          "isPartial": true,
+          "output": "What time does the train leave for Tokyo?",
+          "source": "東京までの電車は何時に出発しますか。"
+        },
+        {
+          "eventToPublicationMS": 0.036292,
+          "isPartial": false,
+          "output": "What time does the train leave for Tokyo?",
+          "source": "東京までの電車は何時に出発しますか。"
+        }
+      ],
+      "repetition": 2
+    },
+    {
+      "failures": [
+        "The experimental translator returned an empty, untranslated, or malformed result."
+      ],
+      "finalFailureMatchesBaseline": false,
+      "finalMatchesBaseline": true,
+      "firstTranslationMS": 25.103166,
+      "fixtureID": "ja-audio",
+      "inferenceCount": 3,
+      "language": "ja-JP",
+      "publications": [
+        {
+          "eventToPublicationMS": 25.095041,
+          "isPartial": true,
+          "output": "Mike's",
+          "source": "マイクの"
+        },
+        {
+          "eventToPublicationMS": 72.100459,
+          "isPartial": true,
+          "output": "Please check the volume of the microphone.",
+          "source": "マイクの音量を確認してください。"
+        },
+        {
+          "eventToPublicationMS": 0.097459,
+          "isPartial": false,
+          "output": "Please check the volume of the microphone.",
+          "source": "マイクの音量を確認してください。"
+        }
+      ],
+      "repetition": 2
+    }
+  ],
+  "schemaVersion": 1,
+  "status": "passed"
+}

@@ -5,12 +5,13 @@ import SwiftUI
 @preconcurrency import Translation
 import os
 
-/// Presents finalized translations in transcript order while two persistent,
-/// direction-pinned lanes serially drive English→Japanese and Japanese→English.
-/// A lane never changes direction, avoiding Translation session stalls during
-/// long Auto sessions that alternate languages.
+/// Shows immutable translations plus a replaceable translation of current speech.
+/// Apple fallback sessions stay pinned to their direction.
 struct InlineTranslationView: View {
     let segments: [TranscriptSegment]
+    let liveText: String
+    let liveLanguage: SpeechLanguage
+    let scopeID: UUID?
     let fillsAvailableSpace: Bool
     let fixtureTranslation: String?
     let initiallyFollowingLatest: Bool
@@ -18,15 +19,22 @@ struct InlineTranslationView: View {
 
     @State private var model = SegmentTranslationModel()
     @State private var retryGeneration = 0
+    @State private var localStream: LocalTranslationStream?
 
     init(
         segments: [TranscriptSegment],
+        liveText: String = "",
+        liveLanguage: SpeechLanguage = .english,
+        scopeID: UUID? = nil,
         fillsAvailableSpace: Bool = false,
         fixtureTranslation: String? = nil,
         initiallyFollowingLatest: Bool = true,
         preferences: UserPreferences? = nil
     ) {
         self.segments = segments
+        self.liveText = liveText
+        self.liveLanguage = liveLanguage
+        self.scopeID = scopeID
         self.fillsAvailableSpace = fillsAvailableSpace
         self.fixtureTranslation = fixtureTranslation
         self.initiallyFollowingLatest = initiallyFollowingLatest
@@ -35,13 +43,21 @@ struct InlineTranslationView: View {
 
     private var renderedTranslation: String {
         if let fixtureTranslation { return fixtureTranslation }
-        return segments.compactMap { model.translations[$0.id] }.joined(separator: "\n")
+        let completed = segments.compactMap { translations[$0.id] }
+        return (completed + (liveOutput.isEmpty ? [] : [liveOutput])).joined(separator: "\n")
+    }
+
+    private var translations: [UUID: String] { localStream?.translations ?? model.translations }
+    private var liveOutput: String { localStream?.liveTranslation ?? "" }
+    private var isTranslating: Bool { localStream?.isTranslating ?? model.isTranslating }
+    private var liveInput: LocalTranslationSnapshot {
+        .init(segments: segments, liveText: liveText, language: liveLanguage, scopeID: scopeID)
     }
 
     var body: some View {
         VStack(spacing: 0) {
             MimiPaneHeader("English ↔ 日本語", symbol: "translate") {
-                if model.isTranslating {
+                if isTranslating {
                     ProgressView()
                         .controlSize(.small)
                         .accessibilityLabel(t("Translating newest sentences locally", "新しい文をローカルで翻訳中"))
@@ -57,11 +73,13 @@ struct InlineTranslationView: View {
                 .accessibilityLabel(t("Copy Translation", "翻訳をコピー"))
                 .disabled(renderedTranslation.isEmpty)
                 Button(t("Refresh", "更新")) {
+                    localStream?.reset()
+                    localStream?.update(liveInput)
                     model.reset(for: segments)
                     retryGeneration &+= 1
                 }
                 .buttonStyle(MimiQuietButtonStyle())
-                .disabled(segments.isEmpty || fixtureTranslation != nil || model.isTranslating)
+                .disabled((segments.isEmpty && liveText.isEmpty) || fixtureTranslation != nil || isTranslating)
             }
             Divider()
 
@@ -76,23 +94,29 @@ struct InlineTranslationView: View {
                             Text(fixtureTranslation)
                         } else {
                             ForEach(segments) { segment in
-                                if let translation = model.translations[segment.id] {
+                                if let translation = translations[segment.id] {
                                     Text(translation)
                                 }
                             }
+                            if !liveOutput.isEmpty {
+                                Text(liveOutput)
+                                    .foregroundStyle(.secondary)
+                                    .accessibilityLabel(t("Current translation: \(liveOutput)", "現在の翻訳：\(liveOutput)"))
+                            }
                         }
                     }
+                    .transaction { $0.animation = nil }
                     .font(fillsAvailableSpace ? .title3 : .body)
                     .textSelection(.enabled)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(18)
                 }
                 .frame(maxHeight: fillsAvailableSpace ? .infinity : 160)
-            } else if model.isTranslating {
+            } else if isTranslating {
                 ContentUnavailableView {
                     Label(t("Translating First Sentences", "最初の文を翻訳中"), systemImage: "translate")
                 } description: {
-                    Text(t("Finalized speech is translated locally, one sentence at a time.", "確定した音声を一文ずつローカルで翻訳します。"))
+                    Text(t("Speech is translated locally as words arrive.", "音声を認識するたびにローカルで翻訳します。"))
                 } actions: {
                     ProgressView().controlSize(.small)
                 }
@@ -101,7 +125,7 @@ struct InlineTranslationView: View {
                 ContentUnavailableView(
                     t("No Translation Yet", "翻訳はまだありません"),
                     systemImage: "translate",
-                    description: Text(t("A translation appears after a sentence is finalized.", "文が確定すると翻訳が表示されます。"))
+                    description: Text(t("Translations appear as you speak and may change until the sentence is complete.", "話している間に翻訳が表示され、文が確定するまで更新されます。"))
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -129,12 +153,6 @@ struct InlineTranslationView: View {
         .frame(maxHeight: fillsAvailableSpace ? .infinity : nil, alignment: .topLeading)
         .background {
             HStack(spacing: 0) {
-                ExperimentalSegmentTranslationLane(
-                    segments: segments,
-                    model: model,
-                    retryGeneration: retryGeneration,
-                    isEnabled: fixtureTranslation == nil
-                )
                 SegmentTranslationLane(
                     segments: segments,
                     sourceLanguage: .english,
@@ -153,6 +171,13 @@ struct InlineTranslationView: View {
             .frame(width: 0, height: 0)
             .accessibilityHidden(true)
         }
+        .onChange(of: liveInput, initial: true) { _, input in
+            guard fixtureTranslation == nil, let configuration = model.experimentalConfiguration else { return }
+            if localStream == nil { localStream = LocalTranslationStream(configuration: configuration) }
+            localStream?.update(input)
+        }
+        .onAppear { localStream?.update(liveInput) }
+        .onDisappear { localStream?.reset() }
         .onChange(of: segments.map(\.id), initial: true) { _, ids in
             model.prune(validIDs: Set(ids))
         }
@@ -342,59 +367,6 @@ func verifyExperimentalTranslationFallbackContract() -> TranslationFallbackVerif
         experimentalPartialsDoNotUseApple: experimentalPartialsDoNotUseApple,
         invalidModelPackRejected: invalidPackRejected
     )
-}
-
-private struct ExperimentalSegmentTranslationLane: View {
-    let segments: [TranscriptSegment]
-    let model: SegmentTranslationModel
-    let retryGeneration: Int
-    let isEnabled: Bool
-
-    private var input: ExperimentalSegmentTranslationLaneInput {
-        .init(
-            segmentIDs: segments.map(\.id),
-            retryGeneration: retryGeneration,
-            isEnabled: isEnabled && model.isUsingExperimentalLocalCandidate
-        )
-    }
-
-    var body: some View {
-        Color.clear
-            .task(id: input) {
-                guard input.isEnabled, let configuration = model.experimentalConfiguration else { return }
-                for segment in segments where model.shouldAttempt(segment.id) {
-                    guard !Task.isCancelled, model.claim(segment.language) else { return }
-                    do {
-                        let translated = try await ExperimentalMLXTranslationEngine.shared.translate(
-                            segment.text,
-                            sourceLanguage: segment.language,
-                            configuration: configuration
-                        )
-                        guard !Task.isCancelled else {
-                            model.release(segment.language)
-                            return
-                        }
-                        model.store(translated, for: segment.id)
-                        model.release(segment.language)
-                    } catch is CancellationError {
-                        model.release(segment.language)
-                        return
-                    } catch {
-                        model.failLocalCandidate(
-                            after: error,
-                            for: segment.language,
-                            segmentID: segment.id
-                        )
-                    }
-                }
-            }
-    }
-}
-
-private struct ExperimentalSegmentTranslationLaneInput: Equatable {
-    let segmentIDs: [UUID]
-    let retryGeneration: Int
-    let isEnabled: Bool
 }
 
 private struct SegmentTranslationLane: View {

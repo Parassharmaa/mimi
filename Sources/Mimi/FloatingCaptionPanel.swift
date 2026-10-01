@@ -141,7 +141,7 @@ struct FloatingCaptionView: View {
     @State private var configuredLanguage: SpeechLanguage?
     @State private var latestTranslationInput: CaptionTranslationInput?
     @State private var retryAfter: Date?
-    @State private var localTranslation = ""
+    @State private var localStream: LocalTranslationStream?
 
     private var sourceLanguage: SpeechLanguage {
         if store.isRecording {
@@ -162,18 +162,20 @@ struct FloatingCaptionView: View {
         CaptionTranslationInput(
             text: sourceText,
             language: sourceLanguage,
+            scopeID: store.currentSessionID,
             isEnabled: allowsLiveTranslation
                 && preferences.floatingCaptionContent != .original
                 && localTranslationConfiguration != nil
         )
     }
     private var displayedTranslation: String {
-        localTranslation.isEmpty ? pipeline.displayedTranslation : localTranslation
+        localStream?.liveTranslation ?? pipeline.displayedTranslation
     }
     private var translationInput: CaptionTranslationInput {
         CaptionTranslationInput(
             text: sourceText,
             language: sourceLanguage,
+            scopeID: store.currentSessionID,
             isEnabled: allowsLiveTranslation
                 && preferences.floatingCaptionContent != .original
                 && usesAppleTranslationForLivePartials
@@ -265,37 +267,22 @@ struct FloatingCaptionView: View {
             configuredLanguage = nil
             retryAfter = nil
         }
-        .task(id: localTranslationInput) {
-            let input = localTranslationInput
-            guard input.isEnabled,
-                  !input.text.isEmpty,
-                  let localTranslationConfiguration else {
-                if input.text.isEmpty {
-                    localTranslation = ""
-                }
+        .onChange(of: localTranslationInput, initial: true) { _, input in
+            guard input.isEnabled, let localTranslationConfiguration else {
+                localStream?.reset()
                 return
             }
-            // Coalesce rapidly changing speech partials, then use the same
-            // integrity-checked local engine as finalized transcript rows.
-            try? await Task.sleep(for: .milliseconds(140))
-            guard !Task.isCancelled else { return }
-            do {
-                let output = try await ExperimentalMLXTranslationEngine.shared.translate(
-                    input.text,
-                    sourceLanguage: input.language,
-                    configuration: localTranslationConfiguration
-                )
-                guard !Task.isCancelled,
-                      sourceText == input.text,
-                      sourceLanguage == input.language else { return }
-                localTranslation = output
-            } catch is CancellationError {
-                return
-            } catch {
-                guard sourceText == input.text else { return }
-                localTranslation = ""
+            if localStream == nil {
+                localStream = LocalTranslationStream(configuration: localTranslationConfiguration)
+            }
+            localStream?.update(.init(segments: [], liveText: input.text, language: input.language, scopeID: store.currentSessionID))
+        }
+        .onAppear {
+            if localTranslationInput.isEnabled {
+                localStream?.update(.init(segments: [], liveText: sourceText, language: sourceLanguage, scopeID: store.currentSessionID))
             }
         }
+        .onDisappear { localStream?.reset() }
         .task {
             while !Task.isCancelled {
                 try? await Task.sleep(for: .milliseconds(180))
@@ -361,6 +348,7 @@ struct FloatingCaptionView: View {
 private struct CaptionTranslationInput: Equatable {
     let text: String
     let language: SpeechLanguage
+    let scopeID: UUID?
     let isEnabled: Bool
 }
 

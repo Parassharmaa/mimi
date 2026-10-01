@@ -1,0 +1,19 @@
+{
+  "checks" : {
+    "correctedFinalIsRetranslated" : true,
+    "failedFinalDoesNotBlockLaterFinals" : true,
+    "failedPartialRetainsLastGoodTranslation" : true,
+    "finalHistoryProgressesDuringContinuousSpeech" : true,
+    "firstPartialPublishesDuringContinuousUpdates" : true,
+    "inFlightMatchingFinalPublishesAsFinal" : true,
+    "languageChangeRejectsStaleResult" : true,
+    "liveSpeechProgressesAlongsideFinalHistory" : true,
+    "matchingFinalPromotesWithoutInference" : true,
+    "newestPendingWins" : true,
+    "oneInferenceAtATime" : true,
+    "resetRejectsInFlightResult" : true,
+    "sessionChangeRejectsStaleResult" : true,
+    "unchangedPartialIsNotRetranslated" : true
+  },
+  "status" : "passed"
+}
