@@ -448,6 +448,7 @@ private struct ModelsSettingsPane: View {
                 ? preferences.text("Prepare English and Japanese", "英語と日本語を準備")
                 : preferences.text("Prepare \(store.sourceLanguage.displayName)", "\(store.sourceLanguage.nativeName)を準備")
         case .whisperKitLargeV3Turbo: preferences.text("Download Mimi Speech", "Mimi Speechをダウンロード")
+        case .parakeetJapanese: preferences.text("Download Parakeet Japanese", "Parakeet Japaneseをダウンロード")
         case .phonon2: preferences.text("Prepare Phonon 2", "Phonon 2を準備")
         case .nemotronStreamingExperimental: preferences.text("Download Nemotron", "Nemotronをダウンロード")
         case .qwen3StreamingExperimental: preferences.text("Download Qwen3-ASR", "Qwen3-ASRをダウンロード")
@@ -466,6 +467,7 @@ private struct ModelsSettingsPane: View {
     private var removeButtonTitle: String {
         switch store.engineID {
         case .whisperKitLargeV3Turbo: preferences.text("Remove Mimi Speech Download", "Mimi Speechのダウンロードを削除")
+        case .parakeetJapanese: preferences.text("Remove Parakeet Japanese Download", "Parakeet Japaneseのダウンロードを削除")
         case .phonon2: preferences.text("Phonon 2 is bundled", "Phonon 2は同梱済み")
         case .nemotronStreamingExperimental: preferences.text("Remove Nemotron Download", "Nemotronのダウンロードを削除")
         case .qwen3StreamingExperimental: preferences.text("Remove Qwen3-ASR Download", "Qwen3-ASRのダウンロードを削除")

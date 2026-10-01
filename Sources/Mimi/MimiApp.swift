@@ -122,17 +122,105 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             }
             return
         }
+        if let source = argument(after: "--convert-parakeet-ja-q4", in: arguments),
+           let output = argument(after: "--output", in: arguments) {
+            Task {
+                do {
+                    let report = try NativeMimiParakeetJapaneseRuntime.convert(source: URL(fileURLWithPath: source), output: URL(fileURLWithPath: output))
+                    print(report["files"] ?? "")
+                    Darwin.exit(0)
+                } catch { print("Parakeet conversion failed: \(error)"); Darwin.exit(1) }
+            }
+            return
+        }
+        if let output = argument(after: "--smoke-parakeet-ja-install", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let engine = MimiParakeetJapaneseLiveEngine()
+                    var progress: [Double] = []
+                    try await engine.install { update in
+                        if let fraction = update.fractionCompleted { progress.append(fraction) }
+                    }
+                    let report: [String: Any] = ["downloaded": engine.isDownloaded, "progress": progress]
+                    try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
+                        .write(to: URL(fileURLWithPath: output))
+                    Darwin.exit(engine.isDownloaded ? 0 : 1)
+                } catch { print("Parakeet installation smoke failed: \(error)"); Darwin.exit(1) }
+            }
+            return
+        }
+        if let output = argument(after: "--smoke-moonshine-ja-install", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let engine = MimiMoonshineLiveEngine()
+                    var progress: [Double] = []
+                    try await engine.install { update in
+                        if let fraction = update.fractionCompleted { progress.append(fraction) }
+                    }
+                    let report: [String: Any] = ["downloaded": engine.isDownloaded, "progress": progress]
+                    try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
+                        .write(to: URL(fileURLWithPath: output))
+                    Darwin.exit(engine.isDownloaded ? 0 : 1)
+                } catch { print("Moonshine installation smoke failed: \(error)"); Darwin.exit(1) }
+            }
+            return
+        }
+        if let root = argument(after: "--smoke-parakeet-ja-live", in: arguments),
+           let audio = argument(after: "--audio", in: arguments),
+           let output = argument(after: "--output", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let engine = MimiParakeetJapaneseLiveEngine(modelRoot: URL(fileURLWithPath: root))
+                    let repeats = min(3, max(1, Int(argument(after: "--warm-runs", in: arguments) ?? "1") ?? 1))
+                    var reports: [[String: Any]] = []
+                    for _ in 0..<repeats {
+                        reports.append(try await engine.runLiveSmoke(recordingAt: URL(fileURLWithPath: audio), paced: !arguments.contains("--unpaced")))
+                    }
+                    let report = repeats == 1 ? reports[0] : ["modelInstanceReused": true, "attempts": reports]
+                    let data = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted,.sortedKeys])
+                    try data.write(to: URL(fileURLWithPath: output))
+                    print("Japanese Parakeet native live smoke complete: \(output)")
+                    Darwin.exit(reports.allSatisfy { ($0["warnings"] as? [String])?.isEmpty == true && ($0["text"] as? String)?.isEmpty == false } ? 0 : 1)
+                } catch { print("Japanese Parakeet live smoke failed: \(error)"); Darwin.exit(1) }
+            }
+            return
+        }
+        if let root = argument(after: "--smoke-moonshine-ja-live", in: arguments),
+           let audio = argument(after: "--audio", in: arguments),
+           let output = argument(after: "--output", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let engine = MimiMoonshineLiveEngine(modelRoot: URL(fileURLWithPath: root))
+                    let repeats = min(3, max(1, Int(argument(after: "--warm-runs", in: arguments) ?? "1") ?? 1))
+                    var reports: [[String: Any]] = []
+                    for _ in 0..<repeats {
+                        reports.append(try await engine.runLiveSmoke(recordingAt: URL(fileURLWithPath: audio), paced: !arguments.contains("--unpaced")))
+                    }
+                    let report = repeats == 1 ? reports[0] : ["modelInstanceReused": true, "attempts": reports]
+                    let data = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted,.sortedKeys])
+                    try data.write(to: URL(fileURLWithPath: output))
+                    print("Moonshine Japanese native live smoke complete: \(output)")
+                    Darwin.exit(reports.allSatisfy { ($0["warnings"] as? [String])?.isEmpty == true && ($0["text"] as? String)?.isEmpty == false } ? 0 : 1)
+                } catch { print("Moonshine Japanese live smoke failed: \(error)"); Darwin.exit(1) }
+            }
+            return
+        }
         if let root = argument(after: "--smoke-phonon2-live", in: arguments),
            let audio = argument(after: "--audio", in: arguments),
            let output = argument(after: "--output", in: arguments) {
             Task { @MainActor in
                 do {
                     let engine = MimiPhononMLXLiveEngine(modelRoot: URL(fileURLWithPath: root))
-                    let report = try await engine.runLiveSmoke(recordingAt: URL(fileURLWithPath: audio))
+                    let repeats = min(3, max(1, Int(argument(after: "--warm-runs", in: arguments) ?? "1") ?? 1))
+                    var reports: [[String: Any]] = []
+                    for _ in 0..<repeats {
+                        reports.append(try await engine.runLiveSmoke(recordingAt: URL(fileURLWithPath: audio)))
+                    }
+                    let report = repeats == 1 ? reports[0] : ["modelInstanceReused": true, "attempts": reports]
                     let data = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted,.sortedKeys])
                     try data.write(to: URL(fileURLWithPath: output))
                     print("Phonon native live smoke complete: \(output)")
-                    Darwin.exit((report["warnings"] as? [String])?.isEmpty == true && (report["text"] as? String)?.isEmpty == false ? 0 : 1)
+                    Darwin.exit(reports.allSatisfy { ($0["warnings"] as? [String])?.isEmpty == true && ($0["text"] as? String)?.isEmpty == false } ? 0 : 1)
                 } catch { print("Phonon live smoke failed: \(error)"); Darwin.exit(1) }
             }
             return
@@ -1048,6 +1136,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         switch argument(after: "--e2e-engine", in: arguments) {
         case "whisper": store.engineID = .whisperKitLargeV3Turbo
         case "phonon": store.engineID = .phonon2
+        case "parakeet": store.engineID = .parakeetJapanese
         default: break
         }
         // Seed deterministic UI fixtures before enabling the visible
@@ -1408,7 +1497,7 @@ struct MimiApp: App {
     init() {
         let arguments = ProcessInfo.processInfo.arguments
         let isVerification = arguments.contains { argument in
-            ["--e2e-", "--verify-", "--smoke-", "--benchmark-", "--validate-", "--print-"].contains { argument.hasPrefix($0) }
+            ["--e2e-", "--verify-", "--smoke-", "--benchmark-", "--convert-", "--validate-", "--print-"].contains { argument.hasPrefix($0) }
         }
         let appleSpeech = SystemAppleSpeechProvider()
         let mimiWhisper = MimiWhisperMLXLiveEngine()

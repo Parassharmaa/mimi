@@ -1,0 +1,1808 @@
+{
+  "schemaVersion": 1,
+  "runtime": "Moonshine native v0.1.5 CPU",
+  "hardware": "arm64",
+  "mode": "direct",
+  "suiteSHA256": "3fa9a58898bd265ba255a1a8d9822b7ec5d8f97b37c58a481d4f807ab9a42d57",
+  "runtimeEnvironment": {
+    "MIMI_MOONSHINE_STEADY_INTERVAL": "1.0"
+  },
+  "attempts": [
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 10.44,
+        "modelLoadSeconds": 1.21411,
+        "warmupSeconds": 0.0146108,
+        "preprocessingSeconds": 0.00337908,
+        "computeSeconds": 0.410123,
+        "computeRTF": 0.0392838,
+        "wallSeconds": 0.406747,
+        "firstTextSeconds": 0.031654,
+        "postInputFinalizationSeconds": 0.00409692,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 535904256,
+        "finalText": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "updates": [
+          {
+            "atSeconds": 0.0316539,
+            "text": "見て"
+          },
+          {
+            "atSeconds": 0.0656012,
+            "text": "インターネットで"
+          },
+          {
+            "atSeconds": 0.111433,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "atSeconds": 0.16285,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "atSeconds": 0.218822,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "atSeconds": 0.273417,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "atSeconds": 0.348931,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          }
+        ]
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "CER": 0.0,
+      "firstPrefixEdits": 2,
+      "firstPrefixCharacters": 2,
+      "firstPrefixCoverage": 0.044444444444444446,
+      "elapsedSeconds": 2.2897729169926606
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0004:1744",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "ロスビー数が小さいほど磁気反転に関して星の活性が低下するわけです",
+      "audioSHA256": "3a268d324535ea7360c2448837f8947e87440554f01cbfc54879052d48703110",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 12.06,
+        "modelLoadSeconds": 0.150495,
+        "warmupSeconds": 0.0138868,
+        "preprocessingSeconds": 0.00352654,
+        "computeSeconds": 0.468938,
+        "computeRTF": 0.0388838,
+        "wallSeconds": 0.465416,
+        "firstTextSeconds": 0.052162,
+        "postInputFinalizationSeconds": 0.00211458,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 525123584,
+        "finalText": "ロスビー数が小さいほど磁気判定に関して星の活性が低下するわけです",
+        "updates": [
+          {
+            "atSeconds": 0.0521624,
+            "text": "ロスビ"
+          },
+          {
+            "atSeconds": 0.104925,
+            "text": "ロスビー数が小さいほど"
+          },
+          {
+            "atSeconds": 0.168107,
+            "text": "ロスビー数が小さいほど時系判定に"
+          },
+          {
+            "atSeconds": 0.250247,
+            "text": "ロスビー数が小さいほど直判定に関して星の"
+          },
+          {
+            "atSeconds": 0.348055,
+            "text": "ロスB数が小さいほど磁気判定に関して星の活性が低下する"
+          },
+          {
+            "atSeconds": 0.45473,
+            "text": "ロスビー数が小さいほど磁気判定に関して星の活性が低下するわけです"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 32,
+      "CER": 0.0625,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 3,
+      "firstPrefixCoverage": 0.09375,
+      "elapsedSeconds": 0.6489772080094554
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0010:1980",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "残念ながら 運転手の行動を100%の確率で予測することはできないので 交通の流れを研究することは困難です",
+      "audioSHA256": "a7297368ff66e4deaf5639aec5c4dbac2840f8ef233008b2709e1ba9a7f0fbd8",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 11.94,
+        "modelLoadSeconds": 0.145316,
+        "warmupSeconds": 0.0136772,
+        "preprocessingSeconds": 0.00357992,
+        "computeSeconds": 0.518587,
+        "computeRTF": 0.0434328,
+        "wallSeconds": 0.515011,
+        "firstTextSeconds": 0.050265,
+        "postInputFinalizationSeconds": 0.00178546,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 559366144,
+        "finalText": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の流れを研究することは困難です",
+        "updates": [
+          {
+            "atSeconds": 0.0502652,
+            "text": "ザ・ザ・ザ・ザ・ザ・ザ"
+          },
+          {
+            "atSeconds": 0.0955015,
+            "text": "残念ながら運転"
+          },
+          {
+            "atSeconds": 0.138508,
+            "text": "残念ながら運転手の行動は"
+          },
+          {
+            "atSeconds": 0.192609,
+            "text": "残念ながら運転手の行動100%の行動"
+          },
+          {
+            "atSeconds": 0.260219,
+            "text": "残念ながら運転手の行動を100%の確率で予測する"
+          },
+          {
+            "atSeconds": 0.318279,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので"
+          },
+          {
+            "atSeconds": 0.378247,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の7"
+          },
+          {
+            "atSeconds": 0.442278,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の流れを研究すること"
+          },
+          {
+            "atSeconds": 0.508765,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の流れを研究することは困難です"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 49,
+      "CER": 0.04081632653061224,
+      "firstPrefixEdits": 6,
+      "firstPrefixCharacters": 6,
+      "firstPrefixCoverage": 0.12244897959183673,
+      "elapsedSeconds": 0.6933293329784647
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 10.08,
+        "modelLoadSeconds": 0.142799,
+        "warmupSeconds": 0.0134507,
+        "preprocessingSeconds": 0.00353846,
+        "computeSeconds": 0.232875,
+        "computeRTF": 0.0231027,
+        "wallSeconds": 0.22934,
+        "firstTextSeconds": 0.062931,
+        "postInputFinalizationSeconds": 0.00227167,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 497975296,
+        "finalText": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "updates": [
+          {
+            "atSeconds": 0.0629307,
+            "text": "ロランド面倒さ"
+          },
+          {
+            "atSeconds": 0.105685,
+            "text": "ロランド面倒さはM166"
+          },
+          {
+            "atSeconds": 0.156212,
+            "text": "ロランド面倒さはM16ライフルで観光"
+          },
+          {
+            "atSeconds": 0.215288,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          }
+        ]
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "CER": 0.17857142857142858,
+      "firstPrefixEdits": 3,
+      "firstPrefixCharacters": 7,
+      "firstPrefixCoverage": 0.25,
+      "elapsedSeconds": 0.4033739159931429
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0016:1733",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "78ある提言うち最初に挙げられているのは 敵対的な介入に対してイラクの国境を確保し 近隣諸国との外交関係を再び確立するために 年内に新たな外交主導権を発揮するべきだというものです",
+      "audioSHA256": "a5825b86aedc8ff2cf984d92e4c16a89fd8db07c087474899fd9a9b3cd3661ec",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 18.6,
+        "modelLoadSeconds": 0.146174,
+        "warmupSeconds": 0.0141351,
+        "preprocessingSeconds": 0.00510283,
+        "computeSeconds": 1.11874,
+        "computeRTF": 0.0601474,
+        "wallSeconds": 1.11365,
+        "firstTextSeconds": 0.03726,
+        "postInputFinalizationSeconds": 0.00038575,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 558776320,
+        "finalText": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び確保しかなり確立するために年内にあるかな外交主導権を破棄するべきだというものです",
+        "updates": [
+          {
+            "atSeconds": 0.0372597,
+            "text": "なんだ"
+          },
+          {
+            "atSeconds": 0.0867459,
+            "text": "78ある、78"
+          },
+          {
+            "atSeconds": 0.152101,
+            "text": "78ある低減打ち最初"
+          },
+          {
+            "atSeconds": 0.243652,
+            "text": "78ある提言うち最初に挙げられているのは"
+          },
+          {
+            "atSeconds": 0.311825,
+            "text": "78ある提言うち最初に挙げられているのは敵対的だ"
+          },
+          {
+            "atSeconds": 0.388982,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対して"
+          },
+          {
+            "atSeconds": 0.460239,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの誤解"
+          },
+          {
+            "atSeconds": 0.553694,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し"
+          },
+          {
+            "atSeconds": 0.638272,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国"
+          },
+          {
+            "atSeconds": 0.703994,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係"
+          },
+          {
+            "atSeconds": 0.791149,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び確保しかなり確率"
+          },
+          {
+            "atSeconds": 0.831074,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び確保しかなり確立するために"
+          },
+          {
+            "atSeconds": 0.892077,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び確保しかなり確立するために年内にあるかな 学"
+          },
+          {
+            "atSeconds": 0.965349,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び確保しだり確立するために年内にあるかな外交主導権を"
+          },
+          {
+            "atSeconds": 1.0561,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び確保しかなり確立するために年内にあるかな外交主導権を破棄するべきだという"
+          },
+          {
+            "atSeconds": 1.1089,
+            "text": "78ある提言うち最初に挙げられているのは敵対的な介入に対してイラクの国境を確保し近隣諸国との外交関係を再び確保しかなり確立するために年内にあるかな外交主導権を破棄するべきだというものです"
+          }
+        ]
+      },
+      "characterEdits": 11,
+      "referenceCharacters": 86,
+      "CER": 0.12790697674418605,
+      "firstPrefixEdits": 3,
+      "firstPrefixCharacters": 3,
+      "firstPrefixCoverage": 0.03488372093023256,
+      "elapsedSeconds": 1.2954392920364626
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0020:1775",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "ビデオ録画の利用は 数ミリ秒程度続く微表情 つまり顔の動きを解釈するうえで重要な発見につながっています",
+      "audioSHA256": "12cacd7f63c7964c1fdaf2ef63d75dcd5fe8d3aa15e15ed382b839c068dc75a8",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 11.76,
+        "modelLoadSeconds": 0.142105,
+        "warmupSeconds": 0.0135444,
+        "preprocessingSeconds": 0.00354308,
+        "computeSeconds": 0.594504,
+        "computeRTF": 0.0505531,
+        "wallSeconds": 0.590965,
+        "firstTextSeconds": 0.034013,
+        "postInputFinalizationSeconds": 0.00101621,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 552173568,
+        "finalText": "ビデオ録画の利用は数ミリ秒程度続く美表情つまり顔の動きを解釈する上で重要な発見につながっています",
+        "updates": [
+          {
+            "atSeconds": 0.0340132,
+            "text": "ビデオ"
+          },
+          {
+            "atSeconds": 0.0739125,
+            "text": "ビデオ録画の利用は"
+          },
+          {
+            "atSeconds": 0.118271,
+            "text": "ビデオ録画の利用は数ミリ秒程度"
+          },
+          {
+            "atSeconds": 0.17084,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く微表示"
+          },
+          {
+            "atSeconds": 0.24971,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く美表情つまり顔の動き"
+          },
+          {
+            "atSeconds": 0.326599,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く美表情つまり顔の動きを解釈する音"
+          },
+          {
+            "atSeconds": 0.406362,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く美表情つまり顔の動きを解釈する上で重要な"
+          },
+          {
+            "atSeconds": 0.520999,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く美表情つまり顔の動きを解釈する上で重要な発見につながっている"
+          },
+          {
+            "atSeconds": 0.585785,
+            "text": "ビデオ録画の利用は数ミリ秒程度続く美表情つまり顔の動きを解釈する上で重要な発見につながっています"
+          }
+        ]
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 49,
+      "CER": 0.061224489795918366,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 3,
+      "firstPrefixCoverage": 0.061224489795918366,
+      "elapsedSeconds": 0.7658883329713717
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 15,
+        "modelLoadSeconds": 0.147076,
+        "warmupSeconds": 0.0138605,
+        "preprocessingSeconds": 0.00415571,
+        "computeSeconds": 0.736674,
+        "computeRTF": 0.0491116,
+        "wallSeconds": 0.732523,
+        "firstTextSeconds": 0.04964,
+        "postInputFinalizationSeconds": 0.00178896,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 539639808,
+        "finalText": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています",
+        "updates": [
+          {
+            "atSeconds": 0.0496397,
+            "text": "スンダルコ"
+          },
+          {
+            "atSeconds": 0.106643,
+            "text": "スンダルバンス世界世界"
+          },
+          {
+            "atSeconds": 0.166612,
+            "text": "スンダルバンス世界最大の沿岸"
+          },
+          {
+            "atSeconds": 0.238893,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯の"
+          },
+          {
+            "atSeconds": 0.318438,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外"
+          },
+          {
+            "atSeconds": 0.361933,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外からバングラデュアル"
+          },
+          {
+            "atSeconds": 0.413118,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外からバングラディッシュとインドの"
+          },
+          {
+            "atSeconds": 0.462767,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外からバングラディッシュとインドの内陸地域まで"
+          },
+          {
+            "atSeconds": 0.532074,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外からバングラディストインドの内陸地域まで80キロ"
+          },
+          {
+            "atSeconds": 0.598729,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外からバングラディストインドの内陸地域まで80km、56km"
+          },
+          {
+            "atSeconds": 0.669754,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外からバングラディストインドの内陸地域まで80km50マイルにわたってきました"
+          },
+          {
+            "atSeconds": 0.726571,
+            "text": "スンダルバンス世界最大の沿岸マングローブ地帯であり海外からバングラディストインドの内陸地域まで80km50マイルにわたって広がっています"
+          }
+        ]
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 69,
+      "CER": 0.07246376811594203,
+      "firstPrefixEdits": 1,
+      "firstPrefixCharacters": 5,
+      "firstPrefixCoverage": 0.07246376811594203,
+      "elapsedSeconds": 0.9129630419774912
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0022:1908",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "これは 一部の動詞と目的語を区別するうえで重要な方法です",
+      "audioSHA256": "cd65b437d63e592adaa06513a2a264573c203b300998463d3563e2a0b75cc10a",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 8.4,
+        "modelLoadSeconds": 0.141014,
+        "warmupSeconds": 0.0137891,
+        "preprocessingSeconds": 0.00284825,
+        "computeSeconds": 0.246226,
+        "computeRTF": 0.0293126,
+        "wallSeconds": 0.24338,
+        "firstTextSeconds": 0.043954,
+        "postInputFinalizationSeconds": 0.00404367,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 507723776,
+        "finalText": "これは一部の動詞と目的語を区別する上で重要な方法です",
+        "updates": [
+          {
+            "atSeconds": 0.043954,
+            "text": "これは一部"
+          },
+          {
+            "atSeconds": 0.0938707,
+            "text": "これは一部の動詞と目的で"
+          },
+          {
+            "atSeconds": 0.149707,
+            "text": "これは一部の動詞と目的語を区別する上で"
+          },
+          {
+            "atSeconds": 0.204484,
+            "text": "これは一部の動詞と目的語を区別する上で重要な方法です"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 27,
+      "CER": 0.07407407407407407,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 5,
+      "firstPrefixCoverage": 0.18518518518518517,
+      "elapsedSeconds": 0.41574204195057973
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0026:1827",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "地殻の厚さは 手前側が約70 km 奥側が約100 kmです",
+      "audioSHA256": "2e9c014b3d4e55ec9ce96c87a4936f4880f6b30fde22d4d658ad982df0a161aa",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 8.1,
+        "modelLoadSeconds": 0.14861,
+        "warmupSeconds": 0.0141244,
+        "preprocessingSeconds": 0.00287842,
+        "computeSeconds": 0.387841,
+        "computeRTF": 0.0478816,
+        "wallSeconds": 0.384966,
+        "firstTextSeconds": 0.03731,
+        "postInputFinalizationSeconds": 0.00282963,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 509542400,
+        "finalText": "近くの暑さは手前側が約70km奥側が約100kmです",
+        "updates": [
+          {
+            "atSeconds": 0.0373102,
+            "text": "違う"
+          },
+          {
+            "atSeconds": 0.0956176,
+            "text": "近くの暑さは手前だ"
+          },
+          {
+            "atSeconds": 0.159236,
+            "text": "近くの暑さは手前側が約70キロ"
+          },
+          {
+            "atSeconds": 0.237551,
+            "text": "近くの暑さは手前側が約70km奥側が約70km"
+          },
+          {
+            "atSeconds": 0.323622,
+            "text": "近くの暑さは手前側が約70km奥側が約100kmです"
+          }
+        ]
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 26,
+      "CER": 0.11538461538461539,
+      "firstPrefixEdits": 2,
+      "firstPrefixCharacters": 2,
+      "firstPrefixCoverage": 0.07692307692307693,
+      "elapsedSeconds": 0.5678181669791229
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 11.88,
+        "modelLoadSeconds": 0.145058,
+        "warmupSeconds": 0.0135148,
+        "preprocessingSeconds": 0.00375467,
+        "computeSeconds": 0.637134,
+        "computeRTF": 0.0536308,
+        "wallSeconds": 0.633382,
+        "firstTextSeconds": 0.043272,
+        "postInputFinalizationSeconds": 0.00150383,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 542507008,
+        "finalText": "ダンデリ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています",
+        "updates": [
+          {
+            "atSeconds": 0.0432718,
+            "text": "なんだ"
+          },
+          {
+            "atSeconds": 0.0991555,
+            "text": "ダンデユ大学のパネル"
+          },
+          {
+            "atSeconds": 0.155765,
+            "text": "ダンデリ大学のパメラファーガソン教授"
+          },
+          {
+            "atSeconds": 0.221751,
+            "text": "ダンデリ大学のパメラ・ファーガソン教授は容疑者でした"
+          },
+          {
+            "atSeconds": 0.306453,
+            "text": "ダンデユ大学のパメラファーガソン教授は容疑者の写真などを公開"
+          },
+          {
+            "atSeconds": 0.395279,
+            "text": "ダンデユ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は"
+          },
+          {
+            "atSeconds": 0.45726,
+            "text": "ダンデユ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡った"
+          },
+          {
+            "atSeconds": 0.574711,
+            "text": "ダンデリ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘して"
+          },
+          {
+            "atSeconds": 0.627798,
+            "text": "ダンデリ大学のパメラ・ファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています"
+          }
+        ]
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 55,
+      "CER": 0.05454545454545454,
+      "firstPrefixEdits": 3,
+      "firstPrefixCharacters": 3,
+      "firstPrefixCoverage": 0.05454545454545454,
+      "elapsedSeconds": 0.8128292079782113
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0033:1997",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "しかし 結核患者全体に占めるxdr-tbの割合はまだ低いようで こうしている間にも南アフリカでは33万人のうち6,000人が感染している",
+      "audioSHA256": "34e7eb92d3834c52204bd8a5eda1d65f761190fa7c0fa80cb2d7b3bf9513700d",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 20.76,
+        "modelLoadSeconds": 0.141771,
+        "warmupSeconds": 0.0133636,
+        "preprocessingSeconds": 0.00550196,
+        "computeSeconds": 0.894141,
+        "computeRTF": 0.0430704,
+        "wallSeconds": 0.888644,
+        "firstTextSeconds": 0.053204,
+        "postInputFinalizationSeconds": 0.000973208,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 539426816,
+        "finalText": "しかし血核患者全体に占めるXDRTVの割合はまだ低いようでこうしている間にも南アフリカでは33万人のうち6000人が感染している",
+        "updates": [
+          {
+            "atSeconds": 0.0532045,
+            "text": "しかし、しかし、"
+          },
+          {
+            "atSeconds": 0.0980573,
+            "text": "しかし結核患者全"
+          },
+          {
+            "atSeconds": 0.165003,
+            "text": "しかし結核患者全体に占める"
+          },
+          {
+            "atSeconds": 0.257271,
+            "text": "しかし血核患者全体に占めるXDRD"
+          },
+          {
+            "atSeconds": 0.340519,
+            "text": "しかし血核患者全体に占めるXDRTVの割合は"
+          },
+          {
+            "atSeconds": 0.423743,
+            "text": "しかし血核患者全体に占めるXDRTVの割合はまだ低いよう"
+          },
+          {
+            "atSeconds": 0.514129,
+            "text": "しかし血核患者全体に占めるXDRTVの割合はまだ低いようでこっ"
+          },
+          {
+            "atSeconds": 0.561389,
+            "text": "しかし血核患者全体に占めるXDRTVの割合はまだ低いようでこうしている間に"
+          },
+          {
+            "atSeconds": 0.621922,
+            "text": "しかし血核患者全体に占めるXDRTVの割合はまだ低いようでこうしている間にも南やふりか"
+          },
+          {
+            "atSeconds": 0.691165,
+            "text": "しかし血核患者全体に占めるXDRTVの割合はまだ低いようでこうしている間にも南アフリカでは30歳"
+          },
+          {
+            "atSeconds": 0.75085,
+            "text": "しかし血核患者全体に占めるXDRTVの割合はまだ低いようでこうしている間にも南アフリカでは33万人のうち"
+          },
+          {
+            "atSeconds": 0.817566,
+            "text": "しかし血核患者全体に占めるXDRTVの割合はまだ低いようでこうしている間にも南アフリカでは33万人のうち6000人が"
+          },
+          {
+            "atSeconds": 0.871819,
+            "text": "しかし血核患者全体に占めるXDRTVの割合はまだ低いようでこうしている間にも南アフリカでは33万人のうち6000人が感染している"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 64,
+      "CER": 0.03125,
+      "firstPrefixEdits": 3,
+      "firstPrefixCharacters": 6,
+      "firstPrefixCoverage": 0.09375,
+      "elapsedSeconds": 1.0644118339987472
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0045:1725",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "asusのeee pcは コスト面と機能面で世界に先駆けて発売され 2007 taipei it monthで話題となりました",
+      "audioSHA256": "9f55b186f1728b92c6f6d82c0c79910429a22c0f9ae2e632e98c81c9ab70770a",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 13.5,
+        "modelLoadSeconds": 0.140332,
+        "warmupSeconds": 0.0134365,
+        "preprocessingSeconds": 0.00422367,
+        "computeSeconds": 0.532075,
+        "computeRTF": 0.039413,
+        "wallSeconds": 0.527855,
+        "firstTextSeconds": 0.032302,
+        "postInputFinalizationSeconds": 7.5e-07,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 549486592,
+        "finalText": "英説のEPCはテストメント機能面で世界に先駆けて販売され2007台北ITマースで話題となりました",
+        "updates": [
+          {
+            "atSeconds": 0.0323024,
+            "text": "ええ"
+          },
+          {
+            "atSeconds": 0.0868746,
+            "text": "英説のなんだ"
+          },
+          {
+            "atSeconds": 0.126039,
+            "text": "英説のEPCは"
+          },
+          {
+            "atSeconds": 0.168753,
+            "text": "英説のEPCはテストメント"
+          },
+          {
+            "atSeconds": 0.217316,
+            "text": "英説のEPCはテストメント機能面で"
+          },
+          {
+            "atSeconds": 0.27516,
+            "text": "英説のEPCはテストメント機能面で世界に先駆けて"
+          },
+          {
+            "atSeconds": 0.328039,
+            "text": "英説のEPCはテストメント機能面で世界に先駆けて販売され"
+          },
+          {
+            "atSeconds": 0.392463,
+            "text": "英説のEPCはテストメント機能面で世界に先駆けて販売され2007、大陸"
+          },
+          {
+            "atSeconds": 0.461568,
+            "text": "英説のEPCはテストメント機能面で世界に先駆けて販売され2007台北ITマースで"
+          },
+          {
+            "atSeconds": 0.519478,
+            "text": "英説のEPCはテストメント機能面で世界に先駆けて販売され2007台北ITマースで話題となりました"
+          }
+        ]
+      },
+      "characterEdits": 22,
+      "referenceCharacters": 57,
+      "CER": 0.38596491228070173,
+      "firstPrefixEdits": 2,
+      "firstPrefixCharacters": 2,
+      "firstPrefixCoverage": 0.03508771929824561,
+      "elapsedSeconds": 0.700922875024844
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0047:1955",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です",
+      "audioSHA256": "7597dd598c8c28710f107d3b2b80d72f977479c3f7087305806ddeaf76be7249",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 9.72,
+        "modelLoadSeconds": 0.141061,
+        "warmupSeconds": 0.013738,
+        "preprocessingSeconds": 0.00334704,
+        "computeSeconds": 0.474798,
+        "computeRTF": 0.0488475,
+        "wallSeconds": 0.471454,
+        "firstTextSeconds": 0.068308,
+        "postInputFinalizationSeconds": 0.000888208,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 531775488,
+        "finalText": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です",
+        "updates": [
+          {
+            "atSeconds": 0.068308,
+            "text": "MSはの"
+          },
+          {
+            "atSeconds": 0.141082,
+            "text": "MSはNO、脊髄、脊髄"
+          },
+          {
+            "atSeconds": 0.224082,
+            "text": "MSは脳脊髄視神経からなる中枢"
+          },
+          {
+            "atSeconds": 0.2961,
+            "text": "MSは脳脊髄視神経からなる中枢神経系に"
+          },
+          {
+            "atSeconds": 0.398912,
+            "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える美容"
+          },
+          {
+            "atSeconds": 0.466437,
+            "text": "MSは脳、脊髄、視神経からなる中枢神経系に影響を与える病気です"
+          }
+        ]
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 29,
+      "CER": 0.0,
+      "firstPrefixEdits": 1,
+      "firstPrefixCharacters": 4,
+      "firstPrefixCoverage": 0.13793103448275862,
+      "elapsedSeconds": 0.6454699580208398
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0049:1721",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "1963年にダムが建設されてからは 川全体に土砂を拡散する季節性洪水が止まりました",
+      "audioSHA256": "0b196289cc470bcf10103785e41f3c93ff84bbdd577bb7f9e72c9371d66c5897",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 15.18,
+        "modelLoadSeconds": 0.145785,
+        "warmupSeconds": 0.0137492,
+        "preprocessingSeconds": 0.00480225,
+        "computeSeconds": 0.47596,
+        "computeRTF": 0.0313544,
+        "wallSeconds": 0.471162,
+        "firstTextSeconds": 0.06905,
+        "postInputFinalizationSeconds": 0.00257008,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 541179904,
+        "finalText": "1963年にダムが建設されてからは川全体に土砂を拡散する気絶性洪水が止まりました",
+        "updates": [
+          {
+            "atSeconds": 0.0690497,
+            "text": "1900円"
+          },
+          {
+            "atSeconds": 0.1134,
+            "text": "1963年に"
+          },
+          {
+            "atSeconds": 0.161592,
+            "text": "1963年にダムが建設された"
+          },
+          {
+            "atSeconds": 0.218141,
+            "text": "1963年にダムが建設されてからは川"
+          },
+          {
+            "atSeconds": 0.278918,
+            "text": "1963年にダムが建設されてからは川全体に土砂を"
+          },
+          {
+            "atSeconds": 0.33914,
+            "text": "1963年にダムが建設されてからは川全体に土砂を拡散する木材"
+          },
+          {
+            "atSeconds": 0.40568,
+            "text": "1963年にダムが建設されてからは川全体に土砂を拡散する気絶性洪水が"
+          },
+          {
+            "atSeconds": 0.460553,
+            "text": "1963年にダムが建設されてからは川全体に土砂を拡散する気絶性洪水が止まりました"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 40,
+      "CER": 0.05,
+      "firstPrefixEdits": 3,
+      "firstPrefixCharacters": 5,
+      "firstPrefixCoverage": 0.125,
+      "elapsedSeconds": 0.6507078750291839
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0059:1983",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "文明という言葉は 市民を意味するラテン語の形容詞civilisから来ており 市民を意味するラテン語の名詞civis 都市や都市国家を意味し 何らかの形で社会の規模を定義するcivitasという名詞に関係しています",
+      "audioSHA256": "65a999507bdb7b4edee824c67b0bb1ccb559205ee992039e6844b51b2d4a6a72",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 24.48,
+        "modelLoadSeconds": 0.140346,
+        "warmupSeconds": 0.0134975,
+        "preprocessingSeconds": 0.00621367,
+        "computeSeconds": 1.06664,
+        "computeRTF": 0.0435718,
+        "wallSeconds": 1.06043,
+        "firstTextSeconds": 0.073504,
+        "postInputFinalizationSeconds": 0.00379746,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 536346624,
+        "finalText": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名詞に関係しています",
+        "updates": [
+          {
+            "atSeconds": 0.0735044,
+            "text": "文明ということで"
+          },
+          {
+            "atSeconds": 0.119406,
+            "text": "文明という言葉は市民"
+          },
+          {
+            "atSeconds": 0.17129,
+            "text": "文明という言葉は市民を意味するラテン語"
+          },
+          {
+            "atSeconds": 0.227531,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞です"
+          },
+          {
+            "atSeconds": 0.316984,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ている"
+          },
+          {
+            "atSeconds": 0.41239,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民"
+          },
+          {
+            "atSeconds": 0.458416,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン"
+          },
+          {
+            "atSeconds": 0.520551,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞シビ"
+          },
+          {
+            "atSeconds": 0.602259,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立大丈夫?"
+          },
+          {
+            "atSeconds": 0.654827,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立都市や都市国家"
+          },
+          {
+            "atSeconds": 0.717009,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立都市や都市国家を意味し何らかの"
+          },
+          {
+            "atSeconds": 0.780729,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立都市や都市国家を意味し何らかの形で社会"
+          },
+          {
+            "atSeconds": 0.853936,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立都市や都市国家を意味し何らかの形で社会の規模を定義する"
+          },
+          {
+            "atSeconds": 0.921982,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名"
+          },
+          {
+            "atSeconds": 0.990247,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名詞に関係する"
+          },
+          {
+            "atSeconds": 1.04853,
+            "text": "文明という言葉は市民を意味するラテン語の形容詞シビリスから来ており市民を意味するラテン語の名詞私立都市や都市国家を意味し何らかの形で社会の規模を定義するシビタスという名詞に関係しています"
+          }
+        ]
+      },
+      "characterEdits": 19,
+      "referenceCharacters": 102,
+      "CER": 0.18627450980392157,
+      "firstPrefixEdits": 3,
+      "firstPrefixCharacters": 8,
+      "firstPrefixCoverage": 0.0784313725490196,
+      "elapsedSeconds": 1.2362715419731103
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0068:1979",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています",
+      "audioSHA256": "8b93845c8d6e4b588147b339cefd8afe091f3441f41c2cb841934efe286ee786",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 11.94,
+        "modelLoadSeconds": 0.143828,
+        "warmupSeconds": 0.0136735,
+        "preprocessingSeconds": 0.00376633,
+        "computeSeconds": 0.534436,
+        "computeRTF": 0.0447602,
+        "wallSeconds": 0.530674,
+        "firstTextSeconds": 0.037969,
+        "postInputFinalizationSeconds": 0.00169329,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 547651584,
+        "finalText": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されています",
+        "updates": [
+          {
+            "atSeconds": 0.037969,
+            "text": "フォーク"
+          },
+          {
+            "atSeconds": 0.0922578,
+            "text": "フォークラウンドの公式"
+          },
+          {
+            "atSeconds": 0.147428,
+            "text": "フォークランドの公式通貨はフォークランド"
+          },
+          {
+            "atSeconds": 0.198741,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンド"
+          },
+          {
+            "atSeconds": 0.265911,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンド"
+          },
+          {
+            "atSeconds": 0.328346,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1Aポンド"
+          },
+          {
+            "atSeconds": 0.392944,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPとと"
+          },
+          {
+            "atSeconds": 0.463625,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されていました"
+          },
+          {
+            "atSeconds": 0.524859,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドFKPで1ポンドが1AポンドGBPと投下に固定されています"
+          }
+        ]
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 54,
+      "CER": 0.05555555555555555,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 4,
+      "firstPrefixCoverage": 0.07407407407407407,
+      "elapsedSeconds": 0.707351416000165
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0077:1671",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "連邦議会は2005年度から猥褻物取締法への資金提供を開始し fbiはアダルトポルノに10人の捜査員を投入しなければならないと規定しました",
+      "audioSHA256": "f7ea91bf7108de023b845e7c3b2f3310642d4f67b980942bc3ca3b10bdb6c1ff",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 18.42,
+        "modelLoadSeconds": 0.144413,
+        "warmupSeconds": 0.014216,
+        "preprocessingSeconds": 0.00532412,
+        "computeSeconds": 0.831955,
+        "computeRTF": 0.0451659,
+        "wallSeconds": 0.826636,
+        "firstTextSeconds": 0.058532,
+        "postInputFinalizationSeconds": 0.00364812,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 532643840,
+        "finalText": "連邦議会は2005年度からYSISOVS取締法Aの資金提供を開始しFBIはアタロルザポールのに10人の捜査員を投入しなければならないと規定しました",
+        "updates": [
+          {
+            "atSeconds": 0.0585326,
+            "text": "連邦議会"
+          },
+          {
+            "atSeconds": 0.113253,
+            "text": "連邦議会は2005年"
+          },
+          {
+            "atSeconds": 0.181089,
+            "text": "連邦議会は2005年度から売せせず"
+          },
+          {
+            "atSeconds": 0.270539,
+            "text": "連邦議会は2005年度からYSスブス取締役"
+          },
+          {
+            "atSeconds": 0.351773,
+            "text": "連邦議会は2005年度からYSS物取締法への資金提供"
+          },
+          {
+            "atSeconds": 0.436439,
+            "text": "連邦議会は2005年度からYSS物取締法への資金提供を開始し"
+          },
+          {
+            "atSeconds": 0.551111,
+            "text": "連邦議会は2005年度からYSISOVS取締法Aの資金提供を開始しFBIは"
+          },
+          {
+            "atSeconds": 0.59088,
+            "text": "連邦議会は2005年度からYSISOVS取締法Aの資金提供を開始しFBIはアタロルザポール"
+          },
+          {
+            "atSeconds": 0.63393,
+            "text": "連邦議会は2005年度からYSISOVS取締法Aの資金提供を開始しFBIはアタロルザポールの20人の"
+          },
+          {
+            "atSeconds": 0.685409,
+            "text": "連邦議会は2005年度からYSISOVS取締法Aの資金提供を開始しFBIはアタロルザポールの20人の捜査員を投入"
+          },
+          {
+            "atSeconds": 0.758641,
+            "text": "連邦議会は2005年度からYSISOVS取締法Aの資金提供を開始しFBIはアタロルザポールのに10人の捜査員を投入しなければならない"
+          },
+          {
+            "atSeconds": 0.814933,
+            "text": "連邦議会は2005年度からYSISOVS取締法Aの資金提供を開始しFBIはアタロルザポールのに10人の捜査員を投入しなければならないと規定しました"
+          }
+        ]
+      },
+      "characterEdits": 13,
+      "referenceCharacters": 67,
+      "CER": 0.19402985074626866,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 4,
+      "firstPrefixCoverage": 0.05970149253731343,
+      "elapsedSeconds": 1.0058692919556051
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0081:1692",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "日本の原子力庁によれば 原発内で放射性セシウムとヨウ素が特定されています",
+      "audioSHA256": "2f0182ce761f4a91728f4287c168a35c6e9c4e0333bb4c2382b0fd01c7c13e09",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 9.66,
+        "modelLoadSeconds": 0.140699,
+        "warmupSeconds": 0.0136101,
+        "preprocessingSeconds": 0.0028965,
+        "computeSeconds": 0.371233,
+        "computeRTF": 0.0384299,
+        "wallSeconds": 0.36834,
+        "firstTextSeconds": 0.03344,
+        "postInputFinalizationSeconds": 0.00063375,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 538902528,
+        "finalText": "日本の原子力庁によれば原発内で放射性セシウムと要素が特定されています",
+        "updates": [
+          {
+            "atSeconds": 0.03344,
+            "text": "日本"
+          },
+          {
+            "atSeconds": 0.0765915,
+            "text": "日本の原子力庁"
+          },
+          {
+            "atSeconds": 0.125945,
+            "text": "日本の原子力庁によれば原子力"
+          },
+          {
+            "atSeconds": 0.181703,
+            "text": "日本の原子力庁によれば原発内で放射"
+          },
+          {
+            "atSeconds": 0.242219,
+            "text": "日本の原子力庁によれば原発内で放射性セシウムと"
+          },
+          {
+            "atSeconds": 0.308084,
+            "text": "日本の原子力庁によれば原発内で放射性セシウムと要素が特定される"
+          },
+          {
+            "atSeconds": 0.363147,
+            "text": "日本の原子力庁によれば原発内で放射性セシウムと要素が特定されています"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 35,
+      "CER": 0.05714285714285714,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 2,
+      "firstPrefixCoverage": 0.05714285714285714,
+      "elapsedSeconds": 0.5404310000012629
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0083:1735",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました",
+      "audioSHA256": "7070db2623ee66124ed0d7afc58a3f86c61fae021c69f358602b43488e5c5854",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 22.68,
+        "modelLoadSeconds": 0.14471,
+        "warmupSeconds": 0.0136527,
+        "preprocessingSeconds": 0.0062105,
+        "computeSeconds": 1.52928,
+        "computeRTF": 0.0674285,
+        "wallSeconds": 1.52307,
+        "firstTextSeconds": 0.03542,
+        "postInputFinalizationSeconds": 0.000658583,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 570163200,
+        "finalText": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した繁殖であるためもっと長い時間がかかると考えられていました",
+        "updates": [
+          {
+            "atSeconds": 0.0354197,
+            "text": "で、"
+          },
+          {
+            "atSeconds": 0.105638,
+            "text": "冷酷なクリンストンが"
+          },
+          {
+            "atSeconds": 0.194655,
+            "text": "米国のクリンストン大学とスウェーデン"
+          },
+          {
+            "atSeconds": 0.278785,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学"
+          },
+          {
+            "atSeconds": 0.359566,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者の"
+          },
+          {
+            "atSeconds": 0.445131,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新進"
+          },
+          {
+            "atSeconds": 0.530037,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2000"
+          },
+          {
+            "atSeconds": 0.639356,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを"
+          },
+          {
+            "atSeconds": 0.715771,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しました"
+          },
+          {
+            "atSeconds": 0.803047,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの方"
+          },
+          {
+            "atSeconds": 0.927917,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは冬"
+          },
+          {
+            "atSeconds": 0.977122,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは不融資のガラパゴスフィン"
+          },
+          {
+            "atSeconds": 1.03773,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは不融資のガラパゴスフィンチと移入者"
+          },
+          {
+            "atSeconds": 1.12272,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは富裕市のガラパゴスフィンチと移入市のオーセボ店"
+          },
+          {
+            "atSeconds": 1.20027,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは富裕市のガラパゴスフィンチと移入市のオーサボテンフィンチが交配した"
+          },
+          {
+            "atSeconds": 1.32054,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した"
+          },
+          {
+            "atSeconds": 1.35997,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した繁殖であるため"
+          },
+          {
+            "atSeconds": 1.40161,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した繁殖であるためもっと長い時間"
+          },
+          {
+            "atSeconds": 1.45819,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した繁殖であるためもっと長い時間がかかると考えると"
+          },
+          {
+            "atSeconds": 1.51786,
+            "text": "米国のクリンストン大学とスウェーデンの奥沢大学の研究者らはこの新種がわずか2世代で進化したことを報告しましたがこの過程はこれは不融資のガラパゴスフィンチと移入者のオーサボテンフィンチが交配した繁殖であるためもっと長い時間がかかると考えられていました"
+          }
+        ]
+      },
+      "characterEdits": 13,
+      "referenceCharacters": 123,
+      "CER": 0.10569105691056911,
+      "firstPrefixEdits": 1,
+      "firstPrefixCharacters": 1,
+      "firstPrefixCoverage": 0.008130081300813009,
+      "elapsedSeconds": 1.7047154159517959
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0084:1766",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "原子の中には不安定な原子核を持つものがあり その原子核は ほとんど何もしなくても分裂してしまう傾向があります",
+      "audioSHA256": "87060a4b963feae72c19ca250d99dcad08c507f663a4c5acfe72d8bf341dbf05",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 11.64,
+        "modelLoadSeconds": 0.140772,
+        "warmupSeconds": 0.0137521,
+        "preprocessingSeconds": 0.00330013,
+        "computeSeconds": 0.599123,
+        "computeRTF": 0.0514711,
+        "wallSeconds": 0.595827,
+        "firstTextSeconds": 0.064938,
+        "postInputFinalizationSeconds": 0.000498167,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 540835840,
+        "finalText": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても分裂してしまう傾向があります",
+        "updates": [
+          {
+            "atSeconds": 0.0649378,
+            "text": "原始の中には"
+          },
+          {
+            "atSeconds": 0.121193,
+            "text": "原子の中には不安定な原子化"
+          },
+          {
+            "atSeconds": 0.177147,
+            "text": "原子の中には不安定な原子核を持つものがあり"
+          },
+          {
+            "atSeconds": 0.256146,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核は"
+          },
+          {
+            "atSeconds": 0.354396,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何も"
+          },
+          {
+            "atSeconds": 0.443167,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても分裂"
+          },
+          {
+            "atSeconds": 0.516383,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても分裂してしまう傾向"
+          },
+          {
+            "atSeconds": 0.589601,
+            "text": "原子の中には不安定な原子核を持つものがありその原子核はほとんど何もしなくても分裂してしまう傾向があります"
+          }
+        ]
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 52,
+      "CER": 0.0,
+      "firstPrefixEdits": 1,
+      "firstPrefixCharacters": 6,
+      "firstPrefixCoverage": 0.11538461538461539,
+      "elapsedSeconds": 0.7704879580414854
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0089:1962",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "ph レベルは 検査した化学物質に含まれる水素イオンphのhの量で示されます",
+      "audioSHA256": "7b39981d7b4876b08b57ffc07d30c774e749b6b760446848145425996fc10613",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 10.56,
+        "modelLoadSeconds": 0.145056,
+        "warmupSeconds": 0.0134403,
+        "preprocessingSeconds": 0.00304917,
+        "computeSeconds": 0.465602,
+        "computeRTF": 0.0440911,
+        "wallSeconds": 0.462556,
+        "firstTextSeconds": 0.038163,
+        "postInputFinalizationSeconds": 0.000237459,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 518160384,
+        "finalText": "PHレールが検査者、化学物質に含まれる水素イオンPHの量で示されます",
+        "updates": [
+          {
+            "atSeconds": 0.0381628,
+            "text": "PHP"
+          },
+          {
+            "atSeconds": 0.0943578,
+            "text": "PHレールが見て"
+          },
+          {
+            "atSeconds": 0.137931,
+            "text": "PHレールが検査者、科学者"
+          },
+          {
+            "atSeconds": 0.197123,
+            "text": "PHレールが検査者、化学物質に含まれる"
+          },
+          {
+            "atSeconds": 0.263005,
+            "text": "PHレールが検査者、化学物質に含まれる水素イオン、水素イオン"
+          },
+          {
+            "atSeconds": 0.328163,
+            "text": "PHレールが検査者、化学物質に含まれる水素イオンPHのHの"
+          },
+          {
+            "atSeconds": 0.416279,
+            "text": "PHレールが検査者、化学物質に含まれる水素イオンPHの量で示されます"
+          }
+        ]
+      },
+      "characterEdits": 6,
+      "referenceCharacters": 36,
+      "CER": 0.16666666666666666,
+      "firstPrefixEdits": 1,
+      "firstPrefixCharacters": 3,
+      "firstPrefixCoverage": 0.08333333333333333,
+      "elapsedSeconds": 0.6395558749791235
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0095:1823",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+      "audioSHA256": "30cb375df36d09fcabcb88c3b4370f185165e3045ffed941ad6fdc983006dcae",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 11.22,
+        "modelLoadSeconds": 0.138282,
+        "warmupSeconds": 0.0133374,
+        "preprocessingSeconds": 0.00368613,
+        "computeSeconds": 0.427974,
+        "computeRTF": 0.0381439,
+        "wallSeconds": 0.424293,
+        "firstTextSeconds": 0.052553,
+        "postInputFinalizationSeconds": 0.00301767,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 532119552,
+        "finalText": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+        "updates": [
+          {
+            "atSeconds": 0.0525528,
+            "text": "交通流入"
+          },
+          {
+            "atSeconds": 0.0967284,
+            "text": "交通流研究とは、"
+          },
+          {
+            "atSeconds": 0.151538,
+            "text": "交通流研究とは2点間にいること"
+          },
+          {
+            "atSeconds": 0.213432,
+            "text": "交通流研究とは2点間にいる個々の運転手と車"
+          },
+          {
+            "atSeconds": 0.271779,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きと"
+          },
+          {
+            "atSeconds": 0.338755,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互差異"
+          },
+          {
+            "atSeconds": 0.41642,
+            "text": "交通流研究とは2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です"
+          }
+        ]
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 39,
+      "CER": 0.0,
+      "firstPrefixEdits": 1,
+      "firstPrefixCharacters": 4,
+      "firstPrefixCoverage": 0.10256410256410256,
+      "elapsedSeconds": 0.597301832982339
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0106:1685",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "例えば 世界で最も普及している静止画写真のフィルム形式は35 mmで これはアナログフィルム時代の終わり頃には主流のフィルムサイズでした",
+      "audioSHA256": "c926cd46b1cb516ce15670b196343deaef40e1ac539fc59b8f5516fdd0ecca35",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 18.24,
+        "modelLoadSeconds": 0.162378,
+        "warmupSeconds": 0.0144338,
+        "preprocessingSeconds": 0.00559154,
+        "computeSeconds": 0.920906,
+        "computeRTF": 0.0504883,
+        "wallSeconds": 0.91532,
+        "firstTextSeconds": 0.089216,
+        "postInputFinalizationSeconds": 0.00314683,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 537706496,
+        "finalText": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリでこれはアナログフィルム時代の終わり頃には主流のフィルムサイズでした",
+        "updates": [
+          {
+            "atSeconds": 0.089216,
+            "text": "例えば世界では"
+          },
+          {
+            "atSeconds": 0.163276,
+            "text": "例えば世界で最も普及する"
+          },
+          {
+            "atSeconds": 0.246764,
+            "text": "例えば世界で最も普及している静止画"
+          },
+          {
+            "atSeconds": 0.338837,
+            "text": "例えば世界で最も普及している静止画写真のフィルムです"
+          },
+          {
+            "atSeconds": 0.440469,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は3"
+          },
+          {
+            "atSeconds": 0.543649,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリで"
+          },
+          {
+            "atSeconds": 0.612952,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリでこれはアナログ"
+          },
+          {
+            "atSeconds": 0.680263,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリでこれはアナログフィルム時代の"
+          },
+          {
+            "atSeconds": 0.752049,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリでこれはアナログフィルム時代の終わり頃には主題"
+          },
+          {
+            "atSeconds": 0.847506,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリでこれはアナログフィルム時代の終わり頃には主流のフィルムサイズ"
+          },
+          {
+            "atSeconds": 0.903707,
+            "text": "例えば世界で最も普及している静止画写真のフィルム形式は35ミリでこれはアナログフィルム時代の終わり頃には主流のフィルムサイズでした"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 65,
+      "CER": 0.03076923076923077,
+      "firstPrefixEdits": 1,
+      "firstPrefixCharacters": 7,
+      "firstPrefixCoverage": 0.1076923076923077,
+      "elapsedSeconds": 1.1137970839627087
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0119:1901",
+      "candidate": "small",
+      "mode": "direct",
+      "reference": "aiはsf的な意味合いが強いものの コンピュータサイエンスにおける非常に重要な分野を形成しており 行動 学習 知的適応を機械で処理します",
+      "audioSHA256": "ea82259a64d2811c0834e836d262455218f073a61bf414d4bff77f6b842766d5",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "direct",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 15.3,
+        "modelLoadSeconds": 0.148749,
+        "warmupSeconds": 0.0138685,
+        "preprocessingSeconds": 0.00468463,
+        "computeSeconds": 0.870502,
+        "computeRTF": 0.0568955,
+        "wallSeconds": 0.865823,
+        "firstTextSeconds": 0.037655,
+        "postInputFinalizationSeconds": 0.00330967,
+        "maximumScheduleLatenessSeconds": 0,
+        "peakRSSBytes": 542900224,
+        "finalText": "AYはSF的な意味合いが強いもののコンピュータサイエンスにおける非常に重要な分野を形成しており合同学習知的点適応機械で処理します",
+        "updates": [
+          {
+            "atSeconds": 0.0376553,
+            "text": "うわっ"
+          },
+          {
+            "atSeconds": 0.100474,
+            "text": "AYは見て"
+          },
+          {
+            "atSeconds": 0.159228,
+            "text": "AYはSF的な意味合いが"
+          },
+          {
+            "atSeconds": 0.22157,
+            "text": "AYはSF的な意味合いが強いものの"
+          },
+          {
+            "atSeconds": 0.297908,
+            "text": "AYはSF的な意味合いが強いもののコンピュータサイエンス"
+          },
+          {
+            "atSeconds": 0.376038,
+            "text": "AYはSF的な意味合いが強いもののコンピュータサイエンスにおける非常に重要"
+          },
+          {
+            "atSeconds": 0.460678,
+            "text": "AYはSF的な意味合いが強いもののコンピュータサイエンスにおける非常に重要な分野を形"
+          },
+          {
+            "atSeconds": 0.576397,
+            "text": "AYはSF的な意味合いが強いもののコンピュータサイエンスにおける非常に重要な分野を形成しており"
+          },
+          {
+            "atSeconds": 0.625977,
+            "text": "AYはSF的な意味合いが強いもののコンピュータサイエンスにおける非常に重要な分野を形成しており合同学習"
+          },
+          {
+            "atSeconds": 0.680522,
+            "text": "AYはSF的な意味合いが強いもののコンピュータサイエンスにおける非常に重要な分野を形成しており合同学習指摘点"
+          },
+          {
+            "atSeconds": 0.766202,
+            "text": "AYはSF的な意味合いが強いもののコンピュータサイエンスにおける非常に重要な分野を形成しており合同学習知的点適応適応"
+          },
+          {
+            "atSeconds": 0.857506,
+            "text": "AYはSF的な意味合いが強いもののコンピュータサイエンスにおける非常に重要な分野を形成しており合同学習知的点適応機械で処理します"
+          }
+        ]
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 64,
+      "CER": 0.078125,
+      "firstPrefixEdits": 3,
+      "firstPrefixCharacters": 3,
+      "firstPrefixCoverage": 0.046875,
+      "elapsedSeconds": 1.0499544159974903
+    }
+  ]
+}

@@ -10,6 +10,7 @@ struct MimiSessionE2E {
         await automaticAppleSpeechRoutesMixedEnglishAndJapanese()
         await onboardingPreparesBothLanguagesWithoutChangingSelection()
         await whisperJapaneseAccuracySessionFreezesConfigurationAndCleansAudio()
+        await parakeetJapaneseUsesDedicatedLiveProvider()
         await mimiWhisperLiveSessionStreamsWithoutRetainingAudio()
         await nemotronJapaneseLiveSessionStreamsAndFinalizesWithoutAudioFiles()
         await qwenDualPassLiveSessionStreamsAndFinalizesWithoutAudioFiles()
@@ -188,6 +189,44 @@ struct MimiSessionE2E {
         expect(session.document.segments.map(\.language) == [.japanese], "Whisper final text retains Japanese routing")
         expect(storage.removedTemporaryURLs == [temporaryURL], "Whisper source audio is deleted after transcription")
         expect(apple.makeEngineCalls == 0, "A mid-session picker change never swaps the active engine")
+    }
+
+    @MainActor
+    private static func parakeetJapaneseUsesDedicatedLiveProvider() async {
+        let capture = FakeCapture()
+        let whisper = FakeWhisper(isDownloaded: true)
+        let japaneseFast = FakeWhisper(isDownloaded: false)
+        japaneseFast.supportsLiveTranscription = true
+        japaneseFast.livePartialText = "日本語を認識中"
+        japaneseFast.liveFinalText = "日本語を認識しました。"
+        let storage = FakeStorage()
+        let session = makeSession(capture: capture, apple: FakeAppleProvider(), whisper: whisper, japaneseFast: japaneseFast, storage: storage)
+        session.engineID = .parakeetJapanese
+        expect(session.sourceLanguage == .japanese && session.languageMode == .japanese, "Choosing Parakeet selects Japanese")
+        expect(session.selectableLanguageModes == [.japanese], "Parakeet exposes only its supported language")
+        await session.refreshSelectedModelReadiness()
+        expect(!session.canStartRecording, "Missing Parakeet requires explicit installation")
+        await session.installSelectedModelNow()
+        expect(japaneseFast.installCalls == 1 && whisper.installCalls == 0, "Parakeet preparation never invokes Whisper")
+        await session.startRecording()
+        expect(session.recordingState == .recording, "Installed Parakeet starts live transcription")
+        expect(japaneseFast.liveStartLanguages == [.japanese], "Parakeet receives the Japanese route")
+        capture.lastCallback?(FakeCapture.makeBuffer())
+        await yieldToMainActor()
+        expect(session.document.liveText == japaneseFast.livePartialText, "Parakeet partials reach the live transcript")
+        expect(storage.createdTemporaryURLs.isEmpty, "Parakeet keeps capture audio in memory")
+        session.engineID = .whisperKitLargeV3Turbo
+        session.sourceLanguage = .english
+        await session.stopRecording()
+        expect(japaneseFast.liveStopCalls == 1 && whisper.liveStopCalls == 0, "Stop flushes the frozen active provider despite selection changes")
+        expect(session.document.segments.last?.text == japaneseFast.liveFinalText && session.document.segments.last?.language == .japanese, "Parakeet final retains its original language")
+        session.engineID = .parakeetJapanese
+        await session.removeSelectedModelNow()
+        expect(japaneseFast.removeCalls == 1 && whisper.removeCalls == 0, "Model removal reaches only Parakeet")
+        japaneseFast.isDownloaded = true
+        session.sourceLanguage = .english
+        await session.startRecording()
+        expect(capture.startCount == 1, "Unsupported Parakeet language never starts capture")
     }
 
     @MainActor
@@ -1320,6 +1359,7 @@ struct MimiSessionE2E {
         apple: FakeAppleProvider,
         automatic: FakeAutomaticAppleSpeech = FakeAutomaticAppleSpeech(),
         whisper: FakeWhisper,
+        japaneseFast: FakeWhisper? = nil,
         nemotron: FakeNemotron = FakeNemotron(isDownloaded: false),
         qwen: FakeNemotron = FakeNemotron(isDownloaded: false),
         storage: FakeStorage
@@ -1336,7 +1376,8 @@ struct MimiSessionE2E {
                 qwen: qwen,
                 storage: storage,
                 inputDevices: [.init(id: 42, name: "Fixture Microphone")],
-                outputDevices: [.init(id: 84, name: "Fixture Speakers")]
+                outputDevices: [.init(id: 84, name: "Fixture Speakers")],
+                japaneseFast: japaneseFast
             ),
             loadPersistedTranscript: true
         )

@@ -28,7 +28,8 @@ struct MimiE2E {
         precondition(TranscriptionEngineID.selectableCases == [
             .appleSpeechAnalyzer,
             .whisperKitLargeV3Turbo,
-            .phonon2
+            .phonon2,
+            .parakeetJapanese
         ])
         precondition(ModelCatalog.pack(for: .phonon2)?.supportedLanguages == [.english])
 

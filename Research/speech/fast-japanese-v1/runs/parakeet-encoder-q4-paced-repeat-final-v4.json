@@ -1,0 +1,3272 @@
+{
+  "schemaVersion": 1,
+  "candidate": "parakeet",
+  "executableSHA256": "ec3df6750d9e267b3d4a9a9b370232ab6e756bf75313832b4ea0e09ac0a1e57c",
+  "suiteSHA256": "3fa9a58898bd265ba255a1a8d9822b7ec5d8f97b37c58a481d4f807ab9a42d57",
+  "harnessSHA256": "0766890aa9e2c7659a5a0600e4038f6f4cc972ac65c5192adfe3044dfc03160d",
+  "executableSourceIdentity": "mimi-adaptive-segmentation-build-identity:67015759df9ec30612f25321b56c5813a09555ffb1568b9c4385b3d973eaa5bf",
+  "audioDeliveryBoundary": "end of each 50ms buffer",
+  "mode": "paced",
+  "attempts": [
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.10403937634099614,
+        "compute_seconds": 1.0861710889999996,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.253388375,
+            "text": "引退。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.7497986660000002,
+            "text": "インターネットで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.252437208,
+            "text": "インターネットで出来た。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.8126312909999998,
+            "text": "インターネットで敵対的監視。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.3807247910000005,
+            "text": "インターネットで敵対的環境構成。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.862799666,
+            "text": "インターネットで敵対的環境コースについて。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.41394475,
+            "text": "インターネットで敵対的環境コースについて検索する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.971237375,
+            "text": "インターネットで敵対的環境コースについて検索すると。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.473547208,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.021250875,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.592538,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.094302375,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.626482708,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.826521791,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          }
+        ],
+        "first_text_seconds": 2.253388375,
+        "first_vad": {
+          "observedAudioSeconds": 2.2,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6640000343322754
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0012415830000005457,
+        "prepare_seconds": 0.439048583,
+        "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 10.448393333,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 45,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.10978020804597698,
+        "compute_seconds": 1.1461053719999996,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.24328575,
+            "text": "引退。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.740448459,
+            "text": "インターネットで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.25339025,
+            "text": "インターネットで出来た。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.806296,
+            "text": "インターネットで敵対的監視。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.363368125,
+            "text": "インターネットで敵対的環境構成。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.865610375,
+            "text": "インターネットで敵対的環境コースについて。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.414159584,
+            "text": "インターネットで敵対的環境コースについて検索する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.963194417,
+            "text": "インターネットで敵対的環境コースについて検索すると。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.481321584,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.041300167,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.592061875,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.095866334,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.638910459,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.830108792,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          }
+        ],
+        "first_text_seconds": 2.24328575,
+        "first_vad": {
+          "observedAudioSeconds": 2.2,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6640000343322754
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0012458330000004736,
+        "prepare_seconds": 0.000608208,
+        "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 10.448548375,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 45,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "敵対的環境コース"
+      ],
+      "protectedTermAliases": {
+        "敵対的環境コース": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.44,
+        "compute_rtf": 0.11245549559386976,
+        "compute_seconds": 1.1740353740000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.250016583,
+            "text": "引退。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.753160583,
+            "text": "インターネットで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.252010917,
+            "text": "インターネットで出来た。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.803169458,
+            "text": "インターネットで敵対的監視。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.369928,
+            "text": "インターネットで敵対的環境構成。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.86612125,
+            "text": "インターネットで敵対的環境コースについて。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.414842417,
+            "text": "インターネットで敵対的環境コースについて検索する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.977230792,
+            "text": "インターネットで敵対的環境コースについて検索すると。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.475478917,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.042742917,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.592050042,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.092060333,
+            "text": "インターネットで敵対的環境コースについて検索すると、恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.647373875,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          },
+          {
+            "kind": "final",
+            "seconds": 8.83700175,
+            "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。"
+          }
+        ],
+        "first_text_seconds": 2.250016583,
+        "first_vad": {
+          "observedAudioSeconds": 2.2,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6640000343322754
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.001188000000000855,
+        "prepare_seconds": 0.000537208,
+        "text": "インターネットで敵対的環境コースについて検索すると恐らく現地企業の住所が出てくるでしょう。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 10.448665542,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 45,
+      "outcome": "passed",
+      "processElapsedSeconds": 32.02557491697371
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.07137436339285709,
+        "compute_seconds": 0.7194535829999995,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.4553858330000002,
+            "text": "ロラン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.994139375,
+            "text": "ロランドメンドース。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.557765958,
+            "text": "ロランド面動さはm。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.055320458,
+            "text": "ロランドメンドーサはm16の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.616646917,
+            "text": "ロランド面動作はm16ライフルで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.17392125,
+            "text": "ロランドメンドーサはm16ライフルで観光客の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.676157208,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲されます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.229605,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.56087225,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。"
+          }
+        ],
+        "first_text_seconds": 2.4553858330000002,
+        "first_vad": {
+          "observedAudioSeconds": 2.4,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.8559999465942383
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0012499160000007947,
+        "prepare_seconds": 0.423803375,
+        "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 10.087653333,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 28,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.0723050185515873,
+        "compute_seconds": 0.728834587,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.49572275,
+            "text": "ロラン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.006550375,
+            "text": "ロランドメンドーサ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.539707292,
+            "text": "ロランドメンドーサはmです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.052539375,
+            "text": "ロランドメンドーサはm16連続。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.613937958,
+            "text": "ロランド面動作はm16ライフルで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.161753,
+            "text": "ロランドメンドーサはm16ライフルで観光客。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.67801525,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲されます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.228542625,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.570308042,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。"
+          }
+        ],
+        "first_text_seconds": 2.49572275,
+        "first_vad": {
+          "observedAudioSeconds": 2.45,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.9199998378753662
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.012515292000001565,
+        "prepare_seconds": 0.000729875,
+        "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 10.096585792,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 28,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "m16"
+      ],
+      "protectedTermAliases": {
+        "m16": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.08,
+        "compute_rtf": 0.07515241795634915,
+        "compute_seconds": 0.7575363729999994,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.448741583,
+            "text": "ロラン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.998001792,
+            "text": "ロランドメンドーサン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.554124792,
+            "text": "ロランドメンドーサはmです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.073452208,
+            "text": "ロランドメンドーサはm16の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.617952042,
+            "text": "ロランド面動作はm16ライフルで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.164911,
+            "text": "ロランドメンドーサはm16ライフルで観光客の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.672166417,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲する。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.231584458,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.5690905,
+            "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。"
+          }
+        ],
+        "first_text_seconds": 2.448741583,
+        "first_vad": {
+          "observedAudioSeconds": 2.4,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.8880000114440918
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.011603499999999656,
+        "prepare_seconds": 0.000404625,
+        "text": "ロランドメンドーサはm16ライフルで観光客に発砲しました。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 10.098423917,
+        "warnings": []
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 28,
+      "outcome": "passed",
+      "processElapsedSeconds": 30.976361457956955
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.12739405013333333,
+        "compute_seconds": 1.910910752,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.818341709,
+            "text": "すん。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.296087125,
+            "text": "スンダルバンス。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.858147125,
+            "text": "ツンダルバンサー世界。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.363924375,
+            "text": "スンダルバンスは世界最大。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.924056334,
+            "text": "スンダルバンスは世界最大の沿岸地域。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.472672584,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ林。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.976208375,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.521209042,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。"
+          },
+          {
+            "kind": "final",
+            "seconds": 5.801989209,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.075315084,
+            "text": "海外。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.645903709,
+            "text": "海外から。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.200748792,
+            "text": "海外からバングラデシュに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.7115515,
+            "text": "海外からバングラデシュとイラン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.276481334,
+            "text": "海外からバングラデシュとインドの内陸。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.833673417,
+            "text": "海外からバングラデシュとインドの内陸地域。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.324169625,
+            "text": "海外からバングラデシュとインドの内陸地域まで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.879253709,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.430028167,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.936659959,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.494233709,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50マイルに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.040835292,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50マイルにわたって。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.548792042,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっている。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.095413084,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.238384042,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。"
+          }
+        ],
+        "first_text_seconds": 1.818341709,
+        "first_vad": {
+          "observedAudioSeconds": 1.75,
+          "segmentDurationSeconds": 0.5119999647140503,
+          "segmentStartSeconds": 1.2160000801086426
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0013184160000001555,
+        "prepare_seconds": 0.421349708,
+        "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。 海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 15.011607125,
+        "warnings": []
+      },
+      "characterEdits": 7,
+      "referenceCharacters": 69,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.12326640540000014,
+        "compute_seconds": 1.8489960810000021,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.841532417,
+            "text": "すんだ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.397983125,
+            "text": "スンダルバンサー。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.909069584,
+            "text": "ツンダルバンサー世界。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.465748125,
+            "text": "ツンダルバンスは世界最大の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.005311334,
+            "text": "スンダルバンスは世界最大の沿岸。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.521828,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ林。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.083299417,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.628401709,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。"
+          },
+          {
+            "kind": "final",
+            "seconds": 5.812662375,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.0859435,
+            "text": "海外。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.642432209,
+            "text": "海外から。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.202619084,
+            "text": "海外からバングラデシュに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.716632292,
+            "text": "海外からバングラデシュとイラン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.269815917,
+            "text": "海外からバングラデシュとインドの内陸。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.819527834,
+            "text": "海外からバングラデシュとインドの内陸地域。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.322106334,
+            "text": "海外からバングラデシュとインドの内陸地域まで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.889152709,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.410421084,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.923015792,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.495599084,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50マイルに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.051695792,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50マイルにわたって。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.545365584,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっている。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.079723375,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.226096709,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。"
+          }
+        ],
+        "first_text_seconds": 1.841532417,
+        "first_vad": {
+          "observedAudioSeconds": 1.8,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.2799999713897705
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.012862500000000665,
+        "prepare_seconds": 0.000627916,
+        "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。 海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 15.021786834,
+        "warnings": []
+      },
+      "characterEdits": 7,
+      "referenceCharacters": 69,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0021:1893",
+      "reference": "スンダルバンスは世界最大の沿岸マングローブ地帯であり 海岸からバングラデシュとインドの内陸地域まで80 km50マイルにわたって広がっています",
+      "audioSHA256": "947644c3ac870080253c92aafd109faed8f95f3de2a38e76b4be18c9e406454d",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "80 km",
+        "50マイル"
+      ],
+      "protectedTermAliases": {
+        "80 km": [
+          "80キロメートル",
+          "八十キロメートル"
+        ],
+        "50マイル": [
+          "五十マイル"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.12215555793333328,
+        "compute_seconds": 1.8323333689999992,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.8358970000000001,
+            "text": "すんだ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.410037083,
+            "text": "スンダルバンサー。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.899692125,
+            "text": "ツンダルバンサー世界。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.45842575,
+            "text": "ツンダルバンスは世界最大の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.026330208,
+            "text": "スンダルバンスは世界最大の沿岸。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.527400583,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ林。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.060849791,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.627696333,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。"
+          },
+          {
+            "kind": "final",
+            "seconds": 5.819925125,
+            "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.088968833,
+            "text": "海外。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.6422185,
+            "text": "海外から。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.209673,
+            "text": "海外からバングラデシュに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.706922291,
+            "text": "海外からバングラデシュとイラン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.271621208,
+            "text": "海外からバングラデシュとインドの内陸。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.827663916,
+            "text": "海外からバングラデシュとインドの内陸地域。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.3216585,
+            "text": "海外からバングラデシュとインドの内陸地域まで。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.868929416,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.420935625,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.94145375,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50キロ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.494895583,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50マイルに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.057193208,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル、50マイルにわたって。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.553096458,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっている。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.079694875,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 13.229424916,
+            "text": "海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。"
+          }
+        ],
+        "first_text_seconds": 1.8358970000000001,
+        "first_vad": {
+          "observedAudioSeconds": 1.8,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.2799999713897705
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0019952090000003864,
+        "prepare_seconds": 0.000527166,
+        "text": "スンダルバンスは世界最大の沿岸マングローブ地帯であり。 海外からバングラデシュとインドの内陸地域まで80キロメートル50マイルにわたって広がっています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 15.010682125,
+        "warnings": []
+      },
+      "characterEdits": 7,
+      "referenceCharacters": 69,
+      "outcome": "passed",
+      "processElapsedSeconds": 45.76141604100121
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.11803304898989901,
+        "compute_seconds": 1.4022326220000003,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.303689625,
+            "text": "なんで?"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.8492290000000002,
+            "text": "ダンディ大学の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.359742458,
+            "text": "ダンデ大学のパメラホームです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.907797416,
+            "text": "ダンディー大学のパミラファーガソン教授。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.469693083,
+            "text": "ダンディー大学のパミラファーガソン教授は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.973837916,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.524591375,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真の中に。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.078360166,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開し。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.566920333,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道を。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.143852541,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.693665208,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋だと考えています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.179879125,
+            "text": "ダンディー大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っている。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.758125125,
+            "text": "ダンディー大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.307916083,
+            "text": "ダンディー大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.801838666,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.883162291,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          }
+        ],
+        "first_text_seconds": 2.303689625,
+        "first_vad": {
+          "observedAudioSeconds": 2.25,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.7279999256134033
+        },
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0014671249999995695,
+        "prepare_seconds": 0.42191375,
+        "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.891052708,
+        "warnings": []
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 55,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.12183017668350167,
+        "compute_seconds": 1.447342499,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.306508167,
+            "text": "断面。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.854191875,
+            "text": "ダンディ大学の教授。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.36532775,
+            "text": "ダンデ大学のパメラアホです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.920837542,
+            "text": "ダンディー大学のパミラファーガソン教授。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.482564125,
+            "text": "ダンディー大学のパミラファーガソン教授は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.959010917,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.534557459,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを調べています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.083360042,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開し。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.584698917,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道を作ります。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.147193167,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.6953703749999995,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋だと考えています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.179821625,
+            "text": "ダンディ大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っている。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.746143167,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.297911167,
+            "text": "ダンディー大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.793075167,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.87568175,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          }
+        ],
+        "first_text_seconds": 2.306508167,
+        "first_vad": {
+          "observedAudioSeconds": 2.25,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.6959998607635498
+        },
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0013438749999998834,
+        "prepare_seconds": 0.000863375,
+        "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.888927042,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 55,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0029:1843",
+      "reference": "ダンディー大学のパメラ ファーガソン教授は 容疑者の写真などを公開する報道記者は危い橋を渡っている と指摘しています",
+      "audioSHA256": "c26de0d9258e045dbf1ae29650763ee37415d7dc3b18258e41947de6c82565f1",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.88,
+        "compute_rtf": 0.11194194722222221,
+        "compute_seconds": 1.329870333,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.283746791,
+            "text": "断面。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.85582575,
+            "text": "ダンディ大学の教授。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.367810041,
+            "text": "ダンデ大学のパメラアホです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.898438916,
+            "text": "ダンディー大学のパミラファーガソン教授。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.469051583,
+            "text": "ダンディー大学のパミラファーガソン教授は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.968536041,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.509641708,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを調べています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.070166833,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開し。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.575169208,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道を作ります。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.140125541,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.705658833,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋だと考えています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.186802,
+            "text": "ダンディ大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っている。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.737729,
+            "text": "ダンディ大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.302428583,
+            "text": "ダンディー大学のパミラファーガソン教授は、容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.8055695,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.887740083,
+            "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。"
+          }
+        ],
+        "first_text_seconds": 2.283746791,
+        "first_vad": {
+          "observedAudioSeconds": 2.25,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.6959998607635498
+        },
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.00031412499999916577,
+        "prepare_seconds": 0.000544833,
+        "text": "ダンディー大学のパミラファーガソン教授は容疑者の写真などを公開する報道記者は危ない橋を渡っていると指摘しています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.890421916,
+        "warnings": []
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 55,
+      "outcome": "passed",
+      "processElapsedSeconds": 36.357227040978614
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0047:1955",
+      "reference": "msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です",
+      "audioSHA256": "7597dd598c8c28710f107d3b2b80d72f977479c3f7087305806ddeaf76be7249",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ms",
+        "中枢神経系"
+      ],
+      "protectedTermAliases": {
+        "ms": [],
+        "中枢神経系": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 9.72,
+        "compute_rtf": 0.09676006121399174,
+        "compute_seconds": 0.9405077949999997,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.451335084,
+            "text": "ms。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.996795459,
+            "text": "msはノーマル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.55116825,
+            "text": "msは脳脊髄。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.044507917,
+            "text": "msは脳、脊髄視神経。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.609207875,
+            "text": "msは脳、脊髄視神経管理。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.174641875,
+            "text": "msは脳、脊髄、視神経から成る中枢神経。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.684862334,
+            "text": "msは脳、脊髄、視神経から成る中枢神経系。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.23796125,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与える。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.29192075,
+            "text": "msは脳、脊髄、視神経から成る中枢神経系に影響を与える病気です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.931353042,
+            "text": "msは脳、脊髄、視神経から成る中枢神経系に影響を与える病気です。"
+          }
+        ],
+        "first_text_seconds": 2.451335084,
+        "first_vad": {
+          "observedAudioSeconds": 2.4,
+          "segmentDurationSeconds": 0.5440001487731934,
+          "segmentStartSeconds": 1.8559999465942383
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.00010958299999863641,
+        "prepare_seconds": 0.445544792,
+        "text": "msは脳、脊髄、視神経から成る中枢神経系に影響を与える病気です。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 9.727084042,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 29,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0047:1955",
+      "reference": "msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です",
+      "audioSHA256": "7597dd598c8c28710f107d3b2b80d72f977479c3f7087305806ddeaf76be7249",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ms",
+        "中枢神経系"
+      ],
+      "protectedTermAliases": {
+        "ms": [],
+        "中枢神経系": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 9.72,
+        "compute_rtf": 0.0974315715020577,
+        "compute_seconds": 0.9470348750000008,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.463732333,
+            "text": "nhk。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.00558725,
+            "text": "msはノーマル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.559349916,
+            "text": "msは脳脊髄。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.050623416,
+            "text": "msは脳、脊髄視神経。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.617145375,
+            "text": "msは脳、脊髄、視神経管理。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.165206333,
+            "text": "msは脳、脊髄視神経から成る中枢神経。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.661340083,
+            "text": "msは脳、脊髄、視神経から成る中枢神経系。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.228719541,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与えます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.779427583,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与える。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.276688041,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与える病気です。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.849432125,
+            "text": "msは脳脊髄視神経から成る中枢神経系に影響を与える病気です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.92907525,
+            "text": "msは脳脊髄視神経から成る中枢神経系に影響を与える病気です。"
+          }
+        ],
+        "first_text_seconds": 2.463732333,
+        "first_vad": {
+          "observedAudioSeconds": 2.4,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.8880000114440918
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0002372499999996336,
+        "prepare_seconds": 0.000209959,
+        "text": "msは脳脊髄視神経から成る中枢神経系に影響を与える病気です。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 9.724208875,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 29,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0047:1955",
+      "reference": "msは 脳 脊髄 視神経からなる中枢神経系に影響を与える病気です",
+      "audioSHA256": "7597dd598c8c28710f107d3b2b80d72f977479c3f7087305806ddeaf76be7249",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "ms",
+        "中枢神経系"
+      ],
+      "protectedTermAliases": {
+        "ms": [],
+        "中枢神経系": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 9.72,
+        "compute_rtf": 0.09512383353909466,
+        "compute_seconds": 0.9246036620000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.436309708,
+            "text": "nhk。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.005152875,
+            "text": "msはノーマル。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.5498387080000002,
+            "text": "msは脳脊髄。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.061117291,
+            "text": "msは脳、脊髄視神経。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.622132333,
+            "text": "msは脳、脊髄、視神経管理。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.162459041,
+            "text": "msは脳、脊髄視神経から成る中枢神経。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.670454041,
+            "text": "msは脳、脊髄、視神経から成る中枢神経系。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.2297595,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与えます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.7641845830000005,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与える。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.27615225,
+            "text": "msは脳、脊髄視神経から成る中枢神経系に影響を与える病気です。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.84181225,
+            "text": "msは脳脊髄視神経から成る中枢神経系に影響を与える病気です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.930863458,
+            "text": "msは脳脊髄視神経から成る中枢神経系に影響を与える病気です。"
+          }
+        ],
+        "first_text_seconds": 2.436309708,
+        "first_vad": {
+          "observedAudioSeconds": 2.4,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.8880000114440918
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.00025508300000076645,
+        "prepare_seconds": 0.000617167,
+        "text": "msは脳脊髄視神経から成る中枢神経系に影響を与える病気です。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 9.727581916,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 29,
+      "outcome": "passed",
+      "processElapsedSeconds": 29.88085424999008
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0068:1979",
+      "reference": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています",
+      "audioSHA256": "8b93845c8d6e4b588147b339cefd8afe091f3441f41c2cb841934efe286ee786",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "fkp",
+        "gbp",
+        "1ポンド"
+      ],
+      "protectedTermAliases": {
+        "fkp": [],
+        "gbp": [],
+        "1ポンド": [
+          "一ポンド"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.94,
+        "compute_rtf": 0.12950234815745393,
+        "compute_seconds": 1.5462580369999999,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.26329225,
+            "text": "フォークアイス。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.752600375,
+            "text": "フォークランドの攻撃。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.258394834,
+            "text": "フォークランドの公式ツイッター。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.80940525,
+            "text": "フォークランドの公式通貨はフォークラウンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.369635584,
+            "text": "フォークランドの公式通貨はフォークランド諸島。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.877865334,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.4313829590000005,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkb。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.9890504589999995,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1万。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.490276209,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1位。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.033313,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.611013042,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgpsで1億円。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.108656959,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpとともに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.669972542,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.204794959,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.91445475,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。"
+          }
+        ],
+        "first_text_seconds": 2.26329225,
+        "first_vad": {
+          "observedAudioSeconds": 2.2,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6640000343322754
+        },
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0007253330000001057,
+        "prepare_seconds": 0.42297675,
+        "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.95087825,
+        "warnings": []
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 54,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0068:1979",
+      "reference": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています",
+      "audioSHA256": "8b93845c8d6e4b588147b339cefd8afe091f3441f41c2cb841934efe286ee786",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "fkp",
+        "gbp",
+        "1ポンド"
+      ],
+      "protectedTermAliases": {
+        "fkp": [],
+        "gbp": [],
+        "1ポンド": [
+          "一ポンド"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.94,
+        "compute_rtf": 0.12344076951423777,
+        "compute_seconds": 1.473882787999999,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.241125708,
+            "text": "フォークアイス。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.760163667,
+            "text": "フォークランドの攻撃。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.255665167,
+            "text": "フォークランドの公式ツイッター。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.806085833,
+            "text": "フォークランドの公式通貨はフォークラウンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.369249,
+            "text": "フォークランドの公式通貨はフォークランド諸島。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.883973042,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.409905875,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkb。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.985066333,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1万。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.480957,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1位。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.057583958,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.6049859170000005,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgpsで1億円。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.107560167,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpとともに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.6539955,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.208503625,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.889623042,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。"
+          }
+        ],
+        "first_text_seconds": 2.241125708,
+        "first_vad": {
+          "observedAudioSeconds": 2.2,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6640000343322754
+        },
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0015423749999996517,
+        "prepare_seconds": 0.000270625,
+        "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.943055417,
+        "warnings": []
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 54,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0068:1979",
+      "reference": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1英ポンドgbpと等価に固定されています",
+      "audioSHA256": "8b93845c8d6e4b588147b339cefd8afe091f3441f41c2cb841934efe286ee786",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "fkp",
+        "gbp",
+        "1ポンド"
+      ],
+      "protectedTermAliases": {
+        "fkp": [],
+        "gbp": [],
+        "1ポンド": [
+          "一ポンド"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.94,
+        "compute_rtf": 0.1259708587102177,
+        "compute_seconds": 1.5040920529999995,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.256792333,
+            "text": "フォークアイス。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.747720416,
+            "text": "フォークランドの攻撃。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.269532,
+            "text": "フォークランドの公式ツイッター。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.81840625,
+            "text": "フォークランドの公式通貨はフォークラウンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.370305041,
+            "text": "フォークランドの公式通貨はフォークランド諸島。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.884705083,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.431843208,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkb。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.98418525,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1万。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.472118916,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1位。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.047575958,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンド。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.605939458,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgpsで1億円。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.086186291,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpとともに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.65553125,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.206868583,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.904421875,
+            "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。"
+          }
+        ],
+        "first_text_seconds": 2.256792333,
+        "first_vad": {
+          "observedAudioSeconds": 2.2,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6640000343322754
+        },
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0007485420000001852,
+        "prepare_seconds": 0.000438333,
+        "text": "フォークランドの公式通貨はフォークランド諸島ポンドfkpで1ポンドが1aポンドgbpと投貨に固定されています。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.942755333000001,
+        "warnings": []
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 54,
+      "outcome": "passed",
+      "processElapsedSeconds": 36.53485866700066
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0083:1735",
+      "reference": "米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました",
+      "audioSHA256": "7070db2623ee66124ed0d7afc58a3f86c61fae021c69f358602b43488e5c5854",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "プリンストン大学",
+        "ウプサラ大学",
+        "2世代"
+      ],
+      "protectedTermAliases": {
+        "プリンストン大学": [],
+        "ウプサラ大学": [],
+        "2世代": [
+          "二世代"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 22.68,
+        "compute_rtf": 0.13800669074074065,
+        "compute_seconds": 3.1299917459999977,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.220082,
+            "text": "冷凍。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.749973,
+            "text": "冷酷な国。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.250056583,
+            "text": "冷酷なプリンストン大学。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.807467958,
+            "text": "冷酷なプリンストン大学と。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.37711875,
+            "text": "米国のプリンストン大学とスウェーデン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.8657861669999996,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.431646458,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.97873875,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者ら。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.470273208,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.0518225,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種を。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.585380708,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種がわずかに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.08793175,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2700種類。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.656906542,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.210087042,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したこと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.712482667,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.245173292,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたが。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.828146333,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたがこの。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.30752525,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたがこの過程は。"
+          },
+          {
+            "kind": "final",
+            "seconds": 11.805983125000001,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたがこの過程は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.829112667,
+            "text": "えっ?"
+          },
+          {
+            "kind": "final",
+            "seconds": 11.852037958,
+            "text": "えっ?"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.034164292,
+            "text": "えい。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.601722583,
+            "text": "固有種のガラガラ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.166213542,
+            "text": "固有種のガラパゴスフィンチ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.660385333,
+            "text": "固有種のガラパゴスフィンチといいます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.231918208,
+            "text": "固有種のガラパゴスフィンチと異乳種の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.7805905,
+            "text": "固有種のガラパゴスフィンチと輸入種のオーサバ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.269790167,
+            "text": "固有種のガラパゴスフィンチと輸入種のオオサボテンフィンチ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.8240185,
+            "text": "固有種のガラパゴスフィンチと異乳種のオオサボテンフィンチが交配。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.38181475,
+            "text": "固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。"
+          },
+          {
+            "kind": "final",
+            "seconds": 16.799309583,
+            "text": "固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.488994583,
+            "text": "あれですよ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.050755625,
+            "text": "繁殖であるため。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.548973167,
+            "text": "繁殖であるため、もっと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.110015875,
+            "text": "繁殖であるため、もっと長い時間。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.669039958,
+            "text": "繁殖であるためもっと長い時間がかかる。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.163382167,
+            "text": "繁殖であるため、もっと長い時間がかかると考えられます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.7189655,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 21.325161375,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました。"
+          }
+        ],
+        "first_text_seconds": 2.220082,
+        "first_vad": {
+          "observedAudioSeconds": 2.15,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6319999694824219
+        },
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.00034245799999865767,
+        "prepare_seconds": 0.415208875,
+        "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らはこの新種が僅か2世代で進化したことを報告しましたがこの過程は。 えっ? 固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。 繁殖であるためもっと長い時間がかかると考えられていました。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 22.687198958,
+        "warnings": []
+      },
+      "characterEdits": 7,
+      "referenceCharacters": 123,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0083:1735",
+      "reference": "米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました",
+      "audioSHA256": "7070db2623ee66124ed0d7afc58a3f86c61fae021c69f358602b43488e5c5854",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "プリンストン大学",
+        "ウプサラ大学",
+        "2世代"
+      ],
+      "protectedTermAliases": {
+        "プリンストン大学": [],
+        "ウプサラ大学": [],
+        "2世代": [
+          "二世代"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 22.68,
+        "compute_rtf": 0.11628482279541445,
+        "compute_seconds": 2.6373397809999997,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.193034917,
+            "text": "冷凍。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.743324667,
+            "text": "冷酷な国。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.246046542,
+            "text": "冷酷なプリンストン大学。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.809641167,
+            "text": "冷酷なプリンストン大学と。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.359801375,
+            "text": "米国のプリンストン大学とスウェーデン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.863650833,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.427571167,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.9856305,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者ら。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.48374,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは。"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.628069417,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.838470958,
+            "text": "ごめんなさい。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.352526875,
+            "text": "この新種が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.90154425,
+            "text": "この新種が僅かに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.459056458,
+            "text": "この新種が僅か2世代でした。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.975814917,
+            "text": "この新種が僅か2世代で進化した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.520969917,
+            "text": "この新種が僅か2世代で進化したことを報告。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.070397583,
+            "text": "この新種が僅か2世代で進化したことを報告しました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.578968583,
+            "text": "この新種が僅か2世代で進化したことを報告しましたが。"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.706983208,
+            "text": "この新種が僅か2世代で進化したことを報告しましたが。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.879063583,
+            "text": "ごめん。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.459364542,
+            "text": "この家庭は。"
+          },
+          {
+            "kind": "final",
+            "seconds": 11.811153875,
+            "text": "この家庭は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.04088525,
+            "text": "えい。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.595934,
+            "text": "固有種のガラガラ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.160326542,
+            "text": "固有種のガラパゴスフィンチ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.668718833,
+            "text": "固有種のガラパゴスフィンチといいます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.217924458,
+            "text": "固有種のガラパゴスフィンチと異乳種の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.7856765,
+            "text": "固有種のガラパゴスフィンチと輸入種のオーサバ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.266095332999999,
+            "text": "固有種のガラパゴスフィンチと輸入種のオオサボテンフィンチ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.831124792,
+            "text": "固有種のガラパゴスフィンチと異乳種のオオサボテンフィンチが交配。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.387335875,
+            "text": "固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。"
+          },
+          {
+            "kind": "final",
+            "seconds": 16.772543542,
+            "text": "固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.487847292,
+            "text": "あれですよ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.052374583,
+            "text": "繁殖であるため。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.5480625,
+            "text": "繁殖であるため、もっと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.11101775,
+            "text": "繁殖であるため、もっと長い時間。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.677861375,
+            "text": "繁殖であるためもっと長い時間がかかる。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.157105958,
+            "text": "繁殖であるため、もっと長い時間がかかると考えられます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.719087333,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 21.33808425,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました。"
+          }
+        ],
+        "first_text_seconds": 2.193034917,
+        "first_vad": {
+          "observedAudioSeconds": 2.15,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6319999694824219
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.001337958000000583,
+        "prepare_seconds": 0.00019,
+        "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは。 この新種が僅か2世代で進化したことを報告しましたが。 この家庭は。 固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。 繁殖であるためもっと長い時間がかかると考えられていました。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 22.682674958,
+        "warnings": []
+      },
+      "characterEdits": 7,
+      "referenceCharacters": 123,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0083:1735",
+      "reference": "米国のプリンストン大学とスウェーデンのウプサラ大学の研究者らは この新種がわずか2世代で進化したことを報告しましたが この過程は 固有種のガラパゴスフィンチと移入種のオオサボテンフィンチが交配した繁殖であるため もっと長い時間がかかると考えられていました",
+      "audioSHA256": "7070db2623ee66124ed0d7afc58a3f86c61fae021c69f358602b43488e5c5854",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "プリンストン大学",
+        "ウプサラ大学",
+        "2世代"
+      ],
+      "protectedTermAliases": {
+        "プリンストン大学": [],
+        "ウプサラ大学": [],
+        "2世代": [
+          "二世代"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 22.68,
+        "compute_rtf": 0.12224449947089942,
+        "compute_seconds": 2.772505247999999,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.209158417,
+            "text": "冷凍。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.750288792,
+            "text": "冷酷な国。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.255419667,
+            "text": "冷酷なプリンストン大学。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.809873417,
+            "text": "冷酷なプリンストン大学と。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.368508417,
+            "text": "米国のプリンストン大学とスウェーデン。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.868950667,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.4371755,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.987482292,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者ら。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.485025083,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは。"
+          },
+          {
+            "kind": "final",
+            "seconds": 6.631105083,
+            "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.843547042,
+            "text": "ごめんなさい。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.351715833,
+            "text": "この新種が。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.912828417,
+            "text": "この新種が僅かに。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.452195167,
+            "text": "この新種が僅か2世代でした。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.956188707999999,
+            "text": "この新種が僅か2世代で進化した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.521053708,
+            "text": "この新種が僅か2世代で進化したことを報告。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.071237833,
+            "text": "この新種が僅か2世代で進化したことを報告しました。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.561223792,
+            "text": "この新種が僅か2世代で進化したことを報告しましたが。"
+          },
+          {
+            "kind": "final",
+            "seconds": 10.712771792,
+            "text": "この新種が僅か2世代で進化したことを報告しましたが。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.887498458,
+            "text": "ごめん。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.444658,
+            "text": "この家庭は。"
+          },
+          {
+            "kind": "final",
+            "seconds": 11.802571417,
+            "text": "この家庭は。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.043505833,
+            "text": "えい。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.595947042,
+            "text": "固有種のガラガラ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.158905458,
+            "text": "固有種のガラパゴスフィンチ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.662384083,
+            "text": "固有種のガラパゴスフィンチといいます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.223206,
+            "text": "固有種のガラパゴスフィンチと異乳種の。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.767537333,
+            "text": "固有種のガラパゴスフィンチと輸入種のオーサバ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.265504708,
+            "text": "固有種のガラパゴスフィンチと輸入種のオオサボテンフィンチ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.8242255,
+            "text": "固有種のガラパゴスフィンチと異乳種のオオサボテンフィンチが交配。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.38734175,
+            "text": "固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。"
+          },
+          {
+            "kind": "final",
+            "seconds": 16.800003167,
+            "text": "固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.5014295,
+            "text": "あれですよ。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.044370042,
+            "text": "繁殖であるため。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 18.56593425,
+            "text": "繁殖であるため、もっと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.098333375,
+            "text": "繁殖であるため、もっと長い時間。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 19.666037667,
+            "text": "繁殖であるためもっと長い時間がかかる。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.174093125,
+            "text": "繁殖であるため、もっと長い時間がかかると考えられます。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 20.711263917,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました。"
+          },
+          {
+            "kind": "final",
+            "seconds": 21.318949208,
+            "text": "繁殖であるためもっと長い時間がかかると考えられていました。"
+          }
+        ],
+        "first_text_seconds": 2.209158417,
+        "first_vad": {
+          "observedAudioSeconds": 2.15,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 1.6319999694824219
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.00048525000000054774,
+        "prepare_seconds": 0.000470042,
+        "text": "米国のプリンストン大学とスウェーデンのオプサラ大学の研究者らは。 この新種が僅か2世代で進化したことを報告しましたが。 この家庭は。 固有種のガラパゴスフィンチと離乳種のオオサボテンフィンチが交配した。 繁殖であるためもっと長い時間がかかると考えられていました。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 22.690595917,
+        "warnings": []
+      },
+      "characterEdits": 7,
+      "referenceCharacters": 123,
+      "outcome": "passed",
+      "processElapsedSeconds": 68.7327106249868
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0095:1823",
+      "reference": "交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+      "audioSHA256": "30cb375df36d09fcabcb88c3b4370f185165e3045ffed941ad6fdc983006dcae",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "交通流研究"
+      ],
+      "protectedTermAliases": {
+        "交通流研究": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.22,
+        "compute_rtf": 0.11157512192513364,
+        "compute_seconds": 1.2518728679999995,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.683525666,
+            "text": "交通。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.204946083,
+            "text": "交通流系。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.709218458,
+            "text": "交通流研究とは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.263045541,
+            "text": "交通流研究とは似てるもの。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.813855916,
+            "text": "交通流研究とは2点間に論点。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.330964666,
+            "text": "交通流研究とは2点間にいる個々の運動。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.876952291,
+            "text": "交通理由研究とは2点間にいる個々の運転士と。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.417059541,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の交流のこと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.910309458,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.49383025,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの研究。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.04087875,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの総合作業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.548695375,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.101451208,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.53602825,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。"
+          }
+        ],
+        "first_text_seconds": 2.683525666,
+        "first_vad": {
+          "observedAudioSeconds": 2.6,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 2.0799999237060547
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.00016316700000018614,
+        "prepare_seconds": 0.443341041,
+        "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.227071083,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 39,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0095:1823",
+      "reference": "交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+      "audioSHA256": "30cb375df36d09fcabcb88c3b4370f185165e3045ffed941ad6fdc983006dcae",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "交通流研究"
+      ],
+      "protectedTermAliases": {
+        "交通流研究": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.22,
+        "compute_rtf": 0.10909126114082007,
+        "compute_seconds": 1.2240039500000013,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.645149,
+            "text": "交通。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.208537458,
+            "text": "交通流系。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.706055708,
+            "text": "交通流研究とは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.256333916,
+            "text": "交通流研究とは似てるもの。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.818330416,
+            "text": "交通流研究とは2点間に論点。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.329401625,
+            "text": "交通流研究とは2点間にいる個々の運動。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.867476708,
+            "text": "交通理由研究とは2点間にいる個々の運転士と。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.429129416,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の交流のこと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.922568291,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.494791208,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの研究。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.028921791,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの総合作業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.555104541,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.097819291,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.552767541,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。"
+          }
+        ],
+        "first_text_seconds": 2.645149,
+        "first_vad": {
+          "observedAudioSeconds": 2.6,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 2.0799999237060547
+        },
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.0002363750000000664,
+        "prepare_seconds": 0.00041175,
+        "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.223279833,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 39,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0095:1823",
+      "reference": "交通流研究とは 2点間にいる個々の運転手と車両の動きとそれらの相互作用の研究です",
+      "audioSHA256": "30cb375df36d09fcabcb88c3b4370f185165e3045ffed941ad6fdc983006dcae",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "交通流研究"
+      ],
+      "protectedTermAliases": {
+        "交通流研究": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Japanese Parakeet native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/parakeet-encoder-q4-paced-repeat-final-v4.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.22,
+        "compute_rtf": 0.11038394973262028,
+        "compute_seconds": 1.2385079159999997,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.6944492909999997,
+            "text": "交通。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.210570541,
+            "text": "交通流系。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.696168541,
+            "text": "交通流研究とは。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.2610805,
+            "text": "交通流研究とは似てるもの。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.813070291,
+            "text": "交通流研究とは2点間による。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.330861833,
+            "text": "交通流研究とは2点間による個々の運動。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.880988708,
+            "text": "交通理由研究とは、2点間にいる個々の運転士と。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.429910833,
+            "text": "交通理由研究とは2点間にいる個々の運転士と車両の交流のこと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.922344125,
+            "text": "交通理由研究とは、2点間にいる個々の運転士と車両の動きと。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.502181916,
+            "text": "交通理由研究とは2点間にいる個々の運転士と車両の動きとそれらのことです。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.0436965,
+            "text": "交通理由研究とは2点間にいる個々の運転士と車両の動きとそれらの総合作業。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.549408041,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究。"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.10676925,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。"
+          },
+          {
+            "kind": "final",
+            "seconds": 9.533508583,
+            "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。"
+          }
+        ],
+        "first_text_seconds": 2.6944492909999997,
+        "first_vad": {
+          "observedAudioSeconds": 2.65,
+          "segmentDurationSeconds": 0.5120000839233398,
+          "segmentStartSeconds": 2.111999988555908
+        },
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "parakeet-japanese-encoder-q4-native",
+        "post_audio_finalization_seconds": 0.00017049999999940724,
+        "prepare_seconds": 0.000565792,
+        "text": "交通流研究とは2点間にいる個々の運転士と車両の動きとそれらの相互作用の研究です。",
+        "vad_lookbehind_samples": 8192,
+        "wall_seconds": 11.226615458,
+        "warnings": []
+      },
+      "characterEdits": 1,
+      "referenceCharacters": 39,
+      "outcome": "passed",
+      "processElapsedSeconds": 34.36562637501629
+    }
+  ]
+}

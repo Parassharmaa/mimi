@@ -1,0 +1,681 @@
+{
+  "schemaVersion": 1,
+  "runtime": "Moonshine native v0.1.5 CPU",
+  "hardware": "arm64",
+  "mode": "paced",
+  "suiteSHA256": "3fa9a58898bd265ba255a1a8d9822b7ec5d8f97b37c58a481d4f807ab9a42d57",
+  "attempts": [
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "candidate": "small",
+      "mode": "paced",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "paced",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 10.44,
+        "modelLoadSeconds": 0.120576,
+        "warmupSeconds": 0.0177859,
+        "preprocessingSeconds": 0.00232746,
+        "computeSeconds": 1.1119,
+        "computeRTF": 0.106504,
+        "wallSeconds": 10.4512,
+        "firstTextSeconds": 2.560136,
+        "postInputFinalizationSeconds": 0.00665546,
+        "maximumScheduleLatenessSeconds": 0.0168088,
+        "peakRSSBytes": 472629248,
+        "finalText": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう",
+        "updates": [
+          {
+            "atSeconds": 2.56014,
+            "text": "見て"
+          },
+          {
+            "atSeconds": 3.05945,
+            "text": "インターネット"
+          },
+          {
+            "atSeconds": 3.55643,
+            "text": "インターネットで"
+          },
+          {
+            "atSeconds": 4.05339,
+            "text": "インターネットで敵対的"
+          },
+          {
+            "atSeconds": 4.58213,
+            "text": "インターネットで敵対的環境を"
+          },
+          {
+            "atSeconds": 5.08518,
+            "text": "インターネットで敵対的環境コースについて"
+          },
+          {
+            "atSeconds": 5.58261,
+            "text": "インターネットで敵対的環境コースについてです"
+          },
+          {
+            "atSeconds": 6.10949,
+            "text": "インターネットで敵対的環境コースについて検索するぞ"
+          },
+          {
+            "atSeconds": 6.58072,
+            "text": "インターネットで敵対的環境コースについて検索すると"
+          },
+          {
+            "atSeconds": 7.0812,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく"
+          },
+          {
+            "atSeconds": 7.61681,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業は"
+          },
+          {
+            "atSeconds": 8.11293,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が"
+          },
+          {
+            "atSeconds": 8.61038,
+            "text": "インターネットで敵対的環境コースについて検索するとおそらく現地企業の住所が出てくるでしょう"
+          }
+        ]
+      },
+      "characterEdits": 0,
+      "referenceCharacters": 45,
+      "CER": 0.0,
+      "firstPrefixEdits": 2,
+      "firstPrefixCharacters": 2,
+      "firstPrefixCoverage": 0.044444444444444446,
+      "elapsedSeconds": 10.62213504203828
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0000:1828",
+      "candidate": "tiny",
+      "mode": "paced",
+      "reference": "インターネットで 敵対的環境コース について検索すると おそらく現地企業の住所が出てくるでしょう",
+      "audioSHA256": "bd1b9533cfa176b8c2a71ecb4821a02bc86fa368d096373efe8d8dceafb35634",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "paced",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 10.44,
+        "modelLoadSeconds": 0.058875,
+        "warmupSeconds": 0.0190255,
+        "preprocessingSeconds": 0.00280425,
+        "computeSeconds": 0.521543,
+        "computeRTF": 0.0499562,
+        "wallSeconds": 10.4557,
+        "firstTextSeconds": 2.55508,
+        "postInputFinalizationSeconds": 0.00948321,
+        "maximumScheduleLatenessSeconds": 0.010038,
+        "peakRSSBytes": 159088640,
+        "finalText": "インターネットで敵対的環境構成について検索するとおそらく現地企業の住所が出てくるでしょう",
+        "updates": [
+          {
+            "atSeconds": 2.55508,
+            "text": "リンリンリンリンリンリンリンリンリンリン"
+          },
+          {
+            "atSeconds": 3.03096,
+            "text": "インターネット"
+          },
+          {
+            "atSeconds": 3.525,
+            "text": "インターネットで、Twitter"
+          },
+          {
+            "atSeconds": 4.04871,
+            "text": "インターネットで敵対的"
+          },
+          {
+            "atSeconds": 4.54416,
+            "text": "インターネットで敵対的環境を考慮する"
+          },
+          {
+            "atSeconds": 5.04098,
+            "text": "インターネットで敵対的環境構成について"
+          },
+          {
+            "atSeconds": 6.04805,
+            "text": "インターネットで敵対的環境構成について検索すると"
+          },
+          {
+            "atSeconds": 7.04754,
+            "text": "インターネットで敵対的環境構成について検索するとおそらく原則"
+          },
+          {
+            "atSeconds": 7.53278,
+            "text": "インターネットで敵対的環境構成について検索するとおそらく現地企業は現地"
+          },
+          {
+            "atSeconds": 8.02807,
+            "text": "インターネットで敵対的環境構成について検索するとおそらく現地企業の住所が電子"
+          },
+          {
+            "atSeconds": 8.54679,
+            "text": "インターネットで敵対的環境構成について検索するとおそらく現地企業の住所が出てくるでしょう"
+          }
+        ]
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 45,
+      "CER": 0.06666666666666667,
+      "firstPrefixEdits": 19,
+      "firstPrefixCharacters": 20,
+      "firstPrefixCoverage": 0.4444444444444444,
+      "elapsedSeconds": 10.558879041986074
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0004:1744",
+      "candidate": "tiny",
+      "mode": "paced",
+      "reference": "ロスビー数が小さいほど磁気反転に関して星の活性が低下するわけです",
+      "audioSHA256": "3a268d324535ea7360c2448837f8947e87440554f01cbfc54879052d48703110",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "paced",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 12.06,
+        "modelLoadSeconds": 0.0632481,
+        "warmupSeconds": 0.0245018,
+        "preprocessingSeconds": 0.00360092,
+        "computeSeconds": 0.508706,
+        "computeRTF": 0.0421812,
+        "wallSeconds": 12.0644,
+        "firstTextSeconds": 4.526941,
+        "postInputFinalizationSeconds": 0.00109733,
+        "maximumScheduleLatenessSeconds": 0.0100527,
+        "peakRSSBytes": 151420928,
+        "finalText": "ロスリースが小さいほど、磁気判定に関して星の活性が低下するわけです。",
+        "updates": [
+          {
+            "atSeconds": 4.52694,
+            "text": "ロスビー"
+          },
+          {
+            "atSeconds": 5.04986,
+            "text": "ロスリースが中止"
+          },
+          {
+            "atSeconds": 5.54364,
+            "text": "ロスリースが小さい方"
+          },
+          {
+            "atSeconds": 6.04867,
+            "text": "ロスリースが小さいほど、磁気配置"
+          },
+          {
+            "atSeconds": 6.54197,
+            "text": "ロスリースが小さいほど、磁気判定に"
+          },
+          {
+            "atSeconds": 7.04859,
+            "text": "ロスリースが小さいほど、磁気判定に関して"
+          },
+          {
+            "atSeconds": 7.54564,
+            "text": "ロスリースが小さいほど、磁気判定に関して星の感"
+          },
+          {
+            "atSeconds": 8.04067,
+            "text": "ロスリースが小さいほど、磁気判定に関して星の活性が低がています。"
+          },
+          {
+            "atSeconds": 8.54424,
+            "text": "ロスリースが小さいほど、磁気判定に関して星の活性が低下する"
+          },
+          {
+            "atSeconds": 9.04124,
+            "text": "ロスリースが小さいほど、磁気判定に関して星の活性が低下するわけです。"
+          }
+        ]
+      },
+      "characterEdits": 4,
+      "referenceCharacters": 32,
+      "CER": 0.125,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 4,
+      "firstPrefixCoverage": 0.125,
+      "elapsedSeconds": 12.182541374990251
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0004:1744",
+      "candidate": "small",
+      "mode": "paced",
+      "reference": "ロスビー数が小さいほど磁気反転に関して星の活性が低下するわけです",
+      "audioSHA256": "3a268d324535ea7360c2448837f8947e87440554f01cbfc54879052d48703110",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "paced",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 12.06,
+        "modelLoadSeconds": 0.13087,
+        "warmupSeconds": 0.0157478,
+        "preprocessingSeconds": 0.00358463,
+        "computeSeconds": 0.894211,
+        "computeRTF": 0.0741469,
+        "wallSeconds": 12.0633,
+        "firstTextSeconds": 4.550608,
+        "postInputFinalizationSeconds": 0.000310625,
+        "maximumScheduleLatenessSeconds": 0.020194,
+        "peakRSSBytes": 463486976,
+        "finalText": "ロスビー数が小さいほど磁気判定に関して星の活性が低下するわけです",
+        "updates": [
+          {
+            "atSeconds": 4.55061,
+            "text": "ロスビ"
+          },
+          {
+            "atSeconds": 5.0585,
+            "text": "ロスビー数が"
+          },
+          {
+            "atSeconds": 5.57352,
+            "text": "ロスビー数が小さいほど"
+          },
+          {
+            "atSeconds": 6.086,
+            "text": "ロスビー数が小さいほど時期"
+          },
+          {
+            "atSeconds": 6.57886,
+            "text": "ロスビー数が小さいほど直判定に"
+          },
+          {
+            "atSeconds": 7.08017,
+            "text": "ロスビー数が小さいほど直判定に関して"
+          },
+          {
+            "atSeconds": 7.58808,
+            "text": "ロスビー数が小さいほど直判定に関して星の"
+          },
+          {
+            "atSeconds": 8.10287,
+            "text": "ロスビー数が小さいほど磁気判定に関して星の活性が"
+          },
+          {
+            "atSeconds": 8.57684,
+            "text": "ロスビー数が小さいほど磁気判定に関して星の活性が低下する"
+          },
+          {
+            "atSeconds": 9.08414,
+            "text": "ロスビー数が小さいほど磁気判定に関して星の活性が低下するわけです"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 32,
+      "CER": 0.0625,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 3,
+      "firstPrefixCoverage": 0.09375,
+      "elapsedSeconds": 12.233460250019561
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0010:1980",
+      "candidate": "small",
+      "mode": "paced",
+      "reference": "残念ながら 運転手の行動を100%の確率で予測することはできないので 交通の流れを研究することは困難です",
+      "audioSHA256": "a7297368ff66e4deaf5639aec5c4dbac2840f8ef233008b2709e1ba9a7f0fbd8",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "paced",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 11.94,
+        "modelLoadSeconds": 0.111013,
+        "warmupSeconds": 0.0131951,
+        "preprocessingSeconds": 0.00268267,
+        "computeSeconds": 1.40832,
+        "computeRTF": 0.11795,
+        "wallSeconds": 11.9539,
+        "firstTextSeconds": 2.618999,
+        "postInputFinalizationSeconds": 0.00662033,
+        "maximumScheduleLatenessSeconds": 0.0216916,
+        "peakRSSBytes": 510738432,
+        "finalText": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の流れを研究することは困難です",
+        "updates": [
+          {
+            "atSeconds": 2.619,
+            "text": "ザ・ザ・ザ・ザ・ザ・ザ"
+          },
+          {
+            "atSeconds": 3.0568,
+            "text": "残念ながら"
+          },
+          {
+            "atSeconds": 3.54764,
+            "text": "残念ながら運転"
+          },
+          {
+            "atSeconds": 4.05972,
+            "text": "残念ながら運転手の頃"
+          },
+          {
+            "atSeconds": 4.56614,
+            "text": "残念ながら運転手の行動は"
+          },
+          {
+            "atSeconds": 5.06406,
+            "text": "残念ながら運転手の行動100%"
+          },
+          {
+            "atSeconds": 5.61219,
+            "text": "残念ながら運転手の行動100%の行動"
+          },
+          {
+            "atSeconds": 6.08238,
+            "text": "残念ながら運転手の行動100%の確率で"
+          },
+          {
+            "atSeconds": 6.60676,
+            "text": "残念ながら運転手の行動を100%の確率で予測する"
+          },
+          {
+            "atSeconds": 7.08503,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできない"
+          },
+          {
+            "atSeconds": 7.59025,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので"
+          },
+          {
+            "atSeconds": 8.07033,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないのでもう"
+          },
+          {
+            "atSeconds": 8.60978,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の7"
+          },
+          {
+            "atSeconds": 9.11797,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の流れをチェック"
+          },
+          {
+            "atSeconds": 9.57847,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の流れを研究すること"
+          },
+          {
+            "atSeconds": 10.1217,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の流れを研究することは困難"
+          },
+          {
+            "atSeconds": 10.5962,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので構図の流れを研究することは困難です"
+          }
+        ]
+      },
+      "characterEdits": 2,
+      "referenceCharacters": 49,
+      "CER": 0.04081632653061224,
+      "firstPrefixEdits": 6,
+      "firstPrefixCharacters": 6,
+      "firstPrefixCoverage": 0.12244897959183673,
+      "elapsedSeconds": 12.106118457973935
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0010:1980",
+      "candidate": "tiny",
+      "mode": "paced",
+      "reference": "残念ながら 運転手の行動を100%の確率で予測することはできないので 交通の流れを研究することは困難です",
+      "audioSHA256": "a7297368ff66e4deaf5639aec5c4dbac2840f8ef233008b2709e1ba9a7f0fbd8",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "paced",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 11.94,
+        "modelLoadSeconds": 0.0596275,
+        "warmupSeconds": 0.0148551,
+        "preprocessingSeconds": 0.00298008,
+        "computeSeconds": 0.704213,
+        "computeRTF": 0.0589793,
+        "wallSeconds": 11.9542,
+        "firstTextSeconds": 2.539047,
+        "postInputFinalizationSeconds": 0.00412825,
+        "maximumScheduleLatenessSeconds": 0.0101472,
+        "peakRSSBytes": 186417152,
+        "finalText": "残念ながら運転手の行動を100%の確率で予測することはできないので、構図の流れを研究することが困難です。",
+        "updates": [
+          {
+            "atSeconds": 2.53905,
+            "text": "残念"
+          },
+          {
+            "atSeconds": 3.03339,
+            "text": "残念ながら"
+          },
+          {
+            "atSeconds": 3.53537,
+            "text": "残念ながら運転手"
+          },
+          {
+            "atSeconds": 4.02238,
+            "text": "残念ながら運転手の行動"
+          },
+          {
+            "atSeconds": 4.5269,
+            "text": "残念ながら運転手の行動を100%にします"
+          },
+          {
+            "atSeconds": 5.04189,
+            "text": "残念ながら運転手の行動100%100%100%"
+          },
+          {
+            "atSeconds": 5.55352,
+            "text": "残念ながら運転手の行動100%の可能性"
+          },
+          {
+            "atSeconds": 6.05427,
+            "text": "残念ながら運転手の行動100%の確率で良い"
+          },
+          {
+            "atSeconds": 6.54936,
+            "text": "残念ながら運転手の行動を100%の確率で予測する"
+          },
+          {
+            "atSeconds": 7.04603,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできない"
+          },
+          {
+            "atSeconds": 7.53719,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので"
+          },
+          {
+            "atSeconds": 8.03988,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので、こう"
+          },
+          {
+            "atSeconds": 8.54169,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので、構図の流れを考慮することができます。"
+          },
+          {
+            "atSeconds": 9.05596,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので、構図の流れを牽引する。"
+          },
+          {
+            "atSeconds": 9.56344,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので、交通の流れを研究すること。"
+          },
+          {
+            "atSeconds": 10.0398,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので、交通の流れを研究することが困難"
+          },
+          {
+            "atSeconds": 10.5737,
+            "text": "残念ながら運転手の行動を100%の確率で予測することはできないので、構図の流れを研究することが困難です。"
+          }
+        ]
+      },
+      "characterEdits": 3,
+      "referenceCharacters": 49,
+      "CER": 0.061224489795918366,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 2,
+      "firstPrefixCoverage": 0.04081632653061224,
+      "elapsedSeconds": 12.047259584011044
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "candidate": "tiny",
+      "mode": "paced",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "paced",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 10.08,
+        "modelLoadSeconds": 0.0480961,
+        "warmupSeconds": 0.0133646,
+        "preprocessingSeconds": 0.00218771,
+        "computeSeconds": 0.370891,
+        "computeRTF": 0.0367948,
+        "wallSeconds": 10.0851,
+        "firstTextSeconds": 3.027367,
+        "postInputFinalizationSeconds": 0.00212521,
+        "maximumScheduleLatenessSeconds": 0.0100499,
+        "peakRSSBytes": 140312576,
+        "finalText": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "updates": [
+          {
+            "atSeconds": 3.02737,
+            "text": "ロランドランド"
+          },
+          {
+            "atSeconds": 3.5529,
+            "text": "ロランド面倒さは"
+          },
+          {
+            "atSeconds": 4.04133,
+            "text": "ロランド面倒さはM"
+          },
+          {
+            "atSeconds": 4.53952,
+            "text": "ロランド面倒さはM16ライン"
+          },
+          {
+            "atSeconds": 5.03858,
+            "text": "ロランド面倒さはM16ライフルで"
+          },
+          {
+            "atSeconds": 5.54559,
+            "text": "ロランド面倒さはM16ライフルで観光客"
+          },
+          {
+            "atSeconds": 6.03961,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲"
+          },
+          {
+            "atSeconds": 6.53637,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          }
+        ]
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "CER": 0.17857142857142858,
+      "firstPrefixEdits": 1,
+      "firstPrefixCharacters": 7,
+      "firstPrefixCoverage": 0.25,
+      "elapsedSeconds": 10.171721416991204
+    },
+    {
+      "caseID": "fleurs-ja-screen-v1:0013:1736",
+      "candidate": "small",
+      "mode": "paced",
+      "reference": "ロランド メンドーサはm16ライフルで観光客に発砲しました",
+      "audioSHA256": "259563f50d31c104a3126afd6ba5c928d3978cb3fb7dd30cb36e5f09e8a4cc2b",
+      "outcome": "passed",
+      "timeoutSeconds": 120,
+      "intervalSeconds": 0.5,
+      "exitCode": 0,
+      "stderr": "Thread 0x1f6855e80:bin-tokenizer.cpp:256:build_merge_index(): No byte fallback block in this vocabulary, so it cannot be byte-pair encoded; falling back to longest-match encoding.\n\n",
+      "result": {
+        "mode": "paced",
+        "libraryVersion": 30000,
+        "audioDurationSeconds": 10.08,
+        "modelLoadSeconds": 0.13018,
+        "warmupSeconds": 0.0145723,
+        "preprocessingSeconds": 0.00366887,
+        "computeSeconds": 0.705221,
+        "computeRTF": 0.0699624,
+        "wallSeconds": 10.0856,
+        "firstTextSeconds": 3.060699,
+        "postInputFinalizationSeconds": 0.00299883,
+        "maximumScheduleLatenessSeconds": 0.0243714,
+        "peakRSSBytes": 462258176,
+        "finalText": "ロランド面倒さはM16ライフルで観光客に発砲しました",
+        "updates": [
+          {
+            "atSeconds": 3.0607,
+            "text": "ロランド"
+          },
+          {
+            "atSeconds": 3.5619,
+            "text": "ロランド面倒さ"
+          },
+          {
+            "atSeconds": 4.07699,
+            "text": "ロランド面倒さはM"
+          },
+          {
+            "atSeconds": 4.59218,
+            "text": "ロランド面倒さはM166"
+          },
+          {
+            "atSeconds": 5.06382,
+            "text": "ロランド面倒さはM16ライフルで"
+          },
+          {
+            "atSeconds": 5.58344,
+            "text": "ロランド面倒さはM16ライフルで観光"
+          },
+          {
+            "atSeconds": 6.12437,
+            "text": "ロランド面倒さはM16ライフルで観光客に発行"
+          },
+          {
+            "atSeconds": 6.57877,
+            "text": "ロランド面倒さはM16ライフルで観光客に発砲しました"
+          }
+        ]
+      },
+      "characterEdits": 5,
+      "referenceCharacters": 28,
+      "CER": 0.17857142857142858,
+      "firstPrefixEdits": 0,
+      "firstPrefixCharacters": 4,
+      "firstPrefixCoverage": 0.14285714285714285,
+      "elapsedSeconds": 10.268821917008609
+    }
+  ]
+}

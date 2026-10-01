@@ -1,0 +1,2210 @@
+{
+  "schemaVersion": 1,
+  "candidate": "phonon",
+  "executableSHA256": "a89185ba6ebe7347cf2bac15d8bd7a0a9bb5bbf06a0cac06cb724dc718ee0b42",
+  "suiteSHA256": "e381d367c0f5ce8a07da9e0346fdaa64579d35a1b74ad4e777bb3545f2d31380",
+  "harnessSHA256": "b64ab35852d6d65c436926412940f0ab37f4bec0e8a61a96260e871657afcbd6",
+  "executableSourceIdentity": "mimi-adaptive-segmentation-build-identity:d53d8fa53b9ad379d52e98c1697b5cead027a57f6e3e8b2a29affb122e89a29c",
+  "audioDeliveryBoundary": "end of each 50ms buffer",
+  "mode": "paced",
+  "attempts": [
+    {
+      "caseID": "fleurs-en-screen-v1:0000:1904",
+      "reference": "however due to the slow communication channels styles in the west could lag behind by 25 to 30 year",
+      "audioSHA256": "33aca50159ec2e3cbcc894eb26faa916d6badb1b49fb75994973561540a7f012",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "25",
+        "30"
+      ],
+      "protectedTermAliases": {
+        "25": [
+          "twenty five",
+          "twenty-five"
+        ],
+        "30": [
+          "thirty"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.56,
+        "compute_rtf": 0.11367618854166663,
+        "compute_seconds": 1.2004205509999997,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.667625291,
+            "text": "However,"
+          },
+          {
+            "kind": "final",
+            "seconds": 2.1182601659999998,
+            "text": "However,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.957965625,
+            "text": "Due to the slow community"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.474927208,
+            "text": "Due to the slow communication."
+          },
+          {
+            "kind": "final",
+            "seconds": 3.981592166,
+            "text": "due to the slow communication channels."
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.057027708,
+            "text": "Styles"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.580246625,
+            "text": "Styles in the way"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.069366708,
+            "text": "Styles in the West could"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.5942366660000005,
+            "text": "Styles in the West could lag behind"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.110014625,
+            "text": "Styles in the West could lag behind,"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.244456583,
+            "text": "Styles in the West could lag behind,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.057419583,
+            "text": "By twenty five."
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.578255333,
+            "text": "By twenty five to thirty."
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.069986,
+            "text": "by twenty five to thirty years."
+          },
+          {
+            "kind": "final",
+            "seconds": 9.304302291,
+            "text": "by twenty five to thirty years."
+          }
+        ],
+        "first_text_seconds": 1.667625291,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 8.841700000061792e-05,
+        "prepare_seconds": 0.510267708,
+        "text": "However, due to the slow communication channels. Styles in the West could lag behind, by twenty five to thirty years.",
+        "wall_seconds": 10.560237,
+        "warnings": []
+      },
+      "characterEdits": 17,
+      "referenceCharacters": 81,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0000:1904",
+      "reference": "however due to the slow communication channels styles in the west could lag behind by 25 to 30 year",
+      "audioSHA256": "33aca50159ec2e3cbcc894eb26faa916d6badb1b49fb75994973561540a7f012",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "25",
+        "30"
+      ],
+      "protectedTermAliases": {
+        "25": [
+          "twenty five",
+          "twenty-five"
+        ],
+        "30": [
+          "thirty"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.56,
+        "compute_rtf": 0.11153210653409092,
+        "compute_seconds": 1.177779045,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.6639882080000001,
+            "text": "However,"
+          },
+          {
+            "kind": "final",
+            "seconds": 2.105235292,
+            "text": "However,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.9662135,
+            "text": "Due to the slow community"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.468149542,
+            "text": "Due to the slow communication."
+          },
+          {
+            "kind": "final",
+            "seconds": 3.976579375,
+            "text": "due to the slow communication channels."
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.054130333,
+            "text": "Styles"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.575413417,
+            "text": "Styles in the way"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.066405167,
+            "text": "Styles in the West could"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.589588417,
+            "text": "Styles in the West could lag behind"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.098312833,
+            "text": "Styles in the West could lag behind,"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.245405542,
+            "text": "Styles in the West could lag behind,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.063329,
+            "text": "By twenty five."
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.580298167,
+            "text": "By twenty five to thirty."
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.079698208,
+            "text": "by twenty five to thirty years."
+          },
+          {
+            "kind": "final",
+            "seconds": 9.3156945,
+            "text": "by twenty five to thirty years."
+          }
+        ],
+        "first_text_seconds": 1.6639882080000001,
+        "maximum_queued_samples": 960,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00020029199999882508,
+        "prepare_seconds": 0.000894167,
+        "text": "However, due to the slow communication channels. Styles in the West could lag behind, by twenty five to thirty years.",
+        "wall_seconds": 10.560607749999999,
+        "warnings": []
+      },
+      "characterEdits": 17,
+      "referenceCharacters": 81,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0000:1904",
+      "reference": "however due to the slow communication channels styles in the west could lag behind by 25 to 30 year",
+      "audioSHA256": "33aca50159ec2e3cbcc894eb26faa916d6badb1b49fb75994973561540a7f012",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "25",
+        "30"
+      ],
+      "protectedTermAliases": {
+        "25": [
+          "twenty five",
+          "twenty-five"
+        ],
+        "30": [
+          "thirty"
+        ]
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.56,
+        "compute_rtf": 0.11421059867424235,
+        "compute_seconds": 1.2060639219999993,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.676296041,
+            "text": "However,"
+          },
+          {
+            "kind": "final",
+            "seconds": 2.122697125,
+            "text": "However,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.968275291,
+            "text": "Due to the slow community"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.475481625,
+            "text": "Due to the slow communication."
+          },
+          {
+            "kind": "final",
+            "seconds": 3.961915625,
+            "text": "due to the slow communication channels."
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.077833291,
+            "text": "Styles"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.5604668329999996,
+            "text": "Styles in the way"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.06129325,
+            "text": "Styles in the West could"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.609460416,
+            "text": "Styles in the West could lag behind"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.1015875,
+            "text": "Styles in the West could lag behind,"
+          },
+          {
+            "kind": "final",
+            "seconds": 7.245638,
+            "text": "Styles in the West could lag behind,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.07198875,
+            "text": "By twenty five."
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.587449291,
+            "text": "By twenty five to thirty."
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.066384,
+            "text": "by twenty five to thirty years."
+          },
+          {
+            "kind": "final",
+            "seconds": 9.314855416,
+            "text": "by twenty five to thirty years."
+          }
+        ],
+        "first_text_seconds": 1.676296041,
+        "maximum_queued_samples": 960,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.0003119580000010558,
+        "prepare_seconds": 0.001598416,
+        "text": "However, due to the slow communication channels. Styles in the West could lag behind, by twenty five to thirty years.",
+        "wall_seconds": 10.560700166,
+        "warnings": []
+      },
+      "characterEdits": 17,
+      "referenceCharacters": 81,
+      "outcome": "passed",
+      "processElapsedSeconds": 32.46840549999615
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0013:1919",
+      "reference": "the city is also the base to climb the nyiragongo volcano along with some of the cheapest mountain gorilla tracking in africa",
+      "audioSHA256": "f93693f080704373d85c2761a4fe12c2a2a4a6ea721576c5c3bf4226dfefa44c",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Nyiragongo"
+      ],
+      "protectedTermAliases": {
+        "Nyiragongo": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.28,
+        "compute_rtf": 0.060821132801418404,
+        "compute_seconds": 0.6860623779999996,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.357115959,
+            "text": "The city is often a city."
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.842395209,
+            "text": "The city is also the"
+          },
+          {
+            "kind": "final",
+            "seconds": 3.09599775,
+            "text": "The city is also the base of the city."
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.272118417,
+            "text": "to claim that Nairai Gango"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.805176959,
+            "text": "to claim that Nairai Gango volcano."
+          },
+          {
+            "kind": "final",
+            "seconds": 6.198057959,
+            "text": "Decline that Nairai Gango volcano along."
+          },
+          {
+            "kind": "final",
+            "seconds": 6.955652042,
+            "text": "along with some of the"
+          }
+        ],
+        "first_text_seconds": 2.357115959,
+        "maximum_queued_samples": 1600,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 7.383400000016138e-05,
+        "prepare_seconds": 0.38295625,
+        "text": "The city is also the base of the city. Decline that Nairai Gango volcano along. along with some of the",
+        "wall_seconds": 11.289233334,
+        "warnings": []
+      },
+      "characterEdits": 61,
+      "referenceCharacters": 104,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0013:1919",
+      "reference": "the city is also the base to climb the nyiragongo volcano along with some of the cheapest mountain gorilla tracking in africa",
+      "audioSHA256": "f93693f080704373d85c2761a4fe12c2a2a4a6ea721576c5c3bf4226dfefa44c",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Nyiragongo"
+      ],
+      "protectedTermAliases": {
+        "Nyiragongo": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.28,
+        "compute_rtf": 0.05906695549645391,
+        "compute_seconds": 0.6662752580000001,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.327318958,
+            "text": "The city is often a city."
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.8338571249999998,
+            "text": "The city is also the"
+          },
+          {
+            "kind": "final",
+            "seconds": 3.094259416,
+            "text": "The city is also the base of the city."
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.279917125,
+            "text": "to claim that Nairai Gango"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.798999625,
+            "text": "to claim that Nairai Gango volcano."
+          },
+          {
+            "kind": "final",
+            "seconds": 6.196749666,
+            "text": "Decline that Nairai Gango volcano along."
+          },
+          {
+            "kind": "final",
+            "seconds": 6.973001541,
+            "text": "along with some of the"
+          }
+        ],
+        "first_text_seconds": 2.327318958,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00016479199999963612,
+        "prepare_seconds": 0.001096083,
+        "text": "The city is also the base of the city. Decline that Nairai Gango volcano along. along with some of the",
+        "wall_seconds": 11.287190125,
+        "warnings": []
+      },
+      "characterEdits": 61,
+      "referenceCharacters": 104,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0013:1919",
+      "reference": "the city is also the base to climb the nyiragongo volcano along with some of the cheapest mountain gorilla tracking in africa",
+      "audioSHA256": "f93693f080704373d85c2761a4fe12c2a2a4a6ea721576c5c3bf4226dfefa44c",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Nyiragongo"
+      ],
+      "protectedTermAliases": {
+        "Nyiragongo": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 11.28,
+        "compute_rtf": 0.054854894592198576,
+        "compute_seconds": 0.6187632109999999,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 2.319653,
+            "text": "The city is often a city."
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.839757875,
+            "text": "The city is also the"
+          },
+          {
+            "kind": "final",
+            "seconds": 3.090389875,
+            "text": "The city is also the base of the city."
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.279299208,
+            "text": "to claim that Nairai Gango"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.784629,
+            "text": "to claim that Nairai Gango volcano."
+          },
+          {
+            "kind": "final",
+            "seconds": 6.190542083,
+            "text": "Decline that Nairai Gango volcano along."
+          },
+          {
+            "kind": "final",
+            "seconds": 6.9557804579999996,
+            "text": "along with some of the"
+          }
+        ],
+        "first_text_seconds": 2.319653,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 5.516599999921823e-05,
+        "prepare_seconds": 0.002268458,
+        "text": "The city is also the base of the city. Decline that Nairai Gango volcano along. along with some of the",
+        "wall_seconds": 11.289134583,
+        "warnings": []
+      },
+      "characterEdits": 61,
+      "referenceCharacters": 104,
+      "outcome": "passed",
+      "processElapsedSeconds": 34.52561354194768
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0021:1952",
+      "reference": "anyone who's going to drive at high latitudes or over mountain passes should consider the possibility of snow ice or freezing temperatures",
+      "audioSHA256": "3f498f6216c60544714c9b334c4cfe4811b60b2dadbc710e68d127371a5ffdfd",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 8.58,
+        "compute_rtf": 0.0009149717948717946,
+        "compute_seconds": 0.007850457999999998,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00019970899999854907,
+        "prepare_seconds": 0.356418416,
+        "text": "",
+        "wall_seconds": 8.587645417,
+        "warnings": []
+      },
+      "characterEdits": 116,
+      "referenceCharacters": 116,
+      "outcome": "runtime-or-quality-failure"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0021:1952",
+      "reference": "anyone who's going to drive at high latitudes or over mountain passes should consider the possibility of snow ice or freezing temperatures",
+      "audioSHA256": "3f498f6216c60544714c9b334c4cfe4811b60b2dadbc710e68d127371a5ffdfd",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 8.58,
+        "compute_rtf": 0.0006762290209790209,
+        "compute_seconds": 0.005802045,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00015524999999882994,
+        "prepare_seconds": 0.002873791,
+        "text": "",
+        "wall_seconds": 8.5881975,
+        "warnings": []
+      },
+      "characterEdits": 116,
+      "referenceCharacters": 116,
+      "outcome": "runtime-or-quality-failure"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0021:1952",
+      "reference": "anyone who's going to drive at high latitudes or over mountain passes should consider the possibility of snow ice or freezing temperatures",
+      "audioSHA256": "3f498f6216c60544714c9b334c4cfe4811b60b2dadbc710e68d127371a5ffdfd",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 8.58,
+        "compute_rtf": 0.0007137630536130535,
+        "compute_seconds": 0.006124086999999999,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00025945899999868516,
+        "prepare_seconds": 0.002120875,
+        "text": "",
+        "wall_seconds": 8.58945075,
+        "warnings": []
+      },
+      "characterEdits": 116,
+      "referenceCharacters": 116,
+      "outcome": "runtime-or-quality-failure",
+      "processElapsedSeconds": 26.35228920803638
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0029:1789",
+      "reference": "the other nominations include best picture director cinematography costume design film-editing original score production design sound editing sound mixing and original screenplay",
+      "audioSHA256": "72f827270ff9808e65b0ea15f47313207d360a0d5b49ad4c647b9c93fecb9f47",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 14.6,
+        "compute_rtf": 0.23213438650684948,
+        "compute_seconds": 3.3891620430000025,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.9306905,
+            "text": "Yeah."
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.426050125,
+            "text": "The other number"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.9219415,
+            "text": "The other nominations"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.42486875,
+            "text": "The other nominations include"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.93630625,
+            "text": "The other nominations include Baspic."
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.454938125,
+            "text": "The other nominations include Best Picture, Doctor"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.957390167,
+            "text": "The other nominations include Best Picture, Director of Center"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.505415167,
+            "text": "The other nominations include Best Picture, Director, Cinematic."
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.960037667,
+            "text": "The other nominations include Best Picture, Director of Cinematography,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.493440167,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Cosmic"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.9864922499999995,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.471904292,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.99301175,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing."
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.504803584,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.008126042,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.559500292,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.046037334,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.549720959,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.022837417,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sound."
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.707340334,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing."
+          },
+          {
+            "kind": "final",
+            "seconds": 11.057388917,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing, Seminar."
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.271758917,
+            "text": "Mixing"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.773517917,
+            "text": "Bow Miss Mixing and original"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.281198584,
+            "text": "Found mixing and original screen point."
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.795959917,
+            "text": "Found mismixing and original screenplay."
+          },
+          {
+            "kind": "final",
+            "seconds": 13.877196875,
+            "text": "Miss Mixing and Original Screenplay."
+          }
+        ],
+        "first_text_seconds": 0.9306905,
+        "maximum_queued_samples": 5600,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.0002533749999997781,
+        "prepare_seconds": 0.366035625,
+        "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing, Seminar. Miss Mixing and Original Screenplay.",
+        "wall_seconds": 14.610588584,
+        "warnings": []
+      },
+      "characterEdits": 13,
+      "referenceCharacters": 156,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0029:1789",
+      "reference": "the other nominations include best picture director cinematography costume design film-editing original score production design sound editing sound mixing and original screenplay",
+      "audioSHA256": "72f827270ff9808e65b0ea15f47313207d360a0d5b49ad4c647b9c93fecb9f47",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 14.6,
+        "compute_rtf": 0.2153332193835616,
+        "compute_seconds": 3.1438650029999993,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.911434459,
+            "text": "Yeah."
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.42786425,
+            "text": "The other number"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.926633584,
+            "text": "The other nominations"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.426781417,
+            "text": "The other nominations include"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.951014709,
+            "text": "The other nominations include Baspic."
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.436425959,
+            "text": "The other nominations include Best Picture, Doctor"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.958592709,
+            "text": "The other nominations include Best Picture, Director of Center"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.461922667,
+            "text": "The other nominations include Best Picture, Director, Cinematic."
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.960373292,
+            "text": "The other nominations include Best Picture, Director of Cinematography,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.500242292,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Cosmic"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.973769959,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.487246375,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.003229917,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing."
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.479592709,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.034157709,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.520234625,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.011313542,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.535330667,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.057015834,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sound."
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.539329375,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing."
+          },
+          {
+            "kind": "final",
+            "seconds": 11.060267167,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing, Seminar."
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.276830209,
+            "text": "Mixing"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.7643235,
+            "text": "Bow Miss Mixing and original"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.280252875,
+            "text": "Found mixing and original screen point."
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.810293917,
+            "text": "Found mismixing and original screenplay."
+          },
+          {
+            "kind": "final",
+            "seconds": 13.896869792,
+            "text": "Miss Mixing and Original Screenplay."
+          }
+        ],
+        "first_text_seconds": 0.911434459,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00011499999999919908,
+        "prepare_seconds": 0.003964459,
+        "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing, Seminar. Miss Mixing and Original Screenplay.",
+        "wall_seconds": 14.606119167,
+        "warnings": []
+      },
+      "characterEdits": 13,
+      "referenceCharacters": 156,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0029:1789",
+      "reference": "the other nominations include best picture director cinematography costume design film-editing original score production design sound editing sound mixing and original screenplay",
+      "audioSHA256": "72f827270ff9808e65b0ea15f47313207d360a0d5b49ad4c647b9c93fecb9f47",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [],
+      "protectedTermAliases": {},
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 14.6,
+        "compute_rtf": 0.21684092842465755,
+        "compute_seconds": 3.1658775550000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 0.935010459,
+            "text": "Yeah."
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.417782209,
+            "text": "The other number"
+          },
+          {
+            "kind": "partial",
+            "seconds": 1.92383875,
+            "text": "The other nominations"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.414772625,
+            "text": "The other nominations include"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.950493917,
+            "text": "The other nominations include Baspic."
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.462806792,
+            "text": "The other nominations include Best Picture, Doctor"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.942403792,
+            "text": "The other nominations include Best Picture, Director of Center"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.475760584,
+            "text": "The other nominations include Best Picture, Director, Cinematic."
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.963356417,
+            "text": "The other nominations include Best Picture, Director of Cinematography,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.480503209,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Cosmic"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.99689425,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.494705417,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.997868084,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing."
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.478788084,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.036230417,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.535791584,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.012634417,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.533078792,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.051467084,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sound."
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.577989125,
+            "text": "The other nominations include Best Picture, Director Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing."
+          },
+          {
+            "kind": "final",
+            "seconds": 11.04089375,
+            "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing, Seminar."
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.275964042,
+            "text": "Mixing"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.77334925,
+            "text": "Bow Miss Mixing and original"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.277131209,
+            "text": "Found mixing and original screen point."
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.80565,
+            "text": "Found mismixing and original screenplay."
+          },
+          {
+            "kind": "final",
+            "seconds": 13.891919875,
+            "text": "Miss Mixing and Original Screenplay."
+          }
+        ],
+        "first_text_seconds": 0.935010459,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00010724999999922602,
+        "prepare_seconds": 0.001907083,
+        "text": "The other nominations include Best Picture, Director of Cinematography, Costume Design, Film Editing, Original Score, Production Design, Sand Editing, Seminar. Miss Mixing and Original Screenplay.",
+        "wall_seconds": 14.608076375,
+        "warnings": []
+      },
+      "characterEdits": 13,
+      "referenceCharacters": 156,
+      "outcome": "passed",
+      "processElapsedSeconds": 44.55057050002506
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0047:1975",
+      "reference": "vatican city's population is around 800 it is the smallest independent country in the world and the country with the lowest population",
+      "audioSHA256": "07385deba3f670720414e0c0b301ec3e311ae617b1b4d0fa3e73d41a1969749c",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Vatican City",
+        "800"
+      ],
+      "protectedTermAliases": {
+        "Vatican City": [],
+        "800": [
+          "eight hundred"
+        ]
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.74,
+        "compute_rtf": 0.0007573083798882682,
+        "compute_seconds": 0.008133492,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00025595800000033364,
+        "prepare_seconds": 0.406933875,
+        "text": "",
+        "wall_seconds": 10.749163292,
+        "warnings": []
+      },
+      "characterEdits": 112,
+      "referenceCharacters": 112,
+      "outcome": "runtime-or-quality-failure"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0047:1975",
+      "reference": "vatican city's population is around 800 it is the smallest independent country in the world and the country with the lowest population",
+      "audioSHA256": "07385deba3f670720414e0c0b301ec3e311ae617b1b4d0fa3e73d41a1969749c",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Vatican City",
+        "800"
+      ],
+      "protectedTermAliases": {
+        "Vatican City": [],
+        "800": [
+          "eight hundred"
+        ]
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.74,
+        "compute_rtf": 0.0007378492551210428,
+        "compute_seconds": 0.007924501,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.0002671250000005898,
+        "prepare_seconds": 0.002276834,
+        "text": "",
+        "wall_seconds": 10.750144625,
+        "warnings": []
+      },
+      "characterEdits": 112,
+      "referenceCharacters": 112,
+      "outcome": "runtime-or-quality-failure"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0047:1975",
+      "reference": "vatican city's population is around 800 it is the smallest independent country in the world and the country with the lowest population",
+      "audioSHA256": "07385deba3f670720414e0c0b301ec3e311ae617b1b4d0fa3e73d41a1969749c",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Vatican City",
+        "800"
+      ],
+      "protectedTermAliases": {
+        "Vatican City": [],
+        "800": [
+          "eight hundred"
+        ]
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 10.74,
+        "compute_rtf": 0.0007680200186219735,
+        "compute_seconds": 0.008248534999999996,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.0001467499999989741,
+        "prepare_seconds": 0.001933708,
+        "text": "",
+        "wall_seconds": 10.747968875,
+        "warnings": []
+      },
+      "characterEdits": 112,
+      "referenceCharacters": 112,
+      "outcome": "runtime-or-quality-failure",
+      "processElapsedSeconds": 32.924586458015256
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0068:1712",
+      "reference": "since 1966 the sundarbans have been a wildlife sanctuary and it is estimated that there are now 400 royal bengal tigers and about 30,000 spotted deer in the area",
+      "audioSHA256": "96c5cde39f15883c5f8ba875581f862cd70e4ab0000ac5f6daae1c15e8c88ef0",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "1966",
+        "Sundarbans",
+        "400",
+        "30,000",
+        "Bengal tigers"
+      ],
+      "protectedTermAliases": {
+        "1966": [
+          "nineteen sixty six",
+          "nineteen sixty-six"
+        ],
+        "Sundarbans": [],
+        "400": [
+          "four hundred"
+        ],
+        "30,000": [
+          "30000",
+          "thirty thousand"
+        ],
+        "Bengal tigers": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 17.46,
+        "compute_rtf": 0.23607585939289796,
+        "compute_seconds": 4.121884504999999,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.9252933749999999,
+            "text": "That's his nineteen sixty six."
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.413256459,
+            "text": "Since nineteen sixty six,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.952033125,
+            "text": "Since nineteen sixty six the"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.4616425,
+            "text": "Since nineteen sixty six, the sun"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.94239025,
+            "text": "Since nineteen sixty six, the son Dar"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.445649542,
+            "text": "Since nineteen sixty six, the Sun Darban"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.968393084,
+            "text": "Since nineteen sixty six, the Sandarbans"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.464348834,
+            "text": "Since nineteen sixty six, the Sandarbans have been"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.9745902090000005,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wild"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.497452625,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.97611125,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary."
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.471321334,
+            "text": "Since nineteen sixty six the Sandarbans have been a wildlife sanctuary"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.0249075,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary and is"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.511478167,
+            "text": "Since nineteen sixty six the Sandarbans have been a wildlife sanctuary and is estimated"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.008715417,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary and it is estimated their"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.515355292,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.01532225,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.535882917,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.071163334,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary and it is estimated there are now four hundred royal Bengal"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.540725959,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers."
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.056198125,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers"
+          },
+          {
+            "kind": "final",
+            "seconds": 12.445044584,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers and"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.591153917,
+            "text": "And a"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.105923375,
+            "text": "And about"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.630959917,
+            "text": "And about thirty"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.121957625,
+            "text": "And about thirty thousand"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.620144417,
+            "text": "And about thirty thousand spot."
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.141553917,
+            "text": "And about thirty thousand spotted deer."
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.656059042,
+            "text": "And about thirty thousand spotted deer in"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.144736959,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.670860459,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.163296459,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "final",
+            "seconds": 17.567466334,
+            "text": "and about thirty thousand spotted deer in the area."
+          }
+        ],
+        "first_text_seconds": 1.9252933749999999,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.10606170799999859,
+        "prepare_seconds": 0.3632955,
+        "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers and and about thirty thousand spotted deer in the area.",
+        "wall_seconds": 17.567493167,
+        "warnings": []
+      },
+      "characterEdits": 48,
+      "referenceCharacters": 132,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0068:1712",
+      "reference": "since 1966 the sundarbans have been a wildlife sanctuary and it is estimated that there are now 400 royal bengal tigers and about 30,000 spotted deer in the area",
+      "audioSHA256": "96c5cde39f15883c5f8ba875581f862cd70e4ab0000ac5f6daae1c15e8c88ef0",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "1966",
+        "Sundarbans",
+        "400",
+        "30,000",
+        "Bengal tigers"
+      ],
+      "protectedTermAliases": {
+        "1966": [
+          "nineteen sixty six",
+          "nineteen sixty-six"
+        ],
+        "Sundarbans": [],
+        "400": [
+          "four hundred"
+        ],
+        "30,000": [
+          "30000",
+          "thirty thousand"
+        ],
+        "Bengal tigers": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 17.46,
+        "compute_rtf": 0.2355966539518901,
+        "compute_seconds": 4.1135175780000015,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.917622333,
+            "text": "That's his nineteen sixty six."
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.4335269999999998,
+            "text": "Since nineteen sixty six,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.958233,
+            "text": "Since nineteen sixty six the"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.45304875,
+            "text": "Since nineteen sixty six, the sun"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.944352167,
+            "text": "Since nineteen sixty six, the son Dar"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.443823292,
+            "text": "Since nineteen sixty six, the Sun Darban"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.96543975,
+            "text": "Since nineteen sixty six, the Sandarbans"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.491153458,
+            "text": "Since nineteen sixty six, the Sandarbans have been"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.987322708,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wild"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.491211167,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.985778375,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary."
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.48126925,
+            "text": "Since nineteen sixty six the Sandarbans have been a wildlife sanctuary"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.024954,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary and is"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.517427083,
+            "text": "Since nineteen sixty six the Sandarbans have been a wildlife sanctuary and is estimated"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.001537125,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary and it is estimated their"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.512585292,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.019748667,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.562507875,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.038001958,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary and it is estimated there are now four hundred royal Bengal"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.677285958,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers."
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.048403958,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers"
+          },
+          {
+            "kind": "final",
+            "seconds": 12.400561375,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers and"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.583598833,
+            "text": "And a"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.110527667,
+            "text": "And about"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.616311833,
+            "text": "And about thirty"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.115661542,
+            "text": "And about thirty thousand"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.617710208,
+            "text": "And about thirty thousand spot."
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.13130675,
+            "text": "And about thirty thousand spotted deer."
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.642713667,
+            "text": "And about thirty thousand spotted deer in"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.143205083,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.647811917,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.1491615,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "final",
+            "seconds": 17.567359667,
+            "text": "and about thirty thousand spotted deer in the area."
+          }
+        ],
+        "first_text_seconds": 1.917622333,
+        "maximum_queued_samples": 4800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.10509229200000192,
+        "prepare_seconds": 0.001531167,
+        "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers and and about thirty thousand spotted deer in the area.",
+        "wall_seconds": 17.567386375,
+        "warnings": []
+      },
+      "characterEdits": 48,
+      "referenceCharacters": 132,
+      "outcome": "passed"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0068:1712",
+      "reference": "since 1966 the sundarbans have been a wildlife sanctuary and it is estimated that there are now 400 royal bengal tigers and about 30,000 spotted deer in the area",
+      "audioSHA256": "96c5cde39f15883c5f8ba875581f862cd70e4ab0000ac5f6daae1c15e8c88ef0",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "1966",
+        "Sundarbans",
+        "400",
+        "30,000",
+        "Bengal tigers"
+      ],
+      "protectedTermAliases": {
+        "1966": [
+          "nineteen sixty six",
+          "nineteen sixty-six"
+        ],
+        "Sundarbans": [],
+        "400": [
+          "four hundred"
+        ],
+        "30,000": [
+          "30000",
+          "thirty thousand"
+        ],
+        "Bengal tigers": []
+      },
+      "exitCode": 0,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 17.46,
+        "compute_rtf": 0.21365941953035522,
+        "compute_seconds": 3.730493465000002,
+        "events": [
+          {
+            "kind": "partial",
+            "seconds": 1.9170407090000001,
+            "text": "That's his nineteen sixty six."
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.417534834,
+            "text": "Since nineteen sixty six,"
+          },
+          {
+            "kind": "partial",
+            "seconds": 2.9388182499999997,
+            "text": "Since nineteen sixty six the"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.450928875,
+            "text": "Since nineteen sixty six, the sun"
+          },
+          {
+            "kind": "partial",
+            "seconds": 3.940791375,
+            "text": "Since nineteen sixty six, the son Dar"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.451042667,
+            "text": "Since nineteen sixty six, the Sun Darban"
+          },
+          {
+            "kind": "partial",
+            "seconds": 4.948739209,
+            "text": "Since nineteen sixty six, the Sandarbans"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.472849834,
+            "text": "Since nineteen sixty six, the Sandarbans have been"
+          },
+          {
+            "kind": "partial",
+            "seconds": 5.965017084,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wild"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.470567625,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife"
+          },
+          {
+            "kind": "partial",
+            "seconds": 6.972440209,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary."
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.471986375,
+            "text": "Since nineteen sixty six the Sandarbans have been a wildlife sanctuary"
+          },
+          {
+            "kind": "partial",
+            "seconds": 7.9976140000000004,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary and is"
+          },
+          {
+            "kind": "partial",
+            "seconds": 8.501246625,
+            "text": "Since nineteen sixty six the Sandarbans have been a wildlife sanctuary and is estimated"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.00458125,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary and it is estimated their"
+          },
+          {
+            "kind": "partial",
+            "seconds": 9.507322792,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.014447667,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred"
+          },
+          {
+            "kind": "partial",
+            "seconds": 10.536340834,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.056781,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary and it is estimated there are now four hundred royal Bengal"
+          },
+          {
+            "kind": "partial",
+            "seconds": 11.537874417,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers."
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.0450915,
+            "text": "Since nineteen sixty six, the Sandarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers"
+          },
+          {
+            "kind": "final",
+            "seconds": 12.39858775,
+            "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers and"
+          },
+          {
+            "kind": "partial",
+            "seconds": 12.583502625,
+            "text": "And a"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.108731125,
+            "text": "And about"
+          },
+          {
+            "kind": "partial",
+            "seconds": 13.616203292,
+            "text": "And about thirty"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.11333425,
+            "text": "And about thirty thousand"
+          },
+          {
+            "kind": "partial",
+            "seconds": 14.615313375,
+            "text": "And about thirty thousand spot."
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.139644209,
+            "text": "And about thirty thousand spotted deer."
+          },
+          {
+            "kind": "partial",
+            "seconds": 15.645338584,
+            "text": "And about thirty thousand spotted deer in"
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.143248084,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "partial",
+            "seconds": 16.647426625,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "partial",
+            "seconds": 17.152542292,
+            "text": "and about thirty thousand spotted deer in the area."
+          },
+          {
+            "kind": "final",
+            "seconds": 17.583907,
+            "text": "and about thirty thousand spotted deer in the area."
+          }
+        ],
+        "first_text_seconds": 1.9170407090000001,
+        "maximum_queued_samples": 3200,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.12372754100000094,
+        "prepare_seconds": 0.000960166,
+        "text": "Since nineteen sixty six, the Sundarbans have been a wildlife sanctuary, and it is estimated there are now four hundred royal Bengal tigers and and about thirty thousand spotted deer in the area.",
+        "wall_seconds": 17.58396125,
+        "warnings": []
+      },
+      "characterEdits": 48,
+      "referenceCharacters": 132,
+      "outcome": "passed",
+      "processElapsedSeconds": 53.379787540994585
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0083:1896",
+      "reference": "usa gymnastics and the usoc have the same goal making the sport of gymnastics and others as safe as possible for athletes to follow their dreams in a safe positive and empowered environment",
+      "audioSHA256": "85cc9b1b455849836fec004ea6904ab05f67b63c2a9766227f0e3e721850e8f6",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "USA Gymnastics",
+        "USOC"
+      ],
+      "protectedTermAliases": {
+        "USA Gymnastics": [],
+        "USOC": []
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.0008868075999999996,
+        "compute_seconds": 0.013302113999999995,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.0001890410000005005,
+        "prepare_seconds": 0.510175375,
+        "text": "",
+        "wall_seconds": 15.00810525,
+        "warnings": []
+      },
+      "characterEdits": 157,
+      "referenceCharacters": 157,
+      "outcome": "runtime-or-quality-failure"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0083:1896",
+      "reference": "usa gymnastics and the usoc have the same goal making the sport of gymnastics and others as safe as possible for athletes to follow their dreams in a safe positive and empowered environment",
+      "audioSHA256": "85cc9b1b455849836fec004ea6904ab05f67b63c2a9766227f0e3e721850e8f6",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "USA Gymnastics",
+        "USOC"
+      ],
+      "protectedTermAliases": {
+        "USA Gymnastics": [],
+        "USOC": []
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.0007064664000000002,
+        "compute_seconds": 0.010596996000000004,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.0002259999999996154,
+        "prepare_seconds": 0.002028625,
+        "text": "",
+        "wall_seconds": 15.006321208,
+        "warnings": []
+      },
+      "characterEdits": 157,
+      "referenceCharacters": 157,
+      "outcome": "runtime-or-quality-failure"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0083:1896",
+      "reference": "usa gymnastics and the usoc have the same goal making the sport of gymnastics and others as safe as possible for athletes to follow their dreams in a safe positive and empowered environment",
+      "audioSHA256": "85cc9b1b455849836fec004ea6904ab05f67b63c2a9766227f0e3e721850e8f6",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "USA Gymnastics",
+        "USOC"
+      ],
+      "protectedTermAliases": {
+        "USA Gymnastics": [],
+        "USOC": []
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 15,
+        "compute_rtf": 0.0007804020666666667,
+        "compute_seconds": 0.011706031,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00040720799999860446,
+        "prepare_seconds": 0.00187575,
+        "text": "",
+        "wall_seconds": 15.004601583,
+        "warnings": []
+      },
+      "characterEdits": 157,
+      "referenceCharacters": 157,
+      "outcome": "runtime-or-quality-failure",
+      "processElapsedSeconds": 45.85442287498154
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0095:2004",
+      "reference": "the same month saw another airliner overrun a runway at mashhad and strike a wall killing seventeen",
+      "audioSHA256": "f5b0d08379aecc5471b7e9ef52cd4446abb7d9f1ec9e5262bcaa4cc97054699b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Mashhad",
+        "17"
+      ],
+      "protectedTermAliases": {
+        "Mashhad": [],
+        "17": [
+          "seventeen"
+        ]
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 0,
+      "modelWasAlreadyLoaded": false,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 6.48,
+        "compute_rtf": 0.0007575878086419751,
+        "compute_seconds": 0.004909168999999999,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.0001865419999997897,
+        "prepare_seconds": 0.364586,
+        "text": "",
+        "wall_seconds": 6.484925917,
+        "warnings": []
+      },
+      "characterEdits": 83,
+      "referenceCharacters": 83,
+      "outcome": "runtime-or-quality-failure"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0095:2004",
+      "reference": "the same month saw another airliner overrun a runway at mashhad and strike a wall killing seventeen",
+      "audioSHA256": "f5b0d08379aecc5471b7e9ef52cd4446abb7d9f1ec9e5262bcaa4cc97054699b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Mashhad",
+        "17"
+      ],
+      "protectedTermAliases": {
+        "Mashhad": [],
+        "17": [
+          "seventeen"
+        ]
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 1,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 6.48,
+        "compute_rtf": 0.0007886452160493823,
+        "compute_seconds": 0.005110420999999998,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 6.075000000027586e-05,
+        "prepare_seconds": 0.002638417,
+        "text": "",
+        "wall_seconds": 6.484528,
+        "warnings": []
+      },
+      "characterEdits": 83,
+      "referenceCharacters": 83,
+      "outcome": "runtime-or-quality-failure"
+    },
+    {
+      "caseID": "fleurs-en-screen-v1:0095:2004",
+      "reference": "the same month saw another airliner overrun a runway at mashhad and strike a wall killing seventeen",
+      "audioSHA256": "f5b0d08379aecc5471b7e9ef52cd4446abb7d9f1ec9e5262bcaa4cc97054699b",
+      "timeoutSeconds": 120,
+      "modelInstanceReusedWithinUtterance": true,
+      "protectedTerms": [
+        "Mashhad",
+        "17"
+      ],
+      "protectedTermAliases": {
+        "Mashhad": [],
+        "17": [
+          "seventeen"
+        ]
+      },
+      "exitCode": 1,
+      "stderr": "",
+      "stdout": "Phonon native live smoke complete: /Users/paras/.codex/worktrees/mimi-japanese-fast-asr/mimi/Research/speech/fast-japanese-v1/runs/mimi-phonon-paced-repeat-v2.current.json\n",
+      "repeat": 2,
+      "modelWasAlreadyLoaded": true,
+      "result": {
+        "audio_delivery_boundary": "end of each 50ms buffer",
+        "audio_seconds": 6.48,
+        "compute_rtf": 0.0007766527777777779,
+        "compute_seconds": 0.005032710000000001,
+        "events": [],
+        "first_text_seconds": null,
+        "maximum_queued_samples": 800,
+        "mode": "paced-production-queue",
+        "model": "phonon2-native-mlx",
+        "post_audio_finalization_seconds": 0.00015612500000017349,
+        "prepare_seconds": 0.001072167,
+        "text": "",
+        "wall_seconds": 6.4883075,
+        "warnings": []
+      },
+      "characterEdits": 83,
+      "referenceCharacters": 83,
+      "outcome": "runtime-or-quality-failure",
+      "processElapsedSeconds": 20.098924625024665
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "phase": "prospective-local-screen",
+  "hardware": "Apple M3 Pro, 36 GB RAM",
+  "runtimePin": "moonshine v0.1.5 native macOS arm64",
+  "nativeSourcePin": "234f60faa0eb388b01cdf7e60aca232af37aefda",
+  "candidates": [
+    "Japanese Moonshine Streaming Small",
+    "Japanese Moonshine Streaming Tiny"
+  ],
+  "japaneseSuite": "fleurs-ja-screen-v1: 24 existing registered clips, dataset revision 70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+  "englishReference": "Phonon 2 on registered English FLEURS clips, separate cross-language speed reference",
+  "samplingUnit": "utterance; repetitions and snapshots within an utterance are dependent",
+  "inference": "batch 1; official native quantized runtime; compare all audio with the same normalizer and include preprocessing in compute timing",
+  "primaryLatency": "paced time to first nonempty text, measured from first delivered audio",
+  "secondaryLatency": [
+    "compute RTF excluding pacing",
+    "post-input finalization",
+    "publication update intervals",
+    "model preparation"
+  ],
+  "quality": "normalized corpus CER; paired per-utterance comparison with existing Japanese Apple/Whisper references; protected-term recall when registered aliases exist",
+  "preliminaryGate": "first-text median <= 1 second; compute RTF <= 0.06 and investigate gap to freshly measured English Phonon; final CER <= Apple reference + 2 percentage points; no blank finals or runaway repetition",
+  "currentWhisperPromotion": "do not replace the accurate default based solely on this selected screen; document any accuracy loss and retain the current final path if a composite candidate is chosen",
+  "repeats": "one complete accuracy screen; three paired timing repeats for a deterministic eight-utterance subset after configuration is fixed",
+  "order": "counterbalance Small/Tiny order across timing repetitions",
+  "timeout": "120 seconds per short-clip attempt; timeout is failure and retained at the cap",
+  "retries": "no automatic inference retries; failed setup or explicit corrected-runtime investigations are separate retained candidates",
+  "selection": "exploratory shortlist; no population or held-out accuracy claim",
+  "cost": "local inference only, no external API or GPU-provider spend",
+  "notes": "Initial official CDN urllib requests returned403; direct curl returned200 before data collection. Native configuration must be read rather than treating default architecture constants as Japanese variants. User preference for single-model versus fast-draft/final-correction was requested; initial investigation tests single models.",
+  "nativeScreenOutcome": "Small v2 passes preliminary final quality; misses absolute first-text <=1s and paced compute <=0.06 gates. Optional preview integration is exploratory, not stable promotion.",
+  "productionTimingAmendment": "Freeze Small initial0.5/steady1.0s CPU,max_tokens13,VAD0.5s before production runs. Eight fixed positions 0,3,6,9,12,15,18,21, three repeats. Measure both candidates through native Mimi queue with audio delivered at end of50ms buffer. English Phonon remains a cross-language speed reference, not paired Japanese accuracy evidence. Tiny rejected on accuracy and not repeated.",
+  "prepackingAblation": "Native source CPU prepacking+arena on, same weights/decode cadence. Exploratory24-case direct parity/speed screen; verify gains on paced replay before adoption. First v3 run overlapped a <1s failed compile probe at start and is exploratory only.",
+  "productionFrozenRuntime": "CPU; Small Japanese; max_tokens13; VAD0.5s; first0.5s then1s updates; return_audio_data=false to free completed-segment PCM; no speculative decoder changes",
+  "productionWarmMeasurement": "Three replays per utterance in one native engine instance: repeat0 includes first inference; repeat1/2 reuse the loaded model. Preparation remains separately reported. Sampling unit is utterance, not24 independent trials.",
+  "selectedApplicationCandidate": "Japanese Parakeet encoder-only affineQ4 group64, BF16 prediction layers, 481857364B model+config; derivative from pinned mouri45BF16 source",
+  "conversionBaseline": "BF16 live-window24 CER8.894%; all-moduleQ4 CER10.518%; encoder-onlyQ4 CER9.049%; longer2s VADlook-behind rejected atCER18.794%; original0.512s retained",
+  "finalApplicationPolicy": "Native SileroVAD0.5s window, lookbehind8192, max15s segment; model inference first350ms within detected segment then500ms cadence; bounded40s actor audio ring plus8s capture queue; native return_audio_data=false; warm512ms and1s silent inference beforecapture; retracted/empty hypotheses clear live text",
+  "newColdInvestigation": "v4 continuous replay passed quality/drops but first-use GPU compilation caused1.9s backlog; v5 prewarms beforecapture. v4 retained asbaseline, v5 is final timing protocol."
+}

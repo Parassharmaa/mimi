@@ -1,0 +1,6 @@
+{
+  "moonshineProductionFrozenVersion": "v2",
+  "moonshineLongReplay": "complete331.56s; no warnings; queue maximum0.3s; CPUcomputeRTF0.07895; peakmemoryfootprint505103776B",
+  "whisperControls": "firstJA gapless replay interrupted before completion to keep candidate exploration separate from final source qualification; final controls remain required after source freeze",
+  "nextCandidate": "Japanese Parakeet MLX Q4: verify public artifact and live path"
+}

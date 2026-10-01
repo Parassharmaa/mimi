@@ -6,6 +6,7 @@ extension TranscriptionEngineID {
         switch self {
         case .appleSpeechAnalyzer: "Apple Speech"
         case .whisperKitLargeV3Turbo: "Mimi Speech"
+        case .parakeetJapanese: "Parakeet Japanese"
         case .phonon2: "Phonon 2"
         case .nemotronStreamingExperimental: "Nemotron"
         case .qwen3StreamingExperimental: "Qwen3 ASR"
@@ -18,6 +19,8 @@ extension TranscriptionEngineID {
             preferences.text("English and Japanese · Managed by macOS", "英語と日本語 · macOSが管理")
         case .whisperKitLargeV3Turbo:
             preferences.text("English and Japanese · Custom model · 468 MB", "英語と日本語 · カスタムモデル · 468 MB")
+        case .parakeetJapanese:
+            preferences.text("Japanese only · Fast live preview · 482 MB", "日本語のみ · 高速ライブプレビュー · 482 MB")
         case .phonon2:
             preferences.text("English only · Fast local speech · 424 MB", "英語のみ · 高速なローカル音声認識 · 424 MB")
         case .nemotronStreamingExperimental, .qwen3StreamingExperimental:

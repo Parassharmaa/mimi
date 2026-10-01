@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "sourceIdentity": "a9a2015c3434e8b7be0f8a5a502b572cd3fadc46824e62085bfc481e020c5d5d",
+  "functionalFullSuite": "scripts/test.sh passed through sessionE2E; initialUI packaging failed only because old128MB localMetal artifact exceeded sizecap",
+  "remainingChecks": "scripts/run-ui-smoke.sh plus main-window lifecycle and packaged native Japanese smoke passed with installedCI-built matchingMLX0.31.4 shader",
+  "compactShaderSHA256": "4306c203e313df5cf796680ee800984172028634922be436802b33d93bf3af1b",
+  "compactShaderSource": "installed0.1.8-preview.1 CI release; unchangedMLX dependency pin",
+  "modelPublicInstall": "passed; both pinnedrawasset digests verified before native load",
+  "existingSpeechControls": {
+    "mimi-paced-gapless-adaptive-ja30-6-japanese-fast-v6.json": {
+      "executableSha256": "8d9e2bbd747ad3e1e114d1678b957edb9b9d970d4b20f2413c623e49e50b0bfd",
+      "implementationSha256": "a9a2015c3434e8b7be0f8a5a502b572cd3fadc46824e62085bfc481e020c5d5d",
+      "corpusErrorRate": 0.060324825986078884,
+      "totalDroppedAudioSamples": 0
+    },
+    "mimi-direct-paused-adaptive-ja30-6-japanese-fast-v6.json": {
+      "executableSha256": "8d9e2bbd747ad3e1e114d1678b957edb9b9d970d4b20f2413c623e49e50b0bfd",
+      "implementationSha256": "a9a2015c3434e8b7be0f8a5a502b572cd3fadc46824e62085bfc481e020c5d5d",
+      "corpusErrorRate": 0.065738592420727,
+      "totalDroppedAudioSamples": 0
+    },
+    "mimi-direct-paused-adaptive-en24-6-japanese-fast-v6.json": {
+      "executableSha256": "8d9e2bbd747ad3e1e114d1678b957edb9b9d970d4b20f2413c623e49e50b0bfd",
+      "implementationSha256": "a9a2015c3434e8b7be0f8a5a502b572cd3fadc46824e62085bfc481e020c5d5d",
+      "corpusErrorRate": 0.05904059040590406,
+      "totalDroppedAudioSamples": 0
+    },
+    "mimi-paced-gapless-adaptive-en24-6-japanese-fast-v6.json": {
+      "executableSha256": "8d9e2bbd747ad3e1e114d1678b957edb9b9d970d4b20f2413c623e49e50b0bfd",
+      "implementationSha256": "a9a2015c3434e8b7be0f8a5a502b572cd3fadc46824e62085bfc481e020c5d5d",
+      "corpusErrorRate": 0.12361623616236163,
+      "totalDroppedAudioSamples": 0
+    }
+  }
+}

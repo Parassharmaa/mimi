@@ -29,7 +29,7 @@ struct OnboardingVoiceTypingChoice: Equatable {
             return .init(model: .mimiWhisper, language: language)
         case .phonon2:
             return .init(model: .phonon2, language: .english)
-        case .nemotronStreamingExperimental, .qwen3StreamingExperimental:
+        case .parakeetJapanese, .nemotronStreamingExperimental, .qwen3StreamingExperimental:
             return nil
         }
     }

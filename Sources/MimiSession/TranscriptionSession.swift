@@ -256,6 +256,7 @@ public struct TranscriptionSessionDependencies {
     public let appleSpeech: any AppleSpeechProviding
     public let automaticAppleSpeech: any AutomaticAppleSpeechTranscribing
     public let whisper: any WhisperAccuracyTranscribing
+    public let japaneseFast: (any WhisperAccuracyTranscribing)?
     public let phonon: (any WhisperAccuracyTranscribing)?
     public let nemotron: any NemotronMLXLiveTranscribing
     public let qwen: any QwenMLXLiveTranscribing
@@ -275,7 +276,8 @@ public struct TranscriptionSessionDependencies {
         storage: any TranscriptPersisting,
         inputDevices: [AudioInputDevice],
         outputDevices: [AudioOutputDevice],
-        phonon: (any WhisperAccuracyTranscribing)? = nil
+        phonon: (any WhisperAccuracyTranscribing)? = nil,
+        japaneseFast: (any WhisperAccuracyTranscribing)? = nil
     ) {
         self.microphoneCapture = microphoneCapture
         self.outputAudioCapture = outputAudioCapture
@@ -284,6 +286,7 @@ public struct TranscriptionSessionDependencies {
         self.automaticAppleSpeech = automaticAppleSpeech
         self.whisper = whisper
         self.phonon = phonon
+        self.japaneseFast = japaneseFast
         self.nemotron = nemotron
         self.qwen = qwen
         self.storage = storage
@@ -401,6 +404,10 @@ public final class TranscriptionSession {
     public var engineID: TranscriptionEngineID {
         didSet {
             guard engineID != oldValue else { return }
+            if engineID == .parakeetJapanese {
+                sourceLanguage = .japanese
+                languageMode = .japanese
+            }
             if engineID == .phonon2 {
                 sourceLanguage = .english
                 languageMode = .english
@@ -429,9 +436,14 @@ public final class TranscriptionSession {
     private let appleSpeech: any AppleSpeechProviding
     private let automaticAppleSpeech: any AutomaticAppleSpeechTranscribing
     private let whisper: any WhisperAccuracyTranscribing
+    private let japaneseFast: any WhisperAccuracyTranscribing
     private let phonon: any WhisperAccuracyTranscribing
     private func localSpeech(for engine: TranscriptionEngineID) -> any WhisperAccuracyTranscribing {
-        engine == .phonon2 ? phonon : whisper
+        switch engine {
+        case .phonon2: phonon
+        case .parakeetJapanese: japaneseFast
+        default: whisper
+        }
     }
     private var selectedLocalSpeech: any WhisperAccuracyTranscribing {
         localSpeech(for: activeSession?.engine ?? engineID)
@@ -466,6 +478,7 @@ public final class TranscriptionSession {
         automaticAppleSpeech = dependencies.automaticAppleSpeech
         whisper = dependencies.whisper
         phonon = dependencies.phonon ?? UnavailablePhononEngine()
+        japaneseFast = dependencies.japaneseFast ?? UnavailableJapaneseEngine()
         nemotron = dependencies.nemotron
         qwen = dependencies.qwen
         storage = dependencies.storage
@@ -474,6 +487,11 @@ public final class TranscriptionSession {
         engineID = initialEngine ?? .appleSpeechAnalyzer
         document = loadPersistedTranscript ? dependencies.storage.loadLatestTranscript() : TranscriptDocument()
         dependencies.storage.removeStaleTemporaryRecordings()
+        if engineID == .parakeetJapanese {
+            sourceLanguage = .japanese
+            languageMode = .japanese
+            detectedLanguage = .japanese
+        }
     }
 
     public var menuBarSymbolName: String {
@@ -503,6 +521,7 @@ public final class TranscriptionSession {
 
     public var selectableLanguageModes: [TranscriptionLanguageMode] {
         if engineID == .phonon2 { return [.english] }
+        if engineID == .parakeetJapanese { return [.japanese] }
         return engineID == .appleSpeechAnalyzer
             ? TranscriptionLanguageMode.allCases
             : [.english, .japanese]
@@ -512,7 +531,7 @@ public final class TranscriptionSession {
         _ = modelStorageRevision
         guard !modelSetupState.isActive else { return false }
         return switch engineID {
-        case .whisperKitLargeV3Turbo, .phonon2: selectedLocalSpeech.isRemovable
+        case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese: selectedLocalSpeech.isRemovable
         case .nemotronStreamingExperimental: nemotron.isDownloaded
         case .qwen3StreamingExperimental: qwen.isDownloaded
         case .appleSpeechAnalyzer:
@@ -564,7 +583,10 @@ public final class TranscriptionSession {
                 return .checking("Checking the \(sourceLanguage.displayName) Apple Speech asset…")
             }
             return appleReadiness(for: assetStatus, language: sourceLanguage)
-        case .whisperKitLargeV3Turbo, .phonon2:
+        case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
+            if engineID == .parakeetJapanese, sourceLanguage != .japanese {
+                return .unavailable("Parakeet Japanese supports Japanese only.")
+            }
             if engineID == .phonon2, sourceLanguage != .english {
                 return .unavailable("Phonon 2 supports English only. Choose Mimi Speech or Apple Speech for Japanese.")
             }
@@ -573,6 +595,9 @@ public final class TranscriptionSession {
             }
             if engineID == .phonon2 {
                 return selectedLocalSpeech.isDownloaded ? .ready : .unavailable("Phonon 2 is not bundled. Install a Mimi build that includes it.")
+            }
+            if engineID == .parakeetJapanese {
+                return selectedLocalSpeech.isDownloaded ? .ready : .needsDownload("Download Parakeet Japanese (482 MB) before starting live transcription.")
             }
             return selectedLocalSpeech.isDownloaded
                 ? .ready
@@ -741,7 +766,7 @@ public final class TranscriptionSession {
             } else {
                 _ = await refreshAppleSpeechAssetStatus(for: sourceLanguage)
             }
-        case .whisperKitLargeV3Turbo, .phonon2, .nemotronStreamingExperimental, .qwen3StreamingExperimental:
+        case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese, .nemotronStreamingExperimental, .qwen3StreamingExperimental:
             modelStorageRevision += 1
         }
     }
@@ -886,7 +911,7 @@ public final class TranscriptionSession {
                         scheduleAppleSpeechDownloadRefresh(for: [language], setupLanguage: language)
                     }
                 }
-            case .whisperKitLargeV3Turbo, .phonon2:
+            case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
                 updateModelSetup(.downloading(engine: request.engine, language: nil, progress: nil), for: request)
                 try await localSpeech(for: request.engine).install { [weak self, request] progress in
                     self?.updateModelDownloadProgress(progress, for: request)
@@ -926,7 +951,7 @@ public final class TranscriptionSession {
 
         do {
             switch request.engine {
-            case .whisperKitLargeV3Turbo, .phonon2:
+            case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
                 try await localSpeech(for: request.engine).removeDownloadedModel()
                 modelStorageRevision += 1
             case .nemotronStreamingExperimental:
@@ -1029,8 +1054,12 @@ public final class TranscriptionSession {
         return switch engine {
         case .appleSpeechAnalyzer:
             "\(verb) \(language?.displayName ?? "Apple Speech") Apple Speech"
-        case .whisperKitLargeV3Turbo, .phonon2:
+        case .whisperKitLargeV3Turbo:
             "\(verb) Whisper Large-v3"
+        case .parakeetJapanese:
+            "\(verb) Parakeet Japanese"
+        case .phonon2:
+            "\(verb) Phonon 2"
         case .nemotronStreamingExperimental:
             "\(verb) Nemotron MLX"
         case .qwen3StreamingExperimental:
@@ -1043,14 +1072,15 @@ public final class TranscriptionSession {
         language: SpeechLanguage?,
         progress: ModelDownloadProgress?
     ) -> String {
-        guard engine == .whisperKitLargeV3Turbo, let progress else {
+        guard engine == .whisperKitLargeV3Turbo || engine == .parakeetJapanese, let progress else {
             return modelSetupTitle(for: engine, language: language, verb: "Downloading")
         }
 
         if let fraction = progress.fractionCompleted {
-            return "Downloading Whisper Large-v3 — \(Int((fraction * 100).rounded()))%"
+            let name = engine == .parakeetJapanese ? "Parakeet Japanese" : "Whisper Large-v3"
+            return "Downloading \(name) — \(Int((fraction * 100).rounded()))%"
         }
-        return "Downloading Whisper Large-v3…"
+        return modelSetupTitle(for: engine, language: language, verb: "Downloading")
     }
 
     private func scheduleSelectedModelReadinessRefresh() {
@@ -1240,7 +1270,10 @@ public final class TranscriptionSession {
             switch configuration.engine {
             case .appleSpeechAnalyzer:
                 guard appleSpeech.isPlatformAvailable else { throw TranscriptionSessionError.appleSpeechRequiresMacOS26 }
-            case .whisperKitLargeV3Turbo, .phonon2:
+            case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
+                if configuration.engine == .parakeetJapanese, configuration.language != .japanese {
+                    throw TranscriptionSessionError.whisperLiveUnavailable
+                }
                 if configuration.engine == .phonon2, configuration.language != .english {
                     throw TranscriptionSessionError.whisperLiveUnavailable
                 }
@@ -1255,7 +1288,7 @@ public final class TranscriptionSession {
             switch configuration.engine {
             case .appleSpeechAnalyzer:
                 recordingURL = nil
-            case .whisperKitLargeV3Turbo, .phonon2:
+            case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
                 recordingURL = selectedLocalSpeech.supportsLiveTranscription
                     ? nil
                     : try storage.makeTemporaryRecordingURL(fileExtension: "caf")
@@ -1312,7 +1345,7 @@ public final class TranscriptionSession {
                 let frames = RealtimeAudioFramePipe(capacity: 32)
                 activeAudioFrames = frames
                 audioFrames = frames
-            case .whisperKitLargeV3Turbo, .phonon2:
+            case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
                 if selectedLocalSpeech.supportsLiveTranscription {
                     try await selectedLocalSpeech.startLive(
                         language: configuration.language,
@@ -1440,7 +1473,7 @@ public final class TranscriptionSession {
                 appleEngine = nil
                 document.finalizeLiveText(language: detectedLanguage ?? configuration.language)
                 try persistDocument()
-            case .whisperKitLargeV3Turbo, .phonon2:
+            case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
                 if whisperLiveSessionActive {
                     if let activeAudioFrames {
                         drainAudioFrames(activeAudioFrames, for: configuration)
@@ -1639,7 +1672,7 @@ public final class TranscriptionSession {
                 qwenLiveSessionActive = false
             }
             try? persistDocument()
-        case .whisperKitLargeV3Turbo, .phonon2:
+        case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
             if whisperLiveSessionActive {
                 await selectedLocalSpeech.stopLive()
                 whisperLiveSessionActive = false
@@ -1684,7 +1717,7 @@ public final class TranscriptionSession {
                 nemotron.consumeLive(frame.buffer)
             case .qwen3StreamingExperimental:
                 qwen.consumeLive(frame.buffer)
-            case .whisperKitLargeV3Turbo, .phonon2:
+            case .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese:
                 if whisperLiveSessionActive {
                     selectedLocalSpeech.consumeLive(frame.buffer)
                 } else {

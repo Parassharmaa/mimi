@@ -137,16 +137,18 @@ struct MimiSelfTest {
     }
 
     private static func testRecommendedPacksCoverBothV1Languages() {
-        expect(ModelCatalog.packs.count == 3, "Mimi presents Apple Speech, Mimi Speech and English-only Phonon")
+        expect(ModelCatalog.packs.count == 4, "Mimi presents Apple Speech, Mimi Speech, English Phonon and Japanese Parakeet")
         expect(ModelCatalog.packs[0].supportedLanguages == [.english, .japanese], "Apple Speech setup covers English and Japanese")
         expect(ModelCatalog.packs[1].supportedLanguages == [.english, .japanese], "Mimi Speech Preview covers English and Japanese with one model")
         expect(ModelCatalog.packs[1].ownership == .experimental, "Mimi Speech remains visibly experimental")
         expect(
-            TranscriptionEngineID.selectableCases == [.appleSpeechAnalyzer, .whisperKitLargeV3Turbo, .phonon2],
+            TranscriptionEngineID.selectableCases == [.appleSpeechAnalyzer, .whisperKitLargeV3Turbo, .phonon2, .parakeetJapanese],
             "Apple remains first while Mimi Speech is available as a preview"
         )
         expect(TranscriptionEngineID.whisperKitLargeV3Turbo.isExperimental, "Mimi Speech cannot silently become the stable default")
         expect(ModelCatalog.pack(for: .phonon2)?.supportedLanguages == [.english], "Phonon does not advertise Japanese")
+        expect(ModelCatalog.pack(for: .parakeetJapanese)?.supportedLanguages == [.japanese], "Parakeet Japanese does not advertise English")
+        expect(TranscriptionEngineID.parakeetJapanese.isExperimental, "Parakeet remains an explicit preview")
     }
 
     private static func testTerminalLiveTextDiffDoesNotReplayOldText() {

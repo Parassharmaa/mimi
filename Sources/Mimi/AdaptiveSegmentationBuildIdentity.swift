@@ -1,3 +1,3 @@
 enum MimiAdaptiveSegmentationBuildIdentity {
-    static let sha256 = "8f852b83a6bfb64a9326139922f829bb02be4e08d9fe8a97e8c1bbdc959b7761"
+    static let sha256 = "a9a2015c3434e8b7be0f8a5a502b572cd3fadc46824e62085bfc481e020c5d5d"
 }
