@@ -38,6 +38,19 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             }
             return
         }
+        if let output = argument(after: "--verify-session-resume", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let report = try await verifySessionResumeContract()
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                    try encoder.encode(report).write(to: URL(fileURLWithPath: output), options: .atomic)
+                    print("Mimi session resume verification \(report.status)")
+                    Darwin.exit(report.status == "passed" ? 0 : 1)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
         if let output = argument(after: "--verify-transcript-persistence-safety", in: arguments) {
             Task { @MainActor in
                 do {

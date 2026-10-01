@@ -12,6 +12,8 @@ swift build --disable-index-store --product Mimi
 "$ROOT/.build/debug/Mimi" --verify-voice-typing-destination
 PERSISTENCE_REPORT="$(mktemp -t mimi-persistence-safety).json"
 "$ROOT/.build/debug/Mimi" --verify-transcript-persistence-safety "$PERSISTENCE_REPORT"
+RESUME_REPORT="$(mktemp -t mimi-session-resume).json"
+"$ROOT/.build/debug/Mimi" --verify-session-resume "$RESUME_REPORT"
 LIFECYCLE_REPORT="$(mktemp -t mimi-voice-lifecycle).json"
 "$ROOT/.build/debug/Mimi" --verify-voice-typing-lifecycle "$LIFECYCLE_REPORT"
 VOICE_TYPING_REPORT="$(mktemp -t mimi-voice-typing-model-selection).json"

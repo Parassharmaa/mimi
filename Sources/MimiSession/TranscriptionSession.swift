@@ -1479,12 +1479,30 @@ public final class TranscriptionSession {
         }
     }
 
-    public func clearTranscript() {
+    @discardableResult
+    public func clearTranscript() -> Bool {
+        guard !controlsLocked else { return false }
         do {
             try storage.clearLatestTranscript()
             document = TranscriptDocument()
+            return true
         } catch {
             record(error)
+            return false
+        }
+    }
+
+    /// Commit an owned working document before publishing it to the UI.
+    @discardableResult
+    public func replaceTranscript(with replacement: TranscriptDocument) -> Bool {
+        guard !controlsLocked else { return false }
+        do {
+            try storage.saveLatestTranscript(replacement)
+            document = replacement
+            return true
+        } catch {
+            record(error)
+            return false
         }
     }
 

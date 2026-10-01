@@ -52,7 +52,7 @@ struct MenuBarView: View {
             }
             Toggle(t("Floating captions", "フローティング字幕"), isOn: $preferences.floatingCaptionsEnabled).toggleStyle(.switch)
             Button { AppWindowCoordinator.shared.showTranscript() } label: {
-                Label(t("Open workspace", "ワークスペースを開く"), systemImage: "rectangle.on.rectangle")
+                Label(t("Open Mimi", "Mimiを開く"), systemImage: "rectangle.on.rectangle")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .buttonStyle(MimiQuietButtonStyle())

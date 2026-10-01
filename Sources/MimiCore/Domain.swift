@@ -433,13 +433,28 @@ public struct SegmentTranslationQueue: Equatable, Sendable {
     }
 }
 
+public struct TranscriptSessionIdentity: Codable, Equatable, Sendable {
+    public let id: UUID
+    public let startedAt: Date
+    public let source: AudioSource
+
+    public init(id: UUID = UUID(), startedAt: Date = Date(), source: AudioSource) {
+        self.id = id
+        self.startedAt = startedAt
+        self.source = source
+    }
+}
+
 public struct TranscriptDocument: Codable, Equatable, Sendable {
     public private(set) var segments: [TranscriptSegment]
     public private(set) var liveText: String
+    /// Optional so existing raw transcript files continue decoding unchanged.
+    public var sessionIdentity: TranscriptSessionIdentity?
 
-    public init(segments: [TranscriptSegment] = [], liveText: String = "") {
+    public init(segments: [TranscriptSegment] = [], liveText: String = "", sessionIdentity: TranscriptSessionIdentity? = nil) {
         self.segments = segments
         self.liveText = liveText
+        self.sessionIdentity = sessionIdentity
     }
 
     public var renderedText: String {

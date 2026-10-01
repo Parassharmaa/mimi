@@ -74,8 +74,12 @@ func verifyTranscriptPersistenceSafetyContract() async throws -> TranscriptPersi
     store.newSession()
     let archived = try history.load()
     let successfulArchiveSurvivesReload = archived.count == 1
-        && archived.first?.document == current && store.historyRecords == archived
-        && store.document.renderedText.isEmpty && storage.clearCalls == 1
+        && archived.first?.document.segments == current.segments
+        && archived.first?.document.liveText == current.liveText
+        && archived.first?.document.sessionIdentity?.id == archived.first?.id
+        && store.historyRecords == archived
+        && store.document.renderedText.isEmpty && store.document.sessionIdentity != nil
+        && storage.saveCalls > 0 && storage.clearCalls == 0
         && store.selectedHistoryID == nil
 
     store.applyFixture(.final("Keep this when clearing fails."), language: .japanese)
@@ -109,10 +113,11 @@ func verifyTranscriptPersistenceSafetyContract() async throws -> TranscriptPersi
 @MainActor
 private final class PersistenceVerificationStorage: TranscriptPersisting {
     private(set) var clearCalls = 0
+    private(set) var saveCalls = 0
     var failsClear = false
 
     func loadLatestTranscript() -> TranscriptDocument { TranscriptDocument() }
-    func saveLatestTranscript(_ document: TranscriptDocument) throws {}
+    func saveLatestTranscript(_ document: TranscriptDocument) throws { saveCalls += 1 }
     func clearLatestTranscript() throws {
         if failsClear { throw CocoaError(.fileWriteNoPermission) }
         clearCalls += 1

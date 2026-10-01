@@ -69,7 +69,7 @@ struct TranscriptWindow: View {
             Button(t("Cancel", "キャンセル"), role: .cancel) {}
             Button(t("Delete", "削除"), role: .destructive) {
                 guard !store.controlsLocked,
-                      clearHistoryID != nil || store.document == clearDocument else { return }
+                      clearHistoryID != store.currentSessionID || store.document == clearDocument else { return }
                 store.clearTranscript(historyID: clearHistoryID)
             }
         } message: {
@@ -91,18 +91,18 @@ struct TranscriptWindow: View {
 
             Spacer()
 
-            if selectedRecord != nil && store.isRecording {
+            if store.viewedSessionID != store.currentSessionID && store.isRecording {
                 Button(t("Go to Live Session", "録音中のセッションへ"), action: store.selectCurrentSession)
                     .buttonStyle(.bordered)
             }
 
-            Picker(t("Workspace view", "表示モード"), selection: $store.translationMode) {
+            Picker(t("Transcript view", "表示モード"), selection: $store.translationMode) {
                 Text(t("Transcript", "文字起こし")).tag(TranslationMode.off)
                 Text(t("Bilingual", "原文と翻訳")).tag(TranslationMode.translateFinalSegments)
             }
             .pickerStyle(.segmented)
             .labelsHidden()
-            .accessibilityLabel(t("Workspace view", "表示モード"))
+            .accessibilityLabel(t("Transcript view", "表示モード"))
             .frame(width: 190)
             .disabled(store.controlsLocked)
         }
@@ -111,12 +111,14 @@ struct TranscriptWindow: View {
     }
 
     private var selectedRecord: TranscriptSessionRecord? {
-        store.historyRecords.first { $0.id == store.selectedHistoryID }
+        store.sessions.first { $0.id == store.viewedSessionID }
     }
 
     private var sessionTitle: String {
-        if let selectedRecord { return selectedRecord.title }
-        return store.isRecording ? t("Listening locally", "ローカルで文字起こし中") : t("Current session", "現在のセッション")
+        if let selectedRecord {
+            return selectedRecord.document.renderedText.isEmpty ? t("New session", "新しいセッション") : selectedRecord.title
+        }
+        return t("Start your first session", "最初のセッションを開始")
     }
 
     private var sessionDetail: String {
@@ -124,7 +126,7 @@ struct TranscriptWindow: View {
             let languages = Set(selectedRecord.document.segments.map(\.language)).map(\.nativeName).sorted().joined(separator: " / ")
             return "\(selectedRecord.startedAt.formatted(date: .abbreviated, time: .shortened)) · \(selectedRecord.source.displayName) · \(languages)"
         }
-        return t("A quiet place for your words and their meaning.", "言葉と、その意味を落ち着いて見渡せる場所。")
+        return t("Record to create a session. Your audio stays on this Mac.", "録音するとセッションを作成します。音声はこのMac内で処理します。")
     }
 
     @ViewBuilder
@@ -135,7 +137,20 @@ struct TranscriptWindow: View {
             liveText: fullDocument.liveText.localizedStandardContains(searchText) ? fullDocument.liveText : ""
         )
 
-        if store.translationMode == .translateFinalSegments {
+        if store.sessions.isEmpty && fullDocument.renderedText.isEmpty {
+            ContentUnavailableView {
+                Label(t("No sessions yet", "セッションはまだありません"), systemImage: "waveform")
+            } description: {
+                Text(t("Start recording to create your first session.", "録音を開始して最初のセッションを作成します。"))
+            } actions: {
+                Button(action: store.toggleRecording) {
+                    Label(t("Record", "録音を開始"), systemImage: "record.circle")
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(!store.canStartRecording)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else if store.translationMode == .translateFinalSegments {
             HSplitView {
                 TranscriptLanguagePane(
                     document: displayedDocument,
@@ -217,7 +232,7 @@ struct TranscriptWindow: View {
 
     private func setClearConfirmation(_ confirming: Bool) {
         if confirming {
-                    clearHistoryID = store.selectedHistoryID
+            clearHistoryID = store.selectedHistoryID
             clearTitle = sessionTitle
             clearDocument = store.viewedDocument
         }
@@ -254,15 +269,14 @@ private struct TranscriptHistorySidebar: View {
     @Bindable var preferences: UserPreferences
     @Environment(\.openSettings) private var openSettings
     @State private var query = ""
-    private static let currentID = UUID(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
 
     private var selection: Binding<UUID?> {
-        Binding(get: { store.selectedHistoryID ?? Self.currentID },
-                set: { store.selectedHistoryID = $0 == Self.currentID ? nil : $0 })
+        Binding(get: { store.viewedSessionID },
+                set: { store.selectedHistoryID = $0 == store.currentSessionID ? nil : $0 })
     }
 
     private var records: [TranscriptSessionRecord] {
-        query.isEmpty ? store.historyRecords : store.historyRecords.filter {
+        query.isEmpty ? store.sessions : store.sessions.filter {
             $0.document.renderedText.localizedStandardContains(query)
         }
     }
@@ -270,14 +284,20 @@ private struct TranscriptHistorySidebar: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 16) {
-                Button(action: store.newSession) {
-                    Label(t("New session", "新しいセッション"), systemImage: "square.and.pencil")
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                HStack {
+                    Text(t("Sessions", "セッション")).font(.headline).accessibilityAddTraits(.isHeader)
+                    Spacer()
+                    Button {
+                        let previous = store.viewedSessionID
+                        store.newSession()
+                        if store.viewedSessionID != previous { query = "" }
+                    } label: { Image(systemName: "plus") }
+                    .buttonStyle(MimiQuietButtonStyle())
+                    .accessibilityLabel(t("New session", "新しいセッション"))
+                    .help(t("New session", "新しいセッション"))
+                    .keyboardShortcut("n", modifiers: .command)
+                    .disabled(store.controlsLocked)
                 }
-                .buttonStyle(MimiQuietButtonStyle())
-                .font(.callout.weight(.semibold))
-                .keyboardShortcut("n", modifiers: .command)
-                .disabled(store.controlsLocked)
                 TextField(t("Search sessions", "セッションを検索"), text: $query)
                     .textFieldStyle(.roundedBorder)
                     .accessibilityLabel(t("Search session history", "過去のセッションを検索"))
@@ -285,24 +305,32 @@ private struct TranscriptHistorySidebar: View {
             .padding(18)
 
             List(selection: selection) {
-                Section(t("Workspace", "ワークスペース")) {
-                    Label(store.isRecording ? t("Listening now", "文字起こし中") : t("Current session", "現在のセッション"),
-                          systemImage: store.isRecording ? "waveform" : "doc.text")
-                        .tag(Optional(Self.currentID))
-                }
-                Section(t("Recent sessions", "最近のセッション")) {
-                    ForEach(records) { record in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(record.title).font(.callout).lineLimit(1)
-                            Text(record.startedAt, format: .dateTime.month().day().hour().minute())
-                                .font(.caption).foregroundStyle(.secondary)
+                ForEach(records) { record in
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack(spacing: 6) {
+                            Text(record.document.renderedText.isEmpty ? t("New session", "新しいセッション") : record.title)
+                                .font(.callout).lineLimit(1)
+                            Spacer(minLength: 0)
+                            if record.id == store.currentSessionID && store.isTranscriptionSessionBusy {
+                                Image(systemName: store.isRecording ? "waveform" : "ellipsis")
+                                    .foregroundStyle(store.isRecording ? Color.red : Color.accentColor)
+                                    .accessibilityLabel(store.isRecording ? t("Recording", "録音中") : t("Preparing or finishing", "準備中または確定中"))
+                            }
                         }
-                        .padding(.vertical, 3)
-                        .tag(Optional(record.id))
+                        Text(record.startedAt, format: .dateTime.month().day().hour().minute())
+                            .font(.caption).foregroundStyle(.secondary)
                     }
+                    .padding(.vertical, 3)
+                    .tag(Optional(record.id))
                 }
             }
             .listStyle(.sidebar)
+            .overlay {
+                if records.isEmpty {
+                    Text(query.isEmpty ? t("No sessions yet", "セッションはまだありません") : t("No matching sessions", "一致するセッションがありません"))
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+            }
 
             VStack(spacing: 12) {
                 sidebarButton(t("Voice Type", "音声入力"), symbol: "keyboard") {
