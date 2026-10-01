@@ -118,6 +118,16 @@ actor ExperimentalMLXTranslationEngine {
         }
     }
 
+    func prepareForLiveTranslation(configuration: ExperimentalMLXTranslationConfiguration) async throws {
+#if arch(arm64)
+        for language in [SpeechLanguage.english, .japanese] {
+            let runtime = try await loadRuntime(sourceLanguage: language, configuration: configuration, expert: false)
+            // Evaluate the first Metal kernels before the first speech hypothesis arrives.
+            _ = runtime.translateTokenIDs(language == .english ? "Hello." : "こんにちは。")
+        }
+#endif
+    }
+
     func translate(
         _ text: String,
         sourceLanguage: SpeechLanguage,

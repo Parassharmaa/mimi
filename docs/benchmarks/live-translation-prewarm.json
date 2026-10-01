@@ -1,0 +1,20 @@
+{
+  "note" : "Fresh process, filesystem and GPU driver caches may be warm. Preparation runs at normal AppStore initialization. Excludes ASR and paint.",
+  "preparationMS" : 605.49516700000004,
+  "results" : [
+    {
+      "firstPartialAfterPrewarmMS" : 22.264209000000001,
+      "language" : "en-US",
+      "output" : "私たちにできること",
+      "source" : "Can we"
+    },
+    {
+      "firstPartialAfterPrewarmMS" : 28.741250000000001,
+      "language" : "ja-JP",
+      "output" : "Tomorrow's Day",
+      "source" : "明日の"
+    }
+  ],
+  "schemaVersion" : 1,
+  "status" : "passed"
+}

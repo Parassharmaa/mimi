@@ -10,6 +10,8 @@ zsh scripts/test-onboarding-policy.sh
 swift build --disable-index-store --product MimiSelfTest
 swift build --disable-index-store --product Mimi
 "$ROOT/.build/debug/Mimi" --verify-voice-typing-destination
+LIVE_TRANSLATION_REPORT="$(mktemp -t mimi-live-translation).json"
+"$ROOT/.build/debug/Mimi" --verify-live-translation "$LIVE_TRANSLATION_REPORT"
 PERSISTENCE_REPORT="$(mktemp -t mimi-persistence-safety).json"
 "$ROOT/.build/debug/Mimi" --verify-transcript-persistence-safety "$PERSISTENCE_REPORT"
 RESUME_REPORT="$(mktemp -t mimi-session-resume).json"

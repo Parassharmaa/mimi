@@ -12,6 +12,52 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
+        if let output = argument(after: "--benchmark-translation-prewarm", in: arguments),
+           let root = argument(after: "--model-root", in: arguments) {
+            Task { @MainActor in
+                do {
+                    try await benchmarkTranslationPrewarm(modelRoot: URL(fileURLWithPath: root), outputURL: URL(fileURLWithPath: output))
+                    Darwin.exit(0)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
+        if let output = argument(after: "--benchmark-instant-translation", in: arguments),
+           let root = argument(after: "--model-root", in: arguments),
+           let baseline = argument(after: "--baseline", in: arguments) {
+            Task { @MainActor in
+                do {
+                    let passed = try await benchmarkInstantTranslation(modelRoot: URL(fileURLWithPath: root), baselineURL: URL(fileURLWithPath: baseline), outputURL: URL(fileURLWithPath: output))
+                    print("Instant translation benchmark saved: \(output)")
+                    Darwin.exit(passed ? 0 : 1)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
+        if let output = argument(after: "--verify-live-translation", in: arguments) {
+            Task { @MainActor in
+                let checks = await verifyLiveTranslationStream()
+                do {
+                    let passed = checks.values.allSatisfy { $0 }
+                    let report: [String: Any] = ["status": passed ? "passed" : "failed", "checks": checks]
+                    try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys]).write(to: URL(fileURLWithPath: output))
+                    print("Live translation verification \(passed ? "passed" : "failed")")
+                    Darwin.exit(passed ? 0 : 1)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
+        if let output = argument(after: "--benchmark-live-translation-baseline", in: arguments),
+           let root = argument(after: "--model-root", in: arguments) {
+            Task { @MainActor in
+                do {
+                    try await benchmarkLiveTranslationBaseline(modelRoot: URL(fileURLWithPath: root), outputURL: URL(fileURLWithPath: output))
+                    print("Live translation baseline saved: \(output)")
+                    Darwin.exit(0)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
         if arguments.contains("--verify-voice-typing-destination") {
             var terminalRejected = false
             do { try VoiceTypingDestinationPolicy.validate(bundleIdentifier: "com.apple.Terminal") }
@@ -1013,6 +1059,13 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         store.applyFixture(.final("こんにちは、Mimi はローカルで文字起こしします。"), language: .japanese)
         store.applyFixture(.final("Mimi keeps the transcript on this Mac."), language: .english)
         store.translationMode = .translateFinalSegments
+        if presentationState == "provisional-translation" {
+            store.clearTranscript(historyID: nil)
+            let language: SpeechLanguage = argument(after: "--e2e-source-language", in: arguments) == "japanese" ? .japanese : .english
+            store.languageMode = TranscriptionLanguageMode(language: language)
+            store.applyFixture(.partial(language == .english ? "Can we move the meeting to tomorrow morning?" : "明日の会議は午前十時に始まります。"), language: language)
+            store.applyPresentationFixture(state: .recording)
+        }
         if presentationState == "history" {
             let record = TranscriptSessionRecord(
                 id: UUID(), startedAt: Date(timeIntervalSince1970: 1_790_730_000),
@@ -1099,7 +1152,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                 preferences: fixturePreferences,
                 isConfirmingClear: presentationState == "clear-confirmation",
                 fixtureTranslation: exercisesLiveTranslation
-                    && ["incremental-translation", "translation-stream"].contains(presentationState)
+                    && ["incremental-translation", "translation-stream", "provisional-translation"].contains(presentationState)
                     ? nil
                     : (presentationState == "history" ? "At yesterday's meeting, we talked about next week's release." : "Hello. Mimi transcribes locally on this Mac."),
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"

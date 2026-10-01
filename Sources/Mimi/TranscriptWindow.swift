@@ -163,6 +163,11 @@ struct TranscriptWindow: View {
 
                 InlineTranslationView(
                     segments: fullDocument.segments,
+                    liveText: fullDocument.liveText,
+                    liveLanguage: store.viewedSessionID == store.currentSessionID
+                        ? (store.detectedLanguage ?? store.sourceLanguage)
+                        : fullDocument.contentLanguage(fallback: store.sourceLanguage),
+                    scopeID: store.viewedSessionID,
                     fillsAvailableSpace: true,
                     fixtureTranslation: fixtureTranslation,
                     initiallyFollowingLatest: initiallyFollowingLatest,

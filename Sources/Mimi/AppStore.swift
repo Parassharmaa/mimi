@@ -91,6 +91,11 @@ final class AppStore {
         Task { [weak createdSession] in
             await createdSession?.refreshSelectedModelReadiness()
         }
+        if loadPersistedTranscript, let configuration = ExperimentalMLXTranslationConfiguration.resolved() {
+            Task {
+                try? await ExperimentalMLXTranslationEngine.shared.prepareForLiveTranslation(configuration: configuration)
+            }
+        }
     }
 
     var recordingState: RecordingState {

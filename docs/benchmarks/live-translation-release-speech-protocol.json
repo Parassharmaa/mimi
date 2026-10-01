@@ -1,0 +1,8 @@
+{
+  "buildConfiguration": "release",
+  "executablePath": "/Users/paras/.codex/worktrees/mimi-ux/mimi/.build/arm64-apple-macosx/release/Mimi",
+  "executableSHA256": "7ff00f66dfd1cab70cf5ccb55f94d5dfe288ae90d34a2b122c4d34fc292a02f8",
+  "metalLibrarySHA256": "098480077b474e8529f9983c7702afcea31fb5f46d36040294951683aaa6158f",
+  "protocol": "Recorded after the first Release replay started but before any Release result. Four fixed existing long-form cases, one Release attempt per case. Same source/model/profile as Debug. Compile with swift build -c release. Reuse matching MLX 0.31.4 Metal library because local Metal compiler is unavailable. Keep both Debug paced attempts and paused Debug reports. Qualify with unchanged source identity, quality, zero-drop, and <=1.1s stop gates.",
+  "sourceIdentity": "8f852b83a6bfb64a9326139922f829bb02be4e08d9fe8a97e8c1bbdc959b7761"
+}
