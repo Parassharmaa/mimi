@@ -33,6 +33,12 @@ and animation; increased contrast strengthens the hover background. Disabled
 controls stay dimmed and never display an active hover background. Native
 prominent buttons, menus, pickers, Forms and list selection retain macOS behavior.
 
+Popovers retain macOS-native shadow, outline and arrow treatment. Screenshot
+capture must not use `screencapture -o`, which strips these and makes the popup
+look flat. Settings navigation uses the same window surface as its content,
+without an extra sidebar tint. Mimi Speech is labelled "Custom model" in the
+chooser; upstream model attribution and distribution licenses remain intact.
+
 ## Evidence
 
 Screenshots use synthetic content and isolated preferences. Capture them with:

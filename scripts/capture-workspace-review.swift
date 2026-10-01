@@ -5,7 +5,7 @@ import Foundation
 @main
 struct WorkspaceReviewCapture {
     @MainActor static func main() async throws {
-        guard CommandLine.arguments.count == 3 else { throw CocoaError(.fileReadInvalidFileName) }
+        guard (3...4).contains(CommandLine.arguments.count) else { throw CocoaError(.fileReadInvalidFileName) }
         let app = CommandLine.arguments[1]
         let output = URL(fileURLWithPath: CommandLine.arguments[2], isDirectory: true)
         try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
@@ -20,9 +20,18 @@ struct WorkspaceReviewCapture {
             ("08-voice-type-hud", ["--e2e-screen", "voice-typing", "--e2e-state", "ready", "--e2e-appearance", "dark"]),
             ("09-captions", ["--e2e-screen", "captions", "--e2e-state", "ready", "--e2e-appearance", "dark"]),
             ("10-model-picker", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-history-count", "72", "--e2e-appearance", "light"]),
-            ("11-model-control-hover", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-history-count", "72", "--e2e-appearance", "light"])
+            ("11-model-control-hover", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-history-count", "72", "--e2e-appearance", "light"]),
+            ("12-model-picker-dark", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-history-count", "72", "--e2e-appearance", "dark"]),
+            ("13-input-popover-light", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-history-count", "72", "--e2e-appearance", "light"]),
+            ("14-input-popover-dark", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-history-count", "72", "--e2e-appearance", "dark"]),
+            ("15-model-picker-contrast", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-appearance", "light", "--e2e-increase-contrast", "--e2e-reduce-transparency"]),
+            ("16-settings-dark", ["--e2e-screen", "settings-voice", "--e2e-state", "ready", "--e2e-appearance", "dark"]),
+            ("17-voice-model-picker", ["--e2e-screen", "settings-voice", "--e2e-state", "voice-enabled", "--e2e-appearance", "light"])
         ]
-        for (name, arguments) in cases {
+        let selectedCases = CommandLine.arguments.count == 4
+            ? cases.filter { $0.0.contains(CommandLine.arguments[3]) } : cases
+        guard !selectedCases.isEmpty else { throw CocoaError(.fileReadInvalidFileName) }
+        for (name, arguments) in selectedCases {
             let process = Process()
             process.executableURL = URL(fileURLWithPath: app)
             process.arguments = ["--e2e-window"] + arguments
@@ -45,13 +54,13 @@ struct WorkspaceReviewCapture {
                 }
                 NSRunningApplication(processIdentifier: process.processIdentifier)?.activate(options: [])
                 try await Task.sleep(for: .milliseconds(600))
-                if name == "10-model-picker" || name == "11-model-control-hover" {
+                if name.contains("model-picker") || name.contains("input-popover") || name == "11-model-control-hover" {
                     let interaction = Process()
                     interaction.executableURL = URL(fileURLWithPath: CommandLine.arguments[0])
                         .deletingLastPathComponent().appendingPathComponent("mimi-ax-audit")
-                    interaction.arguments = ["--pid", String(process.processIdentifier)] + (name == "10-model-picker"
-                        ? ["--press", "Choose speech model", "--step-delay", "0.5"]
-                        : ["--hover", "Choose speech model"])
+                    interaction.arguments = ["--pid", String(process.processIdentifier)] + (name == "11-model-control-hover"
+                        ? ["--hover", "Choose speech model"]
+                        : ["--press", name.contains("input-popover") ? "Choose audio input" : (name.contains("voice-model-picker") ? "Choose Voice Type model" : "Choose speech model"), "--step-delay", "0.5"])
                     interaction.standardOutput = FileHandle.nullDevice
                     interaction.standardError = FileHandle.nullDevice
                     try interaction.run()
@@ -61,7 +70,9 @@ struct WorkspaceReviewCapture {
                 }
                 let capture = Process()
                 capture.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
-                capture.arguments = ["-x", "-o", "-l\(number.uint32Value)", output.appendingPathComponent("\(name).png").path]
+                // Keep native window shadows and outlines. The -o flag also
+                // removes attached popover elevation from app-window captures.
+                capture.arguments = ["-x", "-l\(number.uint32Value)", output.appendingPathComponent("\(name).png").path]
                 try capture.run()
                 capture.waitUntilExit()
                 guard capture.terminationStatus == 0 else { throw CocoaError(.fileWriteUnknown) }
