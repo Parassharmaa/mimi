@@ -61,8 +61,9 @@ struct WorkspaceReviewCapture {
                     interaction.arguments = ["--pid", String(process.processIdentifier)] + (name == "11-model-control-hover"
                         ? ["--hover", "Choose speech model"]
                         : ["--press", name.contains("input-popover") ? "Choose audio input" : (name.contains("voice-model-picker") ? "Choose Voice Type model" : "Choose speech model"), "--step-delay", "0.5"])
+                    if name.contains("voice-model-picker") { interaction.arguments?.append("--assert-no-shortcut-collision") }
                     interaction.standardOutput = FileHandle.nullDevice
-                    interaction.standardError = FileHandle.nullDevice
+                    interaction.standardError = FileHandle.standardError
                     try interaction.run()
                     interaction.waitUntilExit()
                     guard interaction.terminationStatus == 0 else { throw CocoaError(.featureUnsupported) }

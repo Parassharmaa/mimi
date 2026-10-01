@@ -93,6 +93,11 @@ struct AccessibilityAudit {
             throw CocoaError(.userCancelled, userInfo: [NSLocalizedDescriptionKey: "Supply a synthetic fixture PID and allow Accessibility access."])
         }
         let app = AXUIElementCreateApplication(pid)
+        if CommandLine.arguments.contains("--activate") {
+            NSRunningApplication(processIdentifier: pid)?.activate(options: [])
+            Thread.sleep(forTimeInterval: 0.15)
+            guard NSWorkspace.shared.frontmostApplication?.processIdentifier == pid else { throw CocoaError(.userCancelled) }
+        }
         if let expected = argument("--hover") {
             NSRunningApplication(processIdentifier: pid)?.activate(options: [])
             Thread.sleep(forTimeInterval: 0.15)
@@ -180,6 +185,11 @@ struct AccessibilityAudit {
                     throw CocoaError(.featureUnsupported, userInfo: [NSLocalizedDescriptionKey: "AX action \(title) failed with status \(result.rawValue)"])
                 }
                 FileHandle.standardError.write(Data("PASS native action: \(title), AX status \(result.rawValue), confirmed dismissal \(confirmedDismissal)\n".utf8))
+            }
+        }
+        if CommandLine.arguments.contains("--assert-no-shortcut-collision") {
+            guard find(app, label: "That shortcut is already in use. Choose the other shortcut.") == nil else {
+                throw CocoaError(.featureUnsupported, userInfo: [NSLocalizedDescriptionKey: "Preview attempted global shortcut registration."])
             }
         }
         let encoder = JSONEncoder()

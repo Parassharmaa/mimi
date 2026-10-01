@@ -32,6 +32,9 @@ press scale. Hover transitions take 120 ms. Reduced Motion removes movement
 and animation; increased contrast strengthens the hover background. Disabled
 controls stay dimmed and never display an active hover background. Native
 prominent buttons, menus, pickers, Forms and list selection retain macOS behavior.
+The shared quiet style is the default for secondary actions in all app surfaces;
+explicit prominent buttons keep native primary-action styling. Destructive
+actions retain their semantic red label.
 
 Popovers retain macOS-native shadow, outline and arrow treatment. Screenshot
 capture must not use `screencapture -o`, which strips these and makes the popup
@@ -53,6 +56,16 @@ The capture includes English/Japanese workspaces, light/dark appearances,
 72 history entries, menu controls, settings, onboarding, dictation, captions,
 model selection and a real pointer hover. Each captured process is owned by the
 helper and terminated afterward. No user transcripts are read.
+Global shortcut registration is disabled at the registration boundary in
+verification processes, including enabled Voice Type previews. Disabled
+registration is not displayed as a shortcut collision.
+The enabled Voice Type capture asserts that no collision warning appears.
+
+Live field tests explicitly activate their owned fixture before starting Mimi.
+Focus/caret/edit adversaries are triggered when the first partial appears,
+instead of racing against process-startup timers. All ten cases passed with
+unchanged whole-field and second-field-isolation assertions. Evidence is local
+in the temporary fixture directory printed by the test script.
 
 Development packaging and model-integrity checks passed. Core policy checks,
 history/persistence, dictation lifecycle, model selection, speech exclusivity,
@@ -66,10 +79,6 @@ a spoken VoiceOver audit or a substitute for functional tests.
   the previous evidence and generated executable identity belong to PR16.
   Regenerate and rerun source-bound evidence after the design is settled. Do
   not relabel previous reports or change thresholds.
-- A fresh live field test stopped on its first selection case with the text/
-  cursor ownership guard. Its synthetic field did not receive the expected
-  Unicode replacement. Reproduce and diagnose this before delivery; do not
-  claim the ten-case live field suite passed for this branch.
 - Claude independent review remains unavailable until its login is renewed.
 - User feedback, exact-head CI, final independent review and merge checks are
   required for delivery. No release or installation is part of this preview.
