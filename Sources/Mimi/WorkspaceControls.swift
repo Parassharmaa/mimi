@@ -62,7 +62,7 @@ struct SpeechModelControl: View {
                 }
                 VStack(spacing: 6) {
                     ForEach(TranscriptionEngineID.selectableCases) { engine in
-                        MimiModelOption(title: engine.compactTitle, detail: engine.detail(preferences), isSelected: store.engineID == engine) {
+                        MimiChoiceRow(title: engine.compactTitle, detail: engine.detail(preferences), isSelected: store.engineID == engine) {
                             store.engineID = engine
                             isPresented = false
                         }
@@ -177,7 +177,7 @@ struct VoiceModelControl: View {
                 Text(preferences.text("Used when you dictate into another app.", "他のアプリへの音声入力で使用します。"))
                     .font(.caption).foregroundStyle(.secondary)
                 ForEach(VoiceTypingModel.allCases) { model in
-                    MimiModelOption(title: engine(model).compactTitle, detail: engine(model).detail(preferences), isSelected: preferences.voiceTypingModel == model) {
+                    MimiChoiceRow(title: engine(model).compactTitle, detail: engine(model).detail(preferences), isSelected: preferences.voiceTypingModel == model) {
                         preferences.voiceTypingModel = model
                         isPresented = false
                     }
@@ -192,28 +192,55 @@ struct VoiceModelControl: View {
 struct CaptureLanguageControl: View {
     @Bindable var store: AppStore
     let preferences: UserPreferences
+    @State private var isPresented = false
 
     private var title: String {
         store.languageMode == .automatic ? preferences.text("Auto language", "言語を自動判定") : store.sourceLanguage.nativeName
     }
 
     var body: some View {
-        Menu {
-            Picker(preferences.text("Spoken language", "話す言語"), selection: $store.languageMode) {
-                ForEach(store.selectableLanguageModes) { mode in Text(mode.displayName).tag(mode) }
-            }
-        } label: {
+        Button { isPresented.toggle() } label: {
             HStack(spacing: 6) {
                 Image(systemName: "globe").foregroundStyle(.secondary)
                 Text(title)
                 Image(systemName: "chevron.down").font(.caption2).foregroundStyle(.secondary)
             }
         }
-        .menuStyle(.borderlessButton)
+        .buttonStyle(MimiQuietButtonStyle())
         .fixedSize()
         .disabled(store.controlsLocked || store.isModelSetupActive)
         .accessibilityLabel(preferences.text("Spoken language", "話す言語"))
         .accessibilityValue(title)
+        .popover(isPresented: $isPresented, arrowEdge: .bottom) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Text(preferences.text("Spoken language", "話す言語")).font(.headline)
+                    Spacer()
+                    Button { isPresented = false } label: { Image(systemName: "xmark") }
+                        .buttonStyle(MimiQuietButtonStyle())
+                        .accessibilityLabel(preferences.text("Close language selection", "言語選択を閉じる"))
+                }
+                VStack(spacing: 6) {
+                    ForEach(store.selectableLanguageModes) { mode in
+                        MimiChoiceRow(title: mode.displayName, detail: detail(mode), isSelected: store.languageMode == mode) {
+                            store.languageMode = mode
+                            isPresented = false
+                        }
+                        .disabled(store.controlsLocked || store.isModelSetupActive)
+                    }
+                }
+            }
+            .padding(20)
+            .frame(width: MimiMetrics.popoverWidth)
+        }
+    }
+
+    private func detail(_ mode: TranscriptionLanguageMode) -> String {
+        switch mode {
+        case .automatic: preferences.text("Switch between English and Japanese automatically.", "英語と日本語を自動で切り替えます。")
+        case .english: preferences.text("Transcribe English speech.", "英語の音声を文字起こしします。")
+        case .japanese: preferences.text("Transcribe Japanese speech.", "日本語の音声を文字起こしします。")
+        }
     }
 }
 
@@ -278,6 +305,6 @@ struct WorkspaceCaptureBar: View {
         .controlSize(.large)
         .tint(store.isRecording ? .red : .accentColor)
         .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
-        .help(preferences.text("Start a new recording in the current session", "現在のセッションで新しい録音を開始します"))
+        .help(preferences.text("Continue recording in the open session", "開いているセッションで録音を続けます"))
     }
 }

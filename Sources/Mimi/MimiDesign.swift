@@ -73,7 +73,7 @@ struct MimiQuietButtonStyle: ButtonStyle {
     }
 }
 
-struct MimiModelOption: View {
+struct MimiChoiceRow: View {
     let title: String
     let detail: String
     let isSelected: Bool
