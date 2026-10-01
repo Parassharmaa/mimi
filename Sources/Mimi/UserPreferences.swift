@@ -51,7 +51,7 @@ enum VoiceTypingModel: String, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .mimiWhisper: "Mimi (Whisper Large v3 Turbo)"
+        case .mimiWhisper: "Mimi Speech"
         case .phonon2: "Phonon 2 (English)"
         case .appleSpeech: "Apple Speech"
         }

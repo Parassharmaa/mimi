@@ -24,149 +24,107 @@ enum MimiMetrics {
     static let sectionSpacing: CGFloat = 16
     static let cardRadius: CGFloat = 12
     static let cardPadding: CGFloat = 12
+    static let controlRadius: CGFloat = 8
+    static let pagePadding: CGFloat = 24
+    static let popoverWidth: CGFloat = 370
+    static let hoverDuration: Double = 0.12
 }
 
-struct MimiSectionLabel: View {
+/// Shared interaction treatment for flat controls. Native prominent buttons,
+/// menus, pickers and list selection keep their platform behavior.
+struct MimiQuietButtonStyle: ButtonStyle {
+    var horizontalPadding: CGFloat = 8
+    var verticalPadding: CGFloat = 6
+
+    func makeBody(configuration: Configuration) -> some View {
+        QuietButton(configuration: configuration, horizontalPadding: horizontalPadding, verticalPadding: verticalPadding)
+    }
+
+    private struct QuietButton: View {
+        let configuration: ButtonStyleConfiguration
+        let horizontalPadding: CGFloat
+        let verticalPadding: CGFloat
+        @Environment(\.isEnabled) private var isEnabled
+        @Environment(\.accessibilityReduceMotion) private var reduceMotion
+        @Environment(\.colorSchemeContrast) private var contrast
+        @Environment(\.mimiAccessibilityPreview) private var preview
+        @State private var isHovered = false
+
+        private var reducesMotion: Bool { reduceMotion || preview.contains(.reduceMotion) }
+        private var opacity: Double {
+            guard isEnabled else { return 0 }
+            if configuration.isPressed { return 0.12 }
+            if isHovered { return contrast == .increased || preview.contains(.increaseContrast) ? 0.12 : 0.06 }
+            return 0
+        }
+
+        var body: some View {
+            configuration.label
+                .foregroundStyle(configuration.role == .destructive ? Color.red : Color.primary)
+                .padding(.horizontal, horizontalPadding)
+                .padding(.vertical, verticalPadding)
+                .background(Color.primary.opacity(opacity), in: .rect(cornerRadius: MimiMetrics.controlRadius))
+                .contentShape(.rect(cornerRadius: MimiMetrics.controlRadius))
+                .opacity(isEnabled ? 1 : 0.4)
+                .scaleEffect(isEnabled && isHovered && configuration.isPressed && !reducesMotion ? 0.98 : 1)
+                .animation(reducesMotion ? nil : .easeOut(duration: MimiMetrics.hoverDuration), value: isHovered)
+                .onHover { isHovered = $0 }
+        }
+    }
+}
+
+struct MimiChoiceRow: View {
     let title: String
-    let symbol: String?
-
-    init(_ title: String, symbol: String? = nil) {
-        self.title = title
-        self.symbol = symbol
-    }
+    let detail: String
+    let isSelected: Bool
+    let action: () -> Void
 
     var body: some View {
-        if let symbol {
-            Label(title, systemImage: symbol)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-        } else {
-            Text(title)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
-        }
-    }
-}
-
-struct MimiStatusHeader: View {
-    let state: RecordingState
-    let source: AudioSource
-    let preferences: UserPreferences
-
-    var body: some View {
-        HStack(spacing: 11) {
-            Image(systemName: symbolName)
-                .font(.title2)
-                .foregroundStyle(tint)
-                .frame(width: 28, height: 28)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Mimi")
-                    .font(.headline)
-                Text(statusText)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-            }
-
-            Spacer(minLength: 8)
-
-            Text(badgeText)
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(tint)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(tint.opacity(0.12), in: Capsule())
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Mimi, \(statusText)")
-    }
-
-    private var statusText: String {
-        switch state {
-        case .recording:
-            preferences.text("Listening to \(source.displayName.lowercased()) on this Mac", "このMacで音声を文字起こし中")
-        case .idle:
-            preferences.text("Ready for local transcription", "ローカル文字起こしの準備完了")
-        case .preparing: preferences.text("Preparing", "準備中")
-        case .processing: preferences.text("Finalizing", "確定処理中")
-        case .failed:
-            state.label
-        }
-    }
-
-    private var badgeText: String {
-        switch state {
-        case .idle: preferences.text("Ready", "準備完了")
-        case .preparing: preferences.text("Preparing", "準備中")
-        case .recording: preferences.text("Recording", "録音中")
-        case .processing: preferences.text("Finalizing", "確定処理中")
-        case .failed: preferences.text("Attention", "確認が必要")
-        }
-    }
-
-    private var symbolName: String {
-        switch state {
-        case .idle: "ear"
-        case .preparing, .processing: "waveform.badge.magnifyingglass"
-        case .recording: "waveform.circle.fill"
-        case .failed: "exclamationmark.triangle.fill"
-        }
-    }
-
-    private var tint: Color {
-        switch state {
-        case .recording: .red
-        case .failed: .orange
-        case .idle, .preparing, .processing: .accentColor
-        }
-    }
-}
-
-struct MimiControlRow<Control: View>: View {
-    let title: String
-    let detail: String?
-    let symbol: String
-    private let control: Control
-
-    init(
-        _ title: String,
-        detail: String? = nil,
-        symbol: String,
-        @ViewBuilder control: () -> Control
-    ) {
-        self.title = title
-        self.detail = detail
-        self.symbol = symbol
-        self.control = control()
-    }
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: symbol)
-                .foregroundStyle(.secondary)
-                .frame(width: 18)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: 1) {
-                Text(title)
-                    .font(.callout)
-                if let detail {
-                    Text(detail)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title).font(.callout.weight(.semibold))
+                    Text(detail).font(.caption).foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
+                Spacer(minLength: 0)
             }
-
-            Spacer(minLength: 8)
-            control
-                .labelsHidden()
+            .padding(MimiMetrics.cardPadding)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(isSelected ? Color.accentColor.opacity(0.09) : Color.primary.opacity(0.025), in: .rect(cornerRadius: MimiMetrics.cardRadius))
         }
-        .padding(.vertical, 6)
+        .buttonStyle(MimiQuietButtonStyle(horizontalPadding: 0, verticalPadding: 0))
+        .accessibilityLabel("\(title), \(detail)")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
+
+struct MimiPaneHeader<Actions: View>: View {
+    let title: String
+    let symbol: String
+    private let actions: Actions
+
+    init(_ title: String, symbol: String, @ViewBuilder actions: () -> Actions) {
+        self.title = title
+        self.symbol = symbol
+        self.actions = actions()
+    }
+
+    var body: some View {
+        HStack(spacing: MimiMetrics.compactSpacing) {
+            Label(title, systemImage: symbol).font(.callout.weight(.semibold))
+            Spacer()
+            actions
+        }
+        .frame(minHeight: 28)
+        .padding(.horizontal, MimiMetrics.sectionSpacing)
+        .padding(.vertical, 10)
+    }
+}
+
 
 private struct MimiCardModifier: ViewModifier {
     @Environment(\.colorSchemeContrast) private var contrast

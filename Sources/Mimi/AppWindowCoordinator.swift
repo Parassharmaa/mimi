@@ -44,8 +44,8 @@ final class AppWindowCoordinator {
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView]
         window.titlebarAppearsTransparent = true
         window.toolbarStyle = .unified
-        window.minSize = NSSize(width: 680, height: 480)
-        window.setContentSize(NSSize(width: 920, height: 640))
+        window.minSize = NSSize(width: 760, height: 540)
+        window.setContentSize(NSSize(width: 1080, height: 740))
         window.collectionBehavior.insert(.fullScreenPrimary)
         window.isReleasedWhenClosed = false
         window.setFrameAutosaveName("MimiTranscript")

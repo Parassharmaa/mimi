@@ -65,12 +65,15 @@ private let voiceTypingHotKeyHandler: EventHandlerUPP = { _, event, userData in
 @MainActor
 private final class GlobalHotKeyRegistration {
     private let callbackBox: HotKeyCallbackBox
+    private let allowsRegistration: Bool
     private var eventHandler: EventHandlerRef?
     private var primary: EventHotKeyRef?
     private var cancel: EventHotKeyRef?
 
-    init(action: @escaping @MainActor (UInt32) -> Void) {
+    init(allowsRegistration: Bool = true, action: @escaping @MainActor (UInt32) -> Void) {
         callbackBox = HotKeyCallbackBox(action: action)
+        self.allowsRegistration = allowsRegistration
+        guard allowsRegistration else { return }
         var eventType = EventTypeSpec(
             eventClass: OSType(kEventClassKeyboard),
             eventKind: UInt32(kEventHotKeyPressed)
@@ -86,6 +89,7 @@ private final class GlobalHotKeyRegistration {
     }
 
     func registerPrimary(_ shortcut: VoiceTypingShortcut) -> Bool {
+        guard allowsRegistration else { return false }
         if let primary { UnregisterEventHotKey(primary) }
         primary = nil
         let definition = shortcut.hotKey
@@ -108,6 +112,7 @@ private final class GlobalHotKeyRegistration {
     }
 
     func setCancelEnabled(_ enabled: Bool) {
+        guard allowsRegistration else { return }
         if let cancel { UnregisterEventHotKey(cancel) }
         cancel = nil
         guard enabled else { return }
@@ -843,6 +848,7 @@ private final class VoiceTypingVerificationGate {
 @Observable
 final class VoiceTypingController {
     private let preferences: UserPreferences
+    private let allowsGlobalShortcuts: Bool
     private let isSessionRecording: @MainActor () -> Bool
     private let microphone = MicrophoneCapture()
     private let engineFactory: VoiceTypingEngineFactory
@@ -869,19 +875,21 @@ final class VoiceTypingController {
 
     init(
         preferences: UserPreferences,
+        allowsGlobalShortcuts: Bool = true,
         isSessionRecording: @escaping @MainActor () -> Bool = { false },
         appleSpeech: any AppleSpeechProviding = SystemAppleSpeechProvider(),
         mimiWhisper: any WhisperAccuracyTranscribing = MimiWhisperMLXLiveEngine(),
         phonon: any WhisperAccuracyTranscribing = MimiPhononMLXLiveEngine()
     ) {
         self.preferences = preferences
+        self.allowsGlobalShortcuts = allowsGlobalShortcuts
         self.isSessionRecording = isSessionRecording
         engineFactory = VoiceTypingEngineFactory(
             appleSpeech: appleSpeech,
             mimiWhisper: mimiWhisper,
             phonon: phonon
         )
-        hotKeys = GlobalHotKeyRegistration { [weak self] identifier in
+        hotKeys = GlobalHotKeyRegistration(allowsRegistration: allowsGlobalShortcuts) { [weak self] identifier in
             if identifier == 2 { self?.cancel() } else { self?.toggle() }
         }
         applyShortcutPreference()
@@ -889,6 +897,9 @@ final class VoiceTypingController {
     }
 
     var language: SpeechLanguage { preferences.voiceTypingLanguage }
+    var shortcutRegistrationFailed: Bool {
+        allowsGlobalShortcuts && preferences.voiceTypingEnabled && !shortcutRegistered
+    }
 
     func toggle() {
         switch state {
@@ -1135,7 +1146,7 @@ final class VoiceTypingPanelController {
         guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
         let size: NSSize = switch controller.state {
         case .message: NSSize(width: 420, height: 70)
-        case .preparing, .listening, .finishing: NSSize(width: 64, height: 64)
+        case .preparing, .listening, .finishing: NSSize(width: 240, height: 80)
         case .idle: .zero
         }
         panel.setFrame(NSRect(
@@ -1187,17 +1198,25 @@ struct VoiceTypingPill: View {
                 .frame(width: 412, height: 62)
                 .background(surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             case .preparing, .listening, .finishing:
-                Image(systemName: controller.state == .listening ? "waveform" : "ellipsis")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(.tint)
-                    .symbolEffect(
-                        .pulse,
-                        options: .repeating.speed(1.15),
-                        isActive: controller.state == .listening && !reduceMotion && !accessibilityPreview.contains(.reduceMotion)
-                    )
-                    .frame(width: 52, height: 52)
-                    .mimiChrome(padding: 0, radius: 26)
-                    .accessibilityLabel(phaseLabel)
+                HStack(spacing: 12) {
+                    Image(systemName: controller.state == .listening ? "waveform" : "ellipsis")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(.tint)
+                        .symbolEffect(.pulse, options: .repeating.speed(1.15), isActive: controller.state == .listening && !reduceMotion && !accessibilityPreview.contains(.reduceMotion))
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(shortPhaseLabel).font(.callout.weight(.semibold))
+                        Text(preferences.text("Voice Type", "音声入力")).font(.caption).foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 8)
+                    Text("esc").font(.caption.monospaced()).foregroundStyle(.secondary)
+                        .padding(5).background(.quaternary, in: .rect(cornerRadius: 5))
+                        .accessibilityHidden(true)
+                }
+                .frame(width: 184, height: 36)
+                .mimiChrome(padding: 16, radius: 28)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(phaseLabel)
             case .idle:
                 EmptyView()
             }
@@ -1216,6 +1235,15 @@ struct VoiceTypingPill: View {
         case .preparing: preferences.text("Preparing Voice Type. Press Escape to cancel.", "音声入力を準備中。Escapeキーでキャンセルできます。")
         case .listening: preferences.text("Voice Type is listening. Press Escape to cancel.", "音声入力中。Escapeキーでキャンセルできます。")
         case .finishing: preferences.text("Finishing Voice Type", "音声入力を完了中")
+        case .idle, .message: ""
+        }
+    }
+
+    private var shortPhaseLabel: String {
+        switch controller.state {
+        case .preparing: preferences.text("Getting ready", "準備中")
+        case .listening: preferences.text("Listening", "聞き取り中")
+        case .finishing: preferences.text("Finishing", "完了処理中")
         case .idle, .message: ""
         }
     }

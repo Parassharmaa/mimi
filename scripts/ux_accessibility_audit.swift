@@ -93,11 +93,35 @@ struct AccessibilityAudit {
             throw CocoaError(.userCancelled, userInfo: [NSLocalizedDescriptionKey: "Supply a synthetic fixture PID and allow Accessibility access."])
         }
         let app = AXUIElementCreateApplication(pid)
-        if let query = argument("--type-search") {
+        if CommandLine.arguments.contains("--activate") {
+            NSRunningApplication(processIdentifier: pid)?.activate(options: [])
+            Thread.sleep(forTimeInterval: 0.15)
+            guard NSWorkspace.shared.frontmostApplication?.processIdentifier == pid else { throw CocoaError(.userCancelled) }
+        }
+        if let expected = argument("--hover") {
             NSRunningApplication(processIdentifier: pid)?.activate(options: [])
             Thread.sleep(forTimeInterval: 0.15)
             guard NSWorkspace.shared.frontmostApplication?.processIdentifier == pid,
-                  let field = searchField(app),
+                  let target = find(app, label: expected),
+                  (attribute(kAXEnabledAttribute, target) as? NSNumber)?.boolValue == true,
+                  let position = attribute(kAXPositionAttribute, target),
+                  let size = attribute(kAXSizeAttribute, target),
+                  CFGetTypeID(position) == AXValueGetTypeID(),
+                  CFGetTypeID(size) == AXValueGetTypeID() else { throw CocoaError(.userCancelled) }
+            var point = CGPoint.zero
+            var bounds = CGSize.zero
+            guard AXValueGetValue(position as! AXValue, .cgPoint, &point),
+                  AXValueGetValue(size as! AXValue, .cgSize, &bounds) else { throw CocoaError(.featureUnsupported) }
+            let center = CGPoint(x: point.x + bounds.width / 2, y: point.y + bounds.height / 2)
+            CGEvent(mouseEventSource: nil, mouseType: .mouseMoved, mouseCursorPosition: center, mouseButton: .left)?.post(tap: .cghidEventTap)
+            Thread.sleep(forTimeInterval: 0.2)
+        }
+        if let query = argument("--type-history-search") ?? argument("--type-search") {
+            NSRunningApplication(processIdentifier: pid)?.activate(options: [])
+            Thread.sleep(forTimeInterval: 0.15)
+            guard NSWorkspace.shared.frontmostApplication?.processIdentifier == pid,
+                  let field = argument("--type-history-search") != nil
+                    ? find(app, label: "Search session history") : searchField(app),
                   AXUIElementSetAttributeValue(field, kAXFocusedAttribute as CFString, kCFBooleanTrue) == .success else {
                 throw CocoaError(.userCancelled)
             }
@@ -161,6 +185,11 @@ struct AccessibilityAudit {
                     throw CocoaError(.featureUnsupported, userInfo: [NSLocalizedDescriptionKey: "AX action \(title) failed with status \(result.rawValue)"])
                 }
                 FileHandle.standardError.write(Data("PASS native action: \(title), AX status \(result.rawValue), confirmed dismissal \(confirmedDismissal)\n".utf8))
+            }
+        }
+        if CommandLine.arguments.contains("--assert-no-shortcut-collision") {
+            guard find(app, label: "That shortcut is already in use. Choose the other shortcut.") == nil else {
+                throw CocoaError(.featureUnsupported, userInfo: [NSLocalizedDescriptionKey: "Preview attempted global shortcut registration."])
             }
         }
         let encoder = JSONEncoder()

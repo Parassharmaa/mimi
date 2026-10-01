@@ -7,6 +7,9 @@ final class FixtureDelegate: NSObject, NSApplicationDelegate {
     private var fields: [NSTextField] = []
     private var timer: Timer?
     private var ticks = 0
+    private var changedFocus = false
+    private var changedText = false
+    private var changedCaret = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         window = NSWindow(
@@ -42,6 +45,21 @@ final class FixtureDelegate: NSObject, NSApplicationDelegate {
 
     private func tick() {
         ticks += 1
+        let text = fields[0].currentEditor()?.string ?? fields[0].stringValue
+        if !changedFocus, let expected = argument("--switch-on-text"), text == expected {
+            changedFocus = true
+            window.makeFirstResponder(fields[1])
+            fields[1].currentEditor()?.selectedRange = NSRange(location: 0, length: 0)
+        }
+        if !changedText, let expected = argument("--edit-on-text"), text == expected {
+            changedText = true
+            fields[0].stringValue = "user changed this field"
+            fields[0].currentEditor()?.string = "user changed this field"
+        }
+        if !changedCaret, let expected = argument("--move-caret-on-text"), text == expected {
+            changedCaret = true
+            fields[0].currentEditor()?.selectedRange = NSRange(location: 0, length: 0)
+        }
         if let seconds = argument("--switch-after").flatMap(Double.init),
            ticks == Int(seconds * 4) {
             window.makeFirstResponder(fields[1])

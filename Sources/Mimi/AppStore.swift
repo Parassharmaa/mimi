@@ -12,11 +12,11 @@ final class AppStore {
     @ObservationIgnored private let inputDevicesProvider: () -> [AudioInputDevice]
     @ObservationIgnored private let outputDevicesProvider: () -> [AudioOutputDevice]
     @ObservationIgnored private let historyStore: TranscriptHistoryStore
-    @ObservationIgnored private var recordingStartedAt: Date?
+    @ObservationIgnored private let legacySessionIdentity: TranscriptSessionIdentity
     var historyRecords: [TranscriptSessionRecord]
     var selectedHistoryID: UUID?
     @ObservationIgnored var isVoiceTypingActive: @MainActor () -> Bool = { false }
-    private var recordingStartPending = false
+    private var recordingTransitionPending = false
 
     init(
         loadPersistedTranscript: Bool = true,
@@ -32,10 +32,13 @@ final class AppStore {
                 .appending(path: "mimi-fixture-history-\(UUID().uuidString)/sessions.json")))
         self.historyStore = historyStore
         let historyLoadError: Error?
+        let loadedRecords: [TranscriptSessionRecord]
         do {
-            historyRecords = loadPersistedTranscript ? try historyStore.load() : []
+            loadedRecords = loadPersistedTranscript ? try historyStore.load() : []
+            historyRecords = loadedRecords
             historyLoadError = nil
         } catch {
+            loadedRecords = []
             historyRecords = []
             historyLoadError = error
         }
@@ -62,6 +65,26 @@ final class AppStore {
             loadPersistedTranscript: loadPersistedTranscript
         )
         session = createdSession
+        var loadedDocument = createdSession.document
+        // Finals form an append-only segment chain. A successful history
+        // commit can outlive a failed latest-cache write for the same owner.
+        if let owner = loadedDocument.sessionIdentity,
+           let archived = loadedRecords.first(where: { $0.id == owner.id }),
+           archived.document.segments.count > loadedDocument.segments.count,
+           Array(archived.document.segments.prefix(loadedDocument.segments.count)) == loadedDocument.segments {
+            loadedDocument = archived.document
+            loadedDocument.sessionIdentity = TranscriptSessionIdentity(id: archived.id, startedAt: archived.startedAt, source: archived.source)
+            createdSession.document = loadedDocument
+        }
+        let recovered = loadedRecords.first {
+            !loadedDocument.renderedText.isEmpty && $0.document.segments == loadedDocument.segments
+                && $0.document.liveText == loadedDocument.liveText
+        }
+        legacySessionIdentity = loadedDocument.sessionIdentity ?? TranscriptSessionIdentity(
+            id: recovered?.id ?? UUID(),
+            startedAt: recovered?.startedAt ?? loadedDocument.segments.first?.createdAt ?? Date(),
+            source: recovered?.source ?? createdSession.source
+        )
         if let historyLoadError {
             session.lastError = historyLoadError.localizedDescription
         }
@@ -70,7 +93,9 @@ final class AppStore {
         }
     }
 
-    var recordingState: RecordingState { session.recordingState }
+    var recordingState: RecordingState {
+        recordingTransitionPending && session.recordingState == .idle ? .preparing : session.recordingState
+    }
     var source: AudioSource {
         get { session.source }
         set { session.source = newValue }
@@ -94,8 +119,23 @@ final class AppStore {
         set { session.translationMode = newValue }
     }
     var document: TranscriptDocument { session.document }
+    var currentSessionIdentity: TranscriptSessionIdentity? {
+        session.document.sessionIdentity ?? (session.document.renderedText.isEmpty ? nil : legacySessionIdentity)
+    }
+    var currentSessionID: UUID? { currentSessionIdentity?.id }
+    var viewedSessionID: UUID? { selectedHistoryID ?? currentSessionID }
+    var sessions: [TranscriptSessionRecord] {
+        guard let identity = currentSessionIdentity else { return historyRecords }
+        let working = TranscriptSessionRecord(
+            id: identity.id, startedAt: identity.startedAt,
+            endedAt: document.segments.last?.createdAt ?? identity.startedAt,
+            source: identity.source, document: document
+        )
+        return [working] + historyRecords.filter { $0.id != identity.id }
+    }
     var viewedDocument: TranscriptDocument {
         guard let selectedHistoryID,
+              selectedHistoryID != currentSessionID,
               let record = historyRecords.first(where: { $0.id == selectedHistoryID }) else {
             return session.document
         }
@@ -115,7 +155,7 @@ final class AppStore {
     }
     var menuBarSymbolName: String { session.menuBarSymbolName }
     var isRecording: Bool { session.isRecording }
-    var isTranscriptionSessionBusy: Bool { session.controlsLocked || recordingStartPending }
+    var isTranscriptionSessionBusy: Bool { session.controlsLocked || recordingTransitionPending }
     var controlsLocked: Bool { isTranscriptionSessionBusy || isVoiceTypingActive() }
     var modelPack: LocalModelPack? { session.modelPack }
     var canRemoveSelectedModel: Bool { session.canRemoveSelectedModel }
@@ -124,32 +164,49 @@ final class AppStore {
     var modelSetupState: ModelSetupState { session.modelSetupState }
     var selectedModelSetupState: ModelSetupState { session.selectedModelSetupState }
     var isModelSetupActive: Bool { session.modelSetupState.isActive }
-    var canStartRecording: Bool { session.canStartRecording && !recordingStartPending && !isVoiceTypingActive() }
+    var canStartRecording: Bool { session.canStartRecording && !recordingTransitionPending && !isVoiceTypingActive() }
     var canInstallSelectedModel: Bool { session.canInstallSelectedModel }
     var canCancelSelectedModelInstall: Bool { session.canCancelSelectedModelInstall }
 
     func toggleRecording() {
-        guard !isVoiceTypingActive(), !recordingStartPending else { return }
-        if session.isRecording {
-            Task {
+        guard !isVoiceTypingActive(), !recordingTransitionPending else { return }
+        let shouldStop = session.isRecording
+        let destinationID = viewedSessionID
+        recordingTransitionPending = true
+        Task {
+            defer { recordingTransitionPending = false }
+            if shouldStop {
                 await session.stopRecording()
-                archiveCurrentSessionIfNeeded()
-            }
-        } else {
-            recordingStartPending = true
-            Task {
-                defer { recordingStartPending = false }
-                guard !isVoiceTypingActive() else { return }
-                if !session.document.renderedText.isEmpty {
-                    guard archiveCurrentSessionIfNeeded() else { return }
-                    session.clearTranscript()
-                    guard session.document.renderedText.isEmpty else { return }
-                }
-                selectedHistoryID = nil
-                recordingStartedAt = Date()
+                persistCurrentSession()
+            } else {
+                guard prepareSessionForRecording(historyID: destinationID) else { return }
                 await session.startRecording()
             }
         }
+    }
+
+    /// The sidebar can change during model startup. The caller freezes the
+    /// destination before awaiting; the working document carries its owner.
+    @discardableResult
+    func prepareSessionForRecording(historyID: UUID?) -> Bool {
+        guard !session.controlsLocked, !isVoiceTypingActive() else { return false }
+        var replacement: TranscriptDocument
+        if let historyID, historyID != currentSessionID {
+            guard let record = historyRecords.first(where: { $0.id == historyID }) else {
+                session.lastError = "This session is no longer available. Choose another session."
+                return false
+            }
+            replacement = record.document
+            replacement.sessionIdentity = TranscriptSessionIdentity(id: record.id, startedAt: record.startedAt, source: record.source)
+        } else {
+            replacement = session.document
+            replacement.sessionIdentity = currentSessionIdentity ?? TranscriptSessionIdentity(source: session.source)
+        }
+        do { _ = try historyStore.load() }
+        catch { session.lastError = error.localizedDescription; return false }
+        guard persistCurrentSession(), session.replaceTranscript(with: replacement) else { return false }
+        if selectedHistoryID == historyID { selectedHistoryID = nil }
+        return true
     }
 
     func installSelectedModel() {
@@ -179,21 +236,37 @@ final class AppStore {
 
     @discardableResult
     func clearTranscript(historyID: UUID?) -> Bool {
+        guard !controlsLocked else { return false }
         if let historyID {
             let remainingRecords = historyRecords.filter { $0.id != historyID }
-            guard remainingRecords.count != historyRecords.count else { return true }
+            let removesSavedRecord = remainingRecords.count != historyRecords.count
+            let removesWorkingRecord = historyID == currentSessionID
+            guard removesSavedRecord || removesWorkingRecord else { return true }
             do {
-                try historyStore.save(remainingRecords)
+                if removesSavedRecord { try historyStore.save(remainingRecords) }
+                if removesWorkingRecord {
+                    guard session.clearTranscript() else {
+                        if removesSavedRecord { try? historyStore.save(historyRecords) }
+                        return false
+                    }
+                }
                 historyRecords = remainingRecords
                 if selectedHistoryID == historyID { selectedHistoryID = nil }
+                if selectedHistoryID == nil && currentSessionID == nil {
+                    selectedHistoryID = remainingRecords.first?.id
+                }
                 return true
             } catch {
                 session.lastError = error.localizedDescription
                 return false
             }
         } else {
-            session.clearTranscript()
-            return session.document.renderedText.isEmpty
+            if let currentSessionID, historyRecords.contains(where: { $0.id == currentSessionID }) {
+                return clearTranscript(historyID: currentSessionID)
+            }
+            let cleared = session.clearTranscript()
+            if cleared && selectedHistoryID == nil { selectedHistoryID = historyRecords.first?.id }
+            return cleared
         }
     }
 
@@ -203,30 +276,24 @@ final class AppStore {
 
     func newSession() {
         guard !controlsLocked else { return }
-        if !session.document.renderedText.isEmpty {
-            guard archiveCurrentSessionIfNeeded() else { return }
-        }
-        session.clearTranscript()
-        guard session.document.renderedText.isEmpty else { return }
+        guard persistCurrentSession() else { return }
+        let draft = TranscriptDocument(sessionIdentity: TranscriptSessionIdentity(source: session.source))
+        guard session.replaceTranscript(with: draft) else { return }
         selectedHistoryID = nil
-        recordingStartedAt = nil
     }
 
     @discardableResult
-    private func archiveCurrentSessionIfNeeded() -> Bool {
-        let document = session.document
-        guard !document.renderedText.isEmpty else {
-            recordingStartedAt = nil
-            return true
-        }
-        let start = recordingStartedAt ?? document.segments.first?.createdAt ?? Date()
-        var updatedRecords = historyRecords.filter { $0.document != document }
+    func persistCurrentSession() -> Bool {
+        var document = session.document
+        guard !document.renderedText.isEmpty, let identity = currentSessionIdentity else { return true }
+        document.sessionIdentity = identity
+        var updatedRecords = historyRecords.filter { $0.id != identity.id }
         updatedRecords.insert(
             TranscriptSessionRecord(
-                id: UUID(),
-                startedAt: start,
+                id: identity.id,
+                startedAt: identity.startedAt,
                 endedAt: Date(),
-                source: session.source,
+                source: identity.source,
                 document: document
             ),
             at: 0
@@ -234,7 +301,6 @@ final class AppStore {
         do {
             try historyStore.save(updatedRecords)
             historyRecords = updatedRecords
-            recordingStartedAt = nil
             return true
         } catch {
             session.lastError = error.localizedDescription

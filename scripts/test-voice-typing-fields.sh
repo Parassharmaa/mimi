@@ -6,6 +6,7 @@ APP="${1:-$ROOT/.build/Mimi.app/Contents/MacOS/Mimi}"
 [[ -x "$APP" ]] || { print -u2 "Build Mimi before running the live field checks."; exit 1; }
 FIXTURE_DIR="$(mktemp -d -t mimi-field-fixture)"
 swiftc -parse-as-library "$ROOT/scripts/voice_typing_fixture.swift" -o "$FIXTURE_DIR/fixture"
+swiftc -parse-as-library "$ROOT/scripts/ux_accessibility_audit.swift" -o "$FIXTURE_DIR/ax-audit"
 FIXTURE_PID=""
 trap '[[ -z "$FIXTURE_PID" ]] || kill "$FIXTURE_PID" 2>/dev/null || true' EXIT
 
@@ -22,6 +23,7 @@ check_case() {
   "$FIXTURE_DIR/fixture" "${fixture_args[@]}" > "$FIXTURE_DIR/$case_name.jsonl" &
   FIXTURE_PID="$!"
   sleep 0.5
+  "$FIXTURE_DIR/ax-audit" --pid "$FIXTURE_PID" --activate > /dev/null
   "$APP" --e2e-stream-insert "$e2e_stream" --e2e-delay 1 --e2e-target-pid "$FIXTURE_PID" "${app_args[@]}"
   sleep 0.3
   local actual="$(tail -n 1 "$FIXTURE_DIR/$case_name.jsonl")"
@@ -36,9 +38,9 @@ check_case selection '["hello world","untouched second field"]' --location 6 --l
 check_case insertion '["hello world","untouched second field"]' --location 6 --length 0 --
 check_case unicode '["a😀 東京です b","untouched second field"]' --text 'a😀 東京です b' --location 4 --length 2 --
 check_case preparation-cancel '["hello world","untouched second field"]' --location 6 --length 5 -- --e2e-rollback-only
-check_case focus-change '["hello there","untouched second field"]' --switch-after 2 -- --e2e-step-delay 2 --e2e-expect-focus-change
-check_case user-edit '["user changed this field","untouched second field"]' --edit-after 2 -- --e2e-step-delay 2 --e2e-expect-destination-change
-check_case caret-change '["hello there","untouched second field"]' --move-caret-after 2 -- --e2e-step-delay 2 --e2e-expect-destination-change
+check_case focus-change '["hello there","untouched second field"]' --switch-on-text 'hello there' -- --e2e-step-delay 2 --e2e-expect-focus-change
+check_case user-edit '["user changed this field","untouched second field"]' --edit-on-text 'hello there' -- --e2e-step-delay 2 --e2e-expect-destination-change
+check_case caret-change '["hello there","untouched second field"]' --move-caret-on-text 'hello there' -- --e2e-step-delay 2 --e2e-expect-destination-change
 check_case secure-field '["hello world","untouched second field"]' --secure -- --e2e-expect-secure-field
 check_case empty-start '["hello world","untouched second field"]' --location 6 --length 5 --
 check_case withdrawn '["hello world","untouched second field"]' --location 6 --length 5 --

@@ -40,10 +40,7 @@ struct InlineTranslationView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Label("English ↔ 日本語", systemImage: "translate")
-                    .font(.callout.weight(.semibold))
-                Spacer()
+            MimiPaneHeader("English ↔ 日本語", symbol: "translate") {
                 if model.isTranslating {
                     ProgressView()
                         .controlSize(.small)
@@ -55,7 +52,7 @@ struct InlineTranslationView: View {
                 } label: {
                     Image(systemName: "doc.on.doc")
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(MimiQuietButtonStyle())
                 .help(t("Copy Translation", "翻訳をコピー"))
                 .accessibilityLabel(t("Copy Translation", "翻訳をコピー"))
                 .disabled(renderedTranslation.isEmpty)
@@ -63,12 +60,9 @@ struct InlineTranslationView: View {
                     model.reset(for: segments)
                     retryGeneration &+= 1
                 }
-                .buttonStyle(.borderless)
+                .buttonStyle(MimiQuietButtonStyle())
                 .disabled(segments.isEmpty || fixtureTranslation != nil || model.isTranslating)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-
             Divider()
 
             if !renderedTranslation.isEmpty {
@@ -125,7 +119,7 @@ struct InlineTranslationView: View {
                         model.clearErrors()
                         retryGeneration &+= 1
                     }
-                    .buttonStyle(.borderless)
+                    .buttonStyle(MimiQuietButtonStyle())
                 }
                 .padding(10)
                 .background(Color.red.opacity(0.08))
