@@ -8,13 +8,12 @@ and translation on your Mac.
 
 ## A quick look
 
-| Simple setup | Floating captions |
+| Sessions and recording | Spoken language |
 | --- | --- |
-| ![Mimi bilingual onboarding](docs/images/mimi-onboarding.png) | ![Mimi floating original and translated captions](docs/images/mimi-captions.png) |
+| ![Mimi workspace with a single Sessions list and recording controls](https://github.com/user-attachments/assets/7510e993-9856-454a-a0d8-812be587c9de) | ![Mimi single-level spoken language chooser](https://github.com/user-attachments/assets/5077cecc-1fe7-4110-b7d0-a94b3388e040) |
 
-| Menu-bar controls | Transcript history and translation |
-| --- | --- |
-| ![Mimi menu-bar controls](docs/images/mimi-menu.png) | ![Mimi transcript window](docs/images/mimi-transcript.png) |
+Record continues the open session. Use **+** beside Sessions to start a new one.
+With no sessions, Record creates the first session automatically.
 
 ## What Mimi can do
 
@@ -125,6 +124,10 @@ For implementation details, benchmarks, and physical-Mac checks, see:
 
 ## Release status
 
-Mimi is under active development. Official tagged GitHub releases are built by
-CI, signed with Developer ID, notarized by Apple, stapled, and verified with
-Gatekeeper before the archive is published.
+Mimi is under active development. [0.1.7 preview 1](https://github.com/Parassharmaa/mimi/releases/tag/0.1.7-preview.1)
+is an unsigned preview, not notarized by Apple. Its universal CI archive includes
+Phonon 2 for English and the stable translation pack. Bilingual Mimi Speech
+Preview is available as an optional model download.
+
+Signed releases require Developer ID signing, Apple notarization, stapling,
+and Gatekeeper verification before publication.
