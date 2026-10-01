@@ -1012,6 +1012,17 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         } else if presentationState == "empty" {
             store.clearTranscript(historyID: nil)
         }
+        if let countText = argument(after: "--e2e-history-count", in: arguments), let count = Int(countText) {
+            let titles = ["Design review", "Morning planning", "Product discussion", "Travel notes", "Weekly catch-up", "日本語の会話"]
+            store.historyRecords += (0..<min(100, max(0, count))).map { index in
+                let text = titles[index % titles.count]
+                return TranscriptSessionRecord(
+                    id: UUID(), startedAt: Date(timeIntervalSince1970: 1_790_730_000 - Double(index + 1) * 86_400),
+                    endedAt: Date(timeIntervalSince1970: 1_790_730_060 - Double(index + 1) * 86_400), source: .microphone,
+                    document: TranscriptDocument(segments: [.init(text: text, language: index % titles.count == 5 ? .japanese : .english)])
+                )
+            }
+        }
         let fixturePreferences = UserPreferences(defaults: UserDefaults(suiteName: "MimiE2E-\(UUID().uuidString)")!)
         if argument(after: "--e2e-language", in: arguments) == "japanese" {
             fixturePreferences.interfaceLanguage = .japanese
@@ -1054,7 +1065,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                     : (["model-preparing", "model-ready", "model-failed"].contains(presentationState) ? 2 : 0)),
                 preparationFixture: onboardingFixture
             ))
-            size = NSSize(width: 620, height: 560)
+            size = NSSize(width: 790, height: 590)
         case "captions":
             fixturePreferences.floatingCaptionsEnabled = true
             fixturePreferences.floatingCaptionContent = .both
@@ -1068,7 +1079,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         case "voice-typing":
             fixtureVoiceTyping.applyPresentationFixture(text: "")
             view = AnyView(VoiceTypingPill(controller: fixtureVoiceTyping, preferences: fixturePreferences))
-            size = NSSize(width: 64, height: 64)
+            size = NSSize(width: 240, height: 80)
         case "transcript":
             view = AnyView(TranscriptWindow(
                 store: store,
@@ -1080,30 +1091,28 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
                     : (presentationState == "history" ? "At yesterday's meeting, we talked about next week's release." : "Hello. Mimi transcribes locally on this Mac."),
                 initiallyFollowingLatest: presentationState != "follow-latest-paused"
             ))
-            size = NSSize(width: 820, height: 600)
+            size = NSSize(width: 1080, height: 740)
         case "settings", "settings-models":
             view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .models))
-            size = NSSize(width: 620, height: 540)
+            size = NSSize(width: 780, height: 600)
         case "settings-capture":
             view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .capture))
-            size = NSSize(width: 620, height: 540)
+            size = NSSize(width: 780, height: 600)
         case "settings-privacy":
             view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .privacy))
-            size = NSSize(width: 620, height: 540)
+            size = NSSize(width: 780, height: 600)
         case "settings-captions":
             view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .captions))
-            size = NSSize(width: 620, height: 540)
+            size = NSSize(width: 780, height: 600)
         case "settings-voice":
             view = AnyView(SettingsView(store: store, preferences: fixturePreferences, voiceTyping: fixtureVoiceTyping, initialTab: .voiceTyping))
-            size = NSSize(width: 620, height: 540)
+            size = NSSize(width: 780, height: 600)
         default:
             view = AnyView(MenuBarView(
                 store: store,
-                preferences: fixturePreferences,
-                isConfirmingClear: presentationState == "clear-confirmation",
-                initiallyFollowingLatest: presentationState != "follow-latest-paused"
+                preferences: fixturePreferences
             ))
-            size = NSSize(width: 430, height: 580)
+            size = NSSize(width: 360, height: 440)
         }
 
         var accessibilityPreview: MimiAccessibilityPreview = []
@@ -1117,7 +1126,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
         // constraint feedback loop for a popover-width SwiftUI surface.
         hostingController.sizingOptions = []
         let window = NSWindow(contentViewController: hostingController)
-        window.title = "Mimi E2E \(screen.capitalized)"
+        window.title = screen == "transcript" ? "Mimi" : (screen == "onboarding" ? "Welcome to Mimi" : "Mimi \(screen.capitalized)")
         if screen == "captions" || screen == "voice-typing" {
             window.styleMask = [.borderless]
             window.isOpaque = false

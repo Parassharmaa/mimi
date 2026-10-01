@@ -184,10 +184,14 @@ struct FloatingCaptionView: View {
         ZStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 7) {
                 if preferences.floatingCaptionContent != .translation {
+                    Text(preferences.text("Original", "原文") + " · " + sourceLanguage.nativeName)
+                        .font(.caption2.weight(.medium)).foregroundStyle(.secondary)
                     caption(sourceText, secondary: preferences.floatingCaptionContent == .both)
                 }
                 if preferences.floatingCaptionContent != .original {
                     if !displayedTranslation.isEmpty {
+                        Text(preferences.text("Translation", "翻訳"))
+                            .font(.caption2.weight(.medium)).foregroundStyle(.secondary)
                         caption(displayedTranslation, secondary: false)
                     } else if !sourceText.isEmpty && usesAppleTranslationForLivePartials {
                         Text("…")
@@ -217,7 +221,7 @@ struct FloatingCaptionView: View {
             }
         }
         .padding(.horizontal, 24)
-        .padding(.vertical, 18)
+        .padding(.vertical, 20)
         .background {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(

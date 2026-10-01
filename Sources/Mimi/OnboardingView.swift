@@ -50,50 +50,60 @@ struct OnboardingView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 6) {
-                ForEach(0..<5, id: \.self) { index in
-                    Capsule()
-                        .fill(index <= step ? Color.accentColor : Color.secondary.opacity(0.2))
-                        .frame(height: 4)
+        HStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 28) {
+                HStack(spacing: 10) {
+                    Image(systemName: "ear").font(.title2).foregroundStyle(.tint).accessibilityHidden(true)
+                    Text("Mimi").font(.title3.weight(.semibold))
                 }
+                VStack(alignment: .leading, spacing: 20) {
+                    ForEach(0..<5, id: \.self) { index in
+                        HStack(spacing: 10) {
+                            Image(systemName: index < step ? "checkmark.circle.fill" : (index == step ? "circle.inset.filled" : "circle"))
+                                .foregroundStyle(index <= step ? Color.accentColor : Color.secondary)
+                                .accessibilityHidden(true)
+                            Text(stepTitle(index)).font(.callout.weight(index == step ? .semibold : .regular))
+                                .foregroundStyle(index <= step ? .primary : .secondary)
+                        }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityValue(index == step ? t("Current step", "現在のステップ") : "")
+                    }
+                }
+                Spacer()
+                Label(t("Private by design", "プライバシーを大切に"), systemImage: "lock.shield")
+                    .font(.caption).foregroundStyle(.secondary)
             }
-            .padding(.horizontal, 28)
-            .padding(.top, 24)
-            .accessibilityElement(children: .ignore)
+            .padding(24).frame(width: 180)
+            .background(.quaternary.opacity(0.25))
             .accessibilityLabel(t("Setup progress", "設定の進行状況"))
             .accessibilityValue(t("Step \(step + 1) of 5", "5ステップ中\(step + 1)番目"))
 
-            ScrollView {
-                Group {
-                    switch step {
-                    case 0: languageStep
-                    case 1: listeningStep
-                    case 2: preparationStep
-                    case 3: permissionStep
-                    default: readyStep
+            VStack(spacing: 0) {
+                ScrollView {
+                    Group {
+                        switch step {
+                        case 0: languageStep
+                        case 1: listeningStep
+                        case 2: preparationStep
+                        case 3: permissionStep
+                        default: readyStep
+                        }
                     }
+                    .frame(maxWidth: .infinity)
+                    .padding(30)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(32)
+                HStack {
+                    if step > 0 { Button(t("Back", "戻る")) { step -= 1 } }
+                    Spacer()
+                    Button(step == 4 ? t("Start using Mimi", "Mimiを使い始める") : t("Continue", "続ける"), action: advance)
+                        .buttonStyle(.borderedProminent)
+                        .keyboardShortcut(.defaultAction)
+                        .disabled(step == 2 && !preparationIsReady)
+                }
+                .padding(24)
             }
-
-            Divider()
-            HStack {
-                if step > 0 {
-                    Button(t("Back", "戻る")) { step -= 1 }
-                }
-                Spacer()
-                Button(step == 4 ? t("Start using Mimi", "Mimiを使い始める") : t("Continue", "続ける")) {
-                    advance()
-                }
-                .buttonStyle(.borderedProminent)
-                .keyboardShortcut(.defaultAction)
-                .disabled(step == 2 && !preparationIsReady)
-            }
-            .padding(20)
         }
-        .frame(width: 620, height: 560)
+        .frame(width: 790, height: 590)
         .onAppear {
             startAtLogin = preferences.startsAtLogin
             refreshAccess()
@@ -131,6 +141,16 @@ struct OnboardingView: View {
             }
             .pickerStyle(.segmented)
             .frame(width: 300)
+        }
+    }
+
+    private func stepTitle(_ index: Int) -> String {
+        switch index {
+        case 0: t("Welcome", "ようこそ")
+        case 1: t("Listening", "聞き取り")
+        case 2: t("Models", "モデル")
+        case 3: t("Access", "アクセス")
+        default: t("Ready", "準備完了")
         }
     }
 
@@ -249,12 +269,9 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Toggle(t("Dictate into text fields", "入力欄に音声入力"), isOn: $preferences.voiceTypingEnabled)
                 if preferences.voiceTypingEnabled {
-                    Picker(t("Voice Type model", "音声入力モデル"), selection: $preferences.voiceTypingModel) {
-                        ForEach(VoiceTypingModel.allCases) { model in
-                            Text(model.displayName).tag(model)
-                        }
+                    LabeledContent(t("Voice Type model", "音声入力モデル")) {
+                        VoiceModelControl(preferences: preferences, isActive: voiceTyping.state.isActive)
                     }
-                    .disabled(voiceTyping.state.isActive)
                     Picker(t("Spoken language", "話す言語"), selection: $preferences.voiceTypingLanguage) {
                         ForEach(preferences.voiceTypingModel == .phonon2 ? [.english] : SpeechLanguage.allCases) { language in
                             Text(language.nativeName).tag(language)

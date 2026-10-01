@@ -38,8 +38,8 @@ struct TranscriptWindow: View {
     var body: some View {
         NavigationSplitView {
             TranscriptHistorySidebar(store: store, preferences: preferences)
-                .navigationSplitViewColumnWidth(min: 220, ideal: 250, max: 310)
-                .navigationTitle(t("Sessions", "セッション"))
+                .navigationSplitViewColumnWidth(min: 210, ideal: 240, max: 300)
+                .navigationTitle("Mimi")
         } detail: {
             VStack(spacing: 0) {
                 sessionStrip
@@ -51,12 +51,15 @@ struct TranscriptWindow: View {
                 }
 
                 transcriptContent
+                    .padding(.horizontal, 24)
+
+                WorkspaceCaptureBar(store: store, preferences: preferences)
             }
             .frame(minWidth: 560, minHeight: 440)
-            .navigationTitle(t("Transcript", "文字起こし"))
+            .navigationTitle("Mimi")
             .toolbar { transcriptToolbar }
         }
-        .navigationSplitViewStyle(.balanced)
+        .navigationSplitViewStyle(.prominentDetail)
         .searchable(text: $searchText, isPresented: $isSearching, prompt: t("Find in original", "原文を検索"))
         .searchFocused($searchFocused)
         .onChange(of: store.selectedHistoryID) { searchText = "" }
@@ -75,13 +78,10 @@ struct TranscriptWindow: View {
 
     private var sessionStrip: some View {
         HStack(spacing: 10) {
-            Image(systemName: store.menuBarSymbolName)
-                .foregroundStyle(store.isRecording ? .red : .accentColor)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(sessionTitle)
-                    .font(.callout.weight(.semibold))
+                    .font(.title2.weight(.semibold))
+                    .lineLimit(1)
                 Text(sessionDetail)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -95,15 +95,18 @@ struct TranscriptWindow: View {
                     .buttonStyle(.bordered)
             }
 
-            if store.translationMode == .translateFinalSegments {
-                Label(t("Local translation", "ローカル翻訳"), systemImage: "translate")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            Picker(t("Workspace view", "表示モード"), selection: $store.translationMode) {
+                Text(t("Transcript", "文字起こし")).tag(TranslationMode.off)
+                Text(t("Bilingual", "原文と翻訳")).tag(TranslationMode.translateFinalSegments)
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .accessibilityLabel(t("Workspace view", "表示モード"))
+            .frame(width: 190)
+            .disabled(store.controlsLocked)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 11)
-        .accessibilityElement(children: .combine)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 22)
     }
 
     private var selectedRecord: TranscriptSessionRecord? {
@@ -120,7 +123,7 @@ struct TranscriptWindow: View {
             let languages = Set(selectedRecord.document.segments.map(\.language)).map(\.nativeName).sorted().joined(separator: " / ")
             return "\(selectedRecord.startedAt.formatted(date: .abbreviated, time: .shortened)) · \(selectedRecord.source.displayName) · \(languages)"
         }
-        return "\(store.recordingState.label) · \(store.source.displayName) · \(store.sourceLanguage.nativeName) · \(store.engineID.displayName)"
+        return t("A quiet place for your words and their meaning.", "言葉と、その意味を落ち着いて見渡せる場所。")
     }
 
     @ViewBuilder
@@ -151,6 +154,7 @@ struct TranscriptWindow: View {
                 )
                 .frame(minWidth: 250)
             }
+            .clipShape(.rect(cornerRadius: 12))
         } else {
             TranscriptLanguagePane(
                 document: displayedDocument,
@@ -166,14 +170,6 @@ struct TranscriptWindow: View {
     private var transcriptToolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .primaryAction) {
             Button {
-                store.newSession()
-            } label: {
-                Label(t("New Session", "新しいセッション"), systemImage: "plus")
-            }
-            .keyboardShortcut("n", modifiers: .command)
-            .disabled(store.controlsLocked)
-
-            Button {
                 store.copyTranscript()
             } label: {
                 Label(t("Copy Transcript", "文字起こしをコピー"), systemImage: "doc.on.doc")
@@ -187,20 +183,16 @@ struct TranscriptWindow: View {
             .keyboardShortcut("e", modifiers: [.command, .shift])
             .disabled(store.viewedDocument.renderedText.isEmpty)
 
-            Button(role: .destructive) {
-                setClearConfirmation(true)
-            } label: {
-                Label(t("Delete Transcript", "文字起こしを削除"), systemImage: "trash")
-            }
-            .keyboardShortcut(.delete, modifiers: [.command, .option])
-            .disabled(store.viewedDocument.renderedText.isEmpty || isConfirmingClear || store.controlsLocked)
-
             Menu {
                 Button(t("Find in Original", "原文を検索")) {
                     isSearching = true
                     searchFocused = true
                 }
                 .keyboardShortcut("f", modifiers: .command)
+                Divider()
+                Button(t("Delete Transcript", "文字起こしを削除"), role: .destructive) { setClearConfirmation(true) }
+                    .keyboardShortcut(.delete, modifiers: [.command, .option])
+                    .disabled(store.viewedDocument.renderedText.isEmpty || isConfirmingClear || store.controlsLocked)
                 Divider()
                 Button(t("Settings…", "設定…")) { showSettings() }
                 Button(t("Voice Type…", "音声入力…")) { showSettings(.voiceTyping) }
@@ -209,17 +201,6 @@ struct TranscriptWindow: View {
                 Label(t("More", "その他"), systemImage: "ellipsis.circle")
             }
 
-            Button {
-                store.toggleRecording()
-            } label: {
-                Label(
-                    store.isRecording ? t("Stop Recording", "録音を停止") : (selectedRecord == nil ? t("Start Recording", "録音を開始") : t("Start New Recording", "新しい録音を開始")),
-                    systemImage: store.isRecording ? "stop.fill" : "record.circle"
-                )
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(store.isRecording ? .red : .accentColor)
-            .disabled(store.isRecording ? store.recordingState == .processing : !store.canStartRecording)
         }
     }
 
@@ -270,117 +251,82 @@ struct TranscriptWindow: View {
 private struct TranscriptHistorySidebar: View {
     @Bindable var store: AppStore
     @Bindable var preferences: UserPreferences
+    @Environment(\.openSettings) private var openSettings
+    @State private var query = ""
     private static let currentID = UUID(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+
     private var selection: Binding<UUID?> {
-        Binding(
-            get: { store.selectedHistoryID ?? Self.currentID },
-            set: { store.selectedHistoryID = $0 == Self.currentID ? nil : $0 }
-        )
+        Binding(get: { store.selectedHistoryID ?? Self.currentID },
+                set: { store.selectedHistoryID = $0 == Self.currentID ? nil : $0 })
+    }
+
+    private var records: [TranscriptSessionRecord] {
+        query.isEmpty ? store.historyRecords : store.historyRecords.filter {
+            $0.document.renderedText.localizedStandardContains(query)
+        }
     }
 
     var body: some View {
-        List(selection: selection) {
-            Section(t("Now", "現在")) {
-                Label(store.isRecording ? t("Listening now", "文字起こし中") : t("Current transcript", "現在の文字起こし"), systemImage: store.isRecording ? "waveform" : "doc.text")
-                    .tag(Optional(Self.currentID))
+        VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 16) {
+                Button(action: store.newSession) {
+                    Label(t("New session", "新しいセッション"), systemImage: "square.and.pencil")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(MimiQuietButtonStyle())
+                .font(.callout.weight(.semibold))
+                .keyboardShortcut("n", modifiers: .command)
+                .disabled(store.controlsLocked)
+                TextField(t("Search sessions", "セッションを検索"), text: $query)
+                    .textFieldStyle(.roundedBorder)
+                    .accessibilityLabel(t("Search session history", "過去のセッションを検索"))
             }
+            .padding(18)
 
-            if !store.historyRecords.isEmpty {
-                Section(t("Previous sessions", "過去のセッション")) {
-                    ForEach(store.historyRecords) { record in
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(record.title).lineLimit(1)
+            List(selection: selection) {
+                Section(t("Workspace", "ワークスペース")) {
+                    Label(store.isRecording ? t("Listening now", "文字起こし中") : t("Current session", "現在のセッション"),
+                          systemImage: store.isRecording ? "waveform" : "doc.text")
+                        .tag(Optional(Self.currentID))
+                }
+                Section(t("Recent sessions", "最近のセッション")) {
+                    ForEach(records) { record in
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(record.title).font(.callout).lineLimit(1)
                             Text(record.startedAt, format: .dateTime.month().day().hour().minute())
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(.caption).foregroundStyle(.secondary)
                         }
+                        .padding(.vertical, 3)
                         .tag(Optional(record.id))
                     }
                 }
             }
+            .listStyle(.sidebar)
 
-            Section(t("Next recording", "次の録音")) {
-                Picker(t("Source", "入力"), selection: $store.source) {
-                    ForEach(AudioSource.allCases) { source in
-                        Label(source.displayName, systemImage: source.symbolName).tag(source)
-                    }
+            VStack(spacing: 12) {
+                sidebarButton(t("Voice Type", "音声入力"), symbol: "keyboard") {
+                    SettingsWindowFocusCoordinator.shared.requestFocus(tab: .voiceTyping)
+                    openSettings()
                 }
-                .disabled(store.controlsLocked)
-                .accessibilityLabel(t("Audio source", "音声入力"))
-
-                sourceConfiguration
-            }
-
-            Section(t("Transcription", "文字起こし")) {
-                Picker(t("Language", "言語"), selection: $store.languageMode) {
-                    ForEach(store.selectableLanguageModes) { mode in
-                        Text(mode.displayName).tag(mode)
-                    }
-                }
-                .disabled(store.controlsLocked || store.isModelSetupActive)
-                .accessibilityLabel(t("Transcription language", "文字起こしの言語"))
-
-                Picker(t("Model", "モデル"), selection: $store.engineID) {
-                    ForEach(TranscriptionEngineID.selectableCases) { engine in
-                        Text(engine.displayName).tag(engine)
-                    }
-                }
-                .disabled(store.controlsLocked || store.isModelSetupActive)
-                .accessibilityLabel(t("Speech model", "音声認識モデル"))
-
-                ModelSetupStatusView(
-                    readiness: store.selectedModelReadiness,
-                    setupState: store.selectedModelSetupState,
-                    compact: true
-                )
-            }
-
-            Section(t("Translation", "翻訳")) {
-                Picker(t("Mode", "モード"), selection: $store.translationMode) {
-                    ForEach(TranslationMode.allCases) { mode in
-                        Text(mode == .off ? t("Off", "オフ") : "English ↔ 日本語").tag(mode)
-                    }
-                }
-                .disabled(store.controlsLocked)
-                .accessibilityLabel(t("Translation mode", "翻訳モード"))
-            }
-        }
-        .listStyle(.sidebar)
-    }
-
-    @ViewBuilder
-    private var sourceConfiguration: some View {
-        switch store.source {
-        case .microphone:
-            Picker(t("Microphone", "マイク"), selection: $store.selectedInputDeviceID) {
-                Text(t("System Default", "システムのデフォルト")).tag(UInt32?.none)
-                ForEach(store.inputDevices) { device in
-                    Text(device.displayName).tag(Optional(device.id))
+                sidebarButton(t("Settings", "設定"), symbol: "gearshape") {
+                    SettingsWindowFocusCoordinator.shared.requestFocus()
+                    openSettings()
                 }
             }
-            .disabled(store.controlsLocked)
-            .accessibilityLabel(t("Microphone", "マイク"))
-            Button(t("Refresh Microphones", "マイクを更新"), action: store.refreshInputDevices)
-                .disabled(store.controlsLocked)
-        case .outputAudio:
-            Picker(t("Output", "出力"), selection: $store.selectedOutputDeviceID) {
-                Text(t("System Default", "システムのデフォルト")).tag(UInt32?.none)
-                ForEach(store.outputDevices) { device in
-                    Text(device.displayName).tag(Optional(device.id))
-                }
-            }
-            .disabled(store.controlsLocked)
-            .accessibilityLabel(t("Audio output", "音声出力"))
-            Button(t("Refresh Outputs", "出力を更新"), action: store.refreshOutputDevices)
-                .disabled(store.controlsLocked)
-        case .applicationAudio, .systemAudio:
-            ScreenAudioSelectionControl(store: store)
+            .padding(18)
         }
     }
 
-    private func t(_ english: String, _ japanese: String) -> String {
-        preferences.text(english, japanese)
+    private func sidebarButton(_ title: String, symbol: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: symbol)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(MimiQuietButtonStyle())
+        .foregroundStyle(.secondary)
     }
+
+    private func t(_ english: String, _ japanese: String) -> String { preferences.text(english, japanese) }
 }
 
 private struct TranscriptLanguagePane: View {
@@ -400,10 +346,7 @@ private struct TranscriptLanguagePane: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 7) {
-                Label(language?.nativeName ?? preferences.text("Original", "原文"), systemImage: language?.symbolName ?? "text.alignleft")
-                    .font(.callout.weight(.semibold))
-                Spacer()
+            MimiPaneHeader(language?.nativeName ?? preferences.text("Original", "原文"), symbol: language?.symbolName ?? "text.alignleft") {
                 if !document.liveText.isEmpty {
                     Text(preferences.text("Listening", "文字起こし中"))
                         .font(.caption2.weight(.semibold))
@@ -413,9 +356,6 @@ private struct TranscriptLanguagePane: View {
                         .background(.quaternary, in: Capsule())
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-
             Divider()
 
             if displayedDocument.segments.isEmpty && displayedDocument.liveText.isEmpty {

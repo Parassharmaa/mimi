@@ -2,13 +2,35 @@ import AppKit
 import MimiCore
 import SwiftUI
 
-enum SettingsTab: Hashable {
+enum SettingsTab: Hashable, CaseIterable {
     case general
     case voiceTyping
     case captions
     case models
     case capture
     case privacy
+
+    @MainActor func title(_ preferences: UserPreferences) -> String {
+        switch self {
+        case .general: preferences.text("General", "一般")
+        case .voiceTyping: preferences.text("Voice Type", "音声入力")
+        case .captions: preferences.text("Captions", "字幕")
+        case .models: preferences.text("Speech & languages", "音声認識と言語")
+        case .capture: preferences.text("Audio & devices", "音声とデバイス")
+        case .privacy: preferences.text("Privacy", "プライバシー")
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .general: "gearshape"
+        case .voiceTyping: "keyboard"
+        case .captions: "captions.bubble"
+        case .models: "cpu"
+        case .capture: "waveform"
+        case .privacy: "lock.shield"
+        }
+    }
 }
 
 struct SettingsView: View {
@@ -30,37 +52,48 @@ struct SettingsView: View {
         _selectedTab = State(initialValue: initialTab)
     }
 
+    private var sidebarSelection: Binding<SettingsTab?> {
+        Binding(get: { selectedTab }, set: { if let value = $0 { selectedTab = value } })
+    }
+
     var body: some View {
-        TabView(selection: $selectedTab) {
-            Tab(preferences.text("General", "一般"), systemImage: "gearshape", value: .general) {
-                GeneralSettingsPane(preferences: preferences)
+        HStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 18) {
+                Text(preferences.text("Settings", "設定"))
+                    .font(.title3.weight(.semibold)).padding(.horizontal, 18).padding(.top, 24)
+                List(SettingsTab.allCases, id: \.self, selection: sidebarSelection) { tab in
+                    Label(tab.title(preferences), systemImage: tab.symbol).padding(.vertical, 5).tag(tab)
+                }
+                .listStyle(.sidebar)
+                Text(preferences.text("Made for this Mac", "このMacのために"))
+                    .font(.caption).foregroundStyle(.secondary).padding(18)
             }
-
-            Tab(preferences.text("Voice Type", "音声入力"), systemImage: "keyboard.badge.ellipsis", value: .voiceTyping) {
-                VoiceTypingSettingsPane(preferences: preferences, voiceTyping: voiceTyping)
-            }
-
-            Tab(preferences.text("Captions", "字幕"), systemImage: "captions.bubble", value: .captions) {
-                CaptionSettingsPane(preferences: preferences)
-            }
-
-            Tab(preferences.text("Languages", "言語"), systemImage: "character.book.closed", value: .models) {
-                ModelsSettingsPane(store: store, preferences: preferences)
-            }
-
-            Tab(preferences.text("Audio", "音声"), systemImage: "waveform", value: .capture) {
-                CaptureSettingsPane(store: store, preferences: preferences)
-            }
-
-            Tab(preferences.text("Privacy", "プライバシー"), systemImage: "hand.raised", value: .privacy) {
-                PrivacySettingsPane(store: store, preferences: preferences)
+            .frame(width: 195)
+            .background(.quaternary.opacity(0.25))
+            VStack(alignment: .leading, spacing: 6) {
+                Text(selectedTab.title(preferences)).font(.title2.weight(.semibold))
+                    .padding(.horizontal, 28).padding(.top, 26)
+                Text(preferences.text("Make Mimi work the way you do.", "自分に合ったMimiの使い方に。"))
+                    .font(.callout).foregroundStyle(.secondary)
+                    .padding(.horizontal, 28).padding(.bottom, 8)
+                settingsContent.frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .scenePadding()
-        .frame(width: 620, height: 540)
+        .frame(minWidth: 740, idealWidth: 780, minHeight: 560, idealHeight: 600)
         .background(SettingsWindowRegistrar())
         .onAppear { applyRequestedTab() }
         .onChange(of: focusCoordinator.requestID) { applyRequestedTab() }
+    }
+
+    @ViewBuilder private var settingsContent: some View {
+        switch selectedTab {
+        case .general: GeneralSettingsPane(preferences: preferences)
+        case .voiceTyping: VoiceTypingSettingsPane(preferences: preferences, voiceTyping: voiceTyping)
+        case .captions: CaptionSettingsPane(preferences: preferences)
+        case .models: ModelsSettingsPane(store: store, preferences: preferences)
+        case .capture: CaptureSettingsPane(store: store, preferences: preferences)
+        case .privacy: PrivacySettingsPane(store: store, preferences: preferences)
+        }
     }
 
     private func applyRequestedTab() {
@@ -85,12 +118,9 @@ private struct VoiceTypingSettingsPane: View {
                     }
                 }
                 .disabled(!preferences.voiceTypingEnabled)
-                Picker(preferences.text("Model", "モデル"), selection: $preferences.voiceTypingModel) {
-                    ForEach(VoiceTypingModel.allCases) { model in
-                        Text(model.displayName).tag(model)
-                    }
+                LabeledContent(preferences.text("Model", "モデル")) {
+                    VoiceModelControl(preferences: preferences, isActive: voiceTyping.state.isActive)
                 }
-                .disabled(!preferences.voiceTypingEnabled || voiceTyping.state.isActive)
                 Picker(preferences.text("Spoken language", "話す言語"), selection: $preferences.voiceTypingLanguage) {
                     ForEach(preferences.voiceTypingModel == .phonon2 ? [.english] : SpeechLanguage.allCases) { language in
                         Text(language.nativeName).tag(language)
