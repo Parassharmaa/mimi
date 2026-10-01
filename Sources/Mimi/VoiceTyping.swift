@@ -65,12 +65,15 @@ private let voiceTypingHotKeyHandler: EventHandlerUPP = { _, event, userData in
 @MainActor
 private final class GlobalHotKeyRegistration {
     private let callbackBox: HotKeyCallbackBox
+    private let allowsRegistration: Bool
     private var eventHandler: EventHandlerRef?
     private var primary: EventHotKeyRef?
     private var cancel: EventHotKeyRef?
 
-    init(action: @escaping @MainActor (UInt32) -> Void) {
+    init(allowsRegistration: Bool = true, action: @escaping @MainActor (UInt32) -> Void) {
         callbackBox = HotKeyCallbackBox(action: action)
+        self.allowsRegistration = allowsRegistration
+        guard allowsRegistration else { return }
         var eventType = EventTypeSpec(
             eventClass: OSType(kEventClassKeyboard),
             eventKind: UInt32(kEventHotKeyPressed)
@@ -86,6 +89,7 @@ private final class GlobalHotKeyRegistration {
     }
 
     func registerPrimary(_ shortcut: VoiceTypingShortcut) -> Bool {
+        guard allowsRegistration else { return false }
         if let primary { UnregisterEventHotKey(primary) }
         primary = nil
         let definition = shortcut.hotKey
@@ -108,6 +112,7 @@ private final class GlobalHotKeyRegistration {
     }
 
     func setCancelEnabled(_ enabled: Bool) {
+        guard allowsRegistration else { return }
         if let cancel { UnregisterEventHotKey(cancel) }
         cancel = nil
         guard enabled else { return }
@@ -843,6 +848,7 @@ private final class VoiceTypingVerificationGate {
 @Observable
 final class VoiceTypingController {
     private let preferences: UserPreferences
+    private let allowsGlobalShortcuts: Bool
     private let isSessionRecording: @MainActor () -> Bool
     private let microphone = MicrophoneCapture()
     private let engineFactory: VoiceTypingEngineFactory
@@ -869,19 +875,21 @@ final class VoiceTypingController {
 
     init(
         preferences: UserPreferences,
+        allowsGlobalShortcuts: Bool = true,
         isSessionRecording: @escaping @MainActor () -> Bool = { false },
         appleSpeech: any AppleSpeechProviding = SystemAppleSpeechProvider(),
         mimiWhisper: any WhisperAccuracyTranscribing = MimiWhisperMLXLiveEngine(),
         phonon: any WhisperAccuracyTranscribing = MimiPhononMLXLiveEngine()
     ) {
         self.preferences = preferences
+        self.allowsGlobalShortcuts = allowsGlobalShortcuts
         self.isSessionRecording = isSessionRecording
         engineFactory = VoiceTypingEngineFactory(
             appleSpeech: appleSpeech,
             mimiWhisper: mimiWhisper,
             phonon: phonon
         )
-        hotKeys = GlobalHotKeyRegistration { [weak self] identifier in
+        hotKeys = GlobalHotKeyRegistration(allowsRegistration: allowsGlobalShortcuts) { [weak self] identifier in
             if identifier == 2 { self?.cancel() } else { self?.toggle() }
         }
         applyShortcutPreference()
@@ -889,6 +897,9 @@ final class VoiceTypingController {
     }
 
     var language: SpeechLanguage { preferences.voiceTypingLanguage }
+    var shortcutRegistrationFailed: Bool {
+        allowsGlobalShortcuts && preferences.voiceTypingEnabled && !shortcutRegistered
+    }
 
     func toggle() {
         switch state {

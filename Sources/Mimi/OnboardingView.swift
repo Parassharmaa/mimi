@@ -103,6 +103,7 @@ struct OnboardingView: View {
                 .padding(24)
             }
         }
+        .buttonStyle(MimiQuietButtonStyle())
         .frame(width: 790, height: 590)
         .onAppear {
             startAtLogin = preferences.startsAtLogin

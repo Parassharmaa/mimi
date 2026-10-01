@@ -142,6 +142,7 @@ struct CaptureInputControl: View {
             }
             .padding(20)
             .frame(width: 330)
+            .buttonStyle(MimiQuietButtonStyle())
         }
     }
 }

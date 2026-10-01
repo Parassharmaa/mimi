@@ -78,6 +78,7 @@ struct MenuBarView: View {
             }
             .foregroundStyle(.secondary)
         }
+        .buttonStyle(MimiQuietButtonStyle())
         .padding(22)
         .frame(width: 360)
     }

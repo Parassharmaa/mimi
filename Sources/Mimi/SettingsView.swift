@@ -79,6 +79,7 @@ struct SettingsView: View {
                 settingsContent.frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
+        .buttonStyle(MimiQuietButtonStyle())
         .frame(minWidth: 740, idealWidth: 780, minHeight: 560, idealHeight: 600)
         .background(SettingsWindowRegistrar())
         .onAppear { applyRequestedTab() }
@@ -146,7 +147,7 @@ private struct VoiceTypingSettingsPane: View {
                         voiceTyping.requestAccessibilityAccess()
                     }
                 }
-                if preferences.voiceTypingEnabled && !voiceTyping.shortcutRegistered {
+                if voiceTyping.shortcutRegistrationFailed {
                     Label(
                         preferences.text("That shortcut is already in use. Choose the other shortcut.", "そのショートカットは使用中です。もう一つを選んでください。"),
                         systemImage: "exclamationmark.triangle"

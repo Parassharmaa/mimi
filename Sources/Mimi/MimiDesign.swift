@@ -60,7 +60,7 @@ struct MimiQuietButtonStyle: ButtonStyle {
 
         var body: some View {
             configuration.label
-                .foregroundStyle(.primary)
+                .foregroundStyle(configuration.role == .destructive ? Color.red : Color.primary)
                 .padding(.horizontal, horizontalPadding)
                 .padding(.vertical, verticalPadding)
                 .background(Color.primary.opacity(opacity), in: .rect(cornerRadius: MimiMetrics.controlRadius))

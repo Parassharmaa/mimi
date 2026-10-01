@@ -59,6 +59,7 @@ struct TranscriptWindow: View {
             .navigationTitle("Mimi")
             .toolbar { transcriptToolbar }
         }
+        .buttonStyle(MimiQuietButtonStyle())
         .navigationSplitViewStyle(.prominentDetail)
         .searchable(text: $searchText, isPresented: $isSearching, prompt: t("Find in original", "原文を検索"))
         .searchFocused($searchFocused)

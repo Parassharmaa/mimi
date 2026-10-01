@@ -1028,7 +1028,7 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
             fixturePreferences.interfaceLanguage = .japanese
         }
         fixturePreferences.voiceTypingEnabled = false
-        let fixtureVoiceTyping = VoiceTypingController(preferences: fixturePreferences)
+        let fixtureVoiceTyping = VoiceTypingController(preferences: fixturePreferences, allowsGlobalShortcuts: false)
         if presentationState == "voice-enabled" {
             fixturePreferences.voiceTypingEnabled = true
         }
@@ -1359,6 +1359,7 @@ struct MimiApp: App {
         if isVerification { preferences.completedOnboarding = true }
         let voiceTyping = VoiceTypingController(
             preferences: preferences,
+            allowsGlobalShortcuts: !isVerification,
             isSessionRecording: { store.isTranscriptionSessionBusy },
             appleSpeech: appleSpeech,
             mimiWhisper: mimiWhisper,
