@@ -26,7 +26,11 @@ struct WorkspaceReviewCapture {
             ("14-input-popover-dark", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-history-count", "72", "--e2e-appearance", "dark"]),
             ("15-model-picker-contrast", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-appearance", "light", "--e2e-increase-contrast", "--e2e-reduce-transparency"]),
             ("16-settings-dark", ["--e2e-screen", "settings-voice", "--e2e-state", "ready", "--e2e-appearance", "dark"]),
-            ("17-voice-model-picker", ["--e2e-screen", "settings-voice", "--e2e-state", "voice-enabled", "--e2e-appearance", "light"])
+            ("17-voice-model-picker", ["--e2e-screen", "settings-voice", "--e2e-state", "voice-enabled", "--e2e-appearance", "light"]),
+            ("18-language-popover-dark", ["--e2e-screen", "transcript", "--e2e-state", "history", "--e2e-appearance", "dark"]),
+            ("19-language-popover-phonon", ["--e2e-screen", "transcript", "--e2e-state", "ready", "--e2e-engine", "phonon", "--e2e-appearance", "light"]),
+            ("20-empty-session", ["--e2e-screen", "transcript", "--e2e-state", "empty", "--e2e-appearance", "light"]),
+            ("21-recording-session", ["--e2e-screen", "transcript", "--e2e-state", "recording", "--e2e-appearance", "dark"])
         ]
         let selectedCases = CommandLine.arguments.count == 4
             ? cases.filter { $0.0.contains(CommandLine.arguments[3]) } : cases
@@ -54,13 +58,13 @@ struct WorkspaceReviewCapture {
                 }
                 NSRunningApplication(processIdentifier: process.processIdentifier)?.activate(options: [])
                 try await Task.sleep(for: .milliseconds(600))
-                if name.contains("model-picker") || name.contains("input-popover") || name == "11-model-control-hover" {
+                if name.contains("model-picker") || name.contains("input-popover") || name.contains("language-popover") || name == "11-model-control-hover" {
                     let interaction = Process()
                     interaction.executableURL = URL(fileURLWithPath: CommandLine.arguments[0])
                         .deletingLastPathComponent().appendingPathComponent("mimi-ax-audit")
                     interaction.arguments = ["--pid", String(process.processIdentifier)] + (name == "11-model-control-hover"
                         ? ["--hover", "Choose speech model"]
-                        : ["--press", name.contains("input-popover") ? "Choose audio input" : (name.contains("voice-model-picker") ? "Choose Voice Type model" : "Choose speech model"), "--step-delay", "0.5"])
+                        : ["--press", name.contains("input-popover") ? "Choose audio input" : (name.contains("language-popover") ? "Spoken language" : (name.contains("voice-model-picker") ? "Choose Voice Type model" : "Choose speech model")), "--step-delay", "0.5"])
                     if name.contains("voice-model-picker") { interaction.arguments?.append("--assert-no-shortcut-collision") }
                     interaction.standardOutput = FileHandle.nullDevice
                     interaction.standardError = FileHandle.standardError

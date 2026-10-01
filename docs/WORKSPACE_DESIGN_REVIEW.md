@@ -1,8 +1,8 @@
 # Workspace design preview
 
 This feedback branch starts after UX PR16 merged. It is not a release-qualified
-build and does not replace the installed app. Wait for user feedback before
-opening a delivery PR or merging.
+build and does not replace the installed app. PR17 carries the current iteration.
+The user authorized merging only after qualification and independent review pass.
 
 ## Direction
 
@@ -11,11 +11,14 @@ and [model control documentation](https://learn.chatgpt.com/docs/models) informe
 the separation of navigation, content, and controls near the primary action.
 Mimi keeps native macOS controls and readable transcript surfaces.
 
-- Only session history scrolls in the sidebar. New session, search, Voice Type
-  and Settings remain visible.
+- One Sessions list scrolls in the sidebar. Its plus action, search, Voice Type
+  and Settings remain visible. The recording session has an activity indicator.
 - A fixed recording bar groups input, language, model and Record.
 - Transcript and Bilingual are explicit workspace views.
 - All speech models fit in a popover with language support and size visible.
+- Spoken language uses one flat popover with no submenu.
+- Record appends to the open session. Plus creates a separate empty draft, and
+  Record from the empty state creates the first session.
 - Settings use a persistent section list. Onboarding has named steps and fixed
   Back/Continue actions. The dictation overlay explains its current phase.
 
@@ -26,6 +29,14 @@ quiet-button interaction states, model-option rows and transcript-pane headers.
 `Sources/Mimi/WorkspaceControls.swift` owns shared input, language and model
 controls, plus the recording bar. Views reuse these rather than duplicating
 model choices or pointer treatment.
+
+The working transcript carries an optional stable session identity with its
+original start date and source. Existing raw files still decode without this
+field. Resuming copies the saved document without regenerating segment IDs,
+languages or dates. History is upserted by session UUID, never by matching text.
+Working text is persisted before switching owners; failed writes retain the
+previous working value. Sidebar browsing stays separate from the recording
+destination. Both Start and Stop reserve a transition synchronously.
 
 Quiet buttons have a rounded neutral hover background and a subtle pointer
 press scale. Hover transitions take 120 ms. Reduced Motion removes movement
