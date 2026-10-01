@@ -194,7 +194,7 @@ enum MimiPhononError: LocalizedError {
         switch self {
         case .notInstalled: "Phonon 2 is not bundled. Install a Mimi build that includes Phonon 2."
         case .invalidModel: "The bundled Phonon 2 model failed validation. Reinstall Mimi."
-        case .englishOnly: "Phonon 2 supports English only. Choose Mimi Whisper or Apple Speech for Japanese."
+        case .englishOnly: "Phonon 2 supports English only. Choose Mimi Speech or Apple Speech for Japanese."
         case .noAudioFormat: "Phonon 2 could not prepare the audio format."
         }
     }

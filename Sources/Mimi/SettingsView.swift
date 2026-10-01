@@ -65,11 +65,11 @@ struct SettingsView: View {
                     Label(tab.title(preferences), systemImage: tab.symbol).padding(.vertical, 5).tag(tab)
                 }
                 .listStyle(.sidebar)
+                .scrollContentBackground(.hidden)
                 Text(preferences.text("Made for this Mac", "このMacのために"))
                     .font(.caption).foregroundStyle(.secondary).padding(18)
             }
             .frame(width: 195)
-            .background(.quaternary.opacity(0.25))
             VStack(alignment: .leading, spacing: 6) {
                 Text(selectedTab.title(preferences)).font(.title2.weight(.semibold))
                     .padding(.horizontal, 28).padding(.top, 26)
@@ -202,8 +202,8 @@ private struct VoiceTypingSettingsPane: View {
             )
         case .phonon2:
             preferences.text(
-                "Fast local English dictation. Choose Mimi Whisper or Apple Speech for Japanese.",
-                "高速なローカル英語音声入力です。日本語には Mimi Whisper または Apple Speech を選択してください。"
+                "Fast local English dictation. Choose Mimi Speech or Apple Speech for Japanese.",
+                "高速なローカル英語音声入力です。日本語には Mimi Speech または Apple Speech を選択してください。"
             )
         case .appleSpeech:
             preferences.text(

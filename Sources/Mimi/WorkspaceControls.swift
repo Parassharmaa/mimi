@@ -17,7 +17,7 @@ extension TranscriptionEngineID {
         case .appleSpeechAnalyzer:
             preferences.text("English and Japanese · Managed by macOS", "英語と日本語 · macOSが管理")
         case .whisperKitLargeV3Turbo:
-            preferences.text("English and Japanese · Whisper · 468 MB", "英語と日本語 · Whisper · 468 MB")
+            preferences.text("English and Japanese · Custom model · 468 MB", "英語と日本語 · カスタムモデル · 468 MB")
         case .phonon2:
             preferences.text("English only · Fast local speech · 424 MB", "英語のみ · 高速なローカル音声認識 · 424 MB")
         case .nemotronStreamingExperimental, .qwen3StreamingExperimental:

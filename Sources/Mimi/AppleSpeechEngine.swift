@@ -285,9 +285,9 @@ private enum SpeechEngineError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .unsupportedLanguage(language):
-            "Apple Speech does not currently provide a local model for \(language.displayName) on this Mac. Choose Whisper Large-v3 instead."
+            "Apple Speech does not currently provide a local model for \(language.displayName) on this Mac. Choose Mimi Speech instead."
         case .noCompatibleAudioFormat:
-            "Apple Speech could not negotiate a local transcription format for this microphone. Choose another input or use Whisper Large-v3."
+            "Apple Speech could not negotiate a local transcription format for this microphone. Choose another input or use Mimi Speech."
         }
     }
 }
