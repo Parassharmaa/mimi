@@ -50,6 +50,7 @@ jobs:
           ditto -x -k .build/dist/Mimi-macOS.zip .build/package-check
           codesign --verify --deep --strict .build/package-check/Mimi.app
           plutil -lint .build/package-check/Mimi.app/Contents/Info.plist
+          python3 scripts/verify_microphone_entitlement.py .build/package-check/Mimi.app
           python3 scripts/translation/verify_shipped_translation_pack.py \
             --app .build/package-check/Mimi.app
           ARCHS="$(lipo -archs .build/package-check/Mimi.app/Contents/MacOS/Mimi)"
