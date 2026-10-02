@@ -64,6 +64,7 @@ if [[ "$SIGNING_IDENTITY" != "-" ]]; then
 fi
 codesign "${SIGNING_ARGUMENTS[@]}" --sign "$SIGNING_IDENTITY" "$APP"
 codesign --verify --deep --strict "$APP"
+python3 "$ROOT/scripts/verify_microphone_entitlement.py" "$APP"
 plutil -lint "$APP/Contents/Info.plist"
 
 ditto -c -k --sequesterRsrc --keepParent "$APP" "$ARCHIVE"
