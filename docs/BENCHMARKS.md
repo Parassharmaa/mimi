@@ -23,24 +23,28 @@ Use an isolated checkout on Apple Silicon. Install the desired model packs
 before collecting results. The runner never downloads a model or captures a
 microphone. Keep other heavy work off the measurement machine.
 
+Use the `bench` launcher for preparation, collection, reporting, and comparison.
+It uses `uv` to pin Python 3.12.12 (Unicode 15.0.0) and the scoring requirements,
+matching the retained foundation baseline. Mixing a system `python3` with a
+different `uv` interpreter can produce incomparable runs even on the same Mac.
+
 ```sh
 # Stamp the actual source identity, build optimized code, and record compiler,
 # executable, dependency-lock and Metal-library hashes.
 scripts/benchmarks/build.sh
 
 # Synthetic regression probes: EN/JA, numbers, long utterances, noise, silence.
-python3 scripts/benchmarks/prepare_suite.py .build/benchmark-fixtures-v1
+scripts/benchmarks/bench prepare_suite .build/benchmark-fixtures-v1
 
 # Example: the production speech-to-translation path with pinned model roots.
-python3 scripts/benchmarks/run.py \
+scripts/benchmarks/bench run \
   .build/benchmark-fixtures-v1/manifest.jsonl .build/benchmark-run-v1 \
   --lanes speech translation pipeline \
   --whisper-model /path/to/whisper-large-v3-turbo-q4 \
   --phonon-model /path/to/mimi-phonon2 \
   --parakeet-model /path/to/ParakeetJapaneseEncoderQ4-v1
 
-uv run --no-project --with-requirements scripts/benchmarks/requirements.txt \
-  python scripts/benchmarks/report.py .build/benchmark-run-v1
+scripts/benchmarks/bench report .build/benchmark-run-v1
 ```
 
 The model roots are explicit so the report can hash the exact artifacts. The
@@ -61,9 +65,9 @@ For public human speech, materialize the repository's pinned FLEURS screens,
 then import them without transcoding or changing their hashes:
 
 ```sh
-uv run --no-project --with 'datasets==4.0.0' \
+uv run --no-project --python 3.12.12 --with 'datasets==4.0.0' \
   python scripts/speech/prepare_fleurs_en_screen_v1.py .build/fleurs-en
-python3 scripts/benchmarks/import_public_speech.py \
+scripts/benchmarks/bench import_public_speech \
   .build/fleurs-en/manifest.jsonl .build/fleurs-en-common --language en-US
 # Repeat with prepare_fleurs_ja_screen_v1.py and --language ja-JP.
 ```
@@ -79,10 +83,10 @@ suite. Its long-document segments retain their parent document as the independen
 unit. Existing exposure and review limitations remain attached to the rows.
 
 ```sh
-python3 scripts/benchmarks/prepare_suite.py .build/translation-development-v1 \
+scripts/benchmarks/bench prepare_suite .build/translation-development-v1 \
   --text-only \
   --public-translations Research/translation/benchmark/development-accuracy-v1.segments.jsonl
-python3 scripts/benchmarks/run.py \
+scripts/benchmarks/bench run \
   .build/translation-development-v1/manifest.jsonl .build/translation-run-v1 \
   --lanes translation
 ```
@@ -168,12 +172,11 @@ not with historical uninstrumented timings.
 ## Compare a future change
 
 ```sh
-uv run --no-project --with-requirements scripts/benchmarks/requirements.txt \
-  python scripts/benchmarks/compare.py BASELINE CANDIDATE comparison.json --check
+scripts/benchmarks/bench compare BASELINE CANDIDATE comparison.json --check
 ```
 
 Comparison requires matching fixtures, protocol, evaluator, hardware, OS, build
-configuration, power mode, selected cases, and model artifacts. App source and
+configuration, power mode, Unicode normalization version, selected cases, and model artifacts. App source and
 binary identities may differ: that is the change being evaluated. Use
 `--allow-model-change` explicitly for a model comparison. Apple asset revisions
 are not exposed, so their OS-managed identity remains a limitation.
@@ -191,7 +194,7 @@ review exist. Treat ranking across many models or metrics as exploratory.
 ## Verification and sources
 
 ```sh
-python3 scripts/benchmarks/test_contract.py
+scripts/benchmarks/bench test_contract
 .build/debug/Mimi --verify-benchmark-trace
 ```
 
@@ -220,8 +223,7 @@ protocol retains three warm repetitions; omit the pilot's selections to run the
 full speech screens.
 
 ```sh
-uv run --no-project --with-requirements scripts/benchmarks/requirements.txt \
-  python scripts/benchmarks/baseline.py .build/foundation-baseline \
+scripts/benchmarks/bench baseline .build/foundation-baseline \
   --synthetic .build/benchmark-fixtures-v1/manifest.jsonl \
   --human-en .build/fleurs-en-common/manifest.jsonl \
   --human-ja .build/fleurs-ja-common/manifest.jsonl \
