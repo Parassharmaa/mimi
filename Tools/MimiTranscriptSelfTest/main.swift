@@ -90,7 +90,45 @@ struct MimiTranscriptSelfTest {
         try check(updated?.string == original + "\n" + longText + "\n" + draft, "live SwiftUI updates retain the entire growing transcript")
         try check(updated?.selectedRange() == NSRange(location: 0, length: 5), "live SwiftUI updates preserve the native selection")
         try check((updated?.frame.height ?? 0) > 300, "growing transcripts expand inside the scroll view")
+        guard let updated else { throw NSError(domain: "MimiTranscriptSelfTest", code: 3) }
+        try dragAcrossParagraphs(in: updated, window: window, pasteboard: pasteboard)
         print("Transcript usability verification passed.")
+    }
+
+    @MainActor
+    private static func dragAcrossParagraphs(in view: TranscriptTextView, window: NSWindow, pasteboard: NSPasteboard) throws {
+        guard let layout = view.layoutManager, let container = view.textContainer else {
+            throw NSError(domain: "MimiTranscriptSelfTest", code: 2)
+        }
+        layout.ensureLayout(for: container)
+        let text = view.string as NSString
+        let start = text.range(of: "sentence.").location
+        let end = text.range(of: "日本語").upperBound
+        func point(at character: Int) -> NSPoint {
+            let glyph = layout.glyphIndexForCharacter(at: character)
+            let rect = layout.boundingRect(forGlyphRange: NSRange(location: glyph, length: 1), in: container)
+            return view.convert(NSPoint(x: rect.minX + 0.1, y: rect.midY), to: nil)
+        }
+        func event(_ type: NSEvent.EventType, at point: NSPoint) -> NSEvent {
+            NSEvent.mouseEvent(with: type, location: point, modifierFlags: [],
+                timestamp: ProcessInfo.processInfo.systemUptime, windowNumber: window.windowNumber,
+                context: nil, eventNumber: 0, clickCount: 1, pressure: 1)!
+        }
+        window.makeFirstResponder(view)
+        // Feed the native mouse-tracking loop events in this test window only.
+        // Programmatically setting a range does not verify drag selection.
+        NSApp.postEvent(event(.leftMouseDragged, at: point(at: end)), atStart: false)
+        NSApp.postEvent(event(.leftMouseUp, at: point(at: end)), atStart: false)
+        view.mouseDown(with: event(.leftMouseDown, at: point(at: start)))
+        let selection = view.selectedRange()
+        try check(selection == NSRange(location: start, length: end - start), "mouse dragging selects across English and Japanese paragraphs")
+        pasteboard.declareTypes(view.writablePasteboardTypes, owner: nil)
+        try check(view.writeSelection(to: pasteboard, types: view.writablePasteboardTypes), "dragged selection can be copied")
+        try check(pasteboard.string(forType: .string) == "sentence.\n日本語", "drag copy preserves the newline and both paragraphs")
+        NSApp.postEvent(event(.leftMouseDragged, at: point(at: start)), atStart: false)
+        NSApp.postEvent(event(.leftMouseUp, at: point(at: start)), atStart: false)
+        view.mouseDown(with: event(.leftMouseDown, at: point(at: end)))
+        try check(view.selectedRange() == selection, "backward dragging selects the same paragraphs")
     }
 
     @MainActor

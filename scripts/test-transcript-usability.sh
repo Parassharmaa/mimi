@@ -9,4 +9,5 @@ swiftc -parse-as-library \
   "$MIMI_ROOT/Sources/Mimi/TranscriptClipboard.swift" \
   "$MIMI_ROOT/Tools/MimiTranscriptSelfTest/main.swift" \
   -o "$MIMI_TEST_BUILD/MimiTranscriptSelfTest"
-"$MIMI_TEST_BUILD/MimiTranscriptSelfTest"
+"$MIMI_TEST_BUILD/MimiTranscriptSelfTest" | tee "$MIMI_TEST_BUILD/result.log"
+grep -qx 'Transcript usability verification passed.' "$MIMI_TEST_BUILD/result.log"
