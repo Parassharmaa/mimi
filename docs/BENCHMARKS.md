@@ -52,7 +52,7 @@ comparisons. Building updates the existing generated source-identity constant.
 
 A fresh output directory is required. The protocol, selected cases, engine order,
 inputs, every cold/warmup/warm attempt, stdout/stderr, and raw event traces are
-retained. A receipt authenticates the completed files. Reporting refuses an
+retained. A receipt binds the completed files. Reporting refuses an
 incomplete matrix or changed artifact. `metadata.json` records the run's actual
 protocol overrides; `--case`, `--repetitions`, and `--warmups` are explicit,
 recorded selections, not silent pruning.
@@ -141,7 +141,7 @@ not with historical uninstrumented timings.
   adequacy. Exceptions and timeouts are unscored and remain visible in coverage;
   completed empty translations are scored. Compare reference-text translation
   with pipeline translation to inspect propagation of ASR errors.
-- Revision churn counts characters removed after the longest common prefix.
+- Revision churn counts Unicode code points removed after the longest common prefix.
   Appends cost zero. Finalized utterance boundaries reset the comparison. Both the
   numerator and final-length-normalized rate are retained; an empty denominator
   yields null. This is a custom Mimi diagnostic.
@@ -178,7 +178,8 @@ binary identities may differ: that is the change being evaluated. Use
 `--allow-model-change` explicitly for a model comparison. Apple asset revisions
 are not exposed, so their OS-managed identity remains a limitation.
 
-The report pairs independent groups, retains all repeats, and gives both-success,
+The comparison command operates on warm attempts; cold preparation remains
+available in the summaries and raw traces. The report pairs independent groups, retains all repeats, and gives both-success,
 baseline-only, candidate-only and neither-success counts. Latency deltas use
 paired group medians with group bootstrap intervals. Quality comparisons use the
 same paired scored rows and report their coverage. A fast failure cannot improve
@@ -194,7 +195,8 @@ python3 scripts/benchmarks/test_contract.py
 .build/debug/Mimi --verify-benchmark-trace
 ```
 
-These run in `scripts/test.sh`. They cover normalization and edit counts, timing
+These run in `scripts/test.sh`. CI also checks the retained baseline archive
+with `scripts/verify-benchmark-evidence.py`, without replaying the models. They cover normalization and edit counts, timing
 boundaries, source correlation, reused finals, failed inference, monotonic clocks,
 late callbacks, partial UTF-8 traces, hard timeouts, missing observations, repeated
 samples, changed cohorts, and paired reliability loss. The existing speech
@@ -228,3 +230,13 @@ uv run --no-project --with-requirements scripts/benchmarks/requirements.txt \
   --phonon-model /path/to/mimi-phonon2 \
   --parakeet-model /path/to/ParakeetJapaneseEncoderQ4-v1
 ```
+
+
+The first retained collection is documented in
+[the baseline overview](benchmarks/foundation-v1/README.md). Its portable archive
+contains measurement rows, raw events, hashes, and receipts. Machine-specific
+request files and console logs remain in the original local collection.
+`scripts/package-benchmark-evidence.py` creates that portable export. Keep the
+frozen audio and full raw collection outside `.build` if build caches will be
+cleaned; the recorded run is preserved locally under
+`Research/benchmarks/local/foundation-v1/`, which is gitignored.
