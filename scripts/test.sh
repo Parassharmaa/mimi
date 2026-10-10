@@ -7,9 +7,12 @@ cd "$ROOT"
 zsh scripts/test-history-safety.sh
 zsh scripts/test-onboarding-policy.sh
 zsh scripts/test-transcript-usability.sh
+python3 scripts/benchmarks/test_contract.py
+python3 scripts/verify-benchmark-evidence.py
 
 swift build --disable-index-store --product MimiSelfTest
 swift build --disable-index-store --product Mimi
+"$ROOT/.build/debug/Mimi" --verify-benchmark-trace
 "$ROOT/.build/debug/Mimi" --verify-voice-typing-destination
 LIVE_TRANSLATION_REPORT="$(mktemp -t mimi-live-translation).json"
 "$ROOT/.build/debug/Mimi" --verify-live-translation "$LIVE_TRANSLATION_REPORT"

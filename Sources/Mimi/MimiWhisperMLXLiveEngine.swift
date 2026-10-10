@@ -107,6 +107,15 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
     private var liveAudioDropEventCount = 0
     private var liveFirstAudioDropAtInputSample: Int?
     private var liveBackpressureEventCount = 0
+    var recordsBenchmarkTiming = false
+    private var liveRuntimeServiceSeconds = 0.0
+    private(set) var lastBenchmarkQueueMetrics = SpeechBenchmarkQueueMetrics()
+
+    var benchmarkQueueMetrics: SpeechBenchmarkQueueMetrics {
+        .init(sampleRate: 16_000, capacitySamples: Self.maximumPendingSamples,
+              maximumQueuedSamples: liveMaximumQueuedAudioSamples, droppedSamples: liveDroppedSampleCount,
+              runtimeServiceSeconds: recordsBenchmarkTiming ? liveRuntimeServiceSeconds : nil)
+    }
     private var liveSegmentReportCaptureEnabled = false
     private var liveFinalizedSegmentReports: [RealtimeBenchmarkSegment] = []
     private var lastCompletedLiveFinalizedSegmentReports: [RealtimeBenchmarkSegment] = []
@@ -272,12 +281,14 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
             await liveDrainTask.value
         }
         await drainSamples(flush: true, sessionID: sessionID)
-        if let update = await runtime.finishLive() {
-            publish(update, for: sessionID)
-        }
+        let serviceStarted = recordsBenchmarkTiming ? ContinuousClock.now : nil
+        let finalUpdate = await runtime.finishLive()
+        if let serviceStarted { liveRuntimeServiceSeconds += serviceStarted.duration(to: .now).seconds }
+        if let finalUpdate { publish(finalUpdate, for: sessionID) }
         let completedSegmentReports = liveSegmentReportCaptureEnabled
             ? liveFinalizedSegmentReports
             : []
+        lastBenchmarkQueueMetrics = benchmarkQueueMetrics
         resetLiveState()
         lastCompletedLiveFinalizedSegmentReports = completedSegmentReports
     }
@@ -739,11 +750,10 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
             } else {
                 return
             }
-            if let update = await runtime.appendLive(
-                samples: pendingSamples.dequeue(upTo: count)
-            ) {
-                publish(update, for: sessionID)
-            }
+            let serviceStarted = recordsBenchmarkTiming ? ContinuousClock.now : nil
+            let update = await runtime.appendLive(samples: pendingSamples.dequeue(upTo: count))
+            if let serviceStarted { liveRuntimeServiceSeconds += serviceStarted.duration(to: .now).seconds }
+            if let update { publish(update, for: sessionID) }
         }
     }
 
@@ -829,6 +839,7 @@ final class MimiWhisperMLXLiveEngine: WhisperAccuracyTranscribing {
         liveAudioDropEventCount = 0
         liveFirstAudioDropAtInputSample = nil
         liveBackpressureEventCount = 0
+        liveRuntimeServiceSeconds = 0
         liveSegmentReportCaptureEnabled = false
         liveFinalizedSegmentReports.removeAll(keepingCapacity: false)
     }

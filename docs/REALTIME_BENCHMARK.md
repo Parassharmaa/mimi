@@ -1,4 +1,9 @@
-# Realtime transcription benchmark
+# Historical realtime transcription experiments
+
+For current engines, reproducible runs, and metric definitions, use
+[the benchmark guide](BENCHMARKS.md). The measurements and engine decisions below
+are a July 2026 historical record; they do not describe the current app.
+
 
 ## Purpose
 

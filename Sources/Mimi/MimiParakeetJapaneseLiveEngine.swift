@@ -17,6 +17,12 @@ final class MimiParakeetJapaneseLiveEngine: WhisperAccuracyTranscribing {
     private var stopping = false
     private var computeSeconds = 0.0
     private var maximumQueuedSamples = 0
+    private var droppedSamples = 0
+
+    var benchmarkQueueMetrics: SpeechBenchmarkQueueMetrics {
+        .init(sampleRate: 16_000, capacitySamples: 128_000, maximumQueuedSamples: maximumQueuedSamples,
+              droppedSamples: droppedSamples, runtimeServiceSeconds: computeSeconds)
+    }
 
     init(modelRoot: URL? = nil) { explicitRoot = modelRoot }
 
@@ -127,7 +133,7 @@ final class MimiParakeetJapaneseLiveEngine: WhisperAccuracyTranscribing {
         converter = conversion; format = normalized
         self.onEvent = onEvent; self.onBackpressure = onBackpressure
         sessionID = UUID(); stopping = false
-        computeSeconds = 0; maximumQueuedSamples = 0
+        computeSeconds = 0; maximumQueuedSamples = 0; droppedSamples = 0
     }
     func consumeLive(_ buffer: AVAudioPCMBuffer) {
         guard let converter, let format, let id = sessionID, !stopping else { return }
@@ -142,6 +148,7 @@ final class MimiParakeetJapaneseLiveEngine: WhisperAccuracyTranscribing {
         }
         let audio = Array(UnsafeBufferPointer(start: channel, count: Int(converted.frameLength)))
         let dropped = pending.append(audio)
+        droppedSamples += dropped
         maximumQueuedSamples = max(maximumQueuedSamples, pending.count)
         if dropped > 0 { onBackpressure?("Moonshine audio queue exceeded its eight-second limit; \(dropped) samples were dropped.") }
         schedule(id)

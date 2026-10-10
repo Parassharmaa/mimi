@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "protocolID": "mimi-benchmark-foundation-v1",
+  "repetitions": 3,
+  "warmups": 1,
+  "chunkSeconds": 0.05,
+  "translationDrainSeconds": 10,
+  "attemptTimeoutSeconds": 120,
+  "seed": 20261010,
+  "tailMinimumIndependentUnits": 20,
+  "bootstrapReplicates": 2000,
+  "confidenceLevel": 0.95,
+  "primaryLatency": {
+    "speech": "audioStartToFirstTextMs",
+    "translation": "referenceSubmitToFinalTranslationMs",
+    "pipeline": "audioStartToFirstTranslationMs"
+  },
+  "quality": {"englishASR": "WER", "japaneseASR": "CER", "translation": "chrF2"},
+  "normalization": "NFKC-casefold-punctuation-symbols-whitespace-v1",
+  "quantileMethod": "linear-interpolation-type-7",
+  "independentUnit": "groupID within language and condition; repeats remain clustered",
+  "coldDefinition": "fresh benchmark subprocess; filesystem and GPU-driver caches are uncontrolled",
+  "warmDefinition": "same subprocess and model instances after cold attempt and recorded warmups",
+  "latencyEndpoint": "production LocalTranslationStream model publication; excludes capture hardware and paint",
+  "retryPolicy": "none; every planned attempt, failure, deadline and skipped attempt is retained",
+  "qualityClaim": "engineering regression only; no model promotion or general accuracy claim",
+  "parallelism": 1,
+  "references": [
+    "https://www.isca-archive.org/interspeech_2021/shangguan21_interspeech.pdf",
+    "https://aclanthology.org/2020.emnlp-demos.19/",
+    "https://aclanthology.org/2025.findings-naacl.393/",
+    "https://github.com/mjpost/sacrebleu"
+  ]
+}

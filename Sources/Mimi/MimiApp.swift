@@ -12,6 +12,37 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("--verify-benchmark-trace") {
+            Task { @MainActor in
+                do {
+                    let checks = try await verifyBenchmarkTraceContract()
+                    let passed = checks.values.allSatisfy { $0 }
+                    print("Benchmark trace verification: \(checks)")
+                    Darwin.exit(passed ? 0 : 1)
+                } catch { print(error); Darwin.exit(1) }
+            }
+            return
+        }
+        if arguments.contains("--benchmark-environment") {
+            do {
+                let data = try JSONSerialization.data(withJSONObject: pipelineBenchmarkEnvironment(), options: [.sortedKeys])
+                print(String(decoding: data, as: UTF8.self))
+                Darwin.exit(0)
+            } catch { print(error); Darwin.exit(1) }
+        }
+        if let request = argument(after: "--benchmark-case", in: arguments),
+           let trace = argument(after: "--trace-output", in: arguments) {
+            Task { @MainActor in
+                do {
+                    try await runPipelineBenchmark(requestURL: URL(fileURLWithPath: request), traceURL: URL(fileURLWithPath: trace))
+                    Darwin.exit(0)
+                } catch {
+                    print("Benchmark request failed: \(error.localizedDescription)")
+                    Darwin.exit(1)
+                }
+            }
+            return
+        }
         if let output = argument(after: "--benchmark-translation-prewarm", in: arguments),
            let root = argument(after: "--model-root", in: arguments) {
             Task { @MainActor in
