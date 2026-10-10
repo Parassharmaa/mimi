@@ -97,8 +97,7 @@ byte-for-byte and omit machine-specific request files and console logs.
 sha256sum -c evidence.tar.gz.sha256
 # On macOS: shasum -a 256 -c evidence.tar.gz.sha256
 tar -xzf evidence.tar.gz
-uv run --no-project --with-requirements ../../../scripts/benchmarks/requirements.txt \
-  python ../../../scripts/benchmarks/compare.py \
+../../../scripts/benchmarks/bench compare \
   baseline/public-translation baseline/public-translation self-check.json --check
 ```
 
