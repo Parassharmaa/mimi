@@ -15,3 +15,5 @@ for appearance in light dark; do
     "$ROOT/.build/Mimi.app/Contents/MacOS/Mimi" --e2e-window --e2e-screen "$screen" --e2e-state ready --e2e-appearance "$appearance" --e2e-auto-quit
   done
 done
+
+"$ROOT/.build/Mimi.app/Contents/MacOS/Mimi" --e2e-window --e2e-screen transcript --e2e-state ready --e2e-verify-transcript-selection --e2e-auto-quit

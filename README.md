@@ -80,6 +80,17 @@ signed release package keeps the previous stable model because a known long
 legal document can trigger repetition and the public suite is not a promotion
 test.
 
+## Copy and find text
+
+Select text across sentences in either the original or translation pane, then
+press **⌘C**. **⌘A** selects all text in the focused pane. Each pane also has a
+**Copy** button that confirms when text is copied. **Copy All** in the toolbar,
+or **⇧⌘C**, copies the entire original transcript, including the live draft.
+
+Use **⌘F** to find words in the original. The original pane's Copy button copies
+matching sentences while a search is active; Copy All still copies the complete
+transcript. Incoming text does not move the pane while you select text or search.
+
 ## Requirements
 
 - macOS 15 or later.

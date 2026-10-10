@@ -1329,6 +1329,17 @@ final class MimiAppDelegate: NSObject, NSApplicationDelegate {
 
         if arguments.contains("--e2e-auto-quit") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                if arguments.contains("--e2e-verify-transcript-selection"),
+                   !verifyTranscriptSelection(in: hostingController.view, expectedOriginal: store.viewedDocument.renderedText) {
+                    Darwin.exit(1)
+                }
+                if let path = self.argument(after: "--e2e-snapshot", in: arguments),
+                   let bitmap = hostingController.view.bitmapImageRepForCachingDisplay(in: hostingController.view.bounds) {
+                    hostingController.view.cacheDisplay(in: hostingController.view.bounds, to: bitmap)
+                    do {
+                        try bitmap.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: path))
+                    } catch { print(error); Darwin.exit(1) }
+                }
                 print("Mimi UI smoke passed: \(screen) \(presentationState) surface rendered deterministic English/Japanese sample data.")
                 // TranslationSession may still own an asynchronous framework
                 // task for transcript fixtures. A CLI smoke harness must exit

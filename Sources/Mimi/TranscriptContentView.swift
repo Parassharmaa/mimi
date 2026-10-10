@@ -1,3 +1,4 @@
+import AppKit
 import MimiCore
 import SwiftUI
 
@@ -7,14 +8,16 @@ import SwiftUI
 struct TranscriptContentView: View {
     let document: TranscriptDocument
     let emptyMessage: String
-    let font: Font
+    let font: NSFont
     let preferences: UserPreferences?
+    var onSelectionChange: (Bool) -> Void = { _ in }
 
-    init(document: TranscriptDocument, emptyMessage: String, font: Font = .body, preferences: UserPreferences? = nil) {
+    init(document: TranscriptDocument, emptyMessage: String, font: NSFont = .preferredFont(forTextStyle: .body), preferences: UserPreferences? = nil, onSelectionChange: @escaping (Bool) -> Void = { _ in }) {
         self.document = document
         self.emptyMessage = emptyMessage
         self.font = font
         self.preferences = preferences
+        self.onSelectionChange = onSelectionChange
     }
 
     var body: some View {
@@ -23,25 +26,13 @@ struct TranscriptContentView: View {
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
         } else {
-            LazyVStack(alignment: .leading, spacing: 10) {
-                ForEach(document.segments) { segment in
-                    Text(segment.text)
-                        .font(font)
-                        .lineSpacing(3)
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                if !document.liveText.isEmpty {
-                    Text(document.liveText)
-                        .font(font)
-                        .lineSpacing(3)
-                        .foregroundStyle(.secondary)
-                        .textSelection(.enabled)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .accessibilityLabel(preferences?.text("Current transcription: \(document.liveText)", "現在の文字起こし：\(document.liveText)") ?? "Current transcription: \(document.liveText)")
-                }
-            }
+            SelectableTranscriptText(
+                text: document.segments.map(\.text).joined(separator: "\n"),
+                provisionalText: document.liveText,
+                font: font,
+                accessibilityLabel: preferences?.text("Original transcript", "原文") ?? "Original transcript",
+                onSelectionChange: onSelectionChange
+            )
         }
     }
 }

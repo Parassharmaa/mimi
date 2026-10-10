@@ -51,6 +51,7 @@ struct TranscriptWindow: View {
                 }
 
                 transcriptContent
+                    .id(store.viewedSessionID)
                     .padding(.horizontal, 24)
 
                 WorkspaceCaptureBar(store: store, preferences: preferences)
@@ -190,13 +191,8 @@ struct TranscriptWindow: View {
     @ToolbarContentBuilder
     private var transcriptToolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .primaryAction) {
-            Button {
-                store.copyTranscript()
-            } label: {
-                Label(t("Copy Transcript", "文字起こしをコピー"), systemImage: "doc.on.doc")
-            }
-            .keyboardShortcut("c", modifiers: [.command, .shift])
-            .disabled(store.viewedDocument.renderedText.isEmpty)
+            TranscriptCopyButton(text: store.viewedDocument.renderedText, title: t("Copy Entire Transcript", "文字起こし全体をコピー"), copiesEntireTranscript: true, preferences: preferences)
+                .keyboardShortcut("c", modifiers: [.command, .shift])
 
             Button(action: exportTranscript) {
                 Label(t("Export Transcript…", "文字起こしを書き出す…"), systemImage: "square.and.arrow.up")
@@ -369,6 +365,7 @@ private struct TranscriptLanguagePane: View {
     let initiallyFollowingLatest: Bool
     let preferences: UserPreferences
     let isSearching: Bool
+    @State private var hasTextSelection = false
 
     private var displayedDocument: TranscriptDocument {
         guard let language else { return document }
@@ -381,6 +378,7 @@ private struct TranscriptLanguagePane: View {
     var body: some View {
         VStack(spacing: 0) {
             MimiPaneHeader(language?.nativeName ?? preferences.text("Original", "原文"), symbol: language?.symbolName ?? "text.alignleft") {
+                TranscriptCopyButton(text: displayedDocument.renderedText, title: preferences.text(isSearching ? "Copy Search Results" : "Copy Original", isSearching ? "検索結果をコピー" : "原文をコピー"), preferences: preferences)
                 if !document.liveText.isEmpty {
                     Text(preferences.text("Listening", "文字起こし中"))
                         .font(.caption2.weight(.semibold))
@@ -403,16 +401,19 @@ private struct TranscriptLanguagePane: View {
                 FollowLatestScrollView(
                     contentVersion: displayedDocument.renderedText,
                     initiallyFollowing: initiallyFollowingLatest,
+                    allowsFollowing: !isSearching && !hasTextSelection,
                     preferences: preferences
                 ) {
                     TranscriptContentView(
                         document: displayedDocument,
                         emptyMessage: "Speech will appear here.",
-                        font: .title3,
-                        preferences: preferences
+                        font: .preferredFont(forTextStyle: .title3),
+                        preferences: preferences,
+                        onSelectionChange: { hasTextSelection = $0 }
                     )
                     .padding(18)
                 }
+                .id(isSearching)
             }
         }
         .background(Color(nsColor: .textBackgroundColor))
