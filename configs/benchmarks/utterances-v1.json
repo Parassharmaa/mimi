@@ -1,0 +1,10 @@
+[
+  {"id":"en-meeting","language":"en-US","source":"Can we move the meeting to tomorrow morning?","references":["会議を明日の午前中に変更できますか。"],"domain":"meeting","voice":"Samantha"},
+  {"id":"ja-meeting","language":"ja-JP","source":"明日の会議は午前十時に始まります。","references":["Tomorrow's meeting starts at ten in the morning."],"domain":"meeting","voice":"Kyoko"},
+  {"id":"en-technical","language":"en-US","source":"Please check the microphone before the call.","references":["通話の前にマイクを確認してください。"],"domain":"technical","voice":"Samantha"},
+  {"id":"ja-technical","language":"ja-JP","source":"通話を始める前にマイクを確認してください。","references":["Please check the microphone before starting the call."],"domain":"technical","voice":"Kyoko"},
+  {"id":"en-numbers","language":"en-US","source":"The order number is forty two. We need three tickets.","references":["注文番号は四十二です。チケットが三枚必要です。"],"domain":"numbers","voice":"Samantha"},
+  {"id":"ja-numbers","language":"ja-JP","source":"注文番号は四十二です。チケットが三枚必要です。","references":["The order number is forty two. We need three tickets."],"domain":"numbers","voice":"Kyoko"},
+  {"id":"en-long","language":"en-US","source":"The new version is ready for testing. Please check the microphone before the call. Can we move the meeting to tomorrow morning? We will review the results together after lunch.","references":["新しいバージョンのテスト準備ができました。通話の前にマイクを確認してください。会議を明日の午前中に変更できますか。昼食後に結果を一緒に確認します。"],"domain":"long-utterance","voice":"Samantha"},
+  {"id":"ja-long","language":"ja-JP","source":"新しいバージョンのテスト準備ができました。通話を始める前にマイクを確認してください。明日の会議は午前十時に始まります。昼食後に結果を一緒に確認します。","references":["The new version is ready for testing. Please check the microphone before starting the call. Tomorrow's meeting starts at ten in the morning. We will review the results together after lunch."],"domain":"long-utterance","voice":"Kyoko"}
+]

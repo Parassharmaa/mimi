@@ -21,12 +21,13 @@ final class LocalTranslationStream {
     private(set) var liveTranslation = ""
     private(set) var isTranslating = false
     private(set) var failedSegmentIDs: Set<UUID> = []
+    @ObservationIgnored var onWork: ((TranslationWorkObservation) -> Void)?
     @ObservationIgnored var onAttempt: ((String, String?) -> Void)?
     @ObservationIgnored var onPublication: ((String, String, Bool) -> Void)?
     @ObservationIgnored private var snapshot: LocalTranslationSnapshot?
     @ObservationIgnored private var worker: Task<Void, Never>?
     @ObservationIgnored private var generation = 0
-    @ObservationIgnored private var lastLiveResult: (source: String, language: SpeechLanguage, boundary: UUID?, output: String)?
+    @ObservationIgnored private var lastLiveResult: (source: String, language: SpeechLanguage, boundary: UUID?, output: String, requestID: UUID?)?
     @ObservationIgnored private var attemptedLive: LocalTranslationSnapshot?
     @ObservationIgnored private var lastWorkWasLive = false
     private let translate: Translate
@@ -57,6 +58,9 @@ final class LocalTranslationStream {
            snapshot?.boundaryID == result.boundary {
             translations[segment.id] = result.output
             onPublication?(segment.text, result.output, false)
+            onWork?(.init(kind: .reused, requestID: result.requestID, source: segment.text,
+                          language: segment.language, isPartial: false, segmentID: segment.id,
+                          boundaryID: normalized.boundaryID, output: result.output))
         }
         if snapshot?.boundaryID != normalized.boundaryID || snapshot?.language != normalized.language || normalized.liveText.isEmpty {
             liveTranslation = ""
@@ -107,25 +111,40 @@ final class LocalTranslationStream {
             lastWorkWasLive = useLive
             if useLive { attemptedLive = input }
             isTranslating = true
+            let requestID = onWork == nil ? nil : UUID()
+            onWork?(.init(kind: .started, requestID: requestID, source: text, language: language,
+                          isPartial: useLive, segmentID: useLive ? nil : segment?.id, boundaryID: input.boundaryID))
             do {
                 let output = try await translate(text, language)
                 onAttempt?(text, nil)
+                onWork?(.init(kind: .succeeded, requestID: requestID, source: text, language: language,
+                              isPartial: useLive, segmentID: useLive ? nil : segment?.id,
+                              boundaryID: input.boundaryID, output: output))
                 guard !Task.isCancelled, generation == currentGeneration else { return }
                 if useLive {
                     if snapshot?.boundaryID == input.boundaryID, snapshot?.language == language, snapshot?.liveText.isEmpty == false {
-                        lastLiveResult = (text, language, input.boundaryID, output)
+                        lastLiveResult = (text, language, input.boundaryID, output, requestID)
                         liveTranslation = output
                         onPublication?(text, output, true)
+                        onWork?(.init(kind: .published, requestID: requestID, source: text, language: language,
+                                      isPartial: true, segmentID: nil, boundaryID: input.boundaryID, output: output))
                     } else if let final = snapshot?.segments.first(where: { $0.text == text && $0.language == language && !input.segments.contains($0) }) {
                         translations[final.id] = output
                         onPublication?(text, output, false)
+                        onWork?(.init(kind: .published, requestID: requestID, source: text, language: language,
+                                      isPartial: false, segmentID: final.id, boundaryID: snapshot?.boundaryID, output: output))
                     }
                 } else if let segment, snapshot?.segments.contains(segment) == true {
                     translations[segment.id] = output
                     onPublication?(text, output, false)
+                    onWork?(.init(kind: .published, requestID: requestID, source: text, language: language,
+                                  isPartial: false, segmentID: segment.id, boundaryID: input.boundaryID, output: output))
                 }
             } catch {
                 onAttempt?(text, error.localizedDescription)
+                onWork?(.init(kind: .failed, requestID: requestID, source: text, language: language,
+                              isPartial: useLive, segmentID: useLive ? nil : segment?.id,
+                              boundaryID: input.boundaryID, error: error.localizedDescription))
                 guard !Task.isCancelled, generation == currentGeneration else { return }
                 if let segment, !useLive { failedSegmentIDs.insert(segment.id) }
                 // A failed partial retains the last good result until its boundary changes.

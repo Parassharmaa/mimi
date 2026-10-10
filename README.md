@@ -129,7 +129,8 @@ and the native interface in light and dark appearances.
 For implementation details, benchmarks, and physical-Mac checks, see:
 
 - [Version 1 plan](docs/V1_PLAN.md)
-- [Realtime benchmark](docs/REALTIME_BENCHMARK.md)
+- [Transcription and translation benchmarks](docs/BENCHMARKS.md)
+- [Historical realtime experiments](docs/REALTIME_BENCHMARK.md)
 - [Live translation measurements](docs/LIVE_TRANSLATION.md)
 - [Translation development report](Research/translation/development-accuracy-v1-report.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)

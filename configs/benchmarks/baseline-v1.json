@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "profileID": "initial-foundation-pilot-v1",
+  "repetitions": 1,
+  "warmups": 0,
+  "note": "Bounded initial baseline. The public translation corpus is complete. Speech is a registered diagnostic subset; speech tail estimates remain suppressed. Default protocol runs use three warm repetitions and one warmup.",
+  "runs": [
+    {"name":"synthetic","suite":"synthetic","lanes":["speech","translation","pipeline"],"cases":["en-meeting","ja-meeting","en-meeting-noise","ja-meeting-noise","en-long","ja-long","en-US-silence","ja-JP-silence"]},
+    {"name":"human-en","suite":"human-en","lanes":["speech"],"cases":["fleurs-en-screen-v1:0000:1904","fleurs-en-screen-v1:0004:1972","fleurs-en-screen-v1:0010:1776","fleurs-en-screen-v1:0013:1919"]},
+    {"name":"human-ja","suite":"human-ja","lanes":["speech"],"cases":["fleurs-ja-screen-v1:0000:1828","fleurs-ja-screen-v1:0004:1744","fleurs-ja-screen-v1:0010:1980","fleurs-ja-screen-v1:0013:1736"]},
+    {"name":"public-translation","suite":"translation","lanes":["translation"],"condition":"public-development"}
+  ]
+}
