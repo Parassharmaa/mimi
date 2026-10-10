@@ -4,6 +4,7 @@ import SwiftUI
 /// person deliberately scrolls away from the bottom.
 struct FollowLatestScrollView<Content: View>: View {
     let contentVersion: String
+    let allowsFollowing: Bool
     private let content: Content
     private let preferences: UserPreferences?
 
@@ -19,10 +20,12 @@ struct FollowLatestScrollView<Content: View>: View {
     init(
         contentVersion: String,
         initiallyFollowing: Bool = true,
+        allowsFollowing: Bool = true,
         preferences: UserPreferences? = nil,
         @ViewBuilder content: () -> Content
     ) {
         self.contentVersion = contentVersion
+        self.allowsFollowing = allowsFollowing
         self.preferences = preferences
         self.content = content()
         _followsLatest = State(initialValue: initiallyFollowing)
@@ -58,6 +61,7 @@ struct FollowLatestScrollView<Content: View>: View {
                 }
             }
             .onChange(of: contentVersion) { _, _ in
+                guard allowsFollowing else { return }
                 if followsLatest {
                     scrollToLatest(using: proxy, animated: false)
                 } else {
@@ -65,11 +69,11 @@ struct FollowLatestScrollView<Content: View>: View {
                 }
             }
             .onAppear {
-                guard followsLatest else { return }
+                guard followsLatest && allowsFollowing else { return }
                 scrollToLatest(using: proxy, animated: false)
             }
             .overlay(alignment: .bottomTrailing) {
-                if !followsLatest {
+                if !followsLatest && allowsFollowing {
                     Button {
                         followsLatest = true
                         hasUnseenContent = false

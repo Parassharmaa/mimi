@@ -19,6 +19,7 @@ struct InlineTranslationView: View {
 
     @State private var model = SegmentTranslationModel()
     @State private var retryGeneration = 0
+    @State private var hasTextSelection = false
     @State private var localStream: LocalTranslationStream?
 
     init(
@@ -56,22 +57,13 @@ struct InlineTranslationView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MimiPaneHeader("English ↔ 日本語", symbol: "translate") {
+            MimiPaneHeader(t("Translation", "翻訳"), symbol: "translate") {
                 if isTranslating {
                     ProgressView()
                         .controlSize(.small)
                         .accessibilityLabel(t("Translating newest sentences locally", "新しい文をローカルで翻訳中"))
                 }
-                Button {
-                    NSPasteboard.general.clearContents()
-                    NSPasteboard.general.setString(renderedTranslation, forType: .string)
-                } label: {
-                    Image(systemName: "doc.on.doc")
-                }
-                .buttonStyle(MimiQuietButtonStyle())
-                .help(t("Copy Translation", "翻訳をコピー"))
-                .accessibilityLabel(t("Copy Translation", "翻訳をコピー"))
-                .disabled(renderedTranslation.isEmpty)
+                TranscriptCopyButton(text: renderedTranslation, title: t("Copy Translation", "翻訳をコピー"), preferences: preferences)
                 Button(t("Refresh", "更新")) {
                     localStream?.reset()
                     localStream?.update(liveInput)
@@ -87,28 +79,16 @@ struct InlineTranslationView: View {
                 FollowLatestScrollView(
                     contentVersion: renderedTranslation,
                     initiallyFollowing: initiallyFollowingLatest,
+                    allowsFollowing: !hasTextSelection,
                     preferences: preferences
                 ) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        if let fixtureTranslation {
-                            Text(fixtureTranslation)
-                        } else {
-                            ForEach(segments) { segment in
-                                if let translation = translations[segment.id] {
-                                    Text(translation)
-                                }
-                            }
-                            if !liveOutput.isEmpty {
-                                Text(liveOutput)
-                                    .foregroundStyle(.secondary)
-                                    .accessibilityLabel(t("Current translation: \(liveOutput)", "現在の翻訳：\(liveOutput)"))
-                            }
-                        }
-                    }
-                    .transaction { $0.animation = nil }
-                    .font(fillsAvailableSpace ? .title3 : .body)
-                    .textSelection(.enabled)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    SelectableTranscriptText(
+                        text: fixtureTranslation ?? segments.compactMap { translations[$0.id] }.joined(separator: "\n"),
+                        provisionalText: fixtureTranslation == nil ? liveOutput : "",
+                        font: .preferredFont(forTextStyle: fillsAvailableSpace ? .title3 : .body),
+                        accessibilityLabel: t("Translation", "翻訳"),
+                        onSelectionChange: { hasTextSelection = $0 }
+                    )
                     .padding(18)
                 }
                 .frame(maxHeight: fillsAvailableSpace ? .infinity : 160)

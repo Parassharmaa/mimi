@@ -6,6 +6,7 @@ cd "$ROOT"
 
 zsh scripts/test-history-safety.sh
 zsh scripts/test-onboarding-policy.sh
+zsh scripts/test-transcript-usability.sh
 
 swift build --disable-index-store --product MimiSelfTest
 swift build --disable-index-store --product Mimi

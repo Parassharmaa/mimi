@@ -333,9 +333,7 @@ final class AppStore {
     }
 
     func copyTranscript() {
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString(viewedDocument.renderedText, forType: .string)
+        TranscriptClipboard.copy(viewedDocument.renderedText)
     }
 
     func applyFixture(_ event: TranscriptEvent, language: SpeechLanguage) {
